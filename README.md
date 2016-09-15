@@ -1,4 +1,11 @@
-# stalker-bot: Slack Bot stalk daily life
+<p align="center">
+  <img src="images/qs.gif">
+  <a href="https://travis-ci.org/badges/shields">
+    <img src="https://travis-ci.org/DongjunLee/stalker-bot.svg?branch=master" alt="build status">
+  </a>
+</p>
+
+# stalker-bot: stalk daily life along Slack Bot
 
 for Quantified Self slack-bot based on Python. 
 
