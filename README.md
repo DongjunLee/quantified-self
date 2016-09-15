@@ -1,5 +1,7 @@
 <p align="center">
   <img src="images/qs.gif">
+</p>
+<p align="center">
   <a href="https://travis-ci.org/badges/shields">
     <img src="https://travis-ci.org/DongjunLee/stalker-bot.svg?branch=master" alt="build status">
   </a>
