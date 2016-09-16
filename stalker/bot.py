@@ -6,6 +6,7 @@ import websockets
 
 from slacker import Slacker
 
+from alarm_manager.alarm_manager import AlarmManager
 from slack.listener import SlackListener
 
 SLACK_TOKEN = os.environ["STALKER_BOT_TOKEN"]
@@ -15,6 +16,10 @@ slack = Slacker(SLACK_TOKEN)
 slack.chat.post_message(channel='#bot_test',
                         text='Stalker Bot Start!',
                         as_user=True)
+
+# Scheduler
+alarm_manager = AlarmManager()
+alarm_manager.run_schedule()
 
 # Start Bot
 response = slack.rtm.start()
