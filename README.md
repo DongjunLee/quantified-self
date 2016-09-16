@@ -5,6 +5,9 @@
   <a href="https://travis-ci.org/badges/shields">
     <img src="https://travis-ci.org/DongjunLee/stalker-bot.svg?branch=master" alt="build status">
   </a>
+  <a href="https://codecov.io/gh/DongjunLee/stalker-bot">
+    <img src="https://codecov.io/gh/DongjunLee/stalker-bot/branch/master/graph/badge.svg" alt="Codecov" />
+  </a>
 </p>
 
 # stalker-bot: stalk daily life along Slack Bot
