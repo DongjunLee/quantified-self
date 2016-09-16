@@ -5,16 +5,15 @@ from slack.route import MsgRouter
 class SlackListener(object):
 
     def __init__(self):
-        pass
+        self.router = MsgRouter()
 
     def handle_only_message(self, msg):
         self.msg = json.loads(msg)
-        self.router = MsgRouter(self.msg)
-        msg_type = self.msg.get("type", None)
 
+        msg_type = self.msg.get("type", None)
         if msg_type == "message":
             print(self.msg)
-            self.router.route()
+            self.router.route(self.msg)
 
     def __make_full_text(self):
         pass

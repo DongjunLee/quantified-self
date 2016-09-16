@@ -4,16 +4,16 @@ from alarm_manager.alarm_manager import AlarmManager
 
 class MsgRouter(object):
 
-    def __init__(self, msg):
-        self.msg = msg
+    def __init__(self):
+        pass
 
-    def route(self):
-        text = self.msg["text"]
+    def route(self, msg):
+        text = msg["text"]
 
         if text.startswith( '알람'):
-            self.__route__alarm_manager()
+            self.__route__alarm_manager(msg)
 
-    def __route__alarm_manager(self):
+    def __route__alarm_manager(self, msg):
 
         alarm_manager = AlarmManager()
 
@@ -27,7 +27,7 @@ class MsgRouter(object):
         for re_alarm in re_alarm_list:
             match_str, func_name = re_alarm
             matcher = re.compile(match_str, re.I)
-            result = matcher.match(self.msg["text"])
+            result = matcher.match(msg["text"])
 
             if result:
                 getattr(alarm_manager, func_name)(result.groups())
