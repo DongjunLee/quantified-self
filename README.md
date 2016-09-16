@@ -2,6 +2,9 @@
   <img src="images/qs.gif">
 </p>
 <p align="center">
+  <a href="https://github.com/DongjunLee/stalker-bot">
+    <img src="https://img.shields.io/badge/Quantified%20Self-Slack%20Bot-brightgreen.svg" alt="Project Introduction">
+  </a>
   <a href="https://travis-ci.org/badges/shields">
     <img src="https://travis-ci.org/DongjunLee/stalker-bot.svg?branch=master" alt="build status">
   </a>
