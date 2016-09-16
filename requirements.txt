@@ -1,0 +1,17 @@
+asyncio==3.4.3
+DateTime==4.1.1
+environ==1.0
+numpy==1.11.1
+pandas==0.18.1
+PyGithub==1.28
+python-dateutil==2.5.3
+requests==2.10.0
+requests-oauthlib==0.6.2
+schedule==0.3.2
+scikit-learn==0.17.1
+scipy==0.17.1
+seaborn==0.7.1
+slackbot==0.4.1
+slacker==0.9.24
+websocket-client==0.37.0
+websockets==3.2
