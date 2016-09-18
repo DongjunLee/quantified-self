@@ -1,1 +1,6 @@
 __pycache__/
+*/__pycache__/
+.coverage
+coverage.xml
+*.pyc
+scheduler.json
