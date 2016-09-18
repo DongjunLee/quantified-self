@@ -140,7 +140,7 @@ class AlarmManager(object):
 
     def run_schedule(self, params):
         self.__set_schedules()
-        schedule.run_continuously()
+        schedule.run_continuously(interval=60)
 
         self.slacker.chat.post_message(channel="#bot_test", text="알람기능을 시작합니다!",
                                        as_user=True)
