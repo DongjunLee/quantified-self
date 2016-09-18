@@ -2,6 +2,7 @@
 
 import datetime
 import os
+import random
 import schedule
 import threading
 import time
@@ -36,7 +37,7 @@ class AlarmManager(object):
 
     def create_between(self, params):
         input_time_interval, input_description = params[0].split(" + ")
-        input_between = {"time_interval": input_time_interval, "description": input_description}
+        input_between = {"time_interval": input_time_interval, "description": input_description, "color": self.__generate_color_code()}
 
         schedule_data, b_index = self.data_handler.read_json_then_add_data(self.fname, "between", input_between)
 
@@ -48,6 +49,11 @@ class AlarmManager(object):
         self.slacker.chat.post_message(channel="#bot_test", text=None,
                                        attachments=attachments, as_user=True)
 
+    def __generate_color_code(self):
+        r = lambda: random.randint(0,255)
+        color_code = '#%02X%02X%02X' % (r(),r(),r())
+        return color_code
+
     def read(self, params):
         schedule_data = self.data_handler.read_file(self.fname)
         alarm_data = schedule_data.get('alarm', {})
@@ -58,7 +64,18 @@ class AlarmManager(object):
                                            as_user=True)
             return ;n
 
-        attachments = self.template.make_schedule_template("", alarm_data)
+        between_data = schedule_data.get('between', {})
+        for k,v in alarm_data.items():
+            if k == "index":
+                continue
+            between = between_data[v['between_id']]
+            alarm_detail = "Alarm " + k + " => 텍스트: " + v['text'] + ", 주기: " + v['period']
+            if 'alarm' in between:
+                between['registerd_alarm'].append(alarm_detail)
+            else:
+                between['registerd_alarm'] = [alarm_detail]
+
+        attachments = self.template.make_schedule_template("", between_data)
         self.slacker.chat.post_message(channel="#bot_test", text="알람 리스트.",
                                            attachments=attachments, as_user=True)
 
