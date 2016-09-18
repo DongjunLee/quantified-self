@@ -18,10 +18,16 @@ class MsgRouter(object):
         alarm_manager = AlarmManager()
 
         re_alarm_list = [
-            ('알람등록 (.*)', 'create'),
-            (r'알람보기', 'read'),
-            ('알람변경 (.*)', 'update'),
-            ('알람삭제 (.*)', 'delete')
+            ('알람 등록 (.*)', 'create'),
+            ('알람간격 등록 (.*)', 'create_between'),
+            (r'알람 보기', 'read'),
+            (r'알람간격 보기', 'read_between'),
+            ('알람 변경 (.*)', 'update'),
+            ('알람간격 변경 (.*)', 'update_between'),
+            ('알람 삭제 (.*)', 'delete'),
+            ('알람간격 삭제 (.*)', 'delete_between'),
+            (r'알람 시작', 'run_schedule'),
+            (r'알람 중지', 'stop_schedule')
         ]
 
         for re_alarm in re_alarm_list:
@@ -30,5 +36,6 @@ class MsgRouter(object):
             result = matcher.match(msg["text"])
 
             if result:
+                print("route to: " + func_name)
                 getattr(alarm_manager, func_name)(result.groups())
                 break
