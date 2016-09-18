@@ -12,7 +12,6 @@ class SlackListener(object):
 
         msg_type = self.msg.get("type", None)
         if msg_type == "message":
-            print(self.msg)
             self.router.route(self.msg)
 
     def __make_full_text(self):

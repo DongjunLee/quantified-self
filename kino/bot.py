@@ -17,10 +17,6 @@ slack.chat.post_message(channel='#bot_test',
                         text='Stalker Bot Start!',
                         as_user=True)
 
-# Scheduler
-alarm_manager = AlarmManager()
-alarm_manager.run_schedule()
-
 # Start Bot
 response = slack.rtm.start()
 endpoint = response.body['url']
