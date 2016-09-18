@@ -22,27 +22,13 @@ class AlarmManager(object):
 
     def create(self, params):
         input_text, input_period, input_between_id = params[0].split(" + ")
-
-        schedule_data = self.data_handler.read_file(self.fname)
-        alarm_data = schedule_data.get('alarm', {})
-
-        if alarm_data == {}:
-            schedule_data['alarm']= alarm_data
-            a_index = 1
-        else:
-            a_index = alarm_data['count'] + 1
-        alarm_data["count"] = a_index
-
         input_alarm = {"text": input_text, "period": input_period, "between_id": input_between_id}
-        a_index = "#" + str(a_index)
 
-        alarm_data[a_index] = input_alarm
-
-        self.data_handler.write_file(self.fname, schedule_data)
+        schedule_data, a_index = self.__read_then_add_data("alarm", input_alarm)
 
         attachments = self.template.make_schedule_template(
-                "알람이 등록되었습니다.",
-                {a_index:input_alarm}
+            "알람이 등록되었습니다.",
+            {a_index:input_alarm}
         )
 
         self.slacker.chat.post_message(channel="#bot_test", text=None,
@@ -52,8 +38,7 @@ class AlarmManager(object):
         input_time_interval, input_description = params[0].split(" + ")
         input_between = {"time_interval": input_time_interval, "description": input_description}
 
-        schedule_data, b_index = self.__read_data_then_indexing("between", input_between)
-        self.data_handler.write_file(self.fname, schedule_data)
+        schedule_data, b_index = self.__read_then_add_data("between", input_between)
 
         attachments = self.template.make_schedule_template(
              "알람간격이 등록되었습니다.",
@@ -63,7 +48,7 @@ class AlarmManager(object):
         self.slacker.chat.post_message(channel="#bot_test", text=None,
                                        attachments=attachments, as_user=True)
 
-    def __read_data_then_indexing(self, category, input_data):
+    def __read_then_add_data(self, category, input_data):
         schedule_data = self.data_handler.read_file(self.fname)
         category_data = schedule_data.get(category, {})
 
@@ -75,6 +60,8 @@ class AlarmManager(object):
         category_data["count"] = c_index
         c_index = "#" + str(c_index)
         category_data[c_index] = input_data
+
+        self.data_handler.write_file(self.fname, schedule_data)
 
         return schedule_data, c_index
 
