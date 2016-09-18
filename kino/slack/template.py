@@ -8,7 +8,7 @@ class MsgTemplate(object):
     def make_schedule_template(self, pretext, data):
         attachments = []
         for k,v in data.items():
-            if k == "count":
+            if k == "index":
                 continue
 
             a_dict = dict()
