@@ -24,7 +24,7 @@ class AlarmManager(object):
         input_text, input_period, input_between_id = params[0].split(" + ")
         input_alarm = {"text": input_text, "period": input_period, "between_id": input_between_id}
 
-        schedule_data, a_index = self.__read_then_add_data("alarm", input_alarm)
+        schedule_data, a_index = self.data_handler.read_json_then_add_data(self.fname, "alarm", input_alarm)
 
         attachments = self.template.make_schedule_template(
             "알람이 등록되었습니다.",
@@ -38,7 +38,7 @@ class AlarmManager(object):
         input_time_interval, input_description = params[0].split(" + ")
         input_between = {"time_interval": input_time_interval, "description": input_description}
 
-        schedule_data, b_index = self.__read_then_add_data("between", input_between)
+        schedule_data, b_index = self.data_handler.read_json_then_add_data(self.fname, "between", input_between)
 
         attachments = self.template.make_schedule_template(
              "알람간격이 등록되었습니다.",
@@ -48,41 +48,25 @@ class AlarmManager(object):
         self.slacker.chat.post_message(channel="#bot_test", text=None,
                                        attachments=attachments, as_user=True)
 
-    def __read_then_add_data(self, category, input_data):
-        schedule_data = self.data_handler.read_file(self.fname)
-        category_data = schedule_data.get(category, {})
-
-        if category_data == {}:
-            schedule_data[category]= category_data
-            c_index = 1
-        else:
-            c_index = category_data['count'] + 1
-        category_data["count"] = c_index
-        c_index = "#" + str(c_index)
-        category_data[c_index] = input_data
-
-        self.data_handler.write_file(self.fname, schedule_data)
-
-        return schedule_data, c_index
-
     def read(self, params):
         schedule_data = self.data_handler.read_file(self.fname)
         alarm_data = schedule_data.get('alarm', {})
 
-        if alarm_data == {}:
+        if alarm_data == {} or len(alarm_data) == 1:
             self.slacker.chat.post_message(channel="#bot_test",
                                            text="등록된 알람이 없습니다.",
                                            as_user=True)
-        else:
-            attachments = self.template.make_schedule_template("", alarm_data)
-            self.slacker.chat.post_message(channel="#bot_test", text="알람 리스트.",
+            return ;n
+
+        attachments = self.template.make_schedule_template("", alarm_data)
+        self.slacker.chat.post_message(channel="#bot_test", text="알람 리스트.",
                                            attachments=attachments, as_user=True)
 
     def read_between(self, params):
         schedule_data = self.data_handler.read_file(self.fname)
         between_data = schedule_data.get('between', {})
 
-        if between_data == {}:
+        if between_data == {} or len(between_data) == 1:
             self.slacker.chat.post_message(channel="#bot_test",
                                            text="등록된 알람간격이 없습니다.",
                                            as_user=True)
@@ -91,14 +75,51 @@ class AlarmManager(object):
             self.slacker.chat.post_message(channel="#bot_test", text="알람간격 리스트.",
                                            attachments=attachments, as_user=True)
 
-
     def update(self, params):
-        print("alarm update!!")
-        print(params)
+        a_index, input_text, input_period, input_between_id = params[0].split(" + ")
+        input_alarm = {"text": input_text, "period": input_period, "between_id": input_between_id}
+
+        result = self.data_handler.read_json_then_edit_data(self.fname, "alarm", a_index, input_alarm)
+
+        if result == "sucess":
+            attachments = self.template.make_schedule_template(
+                "알람이 변경되었습니다.",
+                {a_index:input_alarm}
+            )
+
+            self.slacker.chat.post_message(channel="#bot_test", text=None,
+                                           attachments=attachments, as_user=True)
+        else:
+            self.slacker.chat.post_message(channel="#bot_test", text="에러발생.", as_user=True)
+
+    def update_between(self, params):
+        b_index, input_time_interval, input_description = params[0].split(" + ")
+        input_between = {"time_interval": input_time_interval, "description": input_description}
+
+        result = self.data_handler.read_json_then_edit_data(self.fname, "between", b_index, input_between)
+
+        if result == "sucess":
+            attachments = self.template.make_schedule_template(
+                "알람간격이 변경되었습니다.",
+                {b_index:input_between}
+            )
+
+            self.slacker.chat.post_message(channel="#bot_test", text=None,
+                                           attachments=attachments, as_user=True)
+        else:
+            self.slacker.chat.post_message(channel="#bot_test", text="에러발생.", as_user=True)
 
     def delete(self, params):
-        print("alarm delete!!")
-        print(params)
+        a_index = params[0]
+
+        self.data_handler.read_json_then_delete(self.fname, "alarm", a_index)
+        self.slacker.chat.post_message(channel="#bot_test", text="알람이 삭제되었습니다.", as_user=True)
+
+    def delete_between(self, params):
+        b_index = params[0]
+
+        self.data_handler.read_json_then_delete(self.fname, "between", b_index)
+        self.slacker.chat.post_message(channel="#bot_test", text="알람간격이 삭제되었습니다.", as_user=True)
 
     def run_schedule(self, params):
         self.__set_schedules()
