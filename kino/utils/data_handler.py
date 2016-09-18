@@ -5,7 +5,7 @@ import json
 class DataHandler(object):
 
     def __init__(self):
-        self.data_path = "data/"
+        self.data_path = "../data/"
 
     def read_file(self, fname):
         try:
