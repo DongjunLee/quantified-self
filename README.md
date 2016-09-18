@@ -2,6 +2,20 @@
   <img src="images/qs.gif">
 </p>
 <p align="center">
+  <img src="images/kino.png" style="inline">
+</p>
+
+<h1 align="center"> kino-bot </h1>
+<p align="center">
+  <sup><strong>
+    A.I Personal Assistant Based on Slack Bot <br/> 
+    <a href="http://humanbrain.in">Blog</a>
+     | 
+    <a href="https://www.facebook.com/dongjun.lee.98284">Facebook</a>
+  </strong></sup>
+</p>
+
+<p align="center">
   <a href="https://github.com/DongjunLee/stalker-bot">
     <img src="https://img.shields.io/badge/Quantified%20Self-Slack%20Bot-brightgreen.svg" alt="Project Introduction">
   </a>
@@ -13,9 +27,9 @@
   </a>
 </p>
 
-# stalker-bot: stalk daily life along Slack Bot
+## Introduce
 
-for Quantified Self slack-bot based on Python. 
+ Kino is Personal Assistant based on slack bot. Not general. just implements the feature what i need.
 
 ## Prerequisites
 
