@@ -13,14 +13,14 @@
 </h3>
 
 <p align="center">
-  <a href="https://github.com/DongjunLee/stalker-bot">
+  <a href="https://github.com/DongjunLee/kino-bot">
     <img src="https://img.shields.io/badge/Quantified%20Self-Slack%20Bot-brightgreen.svg" alt="Project Introduction">
   </a>
   <a href="https://travis-ci.org/badges/shields">
-    <img src="https://travis-ci.org/DongjunLee/stalker-bot.svg?branch=master" alt="build status">
+    <img src="https://travis-ci.org/DongjunLee/kino-bot.svg?branch=master" alt="build status">
   </a>
   <a href="https://codecov.io/gh/DongjunLee/stalker-bot">
-    <img src="https://codecov.io/gh/DongjunLee/stalker-bot/branch/master/graph/badge.svg" alt="Codecov" />
+    <img src="https://codecov.io/gh/DongjunLee/kino-bot/branch/master/graph/badge.svg" alt="Codecov" />
   </a>
 </p>
 
@@ -32,23 +32,31 @@
 
 ## Prerequisites
 
+- [Personal Slack](https://slack.com/)
+- Python 3.5
+- [asyncio](https://docs.python.org/3/library/asyncio.html)
 - [slacker](https://github.com/os/slacker)
 - [PyGithub](https://github.com/PyGithub/PyGithub)
 - [schedule](https://github.com/dbader/schedule)
 
 ## Features
 
-- Alarm Manager (Scheduler)
-	- 정해진 시간동안 일정 주기로 메시지를 전송
+- Alarm Manager (Func-Scheduler)
+	- 정해진 시간대동안 일정 주기로 구현한 Functions을 실행
 	- ex) 07:00~08:00, 20분 주기로 '굿모닝! 일어나세요!' 메시지를 전송
+
+## Functions
+
+- send_message, {"text": <보낼 텍스트>}
 
 ## Usages
 
-- Alarm Manager (Scheduler)
-	- 알람간격 보기
-	- 알람간격 등록 <시간간격> + <설명>
-	- 알람간격 변경 <인덱스> + <시간간격> + <설명>
-	- 알람간격 삭제 <인덱스>
+- **Interface**
+	- 시간대 보기
+	- 시간대 등록 <시간간격> + <설명>
+	- 시간대 변경 <인덱스> + <시간간격> + <설명>
+	- 시간대 <인덱스>
+	- 함수 보기
 	- 알람 보기
 	- 알람 등록  <메시지 받을 텍스트> + <반복주기> + <알림간격 인덱스>
 	- 알람 변경  <인덱스> + <메시지 받을 텍스트> + <반복주기> + <알림간격 인덱스>
