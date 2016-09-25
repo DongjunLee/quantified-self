@@ -11,7 +11,7 @@ class MsgTemplate(object):
             if k == "index":
                 continue
 
-            a_dict = dict()
+            a_dict = {}
 
             if pretext == "":
                 pass
@@ -42,4 +42,38 @@ class MsgTemplate(object):
 
             attachments.append(a_dict)
         return attachments
+
+    def make_function_template(self, pretext, data):
+        attachments = []
+        for f in data:
+
+            a_dict = {}
+            if pretext == "":
+                pass
+            else:
+                a_dict['pretext'] = pretext
+
+            a_dict['title'] = f["name"]
+            a_dict['fallback'] = "Function 관련 정보."
+            a_dict['color'] = "#438C56"
+
+            text = ""
+            for k,v in f["detail"].items():
+                if k == "name":
+                    continue
+
+                if type(v) == type([]):
+                    text += " - " + k + "\n"
+                    for element in v:
+                        text += " - - " + element + "\n"
+                else:
+                    text += " - " + k + ": " + v + "\n"
+            a_dict['text'] = text
+
+            a_dict['mrkdwn_in'] = ["text", "pretext"]
+
+            attachments.append(a_dict)
+        return attachments
+
+
 
