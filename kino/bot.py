@@ -6,10 +6,9 @@ import websockets
 
 from slacker import Slacker
 
-from alarm_manager.alarm_manager import AlarmManager
 from slack.listener import SlackListener
 
-SLACK_TOKEN = os.environ["STALKER_BOT_TOKEN"]
+SLACK_TOKEN = os.environ["KINO_BOT_TOKEN"]
 slack = Slacker(SLACK_TOKEN)
 
 # Send a message to channel (init)
