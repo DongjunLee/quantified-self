@@ -1,7 +1,7 @@
 import re
 
-from alarm_manager.scheduler import Scheduler
-from alarm_manager.between import Between
+from notifier.scheduler import Scheduler
+from notifier.between import Between
 from functions.table import FunctionTable
 
 class MsgRouter(object):
