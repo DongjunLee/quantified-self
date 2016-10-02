@@ -45,10 +45,19 @@ class DataHandler(object):
         category_data[c_index] = input_data
         self.write_file(fname, total_data)
 
-        return "sucess"
+        return "success"
 
     def read_json_then_delete(self, fname, category, index):
         total_data = self.read_file(fname)
         category_data = total_data.get(category, {})
         category_data.pop(index, None)
         self.write_file(fname, total_data)
+
+    def get_current_data(self, fname, category):
+        total_data = self.read_file(fname)
+        category_data = total_data[category]
+        c_index = "#" + str(category_data['index'])
+        current_category_data = category_data[c_index]
+        return c_index, current_category_data
+
+
