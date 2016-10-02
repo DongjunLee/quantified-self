@@ -1,22 +1,19 @@
 # -*- coding: utf-8 -*-
 
 import datetime
-import os
 import random
 import schedule
 import threading
 import time
 
-from slacker import Slacker
-
 from slack.template import MsgTemplate
+from slack.slacker_adapter import SlackerAdapter
 from utils.data_handler import DataHandler
 
 class Scheduler(object):
 
     def __init__(self):
-        SLACK_TOKEN = os.environ["KINO_BOT_TOKEN"]
-        self.slacker = Slacker(SLACK_TOKEN)
+        self.slackbot = SlackerAdapter()
         self.data_handler = DataHandler()
         self.fname = "scheduler.json"
         self.template = MsgTemplate()
@@ -32,17 +29,14 @@ class Scheduler(object):
             {a_index:input_alarm}
         )
 
-        self.slacker.chat.post_message(channel="#bot_test", text=None,
-                                       attachments=attachments, as_user=True)
+        self.slackbot.sendMessage(attachments=attachments)
 
     def read(self, params):
         schedule_data = self.data_handler.read_file(self.fname)
         alarm_data = schedule_data.get('alarm', {})
 
         if alarm_data == {} or len(alarm_data) == 1:
-            self.slacker.chat.post_message(channel="#bot_test",
-                                           text="등록된 알람이 없습니다.",
-                                           as_user=True)
+            self.slackbot.send_message(text="등록된 알람이 없습니다.")
             return ;
 
         between_data = schedule_data.get('between', {})
@@ -57,8 +51,33 @@ class Scheduler(object):
                 between['registerd_alarm'] = [alarm_detail]
 
         attachments = self.template.make_schedule_template("", between_data)
-        self.slacker.chat.post_message(channel="#bot_test", text="알람 리스트.",
-                                       attachments=attachments, as_user=True)
+        self.slackbot.send_message(text="등록되어 있는 알람 리스트입니다.", attachments=attachments)
+
+        attachment_button = []
+        a_dict = {}
+        a_dict["text"] = "Choose a game to play"
+        a_dict["fallback"] = "You are unable to choose a game"
+        a_dict["callback_id"] = "wopr_game"
+        a_dict["color"] = "#3AA3E3"
+        a_dict["attachment_type"] = "default"
+
+        a_action = {}
+        a_action["name"] = "chess"
+        a_action["text"] = "Chess"
+        a_action["type"] = "button"
+        a_action["value"] = "chess"
+
+        b_action = {}
+        b_action["name"] = "maze"
+        b_action["text"] = "Falken's Maze"
+        b_action["type"] = "button"
+        b_action["value"] = "maze"
+        a_dict["actions"] = [a_action, b_action]
+        attachment_button = [a_dict]
+
+        self.slacker.chat.post_message(channel="#bot_test", text=None,
+                                       attachments=attachment_button, as_user=True)
+
 
     def update(self, params):
         a_index, input_text, input_period, input_between_id = params[0].split(" + ")

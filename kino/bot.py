@@ -1,24 +1,17 @@
 #coding: UTF-8
 
 import asyncio
-import os
 import websockets
 
-from slacker import Slacker
-
+from slack.slackbot import SlackerAdapter
 from slack.listener import SlackListener
 
-SLACK_TOKEN = os.environ["KINO_BOT_TOKEN"]
-slack = Slacker(SLACK_TOKEN)
-
 # Send a message to channel (init)
-slack.chat.post_message(channel='#bot_test',
-                        text='Stalker Bot Start!',
-                        as_user=True)
+slackbot = SlackerAdapter()
+slackbot.send_message(text='동준님 안녕하세요! \n저는 동준님의 개인비서 Kino입니다.\n반갑습니다.')
 
-# Start Bot
-response = slack.rtm.start()
-endpoint = response.body['url']
+# Start RTM
+endpoint = slackbot.start_real_time_messaging_session()
 
 async def execute_bot():
     ws = await websockets.connect(endpoint)

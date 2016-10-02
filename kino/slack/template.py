@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from utils.resource import MessageResource
+
 class MsgTemplate(object):
 
     def __init__(self):
@@ -18,7 +20,7 @@ class MsgTemplate(object):
             else:
                 a_dict['pretext'] = pretext
 
-            a_dict['title'] = "index: " + k
+            a_dict['title'] = "시간대. " + MessageResource.TIMER_ICON + k
             a_dict['fallback'] = "알람에서 변경이 있습니다."
 
             if 'color' in v:
@@ -30,11 +32,11 @@ class MsgTemplate(object):
             text = ""
             for d_k,d_v in v.items():
                 if type(d_v) == type([]):
-                    text += " - " + d_k + "\n"
+                    text += MessageResource.ORANGE_DIAMOND_ICON + d_k + "\n"
                     for element in d_v:
-                        text += " - - " + element + "\n"
+                        text += MessageResource.WHITE_ELEMENT_ICON + element + "\n"
                 else:
-                    text += " - " + d_k + ": " + d_v + "\n"
+                    text += MessageResource.ORANGE_DIAMOND_ICON + d_k + ": " + d_v + "\n"
             a_dict['text'] = text
 
             a_dict['mrkdwn_in'] = ["text", "pretext"]
@@ -45,7 +47,7 @@ class MsgTemplate(object):
 
     def make_function_template(self, pretext, data):
         attachments = []
-        for f in data:
+        for f_name, f_detail in data.items():
 
             a_dict = {}
             if pretext == "":
@@ -53,21 +55,13 @@ class MsgTemplate(object):
             else:
                 a_dict['pretext'] = pretext
 
-            a_dict['title'] = f["name"]
+            a_dict['title'] = f_detail["icon"] + f_name
             a_dict['fallback'] = "Function 관련 정보."
             a_dict['color'] = "#438C56"
 
-            text = ""
-            for k,v in f["detail"].items():
-                if k == "name":
-                    continue
-
-                if type(v) == type([]):
-                    text += " - " + k + "\n"
-                    for element in v:
-                        text += " - - " + element + "\n"
-                else:
-                    text += " - " + k + ": " + v + "\n"
+            text = MessageResource.ORANGE_DIAMOND_ICON + "description: " + f_detail['description'] + "\n"
+            text += MessageResource.ORANGE_DIAMOND_ICON + "params" + "\n"
+            text += MessageResource.WHITE_ELEMENT_ICON + ", ".join(f_detail['params'])
             a_dict['text'] = text
 
             a_dict['mrkdwn_in'] = ["text", "pretext"]
