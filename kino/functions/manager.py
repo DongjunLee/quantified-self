@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+import json
 
 from functions.functions import Functions
 from slack.slackbot import SlackerAdapter
@@ -13,18 +14,26 @@ class FunctionManager(object):
         self.functions = Functions().registered
         self.template = MsgTemplate()
 
-    def execute(self, func_name):
-        pass
+    def load_function(self, start_time=None, end_time=None, func_name=None, params=None):
 
-    def __is_between(self, start_time=(7,0), end_time=(24,0)):
+        if self.__is_between(start_time, end_time):
+            functions = Functions()
+            params = json.loads(params)
+            getattr(functions, func_name)(**params)
+
+    def __is_between(self, start_time, end_time):
         now = datetime.datetime.now()
-        now_6pm = now.replace(hour=start_time[0], minute=start_time[1], second=0, microsecond=0)
-        now_11pm = now.replace(hour=end_time[0], minute=end_time[1], second=0, microsecond=0)
-        if (now_6pm < now < now_11pm):
+
+        start_h, start_m = start_time
+        end_h, end_m = end_time
+
+        start = now.replace(hour=start_h, minute=start_m, second=0, microsecond=0)
+        end = now.replace(hour=end_h, minute=end_m, second=0, microsecond=0)
+        if (start < now < end):
             return True
         else:
             return False
 
-    def read(self, params):
+    def read(self):
         attachments = self.template.make_function_template("", self.functions)
-        self.slackbot.send_message(text="사용할 수 있는 Function 리스트 입니다.", attachments=attachments)
+        self.slackbot.send_message(attachments=attachments)
