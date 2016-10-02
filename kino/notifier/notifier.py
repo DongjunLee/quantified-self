@@ -1,22 +1,19 @@
 # -*- coding: utf-8 -*-
 
 import datetime
-import os
 import random
 import schedule
 import threading
 import time
 
-from slacker import Slacker
-
 from slack.template import MsgTemplate
+from slack.slacker_adapter import SlackerAdapter
 from utils.data_handler import DataHandler
 
-class AlarmManager(object):
+class Scheduler(object):
 
     def __init__(self):
-        SLACK_TOKEN = os.environ["STALKER_BOT_TOKEN"]
-        self.slacker = Slacker(SLACK_TOKEN)
+        self.slackbot = SlackerAdapter()
         self.data_handler = DataHandler()
         self.fname = "scheduler.json"
         self.template = MsgTemplate()
@@ -32,37 +29,15 @@ class AlarmManager(object):
             {a_index:input_alarm}
         )
 
-        self.slacker.chat.post_message(channel="#bot_test", text=None,
-                                       attachments=attachments, as_user=True)
-
-    def create_between(self, params):
-        input_time_interval, input_description = params[0].split(" + ")
-        input_between = {"time_interval": input_time_interval, "description": input_description, "color": self.__generate_color_code()}
-
-        schedule_data, b_index = self.data_handler.read_json_then_add_data(self.fname, "between", input_between)
-
-        attachments = self.template.make_schedule_template(
-             "알람간격이 등록되었습니다.",
-            {b_index:input_between}
-        )
-
-        self.slacker.chat.post_message(channel="#bot_test", text=None,
-                                       attachments=attachments, as_user=True)
-
-    def __generate_color_code(self):
-        r = lambda: random.randint(0,255)
-        color_code = '#%02X%02X%02X' % (r(),r(),r())
-        return color_code
+        self.slackbot.sendMessage(attachments=attachments)
 
     def read(self, params):
         schedule_data = self.data_handler.read_file(self.fname)
         alarm_data = schedule_data.get('alarm', {})
 
         if alarm_data == {} or len(alarm_data) == 1:
-            self.slacker.chat.post_message(channel="#bot_test",
-                                           text="등록된 알람이 없습니다.",
-                                           as_user=True)
-            return ;n
+            self.slackbot.send_message(text="등록된 알람이 없습니다.")
+            return ;
 
         between_data = schedule_data.get('between', {})
         for k,v in alarm_data.items():
@@ -76,21 +51,33 @@ class AlarmManager(object):
                 between['registerd_alarm'] = [alarm_detail]
 
         attachments = self.template.make_schedule_template("", between_data)
-        self.slacker.chat.post_message(channel="#bot_test", text="알람 리스트.",
-                                           attachments=attachments, as_user=True)
+        self.slackbot.send_message(text="등록되어 있는 알람 리스트입니다.", attachments=attachments)
 
-    def read_between(self, params):
-        schedule_data = self.data_handler.read_file(self.fname)
-        between_data = schedule_data.get('between', {})
+        attachment_button = []
+        a_dict = {}
+        a_dict["text"] = "Choose a game to play"
+        a_dict["fallback"] = "You are unable to choose a game"
+        a_dict["callback_id"] = "wopr_game"
+        a_dict["color"] = "#3AA3E3"
+        a_dict["attachment_type"] = "default"
 
-        if between_data == {} or len(between_data) == 1:
-            self.slacker.chat.post_message(channel="#bot_test",
-                                           text="등록된 알람간격이 없습니다.",
-                                           as_user=True)
-        else:
-            attachments = self.template.make_schedule_template("", between_data)
-            self.slacker.chat.post_message(channel="#bot_test", text="알람간격 리스트.",
-                                           attachments=attachments, as_user=True)
+        a_action = {}
+        a_action["name"] = "chess"
+        a_action["text"] = "Chess"
+        a_action["type"] = "button"
+        a_action["value"] = "chess"
+
+        b_action = {}
+        b_action["name"] = "maze"
+        b_action["text"] = "Falken's Maze"
+        b_action["type"] = "button"
+        b_action["value"] = "maze"
+        a_dict["actions"] = [a_action, b_action]
+        attachment_button = [a_dict]
+
+        self.slacker.chat.post_message(channel="#bot_test", text=None,
+                                       attachments=attachment_button, as_user=True)
+
 
     def update(self, params):
         a_index, input_text, input_period, input_between_id = params[0].split(" + ")
@@ -109,39 +96,14 @@ class AlarmManager(object):
         else:
             self.slacker.chat.post_message(channel="#bot_test", text="에러발생.", as_user=True)
 
-    def update_between(self, params):
-        b_index, input_time_interval, input_description = params[0].split(" + ")
-        input_between = {"time_interval": input_time_interval, "description": input_description}
-
-        result = self.data_handler.read_json_then_edit_data(self.fname, "between", b_index, input_between)
-
-        if result == "sucess":
-            attachments = self.template.make_schedule_template(
-                "알람간격이 변경되었습니다.",
-                {b_index:input_between}
-            )
-
-            self.slacker.chat.post_message(channel="#bot_test", text=None,
-                                           attachments=attachments, as_user=True)
-        else:
-            self.slacker.chat.post_message(channel="#bot_test", text="에러발생.", as_user=True)
-
     def delete(self, params):
         a_index = params[0]
-
         self.data_handler.read_json_then_delete(self.fname, "alarm", a_index)
         self.slacker.chat.post_message(channel="#bot_test", text="알람이 삭제되었습니다.", as_user=True)
 
-    def delete_between(self, params):
-        b_index = params[0]
-
-        self.data_handler.read_json_then_delete(self.fname, "between", b_index)
-        self.slacker.chat.post_message(channel="#bot_test", text="알람간격이 삭제되었습니다.", as_user=True)
-
-    def run_schedule(self, params):
+    def run(self, params):
         self.__set_schedules()
         schedule.run_continuously(interval=60)
-
         self.slacker.chat.post_message(channel="#bot_test", text="알람기능을 시작합니다!",
                                        as_user=True)
 
@@ -205,7 +167,7 @@ class AlarmManager(object):
         job_thread = threading.Thread(target=job_func, kwargs=param)
         job_thread.start()
 
-    def stop_schedule(self, params):
+    def stop(self, params):
         self.__set_schedules()
         schedule.clear()
 
