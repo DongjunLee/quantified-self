@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 
-import datetime
-import random
+import json
 import schedule
 import threading
-import time
 
+from functions.manager import FunctionManager
+from notifier.between import Between
 from slack.slackbot import SlackerAdapter
 from slack.template import MsgTemplate
 from utils.data_handler import DataHandler
+from utils.resource import MessageResource
+from utils.state import State
 
 class Scheduler(object):
 
@@ -18,24 +20,57 @@ class Scheduler(object):
         self.fname = "scheduler.json"
         self.template = MsgTemplate()
 
-    def create(self, params):
-        input_text, input_period, input_between_id = params[0].split(" + ")
-        input_alarm = {"text": input_text, "period": input_period, "between_id": input_between_id}
+    def create(self, step=0, params=None):
 
-        schedule_data, a_index = self.data_handler.read_json_then_add_data(self.fname, "alarm", input_alarm)
+        def step_0(params):
+            self.slackbot.send_message(text=MessageResource.SCHEDULER_CREATE_START)
+            self.data_handler.read_json_then_add_data(self.fname, "alarm", {})
+            State().start("Scheduler", "create")
 
-        attachments = self.template.make_schedule_template(
-            "알람이 등록되었습니다.",
-            {a_index:input_alarm}
-        )
-        self.slackbot.send_message(attachments=attachments)
+            Between().read()
+            self.slackbot.send_message(text=MessageResource.SCHEDULER_CREATE_STEP1)
 
-    def read(self, params):
+        def step_1(params):
+            a_index, current_alarm_data = self.data_handler.get_current_data(self.fname, "alarm")
+            current_alarm_data["between_id"] = params
+            self.data_handler.read_json_then_edit_data(self.fname, "alarm", a_index, current_alarm_data)
+
+            State().next_step()
+            self.slackbot.send_message(text=MessageResource.SCHEDULER_CREATE_STEP2)
+
+        def step_2(params):
+            a_index, current_alarm_data = self.data_handler.get_current_data(self.fname, "alarm")
+            current_alarm_data["period"] = params
+            self.data_handler.read_json_then_edit_data(self.fname, "alarm", a_index, current_alarm_data)
+
+            State().next_step()
+            FunctionManager().read()
+            self.slackbot.send_message(text=MessageResource.SCHEDULER_CREATE_STEP3)
+
+        def step_3(params):
+            a_index, current_alarm_data = self.data_handler.get_current_data(self.fname, "alarm")
+            f_name, f_params = params.split(",")
+            current_alarm_data["f_name"] = f_name.strip()
+            current_alarm_data["params"] = json.loads(f_params.strip().replace("”", "\"").replace("“", "\""))
+            self.data_handler.read_json_then_edit_data(self.fname, "alarm", a_index, current_alarm_data)
+
+            State().complete()
+            self.slackbot.send_message(text=MessageResource.CREATE)
+
+        state = State()
+        if state.is_do_something():
+            current_step = state.current["step"]
+            step_num = "step_" + str(current_step)
+            locals()[step_num](params)
+        else:
+            step_0(params)
+
+    def read(self):
         schedule_data = self.data_handler.read_file(self.fname)
         alarm_data = schedule_data.get('alarm', {})
 
         if alarm_data == {} or len(alarm_data) == 1:
-            self.slackbot.send_message(text="등록된 알람이 없습니다.")
+            self.slackbot.send_message(text=MessageResource.EMPTY)
             return ;
 
         between_data = schedule_data.get('between', {})
@@ -43,38 +78,21 @@ class Scheduler(object):
             if k == "index":
                 continue
             between = between_data[v['between_id']]
-            alarm_detail = "Alarm " + k + " => 텍스트: " + v['text'] + ", 주기: " + v['period']
+
+            f_name = v['f_name']
+            f_detail = FunctionManager().functions[f_name]
+
+            alarm_detail = "Alarm " + k + " (repeat: "+ v['period'] +")" + "\n"
+            alarm_detail += "            " + f_detail['icon'] + f_name + ", " + str(v['params'])
             if 'alarm' in between:
                 between['registerd_alarm'].append(alarm_detail)
             else:
                 between['registerd_alarm'] = [alarm_detail]
 
         attachments = self.template.make_schedule_template("", between_data)
-        self.slackbot.send_message(text="등록된 알람 리스트입니다.", attachments=attachments)
+        self.slackbot.send_message(text=MessageResource.READ, attachments=attachments)
 
-        attachment_button = []
-        a_dict = {}
-        a_dict["text"] = "Choose a game to play"
-        a_dict["fallback"] = "You are unable to choose a game"
-        a_dict["callback_id"] = "wopr_game"
-        a_dict["color"] = "#3AA3E3"
-        a_dict["attachment_type"] = "default"
-
-        a_action = {}
-        a_action["name"] = "chess"
-        a_action["text"] = "Chess"
-        a_action["type"] = "button"
-        a_action["value"] = "chess"
-
-        b_action = {}
-        b_action["name"] = "maze"
-        b_action["text"] = "Falken's Maze"
-        b_action["type"] = "button"
-        b_action["value"] = "maze"
-        a_dict["actions"] = [a_action, b_action]
-        attachment_button = [a_dict]
-
-    def update(self, params):
+    def update(self, step=0, params=None):
         a_index, input_text, input_period, input_between_id = params[0].split(" + ")
         input_alarm = {"text": input_text, "period": input_period, "between_id": input_between_id}
 
@@ -82,36 +100,36 @@ class Scheduler(object):
 
         if result == "sucess":
             attachments = self.template.make_schedule_template(
-                "알람이 변경되었습니다.",
+                MessageResource.UPDATE,
                 {a_index:input_alarm}
             )
 
             self.slackbot.send_message(attachments=attachments)
         else:
-            self.slackbot.send_message(text="에러가 발생하였습니다.")
+            self.slackbot.send_message(text=MessageResource.ERROR)
 
-    def delete(self, params):
+    def delete(self, step=0, params=None):
         a_index = params[0]
         self.data_handler.read_json_then_delete(self.fname, "alarm", a_index)
-        self.slackbot.send_message(text="알람이 삭제되었습니다.")
+        self.slackbot.send_message(text=MessageResource.DELETE)
 
-    def run(self, params):
+    def run(self):
         self.__set_schedules()
-        schedule.run_continuously(interval=60)
-        self.slackbot.send_message(text="알람기능을 시작합니다.")
+        schedule.run_continuously(interval=1)
+        self.slackbot.send_message(text=MessageResource.NOTIFIER_START)
 
     def __set_schedules(self):
 
-        def send_message(text="input text", start_time=(7,0), end_time=(24,0)):
-            now = datetime.datetime.now()
-            now_6pm = now.replace(hour=start_time[0], minute=start_time[1], second=0, microsecond=0)
-            now_11pm = now.replace(hour=end_time[0], minute=end_time[1], second=0, microsecond=0)
-            if not(now_6pm < now < now_11pm):
-                return
-            else:
-                self.slacker.chat.post_message(channel="#bot_test",
-                                               text=text,
-                                               as_user=True)
+#        def send_message(text="input text", start_time=(7,0), end_time=(24,0)):
+#            now = datetime.datetime.now()
+#            now_6pm = now.replace(hour=start_time[0], minute=start_time[1], second=0, microsecond=0)
+#            now_11pm = now.replace(hour=end_time[0], minute=end_time[1], second=0, microsecond=0)
+#            if not(now_6pm < now < now_11pm):
+#                return
+#            else:
+#                self.slacker.chat.post_message(channel="#bot_test",
+#                                               text=text,
+#                                               as_user=True)
 
         schedule_data = self.data_handler.read_file(self.fname)
         alarm_data = schedule_data.get('alarm', {})
@@ -127,13 +145,15 @@ class Scheduler(object):
                 start_time, end_time = self.__time_interval2start_end(between['time_interval'])
 
                 param = {
-                    "text": v["text"],
                     "start_time": start_time,
-                    "end_time": end_time
+                    "end_time": end_time,
+                    "func_name": v['f_name'],
+                    "params": v['params']
                 }
 
+                function = FunctionManager().load_function
                 getattr(schedule.every(number), datetime_unit).do(self.__run_threaded,
-                                                                  send_message, param)
+                                                                  function, param)
 
     def __replace_datetime_unit_ko2en(self, datetime_unit):
         ko2en_dict = {
@@ -160,8 +180,8 @@ class Scheduler(object):
         job_thread = threading.Thread(target=job_func, kwargs=param)
         job_thread.start()
 
-    def stop(self, params):
+    def stop(self):
         self.__set_schedules()
         schedule.clear()
 
-        self.slackbot.send_message(text="알람기능을 중지합니다.")
+        self.slackbot.send_message(text=MessageResource.NOTIFIER_STOP)
