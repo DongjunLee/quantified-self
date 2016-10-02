@@ -1,0 +1,18 @@
+
+class MessageResource:
+    ERROR = "에러가 발생하였습니다."
+    CREATE = "등록이 완료되었습니다!"
+    EMPTY = "비어있습니다. 새로 등록해주세요!."
+    READ = "등록된 리스트입니다."
+    UPDATE = "변경이 완료되었습니다."
+    DELETE = "삭제 완료!"
+    NOTIFIER_START = "Notifier 기능을 시작합니다."
+    NOTIFIER_STOP = "Notifier 기능을 중지합니다."
+    TIMER_ICON = ":mantelpiece_clock: "
+    WHITE_LIST_ICON = ":white_medium_small_square: "
+    WHITE_ELEMENT_ICON = "   :white_circle: "
+    BLACK_LIST_ICON = ":black_medium_small_square: "
+    BLACK_ELEMENT_ICON = "   :black_circle: "
+    BLUE_DIAMOND_ICON = ":small_blue_diamond: "
+    ORANGE_DIAMOND_ICON = ":small_orange_diamond: "
+    SEND_MESSAGE_ICON = ":speech_balloon: "
