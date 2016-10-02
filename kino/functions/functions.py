@@ -19,5 +19,5 @@ class Functions(object):
         function_dict['send_message'] = send_message
         return function_dict
 
-    def send_message(self, channel=None, text=None):
+    def send_message(self, channel="#personal_assistant", text=None):
         self.slackbot.send_message(channel=channel, text=text)
