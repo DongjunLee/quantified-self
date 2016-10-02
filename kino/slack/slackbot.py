@@ -14,3 +14,9 @@ class SlackerAdapter(object):
     def start_real_time_messaging_session(self):
         response = self.slacker.rtm.start()
         return response.body['url']
+
+    def get_bot_id(self):
+        users = self.slacker.users.list().body['members']
+        for user in users:
+            if user['name'] == "kino":
+                return user['id']
