@@ -2,7 +2,7 @@
 
 import random
 
-from slack.template import MsgTemplate
+from kino.template import MsgTemplate
 from slack.slackbot import SlackerAdapter
 from utils.data_handler import DataHandler
 from utils.resource import MessageResource
@@ -18,10 +18,12 @@ class Between(object):
 
     def create(self, step=0, params=None):
 
+        state = State()
+
         def step_0(params):
             self.slackbot.send_message(text=MessageResource.BETWEEN_CREATE_START)
             self.data_handler.read_json_then_add_data(self.fname, "between", {})
-            State().start("Between", "create")
+            state.start("Between", "create")
 
             self.slackbot.send_message(text=MessageResource.BETWEEN_CREATE_STEP1)
 
@@ -30,7 +32,7 @@ class Between(object):
             current_between_data["time_interval"] = params
             self.data_handler.read_json_then_edit_data(self.fname, "between", b_index, current_between_data)
 
-            State().next_step()
+            state.next_step()
             self.slackbot.send_message(text=MessageResource.BETWEEN_CREATE_STEP2)
 
         def step_2(params):
@@ -38,10 +40,9 @@ class Between(object):
             current_between_data["description"] = params
             self.data_handler.read_json_then_edit_data(self.fname, "between", b_index, current_between_data)
 
-            State().complete()
+            state.complete()
             self.slackbot.send_message(text=MessageResource.CREATE)
 
-        state = State()
         if state.is_do_something():
             current_step = state.current["step"]
             step_num = "step_" + str(current_step)

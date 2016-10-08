@@ -7,7 +7,7 @@ import threading
 from functions.manager import FunctionManager
 from notifier.between import Between
 from slack.slackbot import SlackerAdapter
-from slack.template import MsgTemplate
+from kino.template import MsgTemplate
 from utils.data_handler import DataHandler
 from utils.resource import MessageResource
 from utils.state import State
@@ -22,10 +22,12 @@ class Scheduler(object):
 
     def create(self, step=0, params=None):
 
+        state = State()
+
         def step_0(params):
             self.slackbot.send_message(text=MessageResource.SCHEDULER_CREATE_START)
             self.data_handler.read_json_then_add_data(self.fname, "alarm", {})
-            State().start("Scheduler", "create")
+            state.start("Scheduler", "create")
 
             Between().read()
             self.slackbot.send_message(text=MessageResource.SCHEDULER_CREATE_STEP1)
@@ -35,7 +37,7 @@ class Scheduler(object):
             current_alarm_data["between_id"] = params
             self.data_handler.read_json_then_edit_data(self.fname, "alarm", a_index, current_alarm_data)
 
-            State().next_step()
+            state.next_step()
             self.slackbot.send_message(text=MessageResource.SCHEDULER_CREATE_STEP2)
 
         def step_2(params):
@@ -43,7 +45,7 @@ class Scheduler(object):
             current_alarm_data["period"] = params
             self.data_handler.read_json_then_edit_data(self.fname, "alarm", a_index, current_alarm_data)
 
-            State().next_step()
+            state.next_step()
             FunctionManager().read()
             self.slackbot.send_message(text=MessageResource.SCHEDULER_CREATE_STEP3)
 
@@ -54,10 +56,9 @@ class Scheduler(object):
             current_alarm_data["params"] = json.loads(f_params.strip().replace("”", "\"").replace("“", "\""))
             self.data_handler.read_json_then_edit_data(self.fname, "alarm", a_index, current_alarm_data)
 
-            State().complete()
+            state.complete()
             self.slackbot.send_message(text=MessageResource.CREATE)
 
-        state = State()
         if state.is_do_something():
             current_step = state.current["step"]
             step_num = "step_" + str(current_step)
