@@ -4,7 +4,7 @@ import asyncio
 import websockets
 
 from slack.slackbot import SlackerAdapter
-from slack.listener import SlackListener
+from kino.listener import MsgListener
 
 # Send a message to channel (init)
 slackbot = SlackerAdapter()
@@ -12,10 +12,10 @@ slackbot.send_message(text='동준님 안녕하세요! \n저는 동준님의 개
 
 # Start RTM
 endpoint = slackbot.start_real_time_messaging_session()
+listener = MsgListener()
 
 async def execute_bot():
     ws = await websockets.connect(endpoint)
-    listener = SlackListener()
     while True:
         message_json = await ws.recv()
         listener.handle_only_message(message_json)

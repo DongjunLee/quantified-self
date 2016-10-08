@@ -6,13 +6,17 @@ class State(object):
     def __init__(self):
         self.data_handler = DataHandler()
         self.fname = "state.json"
-        self.current = self.data_handler.read_file(self.fname)
+        self.current = None
 
     def is_do_something(self):
+        self.__check()
         if self.current == {}:
             return False
         else:
             return True
+
+    def __check(self):
+        self.current = self.data_handler.read_file(self.fname)
 
     def start(self, class_name, func_name):
         doing = {"class": class_name, "def": func_name, "step": 1}

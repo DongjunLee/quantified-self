@@ -5,7 +5,7 @@ import json
 
 from functions.functions import Functions
 from slack.slackbot import SlackerAdapter
-from slack.template import MsgTemplate
+from kino.template import MsgTemplate
 
 class FunctionManager(object):
 
