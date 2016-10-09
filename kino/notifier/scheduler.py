@@ -28,17 +28,25 @@ class Scheduler(object):
             self.slackbot.send_message(text=MessageResource.SCHEDULER_CREATE_START)
             self.data_handler.read_json_then_add_data(self.fname, "alarm", {})
             state.start("Scheduler", "create")
-
-            Between().read()
-            self.slackbot.send_message(text=MessageResource.SCHEDULER_CREATE_STEP1)
+            if Between().read() == "success":
+                self.slackbot.send_message(text=MessageResource.SCHEDULER_CREATE_STEP1)
+            else:
+                self.slackbot.send_message(text=MessageResource.SCHEDULER_CREATE_STEP1_ONLY_TIME)
 
         def step_1(params):
             a_index, current_alarm_data = self.data_handler.get_current_data(self.fname, "alarm")
-            current_alarm_data["between_id"] = params
-            self.data_handler.read_json_then_edit_data(self.fname, "alarm", a_index, current_alarm_data)
 
-            state.next_step()
-            self.slackbot.send_message(text=MessageResource.SCHEDULER_CREATE_STEP2)
+            if params.startswith("#"):
+                current_alarm_data["between_id"] = params
+                state.next_step()
+                self.slackbot.send_message(text=MessageResource.SCHEDULER_CREATE_STEP2)
+            else:
+                current_alarm_data["time"] = params
+                state.next_step(num=2)
+                FunctionManager().read()
+                self.slackbot.send_message(text=MessageResource.SCHEDULER_CREATE_STEP3)
+
+            self.data_handler.read_json_then_edit_data(self.fname, "alarm", a_index, current_alarm_data)
 
         def step_2(params):
             a_index, current_alarm_data = self.data_handler.get_current_data(self.fname, "alarm")
@@ -72,26 +80,40 @@ class Scheduler(object):
 
         if alarm_data == {} or len(alarm_data) == 1:
             self.slackbot.send_message(text=MessageResource.EMPTY)
-            return ;
+            return "empty"
 
         between_data = schedule_data.get('between', {})
         for k,v in alarm_data.items():
             if k == "index":
                 continue
-            between = between_data[v['between_id']]
 
-            f_name = v['f_name']
-            f_detail = FunctionManager().functions[f_name]
-
-            alarm_detail = "Alarm " + k + " (repeat: "+ v['period'] +")" + "\n"
-            alarm_detail += "            " + f_detail['icon'] + f_name + ", " + str(v['params'])
-            if 'alarm' in between:
-                between['registerd_alarm'].append(alarm_detail)
-            else:
-                between['registerd_alarm'] = [alarm_detail]
+            if 'between_id' in v:
+                between = between_data[v['between_id']]
+                self.__alarm_in_between(between, k, v, repeat=True)
+            elif 'time' in v:
+                specific = between_data.get("#0", {})
+                specific['description'] = "특정 시간 리스트."
+                between_data["#0"] = self.__alarm_in_between(specific, k, v)
 
         attachments = self.template.make_schedule_template("", between_data)
         self.slackbot.send_message(text=MessageResource.READ, attachments=attachments)
+        return "success"
+
+    def __alarm_in_between(self, between, a_index, alarm_data, repeat=False):
+        f_name = alarm_data['f_name']
+        f_detail = FunctionManager().functions[f_name]
+
+        if repeat:
+            alarm_detail = "Alarm " + a_index + " (repeat: "+ alarm_data['period'] + ")\n"
+        else:
+            alarm_detail = "Alarm " + a_index + " (time: " + alarm_data['time'] + ")\n"
+        alarm_detail += "            " + f_detail['icon'] + f_name + ", " + str(alarm_data['params'])
+        registered_alarm = "등록된 알람 리스트."
+        if registered_alarm in between:
+            between[registered_alarm].append(alarm_detail)
+        else:
+            between[registered_alarm] = [alarm_detail]
+        return between
 
     def update(self, step=0, params=None):
         a_index, input_text, input_period, input_between_id = params[0].split(" + ")
@@ -110,51 +132,74 @@ class Scheduler(object):
             self.slackbot.send_message(text=MessageResource.ERROR)
 
     def delete(self, step=0, params=None):
-        a_index = params[0]
-        self.data_handler.read_json_then_delete(self.fname, "alarm", a_index)
-        self.slackbot.send_message(text=MessageResource.DELETE)
+
+        state = State()
+
+        def step_0(params):
+            self.slackbot.send_message(text=MessageResource.SCHEDULER_DELETE_START)
+            if self.read() == "success":
+                state.start("alarm", "delete")
+
+        def step_1(params):
+            a_index = params
+            self.data_handler.read_json_then_delete(self.fname, "alarm", a_index)
+
+            state.complete()
+            self.slackbot.send_message(text=MessageResource.DELETE)
+
+        if state.is_do_something():
+            current_step = state.current["step"]
+            step_num = "step_" + str(current_step)
+            locals()[step_num](params)
+        else:
+            step_0(params)
 
     def run(self):
         self.__set_schedules()
-        schedule.run_continuously(interval=1)
+        schedule.run_continuously(interval=30)
         self.slackbot.send_message(text=MessageResource.NOTIFIER_START)
 
     def __set_schedules(self):
-
-#        def send_message(text="input text", start_time=(7,0), end_time=(24,0)):
-#            now = datetime.datetime.now()
-#            now_6pm = now.replace(hour=start_time[0], minute=start_time[1], second=0, microsecond=0)
-#            now_11pm = now.replace(hour=end_time[0], minute=end_time[1], second=0, microsecond=0)
-#            if not(now_6pm < now < now_11pm):
-#                return
-#            else:
-#                self.slacker.chat.post_message(channel="#bot_test",
-#                                               text=text,
-#                                               as_user=True)
-
         schedule_data = self.data_handler.read_file(self.fname)
         alarm_data = schedule_data.get('alarm', {})
         between_data = schedule_data.get('between', {})
 
         for k,v in alarm_data.items():
-            if type(v) == type({}):
+            if type(v) != type({}):
+                continue
+
+            if 'time' in v:
+                time = v['time']
+                # Do only once
+                param = {
+                    "repeat": False,
+                    "func_name": v['f_name'],
+                    "params": v['params']
+                }
+
+                function = FunctionManager().load_function
+                schedule.every().day.at(time).do(self.__run_threaded,
+                                                        function, param)
+
+            if 'between_id' in v:
+                between = between_data[v['between_id']]
+                start_time, end_time = self.__time_interval2start_end(between['time_interval'])
+                # Repeat
                 period = v['period'].split(" ")
                 number = int(period[0])
                 datetime_unit = self.__replace_datetime_unit_ko2en(period[1])
-                between = between_data[v['between_id']]
-
-                start_time, end_time = self.__time_interval2start_end(between['time_interval'])
 
                 param = {
                     "start_time": start_time,
                     "end_time": end_time,
+                    "repeat": True,
                     "func_name": v['f_name'],
                     "params": v['params']
                 }
 
                 function = FunctionManager().load_function
                 getattr(schedule.every(number), datetime_unit).do(self.__run_threaded,
-                                                                  function, param)
+                                                                function, param)
 
     def __replace_datetime_unit_ko2en(self, datetime_unit):
         ko2en_dict = {
@@ -168,13 +213,16 @@ class Scheduler(object):
         return datetime_unit
 
     def __time_interval2start_end(self, time_interval):
-        time_interval = time_interval.split("~")
-        start_time = time_interval[0].split(":")
-        end_time = time_interval[1].split(":")
+        if "~" in time_interval:
+            time_interval = time_interval.split("~")
+            start_time = time_interval[0].split(":")
+            end_time = time_interval[1].split(":")
 
-        start_time = tuple(map(lambda x: int(x), start_time))
-        end_time = tuple(map(lambda x: int(x), end_time))
-
+            start_time = tuple(map(lambda x: int(x), start_time))
+            end_time = tuple(map(lambda x: int(x), end_time))
+        else:
+            start_time = time_interval
+            end_time = None
         return start_time, end_time
 
     def __run_threaded(self, job_func, param):

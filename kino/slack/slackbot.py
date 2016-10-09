@@ -1,11 +1,13 @@
 import os
 
 from slacker import Slacker
+from utils.config import Config
 
 class SlackerAdapter(object):
 
     def __init__(self):
-        self.slacker = Slacker(os.environ['KINO_BOT_TOKEN'])
+        self.config = Config()
+        self.slacker = Slacker(self.config.kino['SLACK_BOT_TOKEN'])
 
     def send_message(self, channel="#personal_assistant", text=None, attachments=None):
         self.slacker.chat.post_message(channel=channel, text=text,
