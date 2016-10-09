@@ -20,7 +20,9 @@ class MsgTemplate(object):
             else:
                 a_dict['pretext'] = pretext
 
-            a_dict['title'] = "시간대. " + MessageResource.TIMER_ICON + k
+            a_dict['title'] = "시간대. " + MessageResource.TIMER_ICON + k + " " + v['description']
+            del v['description']
+
             a_dict['fallback'] = "알람에서 변경이 있습니다."
 
             if 'color' in v:

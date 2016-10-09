@@ -1,9 +1,9 @@
 import json
 
-from slack.route import MsgRouter
+from kino.route import MsgRouter
 from slack.slackbot import SlackerAdapter
 
-class SlackListener(object):
+class MsgListener(object):
 
     def __init__(self):
         self.router = MsgRouter()
@@ -14,7 +14,7 @@ class SlackListener(object):
 
         msg_type = self.msg.get("type", None)
         if msg_type == "message" and not self.__is_self_message():
-            self.router.route(self.msg)
+            self.router.route(text=self.msg['text'], user=self.msg['user'])
 
     def __is_self_message(self):
         if self.msg["user"] == self.slackbot.get_bot_id():

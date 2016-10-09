@@ -2,10 +2,11 @@
 
 import datetime
 import json
+import schedule
 
 from functions.functions import Functions
 from slack.slackbot import SlackerAdapter
-from slack.template import MsgTemplate
+from kino.template import MsgTemplate
 
 class FunctionManager(object):
 
@@ -14,12 +15,19 @@ class FunctionManager(object):
         self.functions = Functions().registered
         self.template = MsgTemplate()
 
-    def load_function(self, start_time=None, end_time=None, func_name=None, params=None):
+    def load_function(self, start_time=None, end_time=None,
+                      func_name=None, params=None, repeat=False):
 
-        if self.__is_between(start_time, end_time):
-            functions = Functions()
-            params = json.loads(params)
-            getattr(functions, func_name)(**params)
+        if not repeat:
+            self.__excute(func_name, params)
+            return schedule.CancelJob
+        elif (repeat) and (self.__is_between(start_time, end_time)):
+            self.__excute(func_name, params)
+
+    def __excute(self, func_name, params):
+        functions = Functions()
+        #params = json.loads(params)
+        getattr(functions, func_name)(**params)
 
     def __is_between(self, start_time, end_time):
         now = datetime.datetime.now()
