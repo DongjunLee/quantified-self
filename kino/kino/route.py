@@ -66,6 +66,7 @@ class MsgRouter(object):
             ('등록', 'create'),
             ('추가', 'create'),
             ('보다', 'read'),
+            ('보기', 'read'),
             ('보이다', 'read'),
             ('변경', 'update'),
             ('삭제', 'delete'),

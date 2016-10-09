@@ -29,7 +29,7 @@ class Between(object):
 
         def step_1(params):
             b_index, current_between_data = self.data_handler.get_current_data(self.fname, "between")
-            current_between_data["time_interval"] = params
+            current_between_data['time_interval'] = params
             self.data_handler.read_json_then_edit_data(self.fname, "between", b_index, current_between_data)
 
             state.next_step()
@@ -37,7 +37,8 @@ class Between(object):
 
         def step_2(params):
             b_index, current_between_data = self.data_handler.get_current_data(self.fname, "between")
-            current_between_data["description"] = params
+            current_between_data['color'] = self.__generate_color_code()
+            current_between_data['description'] = params
             self.data_handler.read_json_then_edit_data(self.fname, "between", b_index, current_between_data)
 
             state.complete()
@@ -50,17 +51,6 @@ class Between(object):
         else:
             step_0(params)
 
-#        input_time_interval, input_description = params[0].split(" + ")
-#        input_between = {"time_interval": input_time_interval, "description": input_description, "color": self.__generate_color_code()}
-#
-#        schedule_data, b_index = self.data_handler.read_json_then_add_data(self.fname, "between", input_between)
-#
-#        attachments = self.template.make_schedule_template(
-#            MessageResource.CREATE,
-#            {b_index:input_between}
-#        )
-#        self.slackbot.send_message(attachments=attachments)
-
     def __generate_color_code(self):
         r = lambda: random.randint(0,255)
         color_code = '#%02X%02X%02X' % (r(),r(),r())
@@ -70,8 +60,10 @@ class Between(object):
         attachments = self.__make_between_list()
         if attachments == None:
             self.slackbot.send_message(text=MessageResource.EMPTY)
+            return "empty"
         else:
             self.slackbot.send_message(attachments=attachments)
+            return "success"
 
     def __make_between_list(self):
         schedule_data = self.data_handler.read_file(self.fname)
@@ -98,7 +90,26 @@ class Between(object):
             self.slackbot.send_message(text=MessageResource.ERROR)
 
     def delete(self, step=0, params=None):
-        b_index = params[0]
 
-        self.data_handler.read_json_then_delete(self.fname, "between", b_index)
-        self.slackbot.send_message(text=MessageResource.DELETE)
+        state = State()
+
+        def step_0(params):
+            self.slackbot.send_message(text=MessageResource.BETWEEN_DELETE_START)
+            if self.read() == "success":
+                state.start("Between", "delete")
+
+        def step_1(params):
+            b_index = params
+            self.data_handler.read_json_then_delete(self.fname, "between", b_index)
+
+            state.complete()
+            self.slackbot.send_message(text=MessageResource.DELETE)
+
+        if state.is_do_something():
+            current_step = state.current["step"]
+            step_num = "step_" + str(current_step)
+            locals()[step_num](params)
+        else:
+            step_0(params)
+
+

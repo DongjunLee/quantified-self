@@ -22,8 +22,8 @@ class State(object):
         doing = {"class": class_name, "def": func_name, "step": 1}
         self.data_handler.write_file(self.fname, doing)
 
-    def next_step(self):
-        step_num = self.current['step'] + 1
+    def next_step(self, num=1):
+        step_num = self.current['step'] + num
         self.current['step'] = step_num
         self.data_handler.write_file(self.fname, self.current)
 
