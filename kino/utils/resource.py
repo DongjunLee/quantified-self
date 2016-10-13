@@ -24,6 +24,9 @@ class MessageResource:
 
     BETWEEN_DELETE_START = "시간대 삭제를 진행합니다.\n지우고자 하시는 시간대의 인덱스를 입력해주세요!"
 
+    GITHUB_COMMIT_EMPTY = "Github에 Commit한 기록이 없습니다. 일일커밋 실천하셔야죠!"
+    GITHUB_COMMIT_EXIST = "오, Commit을 하셨군요! 멋지십니다.ㅎㅎ 오늘 하루 Commit 수 : "
+
     TIMER_ICON = ":mantelpiece_clock: "
     WHITE_LIST_ICON = ":white_medium_small_square: "
     WHITE_ELEMENT_ICON = "   :white_circle: "
@@ -32,3 +35,4 @@ class MessageResource:
     BLUE_DIAMOND_ICON = ":small_blue_diamond: "
     ORANGE_DIAMOND_ICON = ":small_orange_diamond: "
     SEND_MESSAGE_ICON = ":speech_balloon: "
+    DAILY_COMMIT_ICON = ":octocat: "

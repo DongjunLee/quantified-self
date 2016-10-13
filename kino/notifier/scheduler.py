@@ -59,9 +59,13 @@ class Scheduler(object):
 
         def step_3(params):
             a_index, current_alarm_data = self.data_handler.get_current_data(self.fname, "alarm")
-            f_name, f_params = params.split(",")
-            current_alarm_data["f_name"] = f_name.strip()
-            current_alarm_data["params"] = json.loads(f_params.strip().replace("”", "\"").replace("“", "\""))
+
+            if "," in params:
+                f_name, f_params = params.split(",")
+                current_alarm_data["f_name"] = f_name.strip()
+                current_alarm_data["params"] = json.loads(f_params.strip().replace("”", "\"").replace("“", "\""))
+            else:
+                current_alarm_data["f_name"] = params.strip()
             self.data_handler.read_json_then_edit_data(self.fname, "alarm", a_index, current_alarm_data)
 
             state.complete()
@@ -107,7 +111,8 @@ class Scheduler(object):
             alarm_detail = "Alarm " + a_index + " (repeat: "+ alarm_data['period'] + ")\n"
         else:
             alarm_detail = "Alarm " + a_index + " (time: " + alarm_data['time'] + ")\n"
-        alarm_detail += "            " + f_detail['icon'] + f_name + ", " + str(alarm_data['params'])
+
+        alarm_detail += "            " + f_detail['icon'] + f_name + ", " + str(alarm_data.get('params', ''))
         registered_alarm = "등록된 알람 리스트."
         if registered_alarm in between:
             between[registered_alarm].append(alarm_detail)
@@ -174,7 +179,7 @@ class Scheduler(object):
                 param = {
                     "repeat": False,
                     "func_name": v['f_name'],
-                    "params": v['params']
+                    "params": v.get('params', {})
                 }
 
                 function = FunctionManager().load_function
@@ -194,7 +199,7 @@ class Scheduler(object):
                     "end_time": end_time,
                     "repeat": True,
                     "func_name": v['f_name'],
-                    "params": v['params']
+                    "params": v.get('params', {})
                 }
 
                 function = FunctionManager().load_function
