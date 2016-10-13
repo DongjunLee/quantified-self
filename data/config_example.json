@@ -1,0 +1,12 @@
+{
+    "kino": {
+        "SLACK_BOT_TOKEN": "<token>",
+        "DEFAULT_CHANNEL": "<#channel>",
+        "MASTER_NAME": "<name>",
+        "BOT_NAME": "<bot_name>"
+    },
+    "github": {
+        "USERNAME": "<name>",
+        "PASSWORD": "<password>"
+    }
+}

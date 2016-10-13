@@ -4,3 +4,4 @@ __pycache__/
 coverage.xml
 *.pyc
 scheduler.json
+data/config.json
