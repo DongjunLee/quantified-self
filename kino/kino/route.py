@@ -1,6 +1,7 @@
 import re
 
 from functions.manager import FunctionManager
+from functions.weather import Weather
 from kino.disintegrator import Disintegrator
 from notifier.scheduler import Scheduler
 from notifier.between import Between
@@ -53,7 +54,8 @@ class MsgRouter(object):
         route_class_list = [
             ('알람', Scheduler()),
             ('시간대', Between()),
-            ('함수', FunctionManager())
+            ('함수', FunctionManager()),
+            ('날씨', Weather())
         ]
 
         for route_class in route_class_list:
@@ -68,8 +70,11 @@ class MsgRouter(object):
             ('보다', 'read'),
             ('보기', 'read'),
             ('보이다', 'read'),
+            ('알다', 'read'),
+            ('어떻다', 'read'),
             ('변경', 'update'),
             ('삭제', 'delete'),
+            ('제거', 'delete'),
             ('시작', 'run'),
             ('중지', 'stop')
         ]

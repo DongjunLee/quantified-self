@@ -23,7 +23,7 @@ class MsgTemplate(object):
             a_dict['title'] = "시간대. " + MessageResource.TIMER_ICON + k + " " + v['description']
             del v['description']
 
-            a_dict['fallback'] = "알람에서 변경이 있습니다."
+            a_dict['fallback'] = "알람 관련한 정보입니다. channel에서 확인하세요!"
 
             if 'color' in v:
                 a_dict['color'] = v['color']
@@ -58,7 +58,7 @@ class MsgTemplate(object):
                 a_dict['pretext'] = pretext
 
             a_dict['title'] = f_detail["icon"] + f_name
-            a_dict['fallback'] = "Function 관련 정보."
+            a_dict['fallback'] = "Function 관련 정보입니다. channel에서 확인하세요!"
             a_dict['color'] = "#438C56"
 
             text = MessageResource.ORANGE_DIAMOND_ICON + "description: " + f_detail['description'] + "\n"
@@ -71,5 +71,24 @@ class MsgTemplate(object):
             attachments.append(a_dict)
         return attachments
 
+    def make_weather_template(self, address, icon, summary, temperature=None):
+        attachments = []
 
+        a_dict = {}
+        a_dict['title'] = MessageResource.WEATHER
+        a_dict['fallback'] = "날씨 관련 정보입니다. channel에서 확인하세요!"
+        a_dict['color'] = "#438C56"
+
+        text = address + " 의 "
+        if temperature is None:
+            text += "오늘의 날씨는 "
+        else:
+            text += "현재 날씨는 " + "{:.3}".format(temperature) + "도에 "
+        text += "\n" + MessageResource.WEATHER_ICONS[icon] + " " + summary + " 입니다."
+        a_dict['text'] = text
+
+        a_dict['mrkdwn_in'] = ["text", "pretext"]
+
+        attachments.append(a_dict)
+        return attachments
 
