@@ -10,6 +10,8 @@ class MessageResource:
     NOTIFIER_START = "Notifier 기능을 시작합니다."
     NOTIFIER_STOP = "Notifier 기능을 중지합니다."
 
+    GUIDE = "Kino에 대한 간략한 소개 및 도움말 입니다."
+
     SCHEDULER_CREATE_START = "알람 등록을 진행합니다."
     SCHEDULER_CREATE_STEP1 = "반복 알람을 사용할 경우는 시간대를 선택 하시고,\n 한 번 알리는 경우 새로운 시간을 입력해주세요!\n (ex. #1 or 10:00)"
     SCHEDULER_CREATE_STEP1_ONLY_TIME = "시간을 입력해주세요!\n (ex. 10:00)"
@@ -27,6 +29,7 @@ class MessageResource:
     GITHUB_COMMIT_EMPTY = "Github에 Commit한 기록이 없습니다. 일일커밋 실천하셔야죠!"
     GITHUB_COMMIT_EXIST = "오, Commit을 하셨군요! 멋지십니다.ㅎㅎ 오늘 하루 Commit 수 : "
 
+    ROBOT_ICON = ":robot_face: "
     TIMER_ICON = ":mantelpiece_clock: "
     WHITE_LIST_ICON = ":white_medium_small_square: "
     WHITE_ELEMENT_ICON = "   :white_circle: "
@@ -38,6 +41,7 @@ class MessageResource:
     DAILY_COMMIT_ICON = ":octocat: "
 
     WEATHER = "날씨 정보를 알려드립니다."
+    WEATHER_ICON = ":full_moon_with_face: "
     WEATHER_ICONS = {
         "clear-day": ":sunny: ",
         "clear-night": ":first_quarter_moon_with_face: ",

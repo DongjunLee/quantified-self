@@ -71,6 +71,26 @@ class MsgTemplate(object):
             attachments.append(a_dict)
         return attachments
 
+
+    def make_help_template(self, guide, example):
+        attachments = []
+
+        a_dict = {}
+        a_dict['pretext'] = ""
+        a_dict['title'] = MessageResource.ROBOT_ICON + MessageResource.GUIDE
+        a_dict['fallback'] = "Kino에 대한 가이드입니다. channel에서 확인하세요!"
+        a_dict['color'] = "#438C56"
+
+        text = guide + "\n\n"
+        for k,v in example.items():
+            text += MessageResource.ORANGE_DIAMOND_ICON + k + ": " + v + "\n"
+        a_dict['text'] = text
+
+        a_dict['mrkdwn_in'] = ["text", "pretext"]
+
+        attachments.append(a_dict)
+        return attachments
+
     def make_weather_template(self, address, icon, summary, temperature=None):
         attachments = []
 
