@@ -35,6 +35,9 @@ class FunctionManager(object):
         start_h, start_m = start_time
         end_h, end_m = end_time
 
+        if end_h == 24 and end_m == 0:
+            end_h = 23; end_m = 59
+
         start = now.replace(hour=start_h, minute=start_m, second=0, microsecond=0)
         end = now.replace(hour=end_h, minute=end_m, second=0, microsecond=0)
         if (start < now < end):

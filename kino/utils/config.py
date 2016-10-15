@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 from utils.data_handler import DataHandler
 
@@ -10,6 +11,7 @@ class Config(object):
             config = self.__read_config()
             self.kino = config["kino"]
             self.github = config["github"]
+            self.weather = config["weather"]
 
         def __read_config(self):
             return self.data_handler.read_file(self.fname)

@@ -32,43 +32,23 @@
 
 ## Prerequisites
 
-- [Personal Slack](https://slack.com/)
-- Python 3.5
-- [asyncio](https://docs.python.org/3/library/asyncio.html)
-- [slacker](https://github.com/os/slacker)
-- [PyGithub](https://github.com/PyGithub/PyGithub)
-- [schedule](https://github.com/dbader/schedule)
+- Personal [Slack](https://slack.com/)
+- **Python 3.5**
+	- [asyncio](https://docs.python.org/3/library/asyncio.html)
+	- [slacker](https://github.com/os/slacker)
+	- [konlpy](http://konlpy.org/en/v0.4.4/)
+	- [schedule](https://github.com/DongjunLee/schedule)
+- **Github**
+	- [PyGithub](https://github.com/PyGithub/PyGithub)
+- **Weather**
+	- [python-forecast.io](https://github.com/ZeevG/python-forecast.io)
+	- [geoopy](https://github.com/geopy/geopy)
+
+## Guide
+
+![intro_and_guide](images/intro_and_guide.png)
 
 ## Features
 
-- Alarm Manager (Func-Scheduler)
-	- 정해진 시간대동안 일정 주기로 구현한 Functions을 실행
-	- ex) 07:00~08:00, 20분 주기로 '굿모닝! 일어나세요!' 메시지를 전송
-
-## Functions
-
-- send_message, {"text": <보낼 텍스트>}
-
-## Usages
-
-- **Interface**
-	- 시간대 보기
-	- 시간대 등록 <시간간격> + <설명>
-	- 시간대 변경 <인덱스> + <시간간격> + <설명>
-	- 시간대 <인덱스>
-	- 함수 보기
-	- 알람 보기
-	- 알람 등록  <메시지 받을 텍스트> + <반복주기> + <알림간격 인덱스>
-	- 알람 변경  <인덱스> + <메시지 받을 텍스트> + <반복주기> + <알림간격 인덱스>
-	- 알람 삭제  <인덱스>
-	- 알람 시작/중지
-- Example.
-<p align="center">
-	<img src="images/between_create.png" width=275 style="inline">
-	<img src="images/between_read.png" width=275 style="inline">
-	<img src="images/alarm_create.png" width=250 style="inline">
-	<img src="images/alarm_read.png" width=300 style="inline">
-	<img src="images/alarm_start_stop.png" width=200 style="inline">
-</P>
-
+![functions](images/functions.png)
 

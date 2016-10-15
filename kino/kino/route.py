@@ -1,7 +1,9 @@
 import re
 
 from functions.manager import FunctionManager
+from functions.weather import Weather
 from kino.disintegrator import Disintegrator
+from kino.help import Guide
 from notifier.scheduler import Scheduler
 from notifier.between import Between
 from slack.slackbot import SlackerAdapter
@@ -30,7 +32,10 @@ class MsgRouter(object):
         func_name = self.__parse_func_name(simple_text)
 
         print("route to: " + route_class.__class__.__name__ + " method: " + func_name)
-        if (route_class == None or func_name == "not exist") and is_greeting:
+        if func_name == "help":
+            route_class = Guide()
+            getattr(route_class, func_name)()
+        elif (route_class == None or func_name == "not exist") and is_greeting:
             pass
         elif route_class == None or func_name == "not exist":
             self.slackbot.send_message(text=MessageResource.NOT_UNDERSTANDING)
@@ -53,7 +58,8 @@ class MsgRouter(object):
         route_class_list = [
             ('알람', Scheduler()),
             ('시간대', Between()),
-            ('함수', FunctionManager())
+            ('함수', FunctionManager()),
+            ('날씨', Weather())
         ]
 
         for route_class in route_class_list:
@@ -63,13 +69,17 @@ class MsgRouter(object):
 
     def __parse_func_name(self, text):
         func_name_list = [
+            ('도움말', 'help'),
             ('등록', 'create'),
             ('추가', 'create'),
             ('보다', 'read'),
             ('보기', 'read'),
             ('보이다', 'read'),
+            ('알다', 'read'),
+            ('어떻다', 'read'),
             ('변경', 'update'),
             ('삭제', 'delete'),
+            ('제거', 'delete'),
             ('시작', 'run'),
             ('중지', 'stop')
         ]
