@@ -31,10 +31,10 @@ class Functions(object):
 
         return function_dict
 
-    def send_message(self, channel="#personal_assistant", text=None):
+    def send_message(self, channel=None, text=None):
         self.slackbot.send_message(channel=channel, text=text)
 
-    def daily_commit(self, channel="#personal_assistant"):
+    def daily_commit(self, channel=None):
         github = GithubManager()
         github.daily_commit_check(channel=channel)
 

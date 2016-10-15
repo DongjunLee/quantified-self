@@ -143,7 +143,7 @@ class Scheduler(object):
         def step_0(params):
             self.slackbot.send_message(text=MessageResource.SCHEDULER_DELETE_START)
             if self.read() == "success":
-                state.start("alarm", "delete")
+                state.start("Scheduler", "delete")
 
         def step_1(params):
             a_index = params
@@ -161,7 +161,7 @@ class Scheduler(object):
 
     def run(self):
         self.__set_schedules()
-        schedule.run_continuously(interval=30)
+        schedule.run_continuously(interval=60)
         self.slackbot.send_message(text=MessageResource.NOTIFIER_START)
 
     def __set_schedules(self):

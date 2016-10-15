@@ -9,7 +9,9 @@ class SlackerAdapter(object):
         self.config = Config()
         self.slacker = Slacker(self.config.kino['SLACK_BOT_TOKEN'])
 
-    def send_message(self, channel="#personal_assistant", text=None, attachments=None):
+    def send_message(self, channel=None, text=None, attachments=None):
+        if channel is None:
+            channel = self.config.kino['DEFAULT_CHANNEL']
         self.slacker.chat.post_message(channel=channel, text=text,
                                        attachments=attachments, as_user=True)
 
