@@ -36,3 +36,17 @@ class MessageResource:
     ORANGE_DIAMOND_ICON = ":small_orange_diamond: "
     SEND_MESSAGE_ICON = ":speech_balloon: "
     DAILY_COMMIT_ICON = ":octocat: "
+
+    WEATHER = "날씨 정보를 알려드립니다."
+    WEATHER_ICONS = {
+        "clear-day": ":sunny: ",
+        "clear-night": ":first_quarter_moon_with_face: ",
+        "rain": ":umbrella_with_rain_drops: ",
+        "snow": ":snowman: ",
+        "sleet": ":snow_cloud: ",
+        "wind": ":wind_blowing_face: ",
+        "fog": ":fog: ",
+        "cloudy": ":cloud: ",
+        "partly-cloudy-day": ":partly_sunny: ",
+        "partly-cloudy-night": ":night_with_stars: "
+    }
