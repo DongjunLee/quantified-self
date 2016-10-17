@@ -18,6 +18,8 @@ class FunctionManager(object):
     def load_function(self, start_time=None, end_time=None,
                       func_name=None, params=None, repeat=False):
 
+        print("load_function: " + str(func_name) + ", " + str(params))
+
         if not repeat:
             self.__excute(func_name, params)
             return schedule.CancelJob

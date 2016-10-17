@@ -182,9 +182,12 @@ class Scheduler(object):
                     "params": v.get('params', {})
                 }
 
-                function = FunctionManager().load_function
-                schedule.every().day.at(time).do(self.__run_threaded,
-                                                        function, param)
+                try:
+                    function = FunctionManager().load_function
+                    schedule.every().day.at(time).do(self.__run_threaded,
+                                                            function, param)
+                except Exception as e:
+                    print("Error: " + e)
 
             if 'between_id' in v:
                 between = between_data[v['between_id']]
@@ -202,9 +205,13 @@ class Scheduler(object):
                     "params": v.get('params', {})
                 }
 
-                function = FunctionManager().load_function
-                getattr(schedule.every(number), datetime_unit).do(self.__run_threaded,
-                                                                function, param)
+                try:
+                    function = FunctionManager().load_function
+                    getattr(schedule.every(number), datetime_unit).do(self.__run_threaded,
+                                                                    function, param)
+                except Exception as e:
+                    print("Error: " + e)
+
 
     def __replace_datetime_unit_ko2en(self, datetime_unit):
         ko2en_dict = {
