@@ -54,3 +54,6 @@ class MessageResource:
         "partly-cloudy-day": ":partly_sunny: ",
         "partly-cloudy-night": ":night_with_stars: "
     }
+
+    YOUTUBE_DOWNLOADER = "요청하신 YouTube 다운로드 링크입니다."
+    YOUTUBE_ICON = ":video_camera: "

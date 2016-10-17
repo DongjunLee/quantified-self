@@ -38,6 +38,14 @@ class Functions(object):
         }
         function_dict['weather_summary'] = weather_summary
 
+        # YouTube Downloader
+        youtube_downloader = {
+            "params": ["(passive)", "*YouTube Link"],
+            "description": "YouTube 링크를 포함해서 메시지를 전송하면 Download Link를 생성합니다.",
+            "icon": MessageResource.YOUTUBE_ICON
+        }
+        function_dict['youtube_downloader'] = youtube_downloader
+
 
         return function_dict
 

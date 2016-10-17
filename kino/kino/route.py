@@ -2,6 +2,7 @@ import re
 
 from functions.manager import FunctionManager
 from functions.weather import Weather
+from functions.youtube_downloader import YoutubeDownloader
 from kino.disintegrator import Disintegrator
 from kino.help import Guide
 from notifier.scheduler import Scheduler
@@ -35,6 +36,8 @@ class MsgRouter(object):
         if func_name == "help":
             route_class = Guide()
             getattr(route_class, func_name)()
+        elif func_name == "make_link":
+            getattr(route_class, func_name)(params=text)
         elif (route_class == None or func_name == "not exist") and is_greeting:
             pass
         elif route_class == None or func_name == "not exist":
@@ -59,7 +62,9 @@ class MsgRouter(object):
             ('알람', Scheduler()),
             ('시간대', Between()),
             ('함수', FunctionManager()),
-            ('날씨', Weather())
+            ('날씨', Weather()),
+            ('youtu.be', YoutubeDownloader()),
+            ('youtube.com', YoutubeDownloader())
         ]
 
         for route_class in route_class_list:
@@ -81,7 +86,9 @@ class MsgRouter(object):
             ('삭제', 'delete'),
             ('제거', 'delete'),
             ('시작', 'run'),
-            ('중지', 'stop')
+            ('중지', 'stop'),
+            ('youtu.be', 'make_link'),
+            ('youtube.com', 'make_link')
         ]
 
         for func_name in func_name_list:
