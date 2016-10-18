@@ -7,6 +7,7 @@ import schedule
 from functions.functions import Functions
 from slack.slackbot import SlackerAdapter
 from kino.template import MsgTemplate
+from utils.logger import Logger
 
 class FunctionManager(object):
 
@@ -14,11 +15,12 @@ class FunctionManager(object):
         self.slackbot = SlackerAdapter()
         self.functions = Functions().registered
         self.template = MsgTemplate()
+        self.logger = Logger().get_logger()
 
     def load_function(self, start_time=None, end_time=None,
                       func_name=None, params=None, repeat=False):
 
-        print("load_function: " + str(func_name) + ", " + str(params))
+        self.logger.info("load_function: " + str(func_name) + ", " + str(params))
 
         if not repeat:
             self.__excute(func_name, params)

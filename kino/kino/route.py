@@ -8,6 +8,7 @@ from kino.help import Guide
 from notifier.scheduler import Scheduler
 from notifier.between import Between
 from slack.slackbot import SlackerAdapter
+from utils.logger import Logger
 from utils.state import State
 from utils.resource import MessageResource
 
@@ -17,6 +18,7 @@ class MsgRouter(object):
         self.disintegrator = Disintegrator()
         self.state = State()
         self.slackbot = SlackerAdapter()
+        self.logger = Logger().get_logger()
 
     def route(self, text=None, user=None):
 
@@ -32,7 +34,7 @@ class MsgRouter(object):
         route_class = self.__parse_route_class(simple_text)
         func_name = self.__parse_func_name(simple_text)
 
-        print("route to: " + route_class.__class__.__name__ + " method: " + func_name)
+        self.logger.info("route to: " + route_class.__class__.__name__ + " method: " + func_name)
         if func_name == "help":
             route_class = Guide()
             getattr(route_class, func_name)()

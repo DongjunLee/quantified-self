@@ -3,6 +3,7 @@
 import asyncio
 import websockets
 from utils.config import Config
+from utils.logger import Logger
 
 from slack.slackbot import SlackerAdapter
 from kino.listener import MsgListener
@@ -19,6 +20,9 @@ slackbot.send_message(text=hello_text)
 # Start RTM
 endpoint = slackbot.start_real_time_messaging_session()
 listener = MsgListener()
+
+logger = Logger().get_logger()
+logger.info('start real time messaging session!')
 
 async def execute_bot():
     ws = await websockets.connect(endpoint)
