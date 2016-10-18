@@ -30,4 +30,4 @@ class GithubManager(object):
         if len(commit_events) == 0:
             self.slackbot.send_message(channel=channel, text=MessageResource.GITHUB_COMMIT_EMPTY)
         else:
-            self.slackbot.send_message(channel=channel, text=MessageResource.GITHUB_COMMIT_EXIST + len(commit_events))
+            self.slackbot.send_message(channel=channel, text=MessageResource.GITHUB_COMMIT_EXIST + str(len(commit_events)))
