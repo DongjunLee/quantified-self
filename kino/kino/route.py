@@ -3,8 +3,10 @@ import re
 from functions.manager import FunctionManager
 from functions.weather import Weather
 from functions.youtube_downloader import YoutubeDownloader
+from functions.todoist import TodoistManager
 from kino.disintegrator import Disintegrator
 from kino.help import Guide
+from kino.worker import Worker
 from notifier.scheduler import Scheduler
 from notifier.between import Between
 from slack.slackbot import SlackerAdapter
@@ -29,6 +31,8 @@ class MsgRouter(object):
             return
 
         simple_text = self.disintegrator.convert2simple(sentence=text)
+
+        self.logger.info("input: " + simple_text)
 
         is_greeting = self.__greeting_call_bot(simple_text)
         route_class = self.__parse_route_class(simple_text)
@@ -61,10 +65,12 @@ class MsgRouter(object):
 
     def __parse_route_class(self, text):
         route_class_list = [
+            ('일', Worker()),
             ('알람', Scheduler()),
             ('시간대', Between()),
             ('함수', FunctionManager()),
             ('날씨', Weather()),
+            ('할일', TodoistManager()),
             ('youtu.be', YoutubeDownloader()),
             ('youtube.com', YoutubeDownloader())
         ]
@@ -75,25 +81,19 @@ class MsgRouter(object):
         return None
 
     def __parse_func_name(self, text):
-        func_name_list = [
-            ('도움말', 'help'),
-            ('등록', 'create'),
-            ('추가', 'create'),
-            ('보다', 'read'),
-            ('보기', 'read'),
-            ('보이다', 'read'),
-            ('알다', 'read'),
-            ('어떻다', 'read'),
-            ('변경', 'update'),
-            ('삭제', 'delete'),
-            ('제거', 'delete'),
-            ('시작', 'run'),
-            ('중지', 'stop'),
-            ('youtu.be', 'make_link'),
-            ('youtube.com', 'make_link')
+        func_name_pair_list = [
+            (['도움말'], 'help'),
+            (['등록', '추가'], 'create'),
+            (['보다', '보기', '보이다',' 알다', '어떻다'], 'read'),
+            (['삭제', '제거', '없애다'], 'delete'),
+            (['시작', '하다', '하자'], 'run'),
+            (['중지', '멈추다', '그만'], 'stop'),
+            (['브리핑'], 'today_briefing'),
+            (['youtu.be', 'youtube.com'], 'make_link')
         ]
 
-        for func_name in func_name_list:
-            if func_name[0] in text:
-                return func_name[1]
+        for func_name_pair in func_name_pair_list:
+            func_pattern_list, func_name = func_name_pair
+            if any([p for p in func_pattern_list if p in text]):
+                return func_name
         return "not exist"

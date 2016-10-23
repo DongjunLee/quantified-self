@@ -2,6 +2,7 @@
 
 from functions.github import GithubManager
 from functions.weather import Weather
+from functions.todoist import TodoistManager
 from slack.slackbot import SlackerAdapter
 from utils.resource import MessageResource
 
@@ -46,6 +47,23 @@ class Functions(object):
         }
         function_dict['youtube_downloader'] = youtube_downloader
 
+        # Todoist - briefing
+        today_briefing = {
+            "params": ["channel"],
+            "description": "Todoist에 등록된 일정들에 따라 하루 브리핑을 합니다.",
+            "icon": MessageResource.TODOIST_ICON
+        }
+        function_dict['today_briefing'] = today_briefing
+
+
+        # Todoist - summary
+        today_summary = {
+            "params": ["channel"],
+            "description": "Todoist에 등록되어있는 일들이 처리되어 있는지 확인하고, 오늘 하루 요약을 합니다.",
+            "icon": MessageResource.TODOIST_ICON
+        }
+        function_dict['today_summary'] = today_summary
+
 
         return function_dict
 
@@ -60,3 +78,10 @@ class Functions(object):
         weather = Weather()
         weather.read(channel=channel, when='daily')
 
+    def today_briefing(self, channel=None):
+        todoist = TodoistManager()
+        todoist.today_briefing(channel=channel)
+
+    def today_summary(self, channel=None):
+        todoist = TodoistManager()
+        todoist.today_summary(channel=channel)
