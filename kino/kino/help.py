@@ -21,6 +21,8 @@ class Guide(object):
 
     def __example(self):
         example = {
+            "Greeting": "키노야 안녕",
+            "Worker": "키노야 일 하자",
             "Notifier": "알람 등록해줘, 알람 보여줘, 알람 삭제",
             "Between": "시간대 추가해줘, 시간대 보자, 시간대 제거해줘",
             "Functions": "함수 보여줘",
