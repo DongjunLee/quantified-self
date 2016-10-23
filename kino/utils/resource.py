@@ -7,8 +7,9 @@ class MessageResource:
     READ = "등록된 리스트입니다."
     UPDATE = "변경이 완료되었습니다."
     DELETE = "삭제 완료!"
-    NOTIFIER_START = "Notifier 기능을 시작합니다."
-    NOTIFIER_STOP = "Notifier 기능을 중지합니다."
+
+    WORKER_START = "넵, 일 열심히 하겠습니다ㅎㅎ"
+    WORKER_STOP = "휴.. 드디어 휴식시간이군요!\n필요하실 때 언제나 불러주세요ㅎㅎ"
 
     GUIDE = "Kino에 대한 간략한 소개 및 도움말 입니다."
 
@@ -31,6 +32,7 @@ class MessageResource:
 
     ROBOT_ICON = ":robot_face: "
     TIMER_ICON = ":mantelpiece_clock: "
+    CLOCK_ICON = ":alarm_clock: "
     WHITE_LIST_ICON = ":white_medium_small_square: "
     WHITE_ELEMENT_ICON = "   :white_circle: "
     BLACK_LIST_ICON = ":black_medium_small_square: "
@@ -54,3 +56,37 @@ class MessageResource:
         "partly-cloudy-day": ":partly_sunny: ",
         "partly-cloudy-night": ":night_with_stars: "
     }
+
+    YOUTUBE_DOWNLOADER = "요청하신 YouTube 다운로드 링크입니다."
+    YOUTUBE_ICON = ":video_camera: "
+
+    TODOIST_ICON = ":memo: "
+    TODOIST_TODAY_BREIFING = "오늘의 브리핑을 시작하겠습니다."
+    def TODOIST_OVERDUE(task_count): return "기한이 지난 일이 " + str(task_count) + "개 있습니다."
+    def TODOIST_TODAY(task_count): return "오늘 할일의 수는 " + str(task_count) + "개 입니다."
+    def TODOIST_KARMA(trend):
+        karma_trend_text = {
+            "up": "최근 생산성이 올랐습니다. 이대로 쭉 갑시다!ㅎㅎ",
+            "down": "최근 생산성이 떨어지고 있습니다. 할일목록을 잘 관리해주세요! ㅠㅠ"
+        }
+        return karma_trend_text[trend]
+    def TODOIST_PRIORITY_COLOR(priority):
+        priority_color = {
+            1: '#CACACA',
+            2: '#FBC03F',
+            3: '#F6802E',
+            4: '#E24439'
+        }
+        return priority_color[priority]
+    TODOIST_TIME = "에 예정되어 있습니다."
+    TODOIST_TODAY_SUMMARY = "오늘 하루 요약을 시작하겠습니다."
+    def TODOIST_SUMMARY_OVERDUE(task_count):
+        if task_count > 5:
+            return "아직 처리해야할 일들이 " + str(task_count) + "개나 남았습니다. ㅠㅠ"
+        elif task_count > 0:
+            return "처리해야할 일들이 " + str(task_count) + "개 남았습니다. 조금만 힘내시죠ㅎㅎ"
+        else:
+            return "오.. 예정되었던 일들을 전부 처리하셨군요! 이제 푹 쉬세요. :+1: "
+
+    def TODOIST_SUMMARY_EVENT(a_count, c_count, u_count):
+        return "오늘은 총 {} 개의 할일들을 추가하였고, {} 개의 일들을 완료하였으며, {} 개의 일들을 완료하지 못하고 연기하였습니다.".format(a_count, c_count, u_count)

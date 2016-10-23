@@ -12,6 +12,7 @@ class Config(object):
             self.kino = config["kino"]
             self.github = config["github"]
             self.weather = config["weather"]
+            self.todoist = config["todoist"]
 
         def __read_config(self):
             return self.data_handler.read_file(self.fname)

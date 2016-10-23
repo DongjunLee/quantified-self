@@ -43,7 +43,6 @@ class MsgTemplate(object):
 
             a_dict['mrkdwn_in'] = ["text", "pretext"]
 
-
             attachments.append(a_dict)
         return attachments
 
@@ -70,7 +69,6 @@ class MsgTemplate(object):
 
             attachments.append(a_dict)
         return attachments
-
 
     def make_help_template(self, guide, example):
         attachments = []
@@ -112,3 +110,21 @@ class MsgTemplate(object):
         attachments.append(a_dict)
         return attachments
 
+
+    def make_todoist_task_template(self, tasks):
+        attachments = []
+
+        for t in tasks:
+            project_name, title, time, priority = t
+
+            a_dict = {}
+            a_dict['title'] = project_name + ": " + title
+            a_dict['fallback'] = "일정 관련 정보입니다. channel에서 확인하세요!"
+            a_dict['color'] = MessageResource.TODOIST_PRIORITY_COLOR(priority)
+
+            text = MessageResource.CLOCK_ICON + " " + time + " " + MessageResource.TODOIST_TIME
+            a_dict['text'] = text
+            a_dict['mrkdwn_in'] = ["text", "pretext"]
+
+            attachments.append(a_dict)
+        return attachments

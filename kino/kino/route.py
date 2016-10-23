@@ -2,11 +2,15 @@ import re
 
 from functions.manager import FunctionManager
 from functions.weather import Weather
+from functions.youtube_downloader import YoutubeDownloader
+from functions.todoist import TodoistManager
 from kino.disintegrator import Disintegrator
 from kino.help import Guide
+from kino.worker import Worker
 from notifier.scheduler import Scheduler
 from notifier.between import Between
 from slack.slackbot import SlackerAdapter
+from utils.logger import Logger
 from utils.state import State
 from utils.resource import MessageResource
 
@@ -16,6 +20,7 @@ class MsgRouter(object):
         self.disintegrator = Disintegrator()
         self.state = State()
         self.slackbot = SlackerAdapter()
+        self.logger = Logger().get_logger()
 
     def route(self, text=None, user=None):
 
@@ -27,14 +32,18 @@ class MsgRouter(object):
 
         simple_text = self.disintegrator.convert2simple(sentence=text)
 
+        self.logger.info("input: " + simple_text)
+
         is_greeting = self.__greeting_call_bot(simple_text)
         route_class = self.__parse_route_class(simple_text)
         func_name = self.__parse_func_name(simple_text)
 
-        print("route to: " + route_class.__class__.__name__ + " method: " + func_name)
+        self.logger.info("route to: " + route_class.__class__.__name__ + " method: " + func_name)
         if func_name == "help":
             route_class = Guide()
             getattr(route_class, func_name)()
+        elif func_name == "make_link":
+            getattr(route_class, func_name)(params=text)
         elif (route_class == None or func_name == "not exist") and is_greeting:
             pass
         elif route_class == None or func_name == "not exist":
@@ -56,10 +65,14 @@ class MsgRouter(object):
 
     def __parse_route_class(self, text):
         route_class_list = [
+            ('일', Worker()),
             ('알람', Scheduler()),
             ('시간대', Between()),
             ('함수', FunctionManager()),
-            ('날씨', Weather())
+            ('날씨', Weather()),
+            ('할일', TodoistManager()),
+            ('youtu.be', YoutubeDownloader()),
+            ('youtube.com', YoutubeDownloader())
         ]
 
         for route_class in route_class_list:
@@ -68,23 +81,19 @@ class MsgRouter(object):
         return None
 
     def __parse_func_name(self, text):
-        func_name_list = [
-            ('도움말', 'help'),
-            ('등록', 'create'),
-            ('추가', 'create'),
-            ('보다', 'read'),
-            ('보기', 'read'),
-            ('보이다', 'read'),
-            ('알다', 'read'),
-            ('어떻다', 'read'),
-            ('변경', 'update'),
-            ('삭제', 'delete'),
-            ('제거', 'delete'),
-            ('시작', 'run'),
-            ('중지', 'stop')
+        func_name_pair_list = [
+            (['도움말'], 'help'),
+            (['등록', '추가'], 'create'),
+            (['보다', '보기', '보이다',' 알다', '어떻다'], 'read'),
+            (['삭제', '제거', '없애다'], 'delete'),
+            (['시작', '하다', '하자'], 'run'),
+            (['중지', '멈추다', '그만'], 'stop'),
+            (['브리핑'], 'today_briefing'),
+            (['youtu.be', 'youtube.com'], 'make_link')
         ]
 
-        for func_name in func_name_list:
-            if func_name[0] in text:
-                return func_name[1]
+        for func_name_pair in func_name_pair_list:
+            func_pattern_list, func_name = func_name_pair
+            if any([p for p in func_pattern_list if p in text]):
+                return func_name
         return "not exist"
