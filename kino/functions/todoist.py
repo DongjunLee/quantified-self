@@ -53,8 +53,8 @@ class TodoistManager(object):
                 due_time = parse(t['due_date']).astimezone(timezone('Asia/Seoul'))
                 due_time = due_time.strftime("%H:%M")
 
-                project_name = self.todoist_api.projects.get_by_id(t['project_id'])
-                project_name = project_name.data['name']
+                project = self.todoist_api.projects.get_data(t['project_id'])
+                project_name = project['project']['name']
 
                 specific_task_list.append( (project_name, t['content'], due_time, t['priority']) )
         return specific_task_list
@@ -82,7 +82,15 @@ class TodoistManager(object):
         added_task_count = 0
         completed_task_count = 0
         updated_task_count = 0
+
+        today = arrow.now().to('Asia/Seoul')
+        start, end = today.span('day')
+
         for log in activity_log_list:
+            event_date = arrow.get(log['event_date'], 'DD MMM YYYY HH:mm:ss Z').to('Asia/Seoul')
+            if event_date < start or event_date > end:
+                continue
+
             event_type = log['event_type']
             if event_type == 'added':
                 added_task_count += 1
