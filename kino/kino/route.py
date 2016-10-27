@@ -4,6 +4,7 @@ from functions.manager import FunctionManager
 from functions.weather import Weather
 from functions.youtube_downloader import YoutubeDownloader
 from functions.todoist import TodoistManager
+from functions.maxim import Maxim
 from kino.disintegrator import Disintegrator
 from kino.help import Guide
 from kino.worker import Worker
@@ -71,6 +72,7 @@ class MsgRouter(object):
             ('함수', FunctionManager()),
             ('날씨', Weather()),
             ('할일', TodoistManager()),
+            ('명언', Maxim()),
             ('youtu.be', YoutubeDownloader()),
             ('youtube.com', YoutubeDownloader())
         ]
@@ -89,6 +91,7 @@ class MsgRouter(object):
             (['시작', '하다', '하자'], 'run'),
             (['중지', '멈추다', '그만'], 'stop'),
             (['브리핑'], 'today_briefing'),
+            (['니체'], 'nietzsche'),
             (['youtu.be', 'youtube.com'], 'make_link')
         ]
 

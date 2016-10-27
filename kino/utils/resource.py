@@ -90,3 +90,5 @@ class MessageResource:
 
     def TODOIST_SUMMARY_EVENT(a_count, c_count, u_count):
         return "오늘은 총 {} 개의 할일들을 추가하였고, {} 개의 일들을 완료하였으며, {} 개의 일들을 완료하지 못하고 연기하였습니다.".format(a_count, c_count, u_count)
+
+    MAXIM_ICON = ":scales: "

@@ -55,7 +55,6 @@ class Functions(object):
         }
         function_dict['today_briefing'] = today_briefing
 
-
         # Todoist - summary
         today_summary = {
             "params": ["channel"],
@@ -64,6 +63,13 @@ class Functions(object):
         }
         function_dict['today_summary'] = today_summary
 
+        # Maxim - nietzsche
+        maxim_nietzsche = {
+            "params": ["channel"],
+            "description": "니체의 짧은 명언을 감상하시죠.",
+            "icon": MessageResource.MAXIM_ICON
+        }
+        function_dict['maxim_nietzsche'] = maxim_nietzsche
 
         return function_dict
 
