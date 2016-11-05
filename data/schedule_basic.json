@@ -1,0 +1,44 @@
+{
+  "between": {
+    "index": 0,
+    "morning": {
+      "time_interval": "08:00~12:00",
+      "description": "아침 시간",
+      "color": "#6A4449"
+    },
+    "lunch": {
+      "time_interval": "12:00~13:00",
+      "description": "점심식사 시간",
+      "color": "#6A4449"
+    },
+    "afternoon": {
+      "time_interval": "13:00~18:00",
+      "description": "오후 시간",
+      "color": "#6A4449"
+    },
+    "dinner": {
+      "time_interval": "18:00~19:00",
+      "description": "저녁 시간",
+      "color": "#6A4449"
+    },
+    "evening": {
+      "time_interval": "19:00~23:00",
+      "description": "밤",
+      "color": "#6A4449"
+    },
+    "all_day": {
+      "time_interval": "08:00~23:59",
+      "description": "하루종일",
+      "color": "#6A4449"
+    },
+    "working_hour": {
+      "color": "#00008B",
+      "time_interval": "10:00~19:00",
+      "description": "\ud558\ub8e8\uc885\uc77c",
+      "icon": ":man_in_business_suit_levitating: "
+    }
+  },
+  "alarm": {
+    "index": 0
+  }
+}
