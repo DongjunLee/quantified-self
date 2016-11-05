@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from functions.github import GithubManager
-from functions.weather import Weather
-from functions.todoist import TodoistManager
-from slack.slackbot import SlackerAdapter
-from utils.resource import MessageResource
+import functions
+import slack
+from slack import MsgResource
 
 class Functions(object):
 
     def __init__(self):
-        self.slackbot = SlackerAdapter()
+        self.slackbot = slack.SlackerAdapter()
         self.registered = self.__registered_functions()
 
     def __registered_functions(self):
@@ -19,7 +17,7 @@ class Functions(object):
         send_message = {
             "params": ["*text", "channel"],
             "description": "해당 채널로 지정된 텍스트 메시지를 전송합니다.",
-            "icon": MessageResource.SEND_MESSAGE_ICON
+            "icon": MsgResource.SEND_MESSAGE_ICON
         }
         function_dict['send_message'] = send_message
 
@@ -27,23 +25,31 @@ class Functions(object):
         daily_commit = {
             "params": ["channel"],
             "description": "일일커밋을 생활화하기 위해! Github commit 여부를 확인합니다.",
-            "icon": MessageResource.DAILY_COMMIT_ICON
+            "icon": MsgResource.DAILY_COMMIT_ICON
         }
         function_dict['daily_commit'] = daily_commit
 
         # Weather Daily Summary
-        weather_summary = {
+        weather_current = {
+            "params": ["channel"],
+            "description": "현재 날씨 정보를 알려줍니다.",
+            "icon": MsgResource.WEATHER_ICON
+        }
+        function_dict['weather_current'] = weather_current
+
+        # Weather Daily Summary
+        weather_daily = {
             "params": ["channel"],
             "description": "오늘의 날씨 정보를 알려줍니다.",
-            "icon": MessageResource.WEATHER_ICON
+            "icon": MsgResource.WEATHER_ICON
         }
-        function_dict['weather_summary'] = weather_summary
+        function_dict['weather_summary'] = weather_daily
 
         # YouTube Downloader
         youtube_downloader = {
             "params": ["(passive)", "*YouTube Link"],
             "description": "YouTube 링크를 포함해서 메시지를 전송하면 Download Link를 생성합니다.",
-            "icon": MessageResource.YOUTUBE_ICON
+            "icon": MsgResource.YOUTUBE_ICON
         }
         function_dict['youtube_downloader'] = youtube_downloader
 
@@ -51,25 +57,18 @@ class Functions(object):
         today_briefing = {
             "params": ["channel"],
             "description": "Todoist에 등록된 일정들에 따라 하루 브리핑을 합니다.",
-            "icon": MessageResource.TODOIST_ICON
+            "icon": MsgResource.TODOIST_ICON
         }
         function_dict['today_briefing'] = today_briefing
+
 
         # Todoist - summary
         today_summary = {
             "params": ["channel"],
             "description": "Todoist에 등록되어있는 일들이 처리되어 있는지 확인하고, 오늘 하루 요약을 합니다.",
-            "icon": MessageResource.TODOIST_ICON
+            "icon": MsgResource.TODOIST_ICON
         }
         function_dict['today_summary'] = today_summary
-
-        # Maxim - nietzsche
-        maxim_nietzsche = {
-            "params": ["channel"],
-            "description": "니체의 짧은 명언을 감상하시죠.",
-            "icon": MessageResource.MAXIM_ICON
-        }
-        function_dict['maxim_nietzsche'] = maxim_nietzsche
 
         return function_dict
 
@@ -77,17 +76,21 @@ class Functions(object):
         self.slackbot.send_message(channel=channel, text=text)
 
     def daily_commit(self, channel=None):
-        github = GithubManager()
+        github = funtions.GithubManager()
         github.daily_commit_check(channel=channel)
 
-    def weather_summary(self, channel=None):
-        weather = Weather()
+    def weather_current(self, channel=None):
+        weather = functions.Weather()
+        weather.read(channel=channel, when='current')
+
+    def weather_daily(self, channel=None):
+        weather = functions.Weather()
         weather.read(channel=channel, when='daily')
 
     def today_briefing(self, channel=None):
-        todoist = TodoistManager()
+        todoist = functions.TodoistManager()
         todoist.today_briefing(channel=channel)
 
     def today_summary(self, channel=None):
-        todoist = TodoistManager()
+        todoist = functions.TodoistManager()
         todoist.today_summary(channel=channel)

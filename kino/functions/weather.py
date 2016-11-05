@@ -4,16 +4,16 @@ import datetime
 import forecastio
 from geopy.geocoders import GoogleV3
 
-from kino.template import MsgTemplate
-from slack.slackbot import SlackerAdapter
-from utils.config import Config
+import slack
+import utils
 
 class Weather(object):
 
-    def __init__(self):
-        self.config = Config()
-        self.slackbot = SlackerAdapter()
-        self.template = MsgTemplate()
+    def __init__(self, text=None):
+        self.input = text
+        self.config = utils.Config()
+        self.slackbot = slack.SlackerAdapter()
+        self.template = slack.MsgTemplate()
 
         geolocator = GoogleV3()
         self.location = geolocator.geocode(self.config.weather["HOME"])

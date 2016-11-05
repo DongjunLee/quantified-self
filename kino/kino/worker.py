@@ -4,23 +4,39 @@ import json
 import schedule
 import threading
 
-from functions.manager import FunctionManager
-from notifier.between import Between
-from slack.slackbot import SlackerAdapter
-from utils.data_handler import DataHandler
-from utils.resource import MessageResource
-from utils.state import State
+import functions
+import nlp
+import notifier
+import slack
+from slack import MsgResource
+import utils
 
 class Worker(object):
 
-    def __init__(self):
-        self.slackbot = SlackerAdapter()
-        self.data_handler = DataHandler()
+    def __init__(self, text):
+        self.input = text
+        self.slackbot = slack.SlackerAdapter()
+        self.data_handler = utils.DataHandler()
+        self.ner = nlp.NamedEntitiyRecognizer()
+
+    def create(self):
+        ner_time_of_day = self.ner.parse(self.ner.time_of_day, self.input)
+        ner_time_unit = self.ner.parse(self.ner.time_unit, self.input, get_all=True)
+        ner_period = self.ner.parse(self.ner.period, self.input)
+        ner_functions = self.ner.parse(self.ner.functions, self.input)
+
+        ner_dict = {
+            "time_of_day": ner_time_of_day,
+            "time_unit": ner_time_unit,
+            "period": ner_period,
+            "functions": ner_functions
+        }
+        notifier.Scheduler().create_with_ner(**ner_dict)
 
     def run(self):
         self.__set_schedules()
         schedule.run_continuously(interval=1)
-        self.slackbot.send_message(text=MessageResource.WORKER_START)
+        self.slackbot.send_message(text=MsgResource.WORKER_START)
 
     def __set_schedules(self):
         schedule_fname = "scheduler.json"
@@ -42,7 +58,7 @@ class Worker(object):
                 }
 
                 try:
-                    function = FunctionManager().load_function
+                    function = functions.FunctionManager().load_function
                     schedule.every().day.at(time).do(self.__run_threaded,
                                                             function, param)
                 except Exception as e:
@@ -65,7 +81,7 @@ class Worker(object):
                 }
 
                 try:
-                    function = FunctionManager().load_function
+                    function = functions.FunctionManager().load_function
                     getattr(schedule.every(number), datetime_unit).do(self.__run_threaded,
                                                                     function, param)
                 except Exception as e:

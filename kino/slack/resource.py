@@ -1,5 +1,5 @@
 
-class MessageResource:
+class MsgResource:
     ERROR = "에러가 발생하였습니다."
     NOT_UNDERSTANDING = "무슨 말인지 잘 모르겠어요. 저를 똑똑하게 만들어주세요!!"
     CREATE = "등록이 완료되었습니다!"
@@ -11,7 +11,11 @@ class MessageResource:
     WORKER_START = "넵, 일 열심히 하겠습니다ㅎㅎ"
     WORKER_STOP = "휴.. 드디어 휴식시간이군요!\n필요하실 때 언제나 불러주세요ㅎㅎ"
 
+    WORKER_CREATE_START = "요청하신 일을 만들도록 하겠습니다!"
+    WORKER_FUNCTION_NOT_FOUND = "어떤 기능을 원하시는 것인지 잘 모르겠어요ㅠㅠ 조금 더 정확하게 말씀해주세요."
+
     GUIDE = "Kino에 대한 간략한 소개 및 도움말 입니다."
+    GREETING = "저를 찾으셨나요! 무엇을 도와드릴까요?"
 
     SCHEDULER_CREATE_START = "알람 등록을 진행합니다."
     SCHEDULER_CREATE_STEP1 = "반복 알람을 사용할 경우는 시간대를 선택 하시고,\n 한 번 알리는 경우 새로운 시간을 입력해주세요!\n (ex. #1 or 10:00)"

@@ -1,12 +1,10 @@
-from kino.template import MsgTemplate
-from slack.slackbot import SlackerAdapter
-from utils.resource import MessageResource
+import slack
 
 class Guide(object):
 
     def __init__(self):
-        self.slackbot = SlackerAdapter()
-        self.template = MsgTemplate()
+        self.slackbot = slack.SlackerAdapter()
+        self.template = slack.MsgTemplate()
 
     def help(self):
         attachments = self.template.make_help_template(self.__guide(), self.__example())

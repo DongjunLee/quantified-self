@@ -1,13 +1,12 @@
 import json
 
-from kino.route import MsgRouter
-from slack.slackbot import SlackerAdapter
+import slack
 
 class MsgListener(object):
 
     def __init__(self):
-        self.router = MsgRouter()
-        self.slackbot = SlackerAdapter()
+        self.router = slack.MsgRouter()
+        self.slackbot = slack.SlackerAdapter()
 
     def handle_only_message(self, msg):
         self.msg = json.loads(msg)

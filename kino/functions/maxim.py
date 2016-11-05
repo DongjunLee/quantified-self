@@ -1,14 +1,15 @@
 
 import random
 
-from slack.slackbot import SlackerAdapter
-from utils.data_handler import DataHandler
+import slack
+import utils
 
 class Maxim(object):
 
-    def __init__(self):
-        self.slackbot = SlackerAdapter()
-        self.data_handler = DataHandler()
+    def __init__(self, text=None):
+        self.input = text
+        self.slackbot = slack.SlackerAdapter()
+        self.data_handler = utils.DataHandler()
 
     def nietzsche(self):
         maxim_list = self.data_handler.read_text("Nietzsche.txt").split("\n")
