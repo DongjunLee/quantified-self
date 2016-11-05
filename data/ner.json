@@ -1,0 +1,90 @@
+{
+  "kino": {
+    "name": ["키노", "kino", "안녕"],
+    "Worker": ["일"],
+    "behave": {
+      "create": ["있다", "추가", "일거리"],
+      "run": ["시작"]
+    }
+  },
+  "time_of_day": {
+    "morning": ["아침", "모닝"],
+    "lunch": ["점심", "점심식사"],
+    "afternoon": ["오후"],
+    "dinner": ["저녁식사"],
+    "evening": ["밤", "저녁"],
+    "all-day": ["하루종일", "종일"]
+  },
+  "time_unit": {
+    "hour": "\\d+시",
+    "minute": "\\d+분",
+    "second": "\\d+초"
+  },
+  "period": {
+    "interval": ["마다", "간격"],
+    "real-time": ["즉시", "바로"]
+  },
+  "functions": {
+    "today_summary": ["today_summary", "오늘하루 요약", "오늘하루 정리", "하루 요약", "하루 정리"],
+    "weather_current": ["weather_summary", "지금 날씨", "지금날씨", "현재 날씨", "현재날씨", "날씨 예보"],
+    "weather_summary": ["weather_summary", "오늘의 날씨", "오늘의날씨", "오늘 날씨", "오늘날씨"],
+    "today_briefing": ["today_briefing", "하루 브리핑", "오늘하루 브리핑"],
+    "daily_commit": ["daily_commit", "일일 커밋", "데일리 커밋"],
+    "maxim_nietzsche": ["maxim_nietzsche", "니체 명언"]
+  },
+  "classname": {
+    "notifier/Scheduler": ["알람"],
+    "notifier/Between": ["시간대"],
+    "functions/FunctionManager": ["함수", "기능", "뭘"],
+    "functions/Weather": ["날씨", "예보"],
+    "functions/TodoistManager": ["할일", "일정", "Todo"],
+    "functions/Maxim": ["명언", "금언"],
+    "functions/YoutubeDownloader": ["youtu.be", "youtube.com"]
+  },
+  "behave": {
+      "notifier/Scheduler": {
+        "create": ["등록", "추가"],
+        "read": ["보다", "보이다", "보기", "확인"],
+        "delete": ["삭제", "제거", "없애다"]
+      },
+      "notifier/Between": {
+        "create": ["등록", "추가"],
+        "read": ["보다", "보이다", "보기", "확인"],
+        "delete": ["삭제", "제거", "없애다"]
+      },
+      "functions/FunctionManager": {
+        "read": ["보다", "보이다", "보기", "확인", "뭐 있다", "하다"]
+      },
+      "functions/Weather": {
+        "read": ["알다", "어떻다", "예보"]
+      },
+      "functions/TodoistManager": {
+        "briefing": ["브리핑"],
+        "summary": ["요약", "서머리"]
+      },
+      "functions/Maxim": {
+        "nietzsche": ["니체"]
+      }
+  },
+  "params": {
+      "notifier/Scheduler": {
+
+      },
+      "notifier/Between": {
+
+      },
+      "functions/FunctionManager": {
+
+      },
+      "functions/Weather": {
+        "current": ["지금", "현재"],
+        "daily": ["오늘", "하루"]
+      },
+      "functions/TodoistManager": {
+
+      },
+      "functions/Maxim": {
+
+      }
+  }
+}
