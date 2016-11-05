@@ -92,7 +92,7 @@ class Worker(object):
         ko2en_dict = {
             "초": "seconds",
             "분": "minutes",
-            "시": "hours"
+            "시": "hours",
             "시간": "hours"
         }
 
