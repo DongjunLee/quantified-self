@@ -39,7 +39,7 @@ class Worker(object):
         self.slackbot.send_message(text=MsgResource.WORKER_START)
 
     def __set_schedules(self):
-        schedule_fname = "scheduler.json"
+        schedule_fname = "schedule.json"
         schedule_data = self.data_handler.read_file(schedule_fname)
         alarm_data = schedule_data.get('alarm', {})
         between_data = schedule_data.get('between', {})
