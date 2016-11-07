@@ -121,4 +121,4 @@ class Worker(object):
         self.__set_schedules()
         schedule.clear()
 
-        self.slackbot.send_message(text=MessageResource.WORKER_STOP)
+        self.slackbot.send_message(text=MsgResource.WORKER_STOP)

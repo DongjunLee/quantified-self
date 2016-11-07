@@ -29,9 +29,8 @@ class FunctionManager(object):
             self.__excute(func_name, params)
 
     def __excute(self, func_name, params):
-        functions = functions.Functions()
         #params = json.loads(params)
-        getattr(functions, func_name)(**params)
+        getattr(functions.Functions(), func_name)(**params)
 
     def __is_between(self, start_time, end_time):
         now = datetime.datetime.now()
