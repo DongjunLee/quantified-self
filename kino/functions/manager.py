@@ -29,7 +29,7 @@ class FunctionManager(object):
             self.__excute(func_name, params)
 
     def __excute(self, func_name, params):
-        functions = Functions()
+        functions = functions.Functions()
         #params = json.loads(params)
         getattr(functions, func_name)(**params)
 
