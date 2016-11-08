@@ -76,7 +76,7 @@ class Functions(object):
         self.slackbot.send_message(channel=channel, text=text)
 
     def daily_commit(self, channel=None):
-        github = funtions.GithubManager()
+        github = functions.GithubManager()
         github.daily_commit_check(channel=channel)
 
     def weather_current(self, channel=None):

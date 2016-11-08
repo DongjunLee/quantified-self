@@ -17,7 +17,7 @@ class TodoistManager(object):
         self.slackbot = slack.SlackerAdapter()
         self.template = slack.MsgTemplate()
 
-    def briefing(self, channel=None):
+    def today_briefing(self, channel=None):
         self.slackbot.send_message(text=MsgResource.TODOIST_TODAY_BREIFING, channel=channel)
 
         overdue_task_count = self.__get_overdue_task_count()
@@ -64,7 +64,7 @@ class TodoistManager(object):
         user = self.todoist_api.user.login(self.config.todoist['ID'], self.config.todoist['PASSWORD'])
         return user['karma_trend']
 
-    def summary(self, channel=None):
+    def today_summary(self, channel=None):
         self.slackbot.send_message(text=MsgResource.TODOIST_TODAY_SUMMARY, channel=channel)
 
         overdue_task_count = self.__get_overdue_task_count()
