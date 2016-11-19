@@ -43,7 +43,7 @@ class Functions(object):
             "description": "오늘의 날씨 정보를 알려줍니다.",
             "icon": MsgResource.WEATHER_ICON
         }
-        function_dict['weather_summary'] = weather_daily
+        function_dict['weather_daily'] = weather_daily
 
         # YouTube Downloader
         youtube_downloader = {
