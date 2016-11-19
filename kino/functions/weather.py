@@ -23,11 +23,11 @@ class Weather(object):
         lon = self.location.longitude
         self.forecastio = forecastio.load_forecast(api_key, lat, lon)
 
-    def read(self, channel=None, when='current'):
-        if when == 'current':
-            self.__current_forecast(channel=channel)
-        elif when == 'daily':
-            self.__daily_forecast(channel=channel)
+    def read(self, timely='current'):
+        if timely == 'current':
+            self.__current_forecast()
+        elif timely == 'daily':
+            self.__daily_forecast()
 
     def __daily_forecast(self, channel=None):
         daily = self.forecastio.daily()
@@ -47,7 +47,7 @@ class Weather(object):
         icon = current.icon
         summary = current.summary
         temperature = current.temperature
-        fallback = summary + " " + temperature + "도"
+        fallback = summary + " " + str(temperature) + "도"
 
         attachments = self.template.make_weather_template(address, icon, summary, temperature=temperature, fallback=fallback)
         self.slackbot.send_message(channel=channel, attachments=attachments)

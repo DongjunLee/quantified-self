@@ -83,15 +83,16 @@ class Scheduler(object):
         else:
             step_0(params)
 
-    def create_with_ner(self, time_of_day=None, time_unit=None, period=None, functions=None):
+    def create_with_ner(self, time_of_day=None, time_unit=None,
+                        period=None, functions=None, params=None):
 
-        if functions == "not exist":
+        if functions is None:
             self.slackbot.send_message(text=MsgResource.WORKER_FUNCTION_NOT_FOUND)
             return
         else:
             self.slackbot.send_message(text=MsgResource.WORKER_CREATE_START)
 
-        if time_of_day == "not exist":
+        if time_of_day is None:
             time_of_day = "all_day"
         if period == "real-time":
             period = "7 minutes"
@@ -100,7 +101,7 @@ class Scheduler(object):
         else:
             period = str(random.randint(25, 35)) + " minutes"
 
-        if time_unit == "not exist":
+        if time_unit is None:
             time = None
         elif len(time_unit) == 1 and period == "interval":
             period = time_unit[0]
@@ -120,12 +121,20 @@ class Scheduler(object):
                     minute = int(t[:t.index('분')])
             time = '{0:02d}'.format(hour) + time + '{0:02d}'.format(minute)
 
+        f_params = {}
+        for p in params:
+            key, value = p
+            f_params[key] = value
+
         alarm_data = {
             "between_id": time_of_day,
             "period": period,
             "time": time,
-            "f_name": functions
+            "f_name": functions,
+            "f_params": f_params
         }
+
+        print(str(alarm_data))
         alarm_data = dict((k, v) for k, v in alarm_data.items() if v)
         self.data_handler.read_json_then_add_data(self.fname, "alarm", alarm_data)
         self.slackbot.send_message(text=MsgResource.CREATE)
@@ -165,7 +174,7 @@ class Scheduler(object):
         else:
             alarm_detail = "Alarm " + a_index + " (time: " + alarm_data['time'] + ")\n"
 
-        alarm_detail += "            " + f_detail['icon'] + f_name + ", " + str(alarm_data.get('params', ''))
+        alarm_detail += "            " + f_detail['icon'] + f_name + ", " + str(alarm_data.get('f_params', ''))
         registered_alarm = "등록된 알람 리스트."
         if registered_alarm in between:
             between[registered_alarm].append(alarm_detail)
