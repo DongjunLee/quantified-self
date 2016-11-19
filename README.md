@@ -32,7 +32,7 @@
 
 ## Prerequisites
 
-- Personal [Slack](https://slack.com/)
+- **Personal [Slack](https://slack.com/)**
 - **Python 3.5**
 	- [asyncio](https://docs.python.org/3/library/asyncio.html)
 	- [slacker](https://github.com/os/slacker)
@@ -43,6 +43,10 @@
 - **Weather**
 	- [python-forecast.io](https://github.com/ZeevG/python-forecast.io)
 	- [geoopy](https://github.com/geopy/geopy)
+- **Todoist**
+	- [todoist-python](https://github.com/Doist/todoist-python)
+- **Toggl**
+	- [TogglPy](https://github.com/DongjunLee/TogglPy) forked from [matthewdowney/TogglPy](https://github.com/matthewdowney/TogglPy)	
 
 ## Guide
 
