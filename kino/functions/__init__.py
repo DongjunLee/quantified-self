@@ -14,5 +14,6 @@ __all__ = ['Functions',
            'FunctionManager',
            'Maxim',
            'TodoistManager',
+           'TogglManager',
            'YoutubeDownloader',
            'Weather']

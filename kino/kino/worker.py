@@ -30,7 +30,7 @@ class Worker(object):
             "time_of_day": time_of_day,
             "time_unit": time_unit,
             "period": period,
-            "functions": functions,
+            "functions": func_name,
             "params": params
         }
         notifier.Scheduler().create_with_ner(**ner_dict)
