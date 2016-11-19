@@ -47,28 +47,28 @@
   "alarm": {
     "index": 0,
     "#wake_up": {
-      "params": {
+      "f_params": {
         "text": "\uc548\ub155\ud788 \uc8fc\ubb34\uc168\ub098\uc694? \uc88b\uc740 \uc544\uce68\uc785\ub2c8\ub2e4^^ :sun_with_face: "
       },
       "time": "07:30",
       "f_name": "send_message"
     },
     "#work_end": {
-      "params": {
+      "f_params": {
         "text": "\uace0\uc0dd\ud558\uc168\uc2b5\ub2c8\ub2e4! \ud479 \uc26c\uc2dc\uba74\uc11c, \uc790\uae30\ubc1c\uc804\ub3c4 \ud558\uc2dc\uace0 \uc54c\ucc2c \uc800\ub141 \ubcf4\ub0b4\uc138\uc694. :night_with_stars: "
       },
       "time": "19:00",
       "f_name": "send_message"
     },
     "#work_start": {
-      "params": {
+      "f_params": {
         "text": "\uc624\ub298 \ud558\ub8e8\ub3c4 \ud654\uc774\ud305\uc785\ub2c8\ub2e4!\u314e\u314e :raised_hands: "
       },
       "time": "10:00",
       "f_name": "send_message"
     },
     "#go_to_bed": {
-      "params": {
+      "f_params": {
         "text": "\uc774\uc81c \uc8fc\ubb34\uc2e4 \uc2dc\uac04\uc785\ub2c8\ub2e4. \uc88b\uc740 \uafc8 \uafb8\uc138\uc694 :first_quarter_moon_with_face: "
       },
       "time": "00:30",

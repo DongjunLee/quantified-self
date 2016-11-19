@@ -74,9 +74,10 @@ class MsgTemplate(object):
 
             field['title'] = f_detail["icon"] + f_name
 
-            text = MsgResource.ORANGE_DIAMOND_ICON + "description: " + f_detail['description'] + "\n"
-            text += MsgResource.ORANGE_DIAMOND_ICON + "params" + "\n"
-            text += MsgResource.WHITE_ELEMENT_ICON + ", ".join(f_detail['params'])
+            text = MsgResource.ORANGE_DIAMOND_ICON + f_detail['description'] + "\n"
+            if len(f_detail['params']) != 0:
+                text += MsgResource.ORANGE_DIAMOND_ICON + "params" + "\n"
+                text += MsgResource.WHITE_ELEMENT_ICON + ", ".join(f_detail['params'])
             field['value'] = text
             field['short'] = "true"
             fields.append(field)

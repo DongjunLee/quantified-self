@@ -15,7 +15,7 @@ class GithubManager(object):
         self.github = Github(self.username, password)
         self.slackbot = slack.SlackerAdapter()
 
-    def daily_commit_check(self, channel="#personal_assistant"):
+    def daily_commit_check(self):
         today = datetime.datetime.today()
         today_date = datetime.datetime(today.year, today.month, today.day)
         today_date_ko = today_date - datetime.timedelta(hours=9)
@@ -28,6 +28,6 @@ class GithubManager(object):
             else:
                 break
         if len(commit_events) == 0:
-            self.slackbot.send_message(channel=channel, text=MsgResource.GITHUB_COMMIT_EMPTY)
+            self.slackbot.send_message(text=MsgResource.GITHUB_COMMIT_EMPTY)
         else:
-            self.slackbot.send_message(channel=channel, text=MsgResource.GITHUB_COMMIT_EXIST + str(len(commit_events)))
+            self.slackbot.send_message(text=MsgResource.GITHUB_COMMIT_EXIST + str(len(commit_events)))

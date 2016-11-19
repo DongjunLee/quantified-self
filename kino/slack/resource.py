@@ -71,6 +71,7 @@ class MsgResource:
     def TODOIST_KARMA(trend):
         karma_trend_text = {
             "up": "최근 생산성이 올랐습니다. 이대로 쭉 갑시다!ㅎㅎ",
+            "-": "생산성에 변화가 없습니다! 분발하시죠!",
             "down": "최근 생산성이 떨어지고 있습니다. 할일목록을 잘 관리해주세요! ㅠㅠ"
         }
         return karma_trend_text[trend]
@@ -100,6 +101,6 @@ class MsgResource:
     TOGGL_START = "Toggl을 시작합니다."
     TOGGL_STOP = "Toggl을 중지합니다."
     def TOGGL_STOP_SUMMARY(description, diff_min):
-        return description + " 작업을 " + str(diff_min) + "동안 작업하셨습니다."
+        return description + " 작업을 " + str(diff_min) + "분 동안 진행하셨습니다."
     TOGGL_NOTI_RELAY = "작업을 너무 오래하고 계십니다! 잠시 멈추고 십분만 휴식하시죠!!"
 

@@ -25,22 +25,10 @@
     "interval": ["마다", "간격"],
     "real-time": ["즉시", "바로"]
   },
-  "functions": {
-    "today_summary": ["today_summary", "오늘하루 요약", "오늘하루 정리", "하루 요약", "하루 정리"],
-    "weather_current": ["weather_summary", "지금 날씨", "지금날씨", "현재 날씨", "현재날씨", "날씨 예보"],
-    "weather_summary": ["weather_summary", "오늘의 날씨", "오늘의날씨", "오늘 날씨", "오늘날씨"],
-    "today_briefing": ["today_briefing", "하루 브리핑", "오늘하루 브리핑"],
-    "daily_commit": ["daily_commit", "일일 커밋", "데일리 커밋"],
-    "maxim_nietzsche": ["maxim_nietzsche", "니체 명언"]
-  },
   "classname": {
     "notifier/Scheduler": ["알람"],
     "notifier/Between": ["시간대"],
-    "functions/FunctionManager": ["함수", "기능", "뭘"],
-    "functions/Weather": ["날씨", "예보"],
-    "functions/TodoistManager": ["할일", "일정", "Todo"],
-    "functions/Maxim": ["명언", "금언"],
-    "functions/YoutubeDownloader": ["youtu.be", "youtube.com"]
+    "functions/FunctionManager": ["함수", "기능", "뭘"]
   },
   "behave": {
       "notifier/Scheduler": {
@@ -55,37 +43,33 @@
       },
       "functions/FunctionManager": {
         "read": ["보다", "보이다", "보기", "확인", "뭐 있다", "하다"]
-      },
-      "functions/Weather": {
-        "read": ["알다", "어떻다", "예보"]
-      },
-      "functions/TodoistManager": {
-        "briefing": ["브리핑"],
-        "summary": ["요약", "서머리"]
-      },
-      "functions/Maxim": {
-        "nietzsche": ["니체"]
       }
   },
+  "functions": {
+    "github_commit": ["깃허브", "github", "커밋", "commit"],
+    "forecast": ["날씨", "예보"],
+    "today_briefing": ["하루 브리핑", "오늘하루 브리핑"],
+    "today_summary": ["하루 마무리", "하루 요약"],
+    "toggl_timer": ["토글"],
+    "noti_relax": ["휴식", "휴식 시간"],
+    "maxim_nietzsche": ["니체 명언", "니체의 말"]
+  },
   "params": {
-      "notifier/Scheduler": {
-
+      "github_commit": {
+        "timely": {
+          "daily": ["일일", "매일", "daily", "데일리"]
+        }
       },
-      "notifier/Between": {
-
+      "forecast": {
+        "timely": {
+          "current": ["current", "현재", "지금"],
+          "daily": ["daily", "하루", "오늘", "데일리"]
+        }
       },
-      "functions/FunctionManager": {
-
-      },
-      "functions/Weather": {
-        "current": ["지금", "현재"],
-        "daily": ["오늘", "하루"]
-      },
-      "functions/TodoistManager": {
-
-      },
-      "functions/Maxim": {
-
-      }
+      "today_briefing": {},
+      "today_summary": {},
+      "toggl_timer": {},
+      "noti_relax": {},
+      "maxim_nietzsche": {}
   }
 }

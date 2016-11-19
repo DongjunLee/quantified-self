@@ -1,0 +1,47 @@
+{
+  "send_message": {
+    "params": ["*text"],
+    "description": "텍스트 메시지 전송",
+    "icon": ":speech_balloon: "
+  },
+  "github_commit": {
+    "params": ["*timely"],
+    "description": "Github commit 여부를 확인",
+    "icon": ":octocat: "
+  },
+  "forecast": {
+    "params": ["*timely"],
+    "description": "날씨예보",
+    "icon": ":sun_with_face: "
+  },
+  "youtube_downloader": {
+    "params": ["*youtu_link"],
+    "description": "YouTube 다운로드 링크생성",
+    "icon": ":video_camera: "
+  },
+  "today_briefing": {
+    "params": [],
+    "description": "하루 브리핑",
+    "icon": ":calendar: "
+  },
+  "today_summary": {
+    "params": [],
+    "description": "하루 요약",
+    "icon": ":night_with_stars: "
+  },
+  "toggl_timer": {
+    "params": ["*description"],
+    "description": "Toggl Timer",
+    "icon": ":watch: "
+  },
+  "noti_relax": {
+    "params": [],
+    "description": "1시간 30분 이상 작업시, 휴식 안내",
+    "icon": ":relaxed: "
+  },
+  "maxim_nietzsche": {
+    "params": [],
+    "description": "니체의 명언",
+    "icon": ":scales: "
+  }
+}

@@ -27,7 +27,11 @@ class NamedEntitiyRecognizer(object):
             ner_list = []
             for item_name, item_pattern in item.items():
                 item_pattern_type = type(item_pattern)
-                if item_pattern_type == type([]):
+                if item_pattern_type == type({}):
+                    sub_ner = self.parse(item_pattern, text)
+                    if sub_ner:
+                        ner_list.append((item_name, sub_ner))
+                elif item_pattern_type == type([]):
                     if any([p for p in item_pattern if p in text]):
                         if get_all:
                             ner_list.append(item_name)
@@ -40,7 +44,7 @@ class NamedEntitiyRecognizer(object):
                     else:
                         return result[0]
             if len(ner_list) == 0:
-                return "not exist"
+                return None
             else:
                 return ner_list
 

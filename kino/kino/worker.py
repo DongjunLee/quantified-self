@@ -20,16 +20,18 @@ class Worker(object):
         self.ner = nlp.NamedEntitiyRecognizer()
 
     def create(self):
-        ner_time_of_day = self.ner.parse(self.ner.time_of_day, self.input)
-        ner_time_unit = self.ner.parse(self.ner.time_unit, self.input, get_all=True)
-        ner_period = self.ner.parse(self.ner.period, self.input)
-        ner_functions = self.ner.parse(self.ner.functions, self.input)
+        time_of_day = self.ner.parse(self.ner.time_of_day, self.input)
+        time_unit = self.ner.parse(self.ner.time_unit, self.input, get_all=True)
+        period = self.ner.parse(self.ner.period, self.input)
+        func_name = self.ner.parse(self.ner.functions, self.input)
+        params = self.ner.parse(self.ner.params[func_name], self.input)
 
         ner_dict = {
-            "time_of_day": ner_time_of_day,
-            "time_unit": ner_time_unit,
-            "period": ner_period,
-            "functions": ner_functions
+            "time_of_day": time_of_day,
+            "time_unit": time_unit,
+            "period": period,
+            "functions": functions,
+            "params": params
         }
         notifier.Scheduler().create_with_ner(**ner_dict)
 
@@ -77,7 +79,7 @@ class Worker(object):
                     "end_time": end_time,
                     "repeat": True,
                     "func_name": v['f_name'],
-                    "params": v.get('params', {})
+                    "params": v.get('f_params', {})
                 }
 
                 try:
