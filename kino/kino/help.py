@@ -1,12 +1,10 @@
-from kino.template import MsgTemplate
-from slack.slackbot import SlackerAdapter
-from utils.resource import MessageResource
+import slack
 
 class Guide(object):
 
     def __init__(self):
-        self.slackbot = SlackerAdapter()
-        self.template = MsgTemplate()
+        self.slackbot = slack.SlackerAdapter()
+        self.template = slack.MsgTemplate()
 
     def help(self):
         attachments = self.template.make_help_template(self.__guide(), self.__example())
@@ -22,10 +20,13 @@ class Guide(object):
     def __example(self):
         example = {
             "Greeting": "키노야 안녕",
-            "Worker": "키노야 일 하자",
+            "Worker": "키노야 일 시작하자, 일거리! 2 시간마다 날씨예보, 일 추가 20시에 하루 요약",
             "Notifier": "알람 등록해줘, 알람 보여줘, 알람 삭제",
             "Between": "시간대 추가해줘, 시간대 보자, 시간대 제거해줘",
             "Functions": "함수 보여줘",
-            "Weather": "날씨 알려줘, 날씨 어때?"
+            "Weather": "지금 날씨 예보, 오늘 날씨",
+            "Todoist": "하루 브리핑, 하루 요약",
+            "Toggl": "토글, 휴식 알리미",
+            "Maxim": "니체 명언"
         }
         return example

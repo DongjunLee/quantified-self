@@ -4,26 +4,44 @@ import json
 import schedule
 import threading
 
-from functions.manager import FunctionManager
-from notifier.between import Between
-from slack.slackbot import SlackerAdapter
-from utils.data_handler import DataHandler
-from utils.resource import MessageResource
-from utils.state import State
+import functions
+import nlp
+import notifier
+import slack
+from slack import MsgResource
+import utils
 
 class Worker(object):
 
-    def __init__(self):
-        self.slackbot = SlackerAdapter()
-        self.data_handler = DataHandler()
+    def __init__(self, text):
+        self.input = text
+        self.slackbot = slack.SlackerAdapter()
+        self.data_handler = utils.DataHandler()
+        self.ner = nlp.NamedEntitiyRecognizer()
+
+    def create(self):
+        time_of_day = self.ner.parse(self.ner.time_of_day, self.input)
+        time_unit = self.ner.parse(self.ner.time_unit, self.input, get_all=True)
+        period = self.ner.parse(self.ner.period, self.input)
+        func_name = self.ner.parse(self.ner.functions, self.input)
+        params = self.ner.parse(self.ner.params[func_name], self.input)
+
+        ner_dict = {
+            "time_of_day": time_of_day,
+            "time_unit": time_unit,
+            "period": period,
+            "functions": functions,
+            "params": params
+        }
+        notifier.Scheduler().create_with_ner(**ner_dict)
 
     def run(self):
         self.__set_schedules()
         schedule.run_continuously(interval=1)
-        self.slackbot.send_message(text=MessageResource.WORKER_START)
+        self.slackbot.send_message(text=MsgResource.WORKER_START)
 
     def __set_schedules(self):
-        schedule_fname = "scheduler.json"
+        schedule_fname = "schedule.json"
         schedule_data = self.data_handler.read_file(schedule_fname)
         alarm_data = schedule_data.get('alarm', {})
         between_data = schedule_data.get('between', {})
@@ -42,7 +60,7 @@ class Worker(object):
                 }
 
                 try:
-                    function = FunctionManager().load_function
+                    function = functions.FunctionManager().load_function
                     schedule.every().day.at(time).do(self.__run_threaded,
                                                             function, param)
                 except Exception as e:
@@ -61,11 +79,11 @@ class Worker(object):
                     "end_time": end_time,
                     "repeat": True,
                     "func_name": v['f_name'],
-                    "params": v.get('params', {})
+                    "params": v.get('f_params', {})
                 }
 
                 try:
-                    function = FunctionManager().load_function
+                    function = functions.FunctionManager().load_function
                     getattr(schedule.every(number), datetime_unit).do(self.__run_threaded,
                                                                     function, param)
                 except Exception as e:
@@ -76,6 +94,7 @@ class Worker(object):
         ko2en_dict = {
             "초": "seconds",
             "분": "minutes",
+            "시": "hours",
             "시간": "hours"
         }
 
@@ -104,4 +123,4 @@ class Worker(object):
         self.__set_schedules()
         schedule.clear()
 
-        self.slackbot.send_message(text=MessageResource.WORKER_STOP)
+        self.slackbot.send_message(text=MsgResource.WORKER_STOP)

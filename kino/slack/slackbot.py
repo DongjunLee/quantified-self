@@ -1,12 +1,13 @@
 import os
 
 from slacker import Slacker
-from utils.config import Config
+
+import utils
 
 class SlackerAdapter(object):
 
     def __init__(self):
-        self.config = Config()
+        self.config = utils.Config()
         self.slacker = Slacker(self.config.kino['SLACK_BOT_TOKEN'])
 
     def send_message(self, channel=None, text=None, attachments=None):

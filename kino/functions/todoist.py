@@ -1,37 +1,38 @@
 
+import arrow
 from dateutil.parser import parse
 from pytz import timezone
 import todoist
 
-from kino.template import MsgTemplate
-from slack.slackbot import SlackerAdapter
-from utils.config import Config
-from utils.resource import MessageResource
+import slack
+from slack import MsgResource
+import utils
 
 class TodoistManager(object):
 
-    def __init__(self):
-        self.config = Config()
+    def __init__(self, text=None):
+        self.input = text
+        self.config = utils.Config()
         self.todoist_api = todoist.TodoistAPI(self.config.todoist['TOKEN'])
-        self.slackbot = SlackerAdapter()
-        self.template = MsgTemplate()
+        self.slackbot = slack.SlackerAdapter()
+        self.template = slack.MsgTemplate()
 
     def today_briefing(self, channel=None):
-        self.slackbot.send_message(text=MessageResource.TODOIST_TODAY_BREIFING, channel=channel)
+        self.slackbot.send_message(text=MsgResource.TODOIST_TODAY_BREIFING, channel=channel)
 
         overdue_task_count = self.__get_overdue_task_count()
         today_task = self.__get_today_task()
         today_task_count = len(today_task)
 
-        task_text = MessageResource.TODOIST_OVERDUE(overdue_task_count) + "\n" + MessageResource.TODOIST_TODAY(today_task_count)
+        task_text = MsgResource.TODOIST_OVERDUE(overdue_task_count) + "\n" + MsgResource.TODOIST_TODAY(today_task_count)
         self.slackbot.send_message(text=task_text, channel=channel)
 
         specific_task_list = self.__get_specific_time_task(today_task)
-        attachments = self.template.make_todoist_task_template(specific_task_list)
+        attachments = self.template.make_todoist_specific_time_task_template(specific_task_list)
         self.slackbot.send_message(attachments=attachments, channel=channel)
 
         karma_trend = self.__get_karma_trend()
-        karma_trend_text = MessageResource.TODOIST_KARMA(karma_trend)
+        karma_trend_text = MsgResource.TODOIST_KARMA(karma_trend)
         self.slackbot.send_message(text=karma_trend_text, channel=channel)
 
     def __get_overdue_task_count(self):
@@ -64,17 +65,17 @@ class TodoistManager(object):
         return user['karma_trend']
 
     def today_summary(self, channel=None):
-        self.slackbot.send_message(text=MessageResource.TODOIST_TODAY_SUMMARY, channel=channel)
+        self.slackbot.send_message(text=MsgResource.TODOIST_TODAY_SUMMARY, channel=channel)
 
         overdue_task_count = self.__get_overdue_task_count()
         today_task = self.__get_today_task()
         today_task_count = len(today_task)
 
-        overdue_today_text = MessageResource.TODOIST_SUMMARY_OVERDUE(overdue_task_count+today_task_count)
+        overdue_today_text = MsgResource.TODOIST_SUMMARY_OVERDUE(overdue_task_count+today_task_count)
         self.slackbot.send_message(text=overdue_today_text, channel=channel)
 
         added_count, completed_count, updated_count = self.__get_event_counts()
-        event_text = MessageResource.TODOIST_SUMMARY_EVENT(added_count, completed_count, updated_count)
+        event_text = MsgResource.TODOIST_SUMMARY_EVENT(added_count, completed_count, updated_count)
         self.slackbot.send_message(text=event_text, channel=channel)
 
     def __get_event_counts(self):

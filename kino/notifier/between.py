@@ -2,30 +2,29 @@
 
 import random
 
-from kino.template import MsgTemplate
-from slack.slackbot import SlackerAdapter
-from utils.data_handler import DataHandler
-from utils.resource import MessageResource
-from utils.state import State
+import slack
+from slack import MsgResource
+import utils
 
 class Between(object):
 
-    def __init__(self):
-        self.slackbot = SlackerAdapter()
-        self.data_handler = DataHandler()
-        self.fname = "scheduler.json"
-        self.template = MsgTemplate()
+    def __init__(self, text=None):
+        self.input = text
+        self.slackbot = slack.SlackerAdapter()
+        self.data_handler = utils.DataHandler()
+        self.fname = "schedule.json"
+        self.template = slack.MsgTemplate()
 
     def create(self, step=0, params=None):
 
         state = State()
 
         def step_0(params):
-            self.slackbot.send_message(text=MessageResource.BETWEEN_CREATE_START)
+            self.slackbot.send_message(text=MsgResource.BETWEEN_CREATE_START)
             self.data_handler.read_json_then_add_data(self.fname, "between", {})
-            state.start("Between", "create")
+            state.start("notifier/Between", "create")
 
-            self.slackbot.send_message(text=MessageResource.BETWEEN_CREATE_STEP1)
+            self.slackbot.send_message(text=MsgResource.BETWEEN_CREATE_STEP1)
 
         def step_1(params):
             b_index, current_between_data = self.data_handler.get_current_data(self.fname, "between")
@@ -33,7 +32,7 @@ class Between(object):
             self.data_handler.read_json_then_edit_data(self.fname, "between", b_index, current_between_data)
 
             state.next_step()
-            self.slackbot.send_message(text=MessageResource.BETWEEN_CREATE_STEP2)
+            self.slackbot.send_message(text=MsgResource.BETWEEN_CREATE_STEP2)
 
         def step_2(params):
             b_index, current_between_data = self.data_handler.get_current_data(self.fname, "between")
@@ -42,7 +41,7 @@ class Between(object):
             self.data_handler.read_json_then_edit_data(self.fname, "between", b_index, current_between_data)
 
             state.complete()
-            self.slackbot.send_message(text=MessageResource.CREATE)
+            self.slackbot.send_message(text=MsgResource.CREATE)
 
         if state.is_do_something():
             current_step = state.current["step"]
@@ -59,7 +58,7 @@ class Between(object):
     def read(self):
         attachments = self.__make_between_list()
         if attachments == None:
-            self.slackbot.send_message(text=MessageResource.EMPTY)
+            self.slackbot.send_message(text=MsgResource.EMPTY)
             return "empty"
         else:
             self.slackbot.send_message(attachments=attachments)
@@ -82,28 +81,28 @@ class Between(object):
 
         if result == "sucess":
             attachments = self.template.make_schedule_template(
-                MessageResource.UPDATE,
+                MsgResource.UPDATE,
                 {b_index:input_between}
             )
             self.slackbot.send_message(attachments=attachments)
         else:
-            self.slackbot.send_message(text=MessageResource.ERROR)
+            self.slackbot.send_message(text=MsgResource.ERROR)
 
     def delete(self, step=0, params=None):
 
         state = State()
 
         def step_0(params):
-            self.slackbot.send_message(text=MessageResource.BETWEEN_DELETE_START)
+            self.slackbot.send_message(text=MsgResource.BETWEEN_DELETE_START)
             if self.read() == "success":
-                state.start("Between", "delete")
+                state.start("notifier/Between", "delete")
 
         def step_1(params):
             b_index = params
             self.data_handler.read_json_then_delete(self.fname, "between", b_index)
 
             state.complete()
-            self.slackbot.send_message(text=MessageResource.DELETE)
+            self.slackbot.send_message(text=MsgResource.DELETE)
 
         if state.is_do_something():
             current_step = state.current["step"]

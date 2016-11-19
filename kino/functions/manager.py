@@ -4,18 +4,18 @@ import datetime
 import json
 import schedule
 
-from functions.functions import Functions
-from slack.slackbot import SlackerAdapter
-from kino.template import MsgTemplate
-from utils.logger import Logger
+import functions
+import slack
+import utils
 
 class FunctionManager(object):
 
-    def __init__(self):
-        self.slackbot = SlackerAdapter()
-        self.functions = Functions().registered
-        self.template = MsgTemplate()
-        self.logger = Logger().get_logger()
+    def __init__(self, text=None):
+        self.input = text
+        self.slackbot = slack.SlackerAdapter()
+        self.functions = functions.Functions().registered
+        self.template = slack.MsgTemplate()
+        self.logger = utils.Logger().get_logger()
 
     def load_function(self, start_time=None, end_time=None,
                       func_name=None, params=None, repeat=False):
@@ -29,9 +29,7 @@ class FunctionManager(object):
             self.__excute(func_name, params)
 
     def __excute(self, func_name, params):
-        functions = Functions()
-        #params = json.loads(params)
-        getattr(functions, func_name)(**params)
+        getattr(functions.Functions(), func_name)(**params)
 
     def __is_between(self, start_time, end_time):
         now = datetime.datetime.now()

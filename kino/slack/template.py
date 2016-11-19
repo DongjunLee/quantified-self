@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from utils.resource import MessageResource
+from slack import MsgResource
 
 class MsgTemplate(object):
 
@@ -8,6 +8,7 @@ class MsgTemplate(object):
         pass
 
     def make_schedule_template(self, pretext, data):
+        sorted(data.items())
         attachments = []
         for k,v in data.items():
             if k == "index":
@@ -20,8 +21,15 @@ class MsgTemplate(object):
             else:
                 a_dict['pretext'] = pretext
 
-            a_dict['title'] = "시간대. " + MessageResource.TIMER_ICON + k + " " + v['description']
+            if 'icon' in v:
+                icon = v['icon']
+                v.pop('icon', None)
+            else:
+                icon = MsgResource.TIMER_ICON
+
+            a_dict['title'] = icon + k + " " + v['description'] + " : " + v['time_interval']
             del v['description']
+            del v['time_interval']
 
             a_dict['fallback'] = "알람 관련한 정보입니다. channel에서 확인하세요!"
 
@@ -34,11 +42,11 @@ class MsgTemplate(object):
             text = ""
             for d_k,d_v in v.items():
                 if type(d_v) == type([]):
-                    text += MessageResource.ORANGE_DIAMOND_ICON + d_k + "\n"
+                    text += MsgResource.ORANGE_DIAMOND_ICON + d_k + "\n"
                     for element in d_v:
-                        text += MessageResource.WHITE_ELEMENT_ICON + element + "\n"
+                        text += MsgResource.WHITE_ELEMENT_ICON + element + "\n"
                 else:
-                    text += MessageResource.ORANGE_DIAMOND_ICON + d_k + ": " + d_v + "\n"
+                    text += MsgResource.ORANGE_DIAMOND_ICON + d_k + ": " + d_v + "\n"
             a_dict['text'] = text
 
             a_dict['mrkdwn_in'] = ["text", "pretext"]
@@ -47,27 +55,35 @@ class MsgTemplate(object):
         return attachments
 
     def make_function_template(self, pretext, data):
+        sorted(data.items())
         attachments = []
+        a_dict = {}
+        if pretext == "":
+            pass
+        else:
+            a_dict['pretext'] = pretext
+
+        a_dict['fallback'] = "Function 관련 정보입니다. channel에서 확인하세요!"
+        a_dict['text'] = ""
+        a_dict['mrkdwn_in'] = ["text", "pretext"]
+        a_dict['color'] = "#438C56"
+
+        fields = []
         for f_name, f_detail in data.items():
+            field = {}
 
-            a_dict = {}
-            if pretext == "":
-                pass
-            else:
-                a_dict['pretext'] = pretext
+            field['title'] = f_detail["icon"] + f_name
 
-            a_dict['title'] = f_detail["icon"] + f_name
-            a_dict['fallback'] = "Function 관련 정보입니다. channel에서 확인하세요!"
-            a_dict['color'] = "#438C56"
+            text = MsgResource.ORANGE_DIAMOND_ICON + f_detail['description'] + "\n"
+            if len(f_detail['params']) != 0:
+                text += MsgResource.ORANGE_DIAMOND_ICON + "params" + "\n"
+                text += MsgResource.WHITE_ELEMENT_ICON + ", ".join(f_detail['params'])
+            field['value'] = text
+            field['short'] = "true"
+            fields.append(field)
+        a_dict['fields'] = fields
 
-            text = MessageResource.ORANGE_DIAMOND_ICON + "description: " + f_detail['description'] + "\n"
-            text += MessageResource.ORANGE_DIAMOND_ICON + "params" + "\n"
-            text += MessageResource.WHITE_ELEMENT_ICON + ", ".join(f_detail['params'])
-            a_dict['text'] = text
-
-            a_dict['mrkdwn_in'] = ["text", "pretext"]
-
-            attachments.append(a_dict)
+        attachments.append(a_dict)
         return attachments
 
     def make_help_template(self, guide, example):
@@ -75,13 +91,13 @@ class MsgTemplate(object):
 
         a_dict = {}
         a_dict['pretext'] = ""
-        a_dict['title'] = MessageResource.ROBOT_ICON + MessageResource.GUIDE
+        a_dict['title'] = MsgResource.ROBOT_ICON + MsgResource.GUIDE
         a_dict['fallback'] = "Kino에 대한 가이드입니다. channel에서 확인하세요!"
         a_dict['color'] = "#438C56"
 
         text = guide + "\n\n"
         for k,v in example.items():
-            text += MessageResource.ORANGE_DIAMOND_ICON + k + ": " + v + "\n"
+            text += MsgResource.ORANGE_DIAMOND_ICON + k + ": " + v + "\n"
         a_dict['text'] = text
 
         a_dict['mrkdwn_in'] = ["text", "pretext"]
@@ -89,12 +105,12 @@ class MsgTemplate(object):
         attachments.append(a_dict)
         return attachments
 
-    def make_weather_template(self, address, icon, summary, temperature=None):
+    def make_weather_template(self, address, icon, summary, temperature=None, fallback="weather fallback"):
         attachments = []
 
         a_dict = {}
-        a_dict['title'] = MessageResource.WEATHER
-        a_dict['fallback'] = "날씨 관련 정보입니다. channel에서 확인하세요!"
+        a_dict['title'] = MsgResource.WEATHER
+        a_dict['fallback'] = MsgResource.WEATHER_ICONS[icon] + " " + fallback
         a_dict['color'] = "#438C56"
 
         text = address + " 의 "
@@ -102,7 +118,7 @@ class MsgTemplate(object):
             text += "오늘의 날씨는 "
         else:
             text += "현재 날씨는 " + "{:.3}".format(temperature) + "도에 "
-        text += "\n" + MessageResource.WEATHER_ICONS[icon] + " " + summary + " 입니다."
+        text += "\n" + MsgResource.WEATHER_ICONS[icon] + " " + summary + " 입니다."
         a_dict['text'] = text
 
         a_dict['mrkdwn_in'] = ["text", "pretext"]
@@ -111,7 +127,7 @@ class MsgTemplate(object):
         return attachments
 
 
-    def make_todoist_task_template(self, tasks):
+    def make_todoist_specific_time_task_template(self, tasks):
         attachments = []
 
         for t in tasks:
@@ -119,10 +135,10 @@ class MsgTemplate(object):
 
             a_dict = {}
             a_dict['title'] = project_name + ": " + title
-            a_dict['fallback'] = "일정 관련 정보입니다. channel에서 확인하세요!"
-            a_dict['color'] = MessageResource.TODOIST_PRIORITY_COLOR(priority)
+            a_dict['fallback'] = time + " " + title
+            a_dict['color'] = MsgResource.TODOIST_PRIORITY_COLOR(priority)
 
-            text = MessageResource.CLOCK_ICON + " " + time + " " + MessageResource.TODOIST_TIME
+            text = MsgResource.CLOCK_ICON + " " + time + " " + MsgResource.TODOIST_TIME
             a_dict['text'] = text
             a_dict['mrkdwn_in'] = ["text", "pretext"]
 

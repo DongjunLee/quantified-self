@@ -1,0 +1,75 @@
+{
+  "kino": {
+    "name": ["키노", "kino", "안녕"],
+    "Worker": ["일"],
+    "behave": {
+      "create": ["있다", "추가", "일거리"],
+      "run": ["시작"],
+      "stop": ["중지", "멈추다", "그만"]
+    }
+  },
+  "time_of_day": {
+    "morning": ["아침", "모닝"],
+    "lunch": ["점심", "점심식사"],
+    "afternoon": ["오후"],
+    "dinner": ["저녁식사"],
+    "evening": ["밤", "저녁"],
+    "all-day": ["하루종일", "종일"]
+  },
+  "time_unit": {
+    "hour": "\\d+시",
+    "minute": "\\d+분",
+    "second": "\\d+초"
+  },
+  "period": {
+    "interval": ["마다", "간격"],
+    "real-time": ["즉시", "바로"]
+  },
+  "classname": {
+    "notifier/Scheduler": ["알람"],
+    "notifier/Between": ["시간대"],
+    "functions/FunctionManager": ["함수", "기능", "뭘"]
+  },
+  "behave": {
+      "notifier/Scheduler": {
+        "create": ["등록", "추가"],
+        "read": ["보다", "보이다", "보기", "확인"],
+        "delete": ["삭제", "제거", "없애다"]
+      },
+      "notifier/Between": {
+        "create": ["등록", "추가"],
+        "read": ["보다", "보이다", "보기", "확인"],
+        "delete": ["삭제", "제거", "없애다"]
+      },
+      "functions/FunctionManager": {
+        "read": ["보다", "보이다", "보기", "확인", "뭐 있다", "하다"]
+      }
+  },
+  "functions": {
+    "github_commit": ["깃허브", "github", "커밋", "commit"],
+    "forecast": ["날씨", "예보"],
+    "today_briefing": ["하루 브리핑", "오늘하루 브리핑"],
+    "today_summary": ["하루 마무리", "하루 요약"],
+    "toggl_timer": ["토글"],
+    "noti_relax": ["휴식", "휴식 시간"],
+    "maxim_nietzsche": ["니체 명언", "니체의 말"]
+  },
+  "params": {
+      "github_commit": {
+        "timely": {
+          "daily": ["일일", "매일", "daily", "데일리"]
+        }
+      },
+      "forecast": {
+        "timely": {
+          "current": ["current", "현재", "지금"],
+          "daily": ["daily", "하루", "오늘", "데일리"]
+        }
+      },
+      "today_briefing": {},
+      "today_summary": {},
+      "toggl_timer": {},
+      "noti_relax": {},
+      "maxim_nietzsche": {}
+  }
+}

@@ -14,6 +14,13 @@ class DataHandler(object):
         except:
             return {}
 
+    def read_text(self, fname):
+        try:
+            with open(self.data_path + fname, 'r') as infile:
+                return infile.read()
+        except:
+            return ""
+
     def write_file(self, fname, data):
         with open(self.data_path + fname, 'w') as outfile:
             json.dump(data, outfile)

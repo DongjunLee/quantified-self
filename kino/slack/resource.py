@@ -1,5 +1,5 @@
 
-class MessageResource:
+class MsgResource:
     ERROR = "에러가 발생하였습니다."
     NOT_UNDERSTANDING = "무슨 말인지 잘 모르겠어요. 저를 똑똑하게 만들어주세요!!"
     CREATE = "등록이 완료되었습니다!"
@@ -11,7 +11,11 @@ class MessageResource:
     WORKER_START = "넵, 일 열심히 하겠습니다ㅎㅎ"
     WORKER_STOP = "휴.. 드디어 휴식시간이군요!\n필요하실 때 언제나 불러주세요ㅎㅎ"
 
+    WORKER_CREATE_START = "요청하신 일을 만들도록 하겠습니다!"
+    WORKER_FUNCTION_NOT_FOUND = "어떤 기능을 원하시는 것인지 잘 모르겠어요ㅠㅠ 조금 더 정확하게 말씀해주세요."
+
     GUIDE = "Kino에 대한 간략한 소개 및 도움말 입니다."
+    GREETING = "저를 찾으셨나요! 무엇을 도와드릴까요?"
 
     SCHEDULER_CREATE_START = "알람 등록을 진행합니다."
     SCHEDULER_CREATE_STEP1 = "반복 알람을 사용할 경우는 시간대를 선택 하시고,\n 한 번 알리는 경우 새로운 시간을 입력해주세요!\n (ex. #1 or 10:00)"
@@ -67,6 +71,7 @@ class MessageResource:
     def TODOIST_KARMA(trend):
         karma_trend_text = {
             "up": "최근 생산성이 올랐습니다. 이대로 쭉 갑시다!ㅎㅎ",
+            "-": "생산성에 변화가 없습니다! 분발하시죠!",
             "down": "최근 생산성이 떨어지고 있습니다. 할일목록을 잘 관리해주세요! ㅠㅠ"
         }
         return karma_trend_text[trend]
@@ -90,3 +95,12 @@ class MessageResource:
 
     def TODOIST_SUMMARY_EVENT(a_count, c_count, u_count):
         return "오늘은 총 {} 개의 할일들을 추가하였고, {} 개의 일들을 완료하였으며, {} 개의 일들을 완료하지 못하고 연기하였습니다.".format(a_count, c_count, u_count)
+
+    MAXIM_ICON = ":scales: "
+
+    TOGGL_START = "Toggl을 시작합니다."
+    TOGGL_STOP = "Toggl을 중지합니다."
+    def TOGGL_STOP_SUMMARY(description, diff_min):
+        return description + " 작업을 " + str(diff_min) + "분 동안 진행하셨습니다."
+    TOGGL_NOTI_RELAY = "작업을 너무 오래하고 계십니다! 잠시 멈추고 십분만 휴식하시죠!!"
+
