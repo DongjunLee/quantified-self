@@ -20,18 +20,18 @@ class TogglManager(object):
 
         self.entity = TogglProjectEntity().entity
 
-    def timer(self, text=None, channel=None):
+    def timer(self, description=None):
         # matching name
-        lower_text = text.lower()
-        for entity in self.entity['project']:
-            key, value_list = entity.items()
-            if any(v in lower_text for v in value_list):
+        lower_description = description.lower()
+        name = None
+        for key, value_list in self.entity['project'].items():
+            if any(v in lower_description for v in value_list):
                 name = key
-        pid = self.__get_pid(name)
+        pid = self.__get_pid(name=name)
 
         current_timer = self.toggl.currentRunningTimeEntry()['data']
         if current_timer is None:
-            self.toggl.startTimeEntry(description=text, pid=pid)
+            self.toggl.startTimeEntry(description=description, pid=pid)
 
             self.slackbot.send_message(text=MsgResource.TOGGL_START)
         else:
@@ -42,7 +42,7 @@ class TogglManager(object):
             self.slackbot.send_message(text=MsgResource.TOGGL_STOP)
             self.slackbot.send_message(text=MsgResource.TOGGL_STOP_SUMMARY(description, diff_min))
 
-    def __get_pid(self, name):
+    def __get_pid(self, name=None):
         project = self.toggl.getWorkspaceProject(name=name)
         if project == None:
             pid = None
@@ -68,7 +68,7 @@ class TogglManager(object):
 class TogglProjectEntity(object):
     class __Entity:
         def __init__(self):
-            self.entity = DataHandler().read_file("toggl.json")
+            self.entity = utils.DataHandler().read_file("toggl.json")
 
     instance = None
     def __init__(self):

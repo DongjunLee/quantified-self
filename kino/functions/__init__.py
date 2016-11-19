@@ -5,6 +5,7 @@ from .github import GithubManager
 from .manager import FunctionManager
 from .maxim import Maxim
 from .todoist import TodoistManager
+from .toggl import TogglManager
 from .youtube_downloader import YoutubeDownloader
 from .weather import Weather
 
