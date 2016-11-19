@@ -1,12 +1,27 @@
 {
-    "kino": {
-        "SLACK_BOT_TOKEN": "<token>",
-        "DEFAULT_CHANNEL": "<#channel>",
-        "MASTER_NAME": "<name>",
-        "BOT_NAME": "<bot_name>"
-    },
-    "github": {
-        "USERNAME": "<name>",
-        "PASSWORD": "<password>"
-    }
+  "kino": {
+      "SLACK_BOT_TOKEN": "<token>",
+      "DEFAULT_CHANNEL": "<#channel>",
+      "MASTER_NAME": "<name>",
+      "BOT_NAME": "<bot_name>"
+  },
+  "github": {
+      "USERNAME": "<name>",
+      "PASSWORD": "<password>"
+  },
+  "weather": {
+      "DARK_SKY_SECRET_KEY": "<token>",
+      "HOME": "<city>",
+      "WORK_PLACE": "<city>"
+  },
+  "todoist": {
+      "TOKEN": "<token>",
+      "ID": "<id>",
+      "PASSWORD": "<password>",
+      "TIMEZONE": "<timezone/id>"
+  },
+  "toggl": {
+    "TOKEN": "<token>",
+    "WORKSPACE_NAME": "<name>"
+  }
 }
