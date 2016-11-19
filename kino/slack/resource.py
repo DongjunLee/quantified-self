@@ -96,3 +96,10 @@ class MsgResource:
         return "오늘은 총 {} 개의 할일들을 추가하였고, {} 개의 일들을 완료하였으며, {} 개의 일들을 완료하지 못하고 연기하였습니다.".format(a_count, c_count, u_count)
 
     MAXIM_ICON = ":scales: "
+
+    TOGGL_START = "Toggl을 시작합니다."
+    TOGGL_STOP = "Toggl을 중지합니다."
+    def TOGGL_STOP_SUMMARY(description, diff_min):
+        return description + " 작업을 " + str(diff_min) + "동안 작업하셨습니다."
+    TOGGL_NOTI_RELAY = "작업을 너무 오래하고 계십니다! 잠시 멈추고 십분만 휴식하시죠!!"
+
