@@ -104,12 +104,12 @@ class MsgTemplate(object):
         attachments.append(a_dict)
         return attachments
 
-    def make_weather_template(self, address, icon, summary, temperature=None):
+    def make_weather_template(self, address, icon, summary, temperature=None, fallback="weather fallback"):
         attachments = []
 
         a_dict = {}
         a_dict['title'] = MsgResource.WEATHER
-        a_dict['fallback'] = "날씨 관련 정보입니다. channel에서 확인하세요!"
+        a_dict['fallback'] = MsgResource.WEATHER_ICONS[icon] + " " + fallback
         a_dict['color'] = "#438C56"
 
         text = address + " 의 "
@@ -126,7 +126,7 @@ class MsgTemplate(object):
         return attachments
 
 
-    def make_todoist_task_template(self, tasks):
+    def make_todoist_specific_time_task_template(self, tasks):
         attachments = []
 
         for t in tasks:
@@ -134,7 +134,7 @@ class MsgTemplate(object):
 
             a_dict = {}
             a_dict['title'] = project_name + ": " + title
-            a_dict['fallback'] = "일정 관련 정보입니다. channel에서 확인하세요!"
+            a_dict['fallback'] = time + " " + title
             a_dict['color'] = MsgResource.TODOIST_PRIORITY_COLOR(priority)
 
             text = MsgResource.CLOCK_ICON + " " + time + " " + MsgResource.TODOIST_TIME

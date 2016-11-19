@@ -35,8 +35,9 @@ class Weather(object):
         address = self.location.address
         icon = daily.icon
         summary = daily.summary
+        fallback = summary
 
-        attachments = self.template.make_weather_template(address, icon, summary)
+        attachments = self.template.make_weather_template(address, icon, summary, fallback=fallback)
         self.slackbot.send_message(channel=channel, attachments=attachments)
 
     def __current_forecast(self, channel=None):
@@ -46,8 +47,9 @@ class Weather(object):
         icon = current.icon
         summary = current.summary
         temperature = current.temperature
+        fallback = summary + " " + temperature + "도"
 
-        attachments = self.template.make_weather_template(address, icon, summary, temperature=temperature)
+        attachments = self.template.make_weather_template(address, icon, summary, temperature=temperature, fallback=fallback)
         self.slackbot.send_message(channel=channel, attachments=attachments)
 
 

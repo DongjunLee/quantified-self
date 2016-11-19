@@ -28,7 +28,7 @@ class TodoistManager(object):
         self.slackbot.send_message(text=task_text, channel=channel)
 
         specific_task_list = self.__get_specific_time_task(today_task)
-        attachments = self.template.make_todoist_task_template(specific_task_list)
+        attachments = self.template.make_todoist_specific_time_task_template(specific_task_list)
         self.slackbot.send_message(attachments=attachments, channel=channel)
 
         karma_trend = self.__get_karma_trend()
