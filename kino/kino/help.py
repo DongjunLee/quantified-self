@@ -20,7 +20,7 @@ class Guide(object):
     def __example(self):
         example = {
             "Greeting": "키노야 안녕",
-            "Worker": "키노야 일 시작하자, 일거리! 2 시간마다 날씨예보, 일 추가 20시에 하루 요약",
+            "Worker": "키노야 일 시작하자, 일이 있어! 2 시간마다 날씨예보, 일 추가 20시에 하루 요약",
             "Notifier": "알람 등록해줘, 알람 보여줘, 알람 삭제",
             "Between": "시간대 추가해줘, 시간대 보자, 시간대 제거해줘",
             "Functions": "함수 보여줘",

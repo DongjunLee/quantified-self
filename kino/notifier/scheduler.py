@@ -122,9 +122,10 @@ class Scheduler(object):
             time = '{0:02d}'.format(hour) + time + '{0:02d}'.format(minute)
 
         f_params = {}
-        for p in params:
-            key, value = p
-            f_params[key] = value
+        if params is not None:
+            for p in params:
+                key, value = p
+                f_params[key] = value
 
         alarm_data = {
             "between_id": time_of_day,
