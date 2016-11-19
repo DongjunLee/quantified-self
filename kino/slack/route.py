@@ -32,10 +32,17 @@ class MsgRouter(object):
         simple_text = self.disintegrator.convert2simple(sentence=text)
         self.logger.info("clean input: " + simple_text)
 
-        # Check - greeting and call worker
+        # Check - greeting, help, and call worker
         is_greeting = self.__greeting_call_bot(simple_text)
-        is_call_worker = self.__worker_call_bot(simple_text)
+        is_need_help = self.__help_call_bot(simple_text)
+        if is_need_help:
+            route_class = kino.Guide()
+            behave = "help"
+            self.logger.info("route to: " + route_class.__class__.__name__ + ", " + str(behave))
+            getattr(route_class, behave)()
+            return
 
+        is_call_worker = self.__worker_call_bot(simple_text)
         if is_call_worker:
             route_class = kino.Worker(text=text)
             behave = self.ner.parse(self.ner.kino['behave'], simple_text)
@@ -75,12 +82,6 @@ class MsgRouter(object):
         behave = self.ner.parse(behave_ner, simple_text)
         params = self.ner.parse(self.ner.params, simple_text)
 
-        if behave == "help":
-            route_class = Guide()
-            self.logger.info("route to: " + route_class.__class__.__name__ + ", " + str(behave))
-            getattr(route_class, behave)()
-            return
-
         if route_class == functions.YoutubeDownloader(text):
             self.logger.info("route to: " + route_class.__class__.__name__ + ", " + str(behave))
             getattr(route_class, "make_link")()
@@ -104,6 +105,11 @@ class MsgRouter(object):
     def __greeting_call_bot(self, text):
         if any([p for p in self.ner.kino['name'] if p in text]):
             self.slackbot.send_message(text=MsgResource.GREETING)
+            return True
+        return False
+
+    def __help_call_bot(self, text):
+        if ("도움말" in text) or ("help" in text):
             return True
         return False
 

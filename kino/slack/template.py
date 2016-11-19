@@ -91,7 +91,7 @@ class MsgTemplate(object):
 
         a_dict = {}
         a_dict['pretext'] = ""
-        a_dict['title'] = MsgResource.ROBOT_ICON + MessageResource.GUIDE
+        a_dict['title'] = MsgResource.ROBOT_ICON + MsgResource.GUIDE
         a_dict['fallback'] = "Kino에 대한 가이드입니다. channel에서 확인하세요!"
         a_dict['color'] = "#438C56"
 
