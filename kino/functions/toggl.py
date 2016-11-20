@@ -52,6 +52,9 @@ class TogglManager(object):
 
     def notify_need_relax(self):
         current_timer = self.toggl.currentRunningTimeEntry()
+        if current_timer['data'] is None:
+            return
+
         diff_min = self.__get_curr_time_diff(start=current_timer['data']['start'])
         if diff_min > 90:
             self.slackbot.send_message(text=MsgResource.TOGGL_NOTI_RELAY)
