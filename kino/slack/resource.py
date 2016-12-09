@@ -102,5 +102,7 @@ class MsgResource:
     TOGGL_STOP = "Toggl을 중지합니다."
     def TOGGL_STOP_SUMMARY(description, diff_min):
         return description + " 작업을 " + str(diff_min) + "분 동안 진행하셨습니다."
+    TOGGL_DO_NOTHING =  "지금은 아무런 작업도 하고 있지 않으십니다."
+    def TOGGL_TIMER_CHECK(minute): return "작업을 진행하신지 " + str(minute) + "분 경과하였습니다."
     TOGGL_NOTI_RELAY = "작업을 너무 오래하고 계십니다! 잠시 멈추고 십분만 휴식하시죠!!"
 

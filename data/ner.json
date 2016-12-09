@@ -51,7 +51,7 @@
     "today_briefing": ["하루 브리핑", "오늘하루 브리핑"],
     "today_summary": ["하루 마무리", "하루 요약"],
     "toggl_timer": ["토글"],
-    "noti_relax": ["휴식", "휴식 시간"],
+    "toggl_checker": ["작업 시간", "작업시간", "경과 시간", "경과시간", "시간 체크", "시간체크"],
     "maxim_nietzsche": ["니체 명언", "니체의 말"]
   },
   "params": {
@@ -63,13 +63,14 @@
       "forecast": {
         "timely": {
           "current": ["current", "현재", "지금"],
-          "daily": ["daily", "하루", "오늘", "데일리"]
+          "hourly": ["hourly", "하루", "오늘"],
+          "daily": ["daily", "주간", "일주일"]
         }
       },
       "today_briefing": {},
       "today_summary": {},
       "toggl_timer": {},
-      "noti_relax": {},
+      "toggl_checker": {},
       "maxim_nietzsche": {}
   }
 }
