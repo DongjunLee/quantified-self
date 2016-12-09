@@ -36,9 +36,9 @@ class Functions(object):
         toggl = functions.TogglManager()
         toggl.timer(description=description)
 
-    def noti_relax(self):
+    def toggl_checker(self):
         toggl = functions.TogglManager()
-        toggl.notify_need_relax()
+        toggl.check_toggl_timer()
 
     def maxim_nietzsche(self):
         maxim = functions.Maxim()
