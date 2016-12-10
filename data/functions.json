@@ -39,6 +39,11 @@
     "description": "Toggl Timer 30분 단위 시간체크",
     "icon": ":bell: "
   },
+  "toggl_report": {
+    "params": ["*kind"],
+    "description": "Toggl Report 일주일간 작업 리포트",
+    "icon": ":bar_chart: "
+  },
   "maxim_nietzsche": {
     "params": [],
     "description": "니체의 명언",

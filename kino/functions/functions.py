@@ -39,6 +39,10 @@ class Functions(object):
         toggl = functions.TogglManager()
         toggl.check_toggl_timer()
 
+    def toggl_report(self, kind="chart"):
+        toggl = functions.TogglManager()
+        toggl.report(kind=kind)
+
     def maxim_nietzsche(self):
         maxim = functions.Maxim()
         maxim.nietzsche()

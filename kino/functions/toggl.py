@@ -61,12 +61,10 @@ class TogglManager(object):
         diff_min_divide_10 = int(diff_min/10)
         if diff_min > 100:
             self.slackbot.send_message(text=MsgResource.TOGGL_NOTI_RELAY)
-        elif diff_min_divide_10 == 3:
-            self.slackbot.send_message(text=MsgResource.TOGGL_TIMER_CHECK(diff_min))
-        elif diff_min_divide_10== 6:
-            self.slackbot.send_message(text=MsgResource.TOGGL_TIMER_CHECK(diff_min))
-        elif diff_min_divide_10 == 9:
-            self.slackbot.send_message(text=MsgResource.TOGGL_TIMER_CHECK(diff_min))
+        else:
+            for i in range(3, 10, 3):
+                if diff_min_divide_10 == 3:
+                    self.slackbot.send_message(text=MsgResource.TOGGL_TIMER_CHECK(diff_min))
 
     def __get_curr_time_diff(self, start=None, stop=arrow.utcnow()):
         if type(start) is str:
@@ -76,6 +74,29 @@ class TogglManager(object):
 
         diff = (stop - start).seconds / 60
         return int(diff)
+
+    def report(self, kind="chart"):
+        now = arrow.now()
+        before_6_days = now.replace(days=-6)
+
+        data = {
+            'since': before_6_days.format('YYYY-MM-DD'),
+            'until': now.format('YYYY-MM-DD'),
+            'calculate': 'time'
+        }
+
+        if kind == "basic":
+            f_name = "basic-report.pdf"
+            self.toggl.getWeeklyReportPDF(data, f_name)
+            self.slackbot.file_upload(f_name, title="기본 리포트", comment=MsgResource.TOGGL_REPORT)
+        elif kind == "chart":
+            f_name = "chart-report.pdf"
+            self.toggl.getSummaryReportPDF(data, f_name)
+            self.slackbot.file_upload(f_name, title="차트 리포트", comment=MsgResource.TOGGL_REPORT)
+        elif kind == "detail":
+            f_name = "detail-report.pdf"
+            self.toggl.getDetailedReportPDF(data, f_name)
+            self.slackbot.file_upload(f_name, title="상세 리포트", comment=MsgResource.TOGGL_REPORT)
 
 class TogglProjectEntity(object):
     class __Entity:
