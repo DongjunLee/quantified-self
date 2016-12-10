@@ -16,6 +16,12 @@ class SlackerAdapter(object):
         self.slacker.chat.post_message(channel=channel, text=text,
                                        attachments=attachments, as_user=True)
 
+    def file_upload(self, f_name, channel=None, title=None, comment=None):
+        if channel is None:
+            channel = self.config.kino['DEFAULT_CHANNEL']
+        self.slacker.files.upload(f_name, channels=channel, title=title
+                                  , initial_comment=comment)
+
     def start_real_time_messaging_session(self):
         response = self.slacker.rtm.start()
         return response.body['url']

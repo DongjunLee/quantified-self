@@ -17,8 +17,7 @@ class Functions(object):
 
     def github_commit(self, timely="daily"):
         github = functions.GithubManager()
-        if timely == "daily":
-            github.daily_commit_check()
+        github.commit(timely)
 
     def forecast(self, timely="current"):
         weather = functions.Weather()
