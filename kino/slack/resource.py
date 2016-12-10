@@ -33,6 +33,7 @@ class MsgResource:
 
     GITHUB_COMMIT_EMPTY = "Github에 Commit한 기록이 없습니다. 일일커밋 실천하셔야죠!"
     GITHUB_COMMIT_EXIST = "오, Commit을 하셨군요! 멋지십니다.ㅎㅎ 오늘 하루 Commit 수 : "
+    GITHUB_COMMIT_WEEKLY = "일주일간의 Github commit 을 확인하세요!"
 
     ROBOT_ICON = ":robot_face: "
     TIMER_ICON = ":mantelpiece_clock: "

@@ -57,7 +57,8 @@
   "params": {
       "github_commit": {
         "timely": {
-          "daily": ["일일", "매일", "daily", "데일리"]
+          "daily": ["일일", "매일", "daily", "데일리"],
+          "weekly": ["주간", "일주일", "weely", "위클리"]
         }
       },
       "forecast": {
