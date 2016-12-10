@@ -17,6 +17,7 @@ class Worker(object):
         self.input = text
         self.slackbot = slack.SlackerAdapter()
         self.data_handler = utils.DataHandler()
+        self.logger = utils.Logger().get_logger()
         self.ner = nlp.NamedEntitiyRecognizer()
 
     def create(self):
@@ -52,11 +53,11 @@ class Worker(object):
 
             if 'time' in v:
                 time = v['time']
-                # Do only once
                 param = {
+                    # Do only once
                     "repeat": False,
                     "func_name": v['f_name'],
-                    "params": v.get('params', {})
+                    "params": v.get('f_params', {})
                 }
 
                 try:
@@ -64,7 +65,8 @@ class Worker(object):
                     schedule.every().day.at(time).do(self.__run_threaded,
                                                             function, param)
                 except Exception as e:
-                    print("Error: " + e)
+                    print("Function Schedule Error: ", e)
+                    self.slackbot.send_message(text=MsgResource.ERROR)
 
             if 'between_id' in v:
                 between = between_data[v['between_id']]

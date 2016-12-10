@@ -25,31 +25,28 @@ class Weather(object):
 
     def read(self, timely='current'):
         if timely == 'current':
-            self.__current_forecast()
+            currently = self.forecastio.currently()
+            self.__forecast(currently, timely)
+        elif timely == 'hourly':
+            hourly = self.forecastio.hourly()
+            self.__forecast(hourly, timely)
         elif timely == 'daily':
-            self.__daily_forecast()
+            daily = self.forecastio.daily()
+            self.__forecast(daily, timely)
 
-    def __daily_forecast(self, channel=None):
-        daily = self.forecastio.daily()
-
-        address = self.location.address
-        icon = daily.icon
-        summary = daily.summary
-        fallback = summary
-
-        attachments = self.template.make_weather_template(address, icon, summary, fallback=fallback)
-        self.slackbot.send_message(channel=channel, attachments=attachments)
-
-    def __current_forecast(self, channel=None):
-        current = self.forecastio.currently()
+    def __forecast(self, forecast, timely):
 
         address = self.location.address
-        icon = current.icon
-        summary = current.summary
-        temperature = current.temperature
-        fallback = summary + " " + str(temperature) + "도"
+        icon = forecast.icon
+        summary = forecast.summary
+
+        if timely == 'current':
+            temperature = forecast.temperature
+            fallback = summary + " " + str(temperature) + "도"
+        else:
+            temperature = None
+            fallback = summary
 
         attachments = self.template.make_weather_template(address, icon, summary, temperature=temperature, fallback=fallback)
-        self.slackbot.send_message(channel=channel, attachments=attachments)
-
+        self.slackbot.send_message(attachments=attachments)
 

@@ -34,10 +34,15 @@
     "description": "Toggl Timer",
     "icon": ":watch: "
   },
-  "noti_relax": {
+  "toggl_checker": {
     "params": [],
-    "description": "1시간 30분 이상 작업시, 휴식 안내",
-    "icon": ":relaxed: "
+    "description": "Toggl Timer 30분 단위 시간체크",
+    "icon": ":bell: "
+  },
+  "toggl_report": {
+    "params": ["*kind"],
+    "description": "Toggl Report 일주일간 작업 리포트",
+    "icon": ":bar_chart: "
   },
   "maxim_nietzsche": {
     "params": [],

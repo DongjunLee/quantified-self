@@ -13,7 +13,11 @@ class MsgListener(object):
 
         msg_type = self.msg.get("type", None)
         if msg_type == "message" and not self.__is_self_message():
-            self.router.route(text=self.msg['text'], user=self.msg['user'])
+            try:
+                self.router.route(text=self.msg['text'], user=self.msg['user'])
+            except Exception as e:
+                print("Listener Error: ", e)
+                self.slackbot.send_message(text=slack.MsgResource.ERROR)
 
     def __is_self_message(self):
         if self.msg["user"] == self.slackbot.get_bot_id():

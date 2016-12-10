@@ -115,7 +115,7 @@ class MsgTemplate(object):
 
         text = address + " 의 "
         if temperature is None:
-            text += "오늘의 날씨는 "
+            text += "날씨는 "
         else:
             text += "현재 날씨는 " + "{:.3}".format(temperature) + "도에 "
         text += "\n" + MsgResource.WEATHER_ICONS[icon] + " " + summary + " 입니다."
