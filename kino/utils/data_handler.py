@@ -11,7 +11,7 @@ class DataHandler(object):
         try:
             with open(self.data_path + fname, 'r') as infile:
                 return json.loads(infile.read())
-        except:
+        except Exception as e:
             return {}
 
     def read_text(self, fname):

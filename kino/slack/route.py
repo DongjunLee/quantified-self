@@ -63,7 +63,7 @@ class MsgRouter(object):
 
 
             if func_name == "toggl_timer":
-                f_params = {"description": text[text.index("토글")+2:]}
+                f_params = {"description": text[text.index("toggl")+5:]}
 
             self.logger.info("From call functions - route to: " + func_name + ", " + str(f_params))
             getattr(functions.Functions(), func_name)(**f_params)
