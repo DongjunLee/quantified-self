@@ -1,12 +1,14 @@
 import json
 
 import slack
+import utils
 
 class MsgListener(object):
 
     def __init__(self):
         self.router = slack.MsgRouter()
         self.slackbot = slack.SlackerAdapter()
+        self.logger = utils.Logger().get_logger()
 
     def handle_only_message(self, msg):
         self.msg = json.loads(msg)
@@ -16,7 +18,7 @@ class MsgListener(object):
             try:
                 self.router.route(text=self.msg['text'], user=self.msg['user'])
             except Exception as e:
-                print("Listener Error: ", e)
+                self.logger.error("Listener Error: ", e)
                 self.slackbot.send_message(text=slack.MsgResource.ERROR)
 
     def __is_self_message(self):

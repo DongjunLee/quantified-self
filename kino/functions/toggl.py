@@ -11,6 +11,7 @@ class TogglManager(object):
     def __init__(self):
         self.config = utils.Config()
         self.slackbot = slack.SlackerAdapter()
+        self.logger = utils.Logger().get_logger()
 
         self.toggl = Toggl()
         self.toggl.setAPIKey(self.config.toggl['TOKEN'])
@@ -32,7 +33,9 @@ class TogglManager(object):
                 for key, value_list in self.entity['project'].items():
                     if any(v in lower_description for v in value_list):
                         name = key
-                pid = self.__get_pid(name=name)
+                        pid = self.__get_pid(name=name)
+                    else:
+                        pid = None
 
             self.toggl.startTimeEntry(description=description, pid=pid)
             self.slackbot.send_message(text=MsgResource.TOGGL_START)
@@ -58,6 +61,7 @@ class TogglManager(object):
             return
 
         diff_min = self.__get_curr_time_diff(start=current_timer['start'])
+        self.logger.info("diff_min: " + str(diff_min))
         diff_min_divide_10 = int(diff_min/10)
         if diff_min > 100:
             self.slackbot.send_message(text=MsgResource.TOGGL_NOTI_RELAY)
