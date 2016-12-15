@@ -57,6 +57,7 @@ class TogglManager(object):
 
     def check_toggl_timer(self):
         current_timer = self.toggl.currentRunningTimeEntry()['data']
+        self.logger.info(str(current_timer))
         if current_timer is None:
             return
 
@@ -70,11 +71,16 @@ class TogglManager(object):
                 if diff_min_divide_10 == 3:
                     self.slackbot.send_message(text=MsgResource.TOGGL_TIMER_CHECK(diff_min))
 
-    def __get_curr_time_diff(self, start=None, stop=arrow.utcnow()):
+    def __get_curr_time_diff(self, start=None, stop=None):
         if type(start) is str:
             start = arrow.get(start)
         if type(stop) is str:
             stop = arrow.get(stop)
+
+        if stop is None:
+            stop = arrow.utcnow()
+
+        self.logger.info(str(stop))
 
         diff = (stop - start).seconds / 60
         return int(diff)
