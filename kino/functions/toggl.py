@@ -85,12 +85,17 @@ class TogglManager(object):
         diff = (stop - start).seconds / 60
         return int(diff)
 
-    def report(self, kind="chart"):
+    def report(self, kind="chart", timely="weekly"):
+
         now = arrow.now()
-        before_6_days = now.replace(days=-6)
+
+        if timely == "daily":
+            before_days = now.replace(days=0)
+        elif timely == "weekly":
+            before_days = now.replace(days=-6)
 
         data = {
-            'since': before_6_days.format('YYYY-MM-DD'),
+            'since': before_days.format('YYYY-MM-DD'),
             'until': now.format('YYYY-MM-DD'),
             'calculate': 'time'
         }
@@ -98,15 +103,15 @@ class TogglManager(object):
         if kind == "basic":
             f_name = "basic-report.pdf"
             self.toggl.getWeeklyReportPDF(data, f_name)
-            self.slackbot.file_upload(f_name, title="기본 리포트", comment=MsgResource.TOGGL_REPORT)
+            self.slackbot.file_upload(f_name, title=timely + " 기본 리포트", comment=MsgResource.TOGGL_REPORT)
         elif kind == "chart":
             f_name = "chart-report.pdf"
             self.toggl.getSummaryReportPDF(data, f_name)
-            self.slackbot.file_upload(f_name, title="차트 리포트", comment=MsgResource.TOGGL_REPORT)
+            self.slackbot.file_upload(f_name, title=timely + " 차트 리포트", comment=MsgResource.TOGGL_REPORT)
         elif kind == "detail":
             f_name = "detail-report.pdf"
             self.toggl.getDetailedReportPDF(data, f_name)
-            self.slackbot.file_upload(f_name, title="상세 리포트", comment=MsgResource.TOGGL_REPORT)
+            self.slackbot.file_upload(f_name, title=timely + " 상세 리포트", comment=MsgResource.TOGGL_REPORT)
 
 class TogglProjectEntity(object):
     class __Entity:

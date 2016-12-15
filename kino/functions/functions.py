@@ -2,7 +2,6 @@
 
 import functions
 import slack
-from slack import MsgResource
 import utils
 
 class Functions(object):
@@ -39,9 +38,9 @@ class Functions(object):
         toggl = functions.TogglManager()
         toggl.check_toggl_timer()
 
-    def toggl_report(self, kind="chart"):
+    def toggl_report(self, kind="chart", timely="weekly"):
         toggl = functions.TogglManager()
-        toggl.report(kind=kind)
+        toggl.report(kind=kind, timely=timely)
 
     def maxim_nietzsche(self):
         maxim = functions.Maxim()
