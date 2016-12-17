@@ -4,15 +4,25 @@
     "description": "텍스트 메시지 전송",
     "icon": ":speech_balloon: "
   },
+  "forecast": {
+    "params": ["*timely"],
+    "description": "날씨예보",
+    "icon": ":sun_with_face: "
+  },
   "github_commit": {
     "params": ["*timely"],
     "description": "Github commit 여부를 확인",
     "icon": ":octocat: "
   },
-  "forecast": {
-    "params": ["*timely"],
-    "description": "날씨예보",
-    "icon": ":sun_with_face: "
+  "happy": {
+    "params": ["*answer"],
+    "description": "행복도 조사",
+    "icon": ":smile: "
+  },
+  "happy_report": {
+    "params": ["*answer"],
+    "description": "행복도 리포트",
+    "icon": ":smile_cat: "
   },
   "youtube_downloader": {
     "params": ["*youtu_link"],

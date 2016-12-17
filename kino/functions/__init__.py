@@ -2,6 +2,7 @@
 
 from .functions import Functions
 from .github import GithubManager
+from .happy import Happy
 from .manager import FunctionManager
 from .maxim import Maxim
 from .todoist import TodoistManager
@@ -10,8 +11,9 @@ from .youtube_downloader import YoutubeDownloader
 from .weather import Weather
 
 __all__ = ['Functions',
-           'GithubManager',
            'FunctionManager',
+           'GithubManager',
+           'Happy',
            'Maxim',
            'TodoistManager',
            'TogglManager',

@@ -14,13 +14,21 @@ class Functions(object):
     def send_message(self, text=None):
         self.slackbot.send_message(text=text)
 
+    def forecast(self, timely="current"):
+        weather = functions.Weather()
+        weather.read(timely=timely)
+
     def github_commit(self, timely="daily"):
         github = functions.GithubManager()
         github.commit(timely)
 
-    def forecast(self, timely="current"):
-        weather = functions.Weather()
-        weather.read(timely=timely)
+    def happy(self, text="busy"):
+        happy = functions.Happy(text=text)
+        happy.question()
+
+    def happy_report(self, timely="daily"):
+        happy = functions.Happy()
+        happy.report(timely=timely)
 
     def today_briefing(self):
         todoist = functions.TodoistManager()

@@ -108,3 +108,17 @@ class MsgResource:
     TOGGL_NOTI_RELAY = "작업을 너무 오래하고 계십니다! 잠시 멈추고 십분만 휴식하시죠!!"
     TOGGL_REPORT = "Toggl에 저장되어있는 Report 입니다."
 
+    HAPPY_QUESTION_STEP_0 = "지금 현재 행복도는 10점 만점에 몇점인가요??"
+    def HAPPY_QUESTION_STEP_1(happy):
+        happy = int(happy)
+        if happy >= 10:
+            return "기분 최고!! :laughing: "
+        elif happy > 8:
+            return "행복하시군요ㅎㅎ 보기 좋습니다. :smile: "
+        elif happy> 6.5:
+            return "슬며시 미소를 짓고 계신 것 같아요ㅎㅎ :smiley: "
+        elif happy > 5:
+            return "기분이 그냥 그러시군요! :simple_smile: "
+        else:
+            return "무슨 일 있으신가요? 기분이 안 좋아보입니다ㅠㅠ :angry: "
+    HAPPY_REPORT = "행복도 Report 입니다."
