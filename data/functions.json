@@ -41,7 +41,7 @@
   },
   "today_summary": {
     "params": [],
-    "description": "하루 요약 \n - Todoist 피드백 \n - Toggl 작업리포트 \n - RescueTime 생산성 차트 \n - 일일 커밋",
+    "description": "하루 요약 \n - Todoist 피드백 \n - Toggl 작업리포트 \n - RescueTime 생산성 차트 \n - 행복도 리포트 \n - 일일 커밋",
     "icon": ":night_with_stars: "
   },
   "todoist_schedule": {

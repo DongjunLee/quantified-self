@@ -56,6 +56,9 @@ class Functions(object):
         rescuetime = functions.RescueTime()
         rescuetime.efficiency(timely="daily")
 
+        happy = functions.Happy()
+        happy.report(timely="daily")
+
         github = functions.GithubManager()
         github.commit(timely="daily")
 
