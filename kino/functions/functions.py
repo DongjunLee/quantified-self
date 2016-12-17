@@ -30,6 +30,10 @@ class Functions(object):
         happy = functions.Happy()
         happy.report(timely=timely)
 
+    def rescuetime_efficiency(self, timely="daily"):
+        rescuetime = functions.RescueTime()
+        rescuetime.efficiency(timely=timely)
+
     def today_briefing(self):
         todoist = functions.TodoistManager()
         todoist.today_briefing()

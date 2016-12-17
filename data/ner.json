@@ -50,6 +50,7 @@
     "github_commit": ["깃허브", "github", "커밋", "commit"],
     "happy": ["행복도 조사", "행복도 질문", "happy question"],
     "happy_report": ["행복도 리포트", "happy report"],
+    "rescuetime_efficiency": ["레스큐타임 효율성", "작업 효율", "생산성 차트"],
     "today_briefing": ["하루 브리핑", "오늘하루 브리핑"],
     "today_summary": ["하루 마무리", "하루 요약"],
     "toggl_timer": ["toggl"],
@@ -73,6 +74,12 @@
       },
       "happy": {},
       "happy_report": {
+        "timely": {
+          "daily": ["일일", "매일", "daily", "데일리"],
+          "weekly": ["주간", "일주일", "weely", "위클리"]
+        }
+      },
+      "rescuetime_efficiency": {
         "timely": {
           "daily": ["일일", "매일", "daily", "데일리"],
           "weekly": ["주간", "일주일", "weely", "위클리"]

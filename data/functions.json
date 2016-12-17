@@ -24,6 +24,11 @@
     "description": "행복도 리포트",
     "icon": ":smile_cat: "
   },
+  "rescuetime_efficiency": {
+    "params": ["*timely"],
+    "description": "RescueTime Efficiency 차트",
+    "icon": ":chart_with_upwards_trend: "
+  },
   "youtube_downloader": {
     "params": ["*youtu_link"],
     "description": "YouTube 다운로드 링크생성",
@@ -31,12 +36,12 @@
   },
   "today_briefing": {
     "params": [],
-    "description": "하루 브리핑",
+    "description": "하루 브리핑 - 오늘의 날씨, 하루 스케쥴",
     "icon": ":calendar: "
   },
   "today_summary": {
     "params": [],
-    "description": "하루 요약",
+    "description": "하루 요약 - Todoist 요약, Toggl 작업리포트, RescueTime 생산성 차트",
     "icon": ":night_with_stars: "
   },
   "toggl_timer": {
@@ -51,7 +56,7 @@
   },
   "toggl_report": {
     "params": ["*kind"],
-    "description": "Toggl Report 일주일간 작업 리포트",
+    "description": "Toggl Report 작업 리포트",
     "icon": ":bar_chart: "
   },
   "maxim_nietzsche": {
