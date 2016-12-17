@@ -33,7 +33,7 @@ class RescueTime(object):
 
         self.plot.make_efficiency_date(total_data, avg_data, f_name,
                                        x_label="Efficiency", y_label="Hours", title=title)
-        self.slackbot.file_upload(f_name, title=title, comment=MsgResource.ERROR)
+        self.slackbot.file_upload(f_name, title=title, comment=MsgResource.RESCUETIME_EFFICIENCY)
 
     def __data_request(self, start, end):
         url = "https://www.rescuetime.com/anapi/data/?"

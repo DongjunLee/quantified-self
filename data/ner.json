@@ -53,6 +53,8 @@
     "rescuetime_efficiency": ["레스큐타임 효율성", "작업 효율", "생산성 차트"],
     "today_briefing": ["하루 브리핑", "오늘하루 브리핑"],
     "today_summary": ["하루 마무리", "하루 요약"],
+    "todoist_schedule": ["스케쥴", "할일 안내", "todoist schedule"],
+    "todoist_feedback": ["할일 피드백", "todoist feedback"],
     "toggl_timer": ["toggl"],
     "toggl_checker": ["작업 시간", "작업시간", "경과 시간", "경과시간", "시간 체크", "시간체크"],
     "toggl_report": ["토글 리포트", "작업 리포트"],
@@ -87,6 +89,8 @@
       },
       "today_briefing": {},
       "today_summary": {},
+      "todoist_schedule": {},
+      "todoist_feedback": {},
       "toggl_timer": {},
       "toggl_checker": {},
       "toggl_report": {

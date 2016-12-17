@@ -66,7 +66,7 @@ class MsgResource:
     YOUTUBE_ICON = ":video_camera: "
 
     TODOIST_ICON = ":memo: "
-    TODOIST_TODAY_BREIFING = "오늘의 브리핑을 시작하겠습니다."
+    TODOIST_TODAY_SCHEDULE = "오늘의 스케쥴을 알려드리겠습니다."
     def TODOIST_OVERDUE(task_count): return "기한이 지난 일이 " + str(task_count) + "개 있습니다."
     def TODOIST_TODAY(task_count): return "오늘 할일의 수는 " + str(task_count) + "개 입니다."
     def TODOIST_KARMA(trend):
@@ -85,8 +85,8 @@ class MsgResource:
         }
         return priority_color[priority]
     TODOIST_TIME = "에 예정되어 있습니다."
-    TODOIST_TODAY_SUMMARY = "오늘 하루 요약을 시작하겠습니다."
-    def TODOIST_SUMMARY_OVERDUE(task_count):
+    TODOIST_FEEDBACK = "오늘 Todoist 작업내역 입니다."
+    def TODOIST_FEEDBACK_OVERDUE(task_count):
         if task_count > 5:
             return "아직 처리해야할 일들이 " + str(task_count) + "개나 남았습니다. ㅠㅠ"
         elif task_count > 0:
@@ -94,7 +94,7 @@ class MsgResource:
         else:
             return "오.. 예정되었던 일들을 전부 처리하셨군요! 이제 푹 쉬세요. :+1: "
 
-    def TODOIST_SUMMARY_EVENT(a_count, c_count, u_count):
+    def TODOIST_FEEDBACK_EVENT(a_count, c_count, u_count):
         return "오늘은 총 {} 개의 할일들을 추가하였고, {} 개의 일들을 완료하였으며, {} 개의 일들을 완료하지 못하고 연기하였습니다.".format(a_count, c_count, u_count)
 
     MAXIM_ICON = ":scales: "
@@ -122,3 +122,8 @@ class MsgResource:
         else:
             return "무슨 일 있으신가요? 기분이 안 좋아보입니다ㅠㅠ :angry: "
     HAPPY_REPORT = "행복도 Report 입니다."
+
+    RESCUETIME_EFFICIENCY = "RescueTime 생산성 차트입니다."
+
+    TODAY_BREIFING = "오늘 하루 브리핑을 시작하겠습니다!"
+    TODAY_SUMMARY = "오늘 하루 요약을 시작하겠습니다!"

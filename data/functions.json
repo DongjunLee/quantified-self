@@ -36,13 +36,23 @@
   },
   "today_briefing": {
     "params": [],
-    "description": "하루 브리핑 - 오늘의 날씨, 하루 스케쥴",
-    "icon": ":calendar: "
+    "description": "하루 브리핑 \n - 오늘의 날씨 \n - Todoist 스케쥴",
+    "icon": ":city_sunset:  "
   },
   "today_summary": {
     "params": [],
-    "description": "하루 요약 - Todoist 요약, Toggl 작업리포트, RescueTime 생산성 차트",
+    "description": "하루 요약 \n - Todoist 피드백 \n - Toggl 작업리포트 \n - RescueTime 생산성 차트 \n - 일일 커밋",
     "icon": ":night_with_stars: "
+  },
+  "todoist_schedule": {
+    "params": [],
+    "description": "Todoist에 등록되어 있는 스케쥴 안내",
+    "icon": ":calendar:  "
+  },
+  "todoist_feedback": {
+    "params": [],
+    "description": "Todoist의 작업내역 피드백",
+    "icon": ":memo: "
   },
   "toggl_timer": {
     "params": ["*description"],
