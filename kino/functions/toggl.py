@@ -68,8 +68,9 @@ class TogglManager(object):
             self.slackbot.send_message(text=MsgResource.TOGGL_NOTI_RELAY)
         else:
             for i in range(3, 10, 3):
-                if diff_min_divide_10 == 3:
+                if diff_min_divide_10 == i:
                     self.slackbot.send_message(text=MsgResource.TOGGL_TIMER_CHECK(diff_min))
+                    break
 
     def __get_curr_time_diff(self, start=None, stop=None):
         if type(start) is str:
