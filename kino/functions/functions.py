@@ -2,6 +2,7 @@
 
 import functions
 import slack
+from slack import MsgResource
 import utils
 
 class Functions(object):
@@ -20,7 +21,7 @@ class Functions(object):
 
     def github_commit(self, timely="daily"):
         github = functions.GithubManager()
-        github.commit(timely)
+        github.commit(timely=timely)
 
     def happy(self, text="busy"):
         happy = functions.Happy(text=text)
@@ -30,13 +31,41 @@ class Functions(object):
         happy = functions.Happy()
         happy.report(timely=timely)
 
+    def rescuetime_efficiency(self, timely="daily"):
+        rescuetime = functions.RescueTime()
+        rescuetime.efficiency(timely=timely)
+
     def today_briefing(self):
+        self.slackbot.send_message(text=MsgResource.TODAY_BREIFING)
+
+        weather = functions.Weather()
+        weather.read(timely="daily")
+
         todoist = functions.TodoistManager()
-        todoist.today_briefing()
+        todoist.schedule()
 
     def today_summary(self):
+        self.slackbot.send_message(text=MsgResource.TODAY_SUMMARY)
+
         todoist = functions.TodoistManager()
-        todoist.today_summary()
+        todoist.feedback()
+
+        toggl = functions.TogglManager()
+        toggl.report(kind="chart", timely="daily")
+
+        rescuetime = functions.RescueTime()
+        rescuetime.efficiency(timely="daily")
+
+        github = functions.GithubManager()
+        github.commit(timely="daily")
+
+    def todoist_schedule(self):
+        todoist = functions.TodoistManager()
+        todoist.schedule()
+
+    def todoist_feedback(self):
+        todoist = functions.TodoistManager()
+        todoist.feedback()
 
     def toggl_timer(self, description=None):
         toggl = functions.TogglManager()

@@ -17,8 +17,8 @@ class TodoistManager(object):
         self.slackbot = slack.SlackerAdapter()
         self.template = slack.MsgTemplate()
 
-    def today_briefing(self, channel=None):
-        self.slackbot.send_message(text=MsgResource.TODOIST_TODAY_BREIFING, channel=channel)
+    def schedule(self, channel=None):
+        self.slackbot.send_message(text=MsgResource.TODOIST_TODAY_SCHEDULE)
 
         overdue_task_count = self.__get_overdue_task_count()
         today_task = self.__get_today_task()
@@ -64,18 +64,18 @@ class TodoistManager(object):
         user = self.todoist_api.user.login(self.config.todoist['ID'], self.config.todoist['PASSWORD'])
         return user['karma_trend']
 
-    def today_summary(self, channel=None):
-        self.slackbot.send_message(text=MsgResource.TODOIST_TODAY_SUMMARY, channel=channel)
+    def feedback(self, channel=None):
+        self.slackbot.send_message(text=MsgResource.TODOIST_FEEDBACK)
 
         overdue_task_count = self.__get_overdue_task_count()
         today_task = self.__get_today_task()
         today_task_count = len(today_task)
 
-        overdue_today_text = MsgResource.TODOIST_SUMMARY_OVERDUE(overdue_task_count+today_task_count)
+        overdue_today_text = MsgResource.TODOIST_FEEDBACK_OVERDUE(overdue_task_count+today_task_count)
         self.slackbot.send_message(text=overdue_today_text, channel=channel)
 
         added_count, completed_count, updated_count = self.__get_event_counts()
-        event_text = MsgResource.TODOIST_SUMMARY_EVENT(added_count, completed_count, updated_count)
+        event_text = MsgResource.TODOIST_FEEDBACK_EVENT(added_count, completed_count, updated_count)
         self.slackbot.send_message(text=event_text, channel=channel)
 
     def __get_event_counts(self):

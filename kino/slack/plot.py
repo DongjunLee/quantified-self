@@ -2,7 +2,9 @@ import matplotlib
 matplotlib.use('TkAgg')
 
 from matplotlib import pyplot as plt
+import matplotlib.dates as dt
 import seaborn; seaborn.set()
+import datetime
 
 class Plot(object):
 
@@ -46,3 +48,33 @@ class Plot(object):
         plt.plot(x, y)
         plt.savefig(f_name)
         plt.close(fig)
+
+    def make_efficiency_date(total_data, avg_data, f_name, title=None,
+            x_label=None, y_label=None, x_ticks=None, y_ticks=None):
+
+        fig = plt.figure()
+
+        if title is not None:
+            plt.title(title, fontsize=16)
+        if x_label is not None:
+            plt.ylabel(x_label)
+        if y_label is not None:
+            plt.xlabel(y_label)
+
+        v_date=[]
+        v_val=[]
+
+        for data in total_data:
+            dates = dt.date2num(datetime.datetime.strptime(data[0], '%H:%M'))
+            to_int=round(float(data[1]))
+            plt.plot_date(dates, data[1],color=plt.cm.brg(to_int))
+        for data in avg_data:
+            dates = dt.date2num(datetime.datetime.strptime(data[0], '%H:%M'))
+            v_date.append(dates)
+            v_val.append(data[1])
+
+        plt.plot_date(v_date, v_val, "^y-", label='Average')
+        plt.legend()
+        plt.savefig(f_name)
+        plt.close(fig)
+
