@@ -24,6 +24,9 @@ class Happy(object):
             state.start("functions/Happy", "question")
 
         def step_1(params):
+            if params is None:
+                return
+
             numbers = re.findall(r'\d+', params)
             if len(numbers) != 1:
                 self.slackbot.send_message(text=MsgResource.NOT_UNDERSTANDING)

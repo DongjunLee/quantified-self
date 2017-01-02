@@ -34,6 +34,7 @@ class TogglManager(object):
                     if any(v in lower_description for v in value_list):
                         name = key
                         pid = self.__get_pid(name=name)
+                        break
                     else:
                         pid = None
 

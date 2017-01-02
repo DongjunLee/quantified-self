@@ -111,13 +111,13 @@ class MsgResource:
     HAPPY_QUESTION_STEP_0 = "지금 현재 행복도는 10점 만점에 몇점인가요??"
     def HAPPY_QUESTION_STEP_1(happy):
         happy = int(happy)
-        if happy >= 10:
+        if happy >= 100:
             return "기분 최고!! :laughing: "
-        elif happy > 8:
+        elif happy >= 90:
             return "행복하시군요ㅎㅎ 보기 좋습니다. :smile: "
-        elif happy> 6.5:
+        elif happy >= 80:
             return "슬며시 미소를 짓고 계신 것 같아요ㅎㅎ :smiley: "
-        elif happy > 5:
+        elif happy >= 70:
             return "기분이 그냥 그러시군요! :simple_smile: "
         else:
             return "무슨 일 있으신가요? 기분이 안 좋아보입니다ㅠㅠ :angry: "
