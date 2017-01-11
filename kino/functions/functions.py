@@ -15,6 +15,10 @@ class Functions(object):
     def send_message(self, text=None):
         self.slackbot.send_message(text=text)
 
+    def bus_stop(self, station_id=None):
+        bus = functions.Bus()
+        bus.arrive_info(station_id)
+
     def forecast(self, timely="current"):
         weather = functions.Weather()
         weather.read(timely=timely)

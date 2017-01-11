@@ -10,6 +10,7 @@ class Config(object):
 
             config = self.__read_config()
             self.kino = config["kino"]
+            self.bus = config["bus"]
             self.github = config["github"]
             self.weather = config["weather"]
             self.todoist = config["todoist"]

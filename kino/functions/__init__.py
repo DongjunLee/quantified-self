@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .functions import Functions
+from .bus import Bus
 from .github import GithubManager
 from .happy import Happy
 from .rescuetime import RescueTime
@@ -12,6 +13,7 @@ from .youtube_downloader import YoutubeDownloader
 from .weather import Weather
 
 __all__ = ['Functions',
+           'Bus',
            'FunctionManager',
            'GithubManager',
            'Happy',

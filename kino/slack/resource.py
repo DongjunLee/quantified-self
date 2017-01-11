@@ -127,3 +127,5 @@ class MsgResource:
 
     TODAY_BREIFING = "오늘 하루 브리핑을 시작하겠습니다!"
     TODAY_SUMMARY = "오늘 하루 요약을 시작하겠습니다!"
+
+    BUS_ICON = ":bus: "

@@ -144,3 +144,24 @@ class MsgTemplate(object):
 
             attachments.append(a_dict)
         return attachments
+
+    def make_bus_stop_template(self, data):
+        attachments = []
+        a_dict = {}
+        a_dict['fallback'] = "Bus 도착정보. "
+        a_dict['text'] = "Bus 도착정보 입니다."
+        a_dict['mrkdwn_in'] = ["text", "pretext"]
+        a_dict['color'] = "#438C56"
+
+        fields = []
+        for k,v in data.items():
+            field = {}
+
+            field['title'] = MsgResource.BUS_ICON + str(k) + "번 버스"
+            field['value'] = MsgResource.ORANGE_DIAMOND_ICON + v['bus1'] + "\n" + MsgResource.ORANGE_DIAMOND_ICON + v['bus2']
+            field['short'] = "true"
+            fields.append(field)
+        a_dict['fields'] = fields
+
+        attachments.append(a_dict)
+        return attachments
