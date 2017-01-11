@@ -4,6 +4,11 @@
     "description": "텍스트 메시지 전송",
     "icon": ":speech_balloon: "
   },
+  "bus_stop": {
+    "params": ["*station_name"],
+    "description": "버스 도착 정보 조회",
+    "icon": ":oncoming_bus: "
+  },
   "forecast": {
     "params": ["*timely"],
     "description": "날씨예보",

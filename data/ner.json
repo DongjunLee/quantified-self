@@ -46,6 +46,7 @@
       }
   },
   "functions": {
+    "bus_stop": ["버스 도착", "버스도착", "버스 언제", "버스 조회", "버스조회"],
     "forecast": ["날씨", "예보"],
     "github_commit": ["깃허브", "github", "커밋", "commit"],
     "happy": ["행복도 조사", "행복도 질문", "happy question"],
@@ -61,6 +62,13 @@
     "maxim_nietzsche": ["니체 명언", "니체의 말"]
   },
   "params": {
+      "bus_stop": {
+        "station_id": {
+          "217000054": ["초지역"],
+          "217000224": ["집앞", "집 앞", "주공9단지"],
+          "217000147": ["집 건너편", "차량등록사업소"]
+        }
+      },
       "forecast": {
         "timely": {
           "current": ["current", "현재", "지금"],
