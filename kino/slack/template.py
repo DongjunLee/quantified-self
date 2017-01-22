@@ -9,6 +9,7 @@ class MsgTemplate(object):
 
     def make_schedule_template(self, pretext, data):
         sorted(data.items())
+        print(data)
         attachments = []
         for k,v in data.items():
             if k == "index":
@@ -39,22 +40,24 @@ class MsgTemplate(object):
             else:
                 a_dict['color'] = "#438C56"
 
-            text = ""
-            for d_k,d_v in v.items():
-                if type(d_v) == type([]):
-                    text += MsgResource.ORANGE_DIAMOND_ICON + d_k + "\n"
-                    for element in d_v:
-                        text += MsgResource.WHITE_ELEMENT_ICON + element + "\n"
-                else:
-                    text += MsgResource.ORANGE_DIAMOND_ICON + d_k + ": " + d_v + "\n"
-            a_dict['text'] = text
+            fields = []
+            if 'registered_alarm' in v:
+                for d_k, d_v in v['registered_alarm'].items():
+                    field = {
+                        "title": d_k,
+                        "value": d_v,
+                        "short": "true"
+                    }
+                    fields.append(field)
 
+            a_dict['fields'] = fields
+            a_dict['text'] = ""
             a_dict['mrkdwn_in'] = ["text", "pretext"]
 
             attachments.append(a_dict)
         return attachments
 
-    def make_function_template(self, pretext, data):
+    def make_skill_template(self, pretext, data):
         sorted(data.items())
         attachments = []
         a_dict = {}

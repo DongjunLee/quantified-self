@@ -13,7 +13,8 @@ class TodoistManager(object):
     def __init__(self, text=None):
         self.input = text
         self.config = utils.Config()
-        self.todoist_api = todoist.TodoistAPI(self.config.todoist['TOKEN'])
+        self.todoist_api = todoist.TodoistAPI(self.config.open_api['todoist']['TOKEN'])
+
         self.slackbot = slack.SlackerAdapter()
         self.template = slack.MsgTemplate()
 
@@ -61,7 +62,7 @@ class TodoistManager(object):
         return specific_task_list
 
     def __get_karma_trend(self):
-        user = self.todoist_api.user.login(self.config.todoist['ID'], self.config.todoist['PASSWORD'])
+        user = self.todoist_api.user.login(self.config.open_api['todoist']['ID'], self.config.open_api['todoist']['PASSWORD'])
         return user['karma_trend']
 
     def feedback(self, channel=None):

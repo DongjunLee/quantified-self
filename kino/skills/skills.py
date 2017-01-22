@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import functions
+import skills
 import slack
 from slack import MsgResource
 import utils
@@ -16,84 +16,84 @@ class Functions(object):
         self.slackbot.send_message(text=text)
 
     def bus_stop(self, station_id=None):
-        bus = functions.Bus()
+        bus = skills.Bus()
         bus.arrive_info(station_id)
 
     def forecast(self, timely="current"):
-        weather = functions.Weather()
+        weather = skills.Weather()
         weather.read(timely=timely)
 
     def github_commit(self, timely="daily"):
-        github = functions.GithubManager()
+        github = skills.GithubManager()
         github.commit(timely=timely)
 
     def happy(self, text="busy"):
-        happy = functions.Happy(text=text)
+        happy = skills.Happy(text=text)
         happy.question()
 
     def happy_report(self, timely="daily"):
-        happy = functions.Happy()
+        happy = skills.Happy()
         happy.report(timely=timely)
 
     def rescuetime_efficiency(self, timely="daily"):
-        rescuetime = functions.RescueTime()
+        rescuetime = skills.RescueTime()
         rescuetime.efficiency(timely=timely)
 
     def today_briefing(self):
         self.slackbot.send_message(text=MsgResource.TODAY_BREIFING)
 
-        weather = functions.Weather()
+        weather = skills.Weather()
         weather.read(timely="daily")
 
-        todoist = functions.TodoistManager()
+        todoist = skills.TodoistManager()
         todoist.schedule()
 
     def today_summary(self):
         self.slackbot.send_message(text=MsgResource.TODAY_SUMMARY)
 
-        todoist = functions.TodoistManager()
+        todoist = skills.TodoistManager()
         todoist.feedback()
 
-        toggl = functions.TogglManager()
+        toggl = skills.TogglManager()
         toggl.report(kind="chart", timely="daily")
 
-        rescuetime = functions.RescueTime()
+        rescuetime = skills.RescueTime()
         rescuetime.efficiency(timely="daily")
 
-        happy = functions.Happy()
+        happy = skills.Happy()
         happy.report(timely="daily")
 
-        github = functions.GithubManager()
+        github = skills.GithubManager()
         github.commit(timely="daily")
 
     def todoist_schedule(self):
-        todoist = functions.TodoistManager()
+        todoist = skills.TodoistManager()
         todoist.schedule()
 
     def todoist_feedback(self):
-        todoist = functions.TodoistManager()
+        todoist = skills.TodoistManager()
         todoist.feedback()
 
     def toggl_timer(self, description=None):
-        toggl = functions.TogglManager()
+        toggl = skills.TogglManager()
         toggl.timer(description=description)
 
     def toggl_checker(self):
-        toggl = functions.TogglManager()
+        toggl = skills.TogglManager()
         toggl.check_toggl_timer()
 
     def toggl_report(self, kind="chart", timely="weekly"):
-        toggl = functions.TogglManager()
+        toggl = skills.TogglManager()
         toggl.report(kind=kind, timely=timely)
 
     def maxim_nietzsche(self):
-        maxim = functions.Maxim()
+        maxim = skills.Maxim()
         maxim.nietzsche()
 
 class RegisteredFuctions(object):
     class __List:
         def __init__(self):
-            self.list = utils.DataHandler().read_file("functions.json")
+            self.list = utils.DataHandler().read_file("skills.json")
 
     instance = None
     def __init__(self):

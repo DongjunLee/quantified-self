@@ -10,8 +10,8 @@ import utils
 slackbot = slack.SlackerAdapter()
 
 config = utils.Config()
-MASTER_NAME = config.kino["MASTER_NAME"]
-BOT_NAME = config.kino["BOT_NAME"]
+MASTER_NAME = config.bot["MASTER_NAME"]
+BOT_NAME = config.bot["BOT_NAME"]
 hello_text = "{}님 안녕하세요! \n저는 개인비서 {} 라고 합니다.\n반갑습니다.".format(MASTER_NAME, BOT_NAME)
 slackbot.send_message(text=hello_text)
 

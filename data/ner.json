@@ -1,117 +1,65 @@
 {
   "kino": {
-    "name": ["키노", "kino", "안녕"],
-    "Worker": ["일", "일이", "일거리"],
-    "behave": {
-      "create": ["있다", "추가", "일거리"],
-      "run": ["시작"],
-      "stop": ["중지", "멈추다", "그만"]
-    }
-  },
-  "time_of_day": {
-    "morning": ["아침", "모닝"],
-    "lunch": ["점심", "점심식사"],
-    "afternoon": ["오후"],
-    "dinner": ["저녁식사"],
-    "evening": ["밤", "저녁"],
-    "all-day": ["하루종일", "종일"]
-  },
-  "time_unit": {
-    "hour": "\\d+시",
-    "minute": "\\d+분",
-    "second": "\\d+초"
-  },
-  "period": {
-    "interval": ["마다", "간격"],
-    "real-time": ["즉시", "바로"]
-  },
-  "classname": {
-    "notifier/Scheduler": ["알람"],
-    "notifier/Between": ["시간대"],
-    "functions/FunctionManager": ["함수", "기능", "뭘"]
-  },
-  "behave": {
-      "notifier/Scheduler": {
+    "kino/Worker": {
+      "keyword": ["일", "일이", "일거리"],
+      "behave": {
+        "create": ["있다", "추가", "일거리"],
+        "run": ["시작"],
+        "stop": ["중지", "멈추다", "그만"]
+      }
+    },
+    "notifier/Scheduler": {
+      "keyword": ["알람"],
+      "behave": {
         "create": ["등록", "추가"],
         "read": ["보다", "보이다", "보기", "확인"],
         "delete": ["삭제", "제거", "없애다"]
-      },
-      "notifier/Between": {
+      }
+    },
+    "notifier/Between": {
+      "keyword": ["시간대"],
+      "behave": {
         "create": ["등록", "추가"],
         "read": ["보다", "보이다", "보기", "확인"],
         "delete": ["삭제", "제거", "없애다"]
-      },
-      "functions/FunctionManager": {
+      }
+    },
+    "skills/FunctionManager": {
+      "keyword": ["함수", "기능", "뭘"],
+      "behave": {
         "read": ["보다", "보이다", "보기", "확인", "뭐 있다", "하다"]
       }
+    }
   },
-  "functions": {
-    "bus_stop": ["버스 도착", "버스도착", "버스 언제", "버스 조회", "버스조회"],
-    "forecast": ["날씨", "예보"],
-    "github_commit": ["깃허브", "github", "커밋", "commit"],
-    "happy": ["행복도 조사", "행복도 질문", "happy question"],
-    "happy_report": ["행복도 리포트", "happy report"],
-    "rescuetime_efficiency": ["레스큐타임 효율성", "작업 효율", "생산성 차트"],
-    "today_briefing": ["하루 브리핑", "오늘하루 브리핑"],
-    "today_summary": ["하루 마무리", "하루 요약"],
-    "todoist_schedule": ["스케쥴", "할일 안내", "todoist schedule"],
-    "todoist_feedback": ["할일 피드백", "todoist feedback"],
-    "toggl_timer": ["toggl"],
-    "toggl_checker": ["작업 시간", "작업시간", "경과 시간", "경과시간", "시간 체크", "시간체크"],
-    "toggl_report": ["토글 리포트", "작업 리포트"],
-    "maxim_nietzsche": ["니체 명언", "니체의 말"]
+  "schedule": {
+    "time_of_day": {
+      "morning": ["아침", "모닝"],
+      "lunch": ["점심", "점심식사"],
+      "afternoon": ["오후"],
+      "dinner": ["저녁식사"],
+      "evening": ["밤", "저녁"],
+      "all-day": ["하루종일", "종일"]
+    },
+    "time_unit": {
+      "hour": "\\d+시",
+      "minute": "\\d+분",
+      "second": "\\d+초"
+    },
+    "period": {
+      "interval": ["마다", "간격"],
+      "real-time": ["즉시", "바로"]
+    }
   },
   "params": {
-      "bus_stop": {
-        "station_id": {
-          "217000054": ["초지역"],
-          "217000224": ["집앞", "집 앞", "주공9단지"],
-          "217000147": ["집 건너편", "차량등록사업소"]
-        }
-      },
-      "forecast": {
-        "timely": {
-          "current": ["current", "현재", "지금"],
-          "hourly": ["hourly", "하루", "오늘"],
-          "daily": ["daily", "주간", "일주일"]
-        }
-      },
-      "github_commit": {
-        "timely": {
-          "daily": ["일일", "매일", "daily", "데일리"],
-          "weekly": ["주간", "일주일", "weely", "위클리"]
-        }
-      },
-      "happy": {},
-      "happy_report": {
-        "timely": {
-          "daily": ["일일", "매일", "daily", "데일리"],
-          "weekly": ["주간", "일주일", "weely", "위클리"]
-        }
-      },
-      "rescuetime_efficiency": {
-        "timely": {
-          "daily": ["일일", "매일", "daily", "데일리"],
-          "weekly": ["주간", "일주일", "weely", "위클리"]
-        }
-      },
-      "today_briefing": {},
-      "today_summary": {},
-      "todoist_schedule": {},
-      "todoist_feedback": {},
-      "toggl_timer": {},
-      "toggl_checker": {},
-      "toggl_report": {
-        "kind": {
-          "basic": ["기본", "간단"],
-          "chart": ["요약", "차트", "그래프"],
-          "detail": ["세부", "상세"]
-        },
-        "timely": {
-          "daily": ["일일", "매일", "daily", "데일리"],
-          "weekly": ["주간", "일주일", "weely", "위클리"]
-        }
-      },
-      "maxim_nietzsche": {}
+    "timely": {
+      "current": ["current", "현재", "지금"],
+      "daily": ["일일", "매일", "daily", "데일리", "하루", "오늘"],
+      "weekly": ["주간", "일주일", "weely", "위클리"]
+    },
+    "station_id": {
+      "217000054": ["초지역"],
+      "217000224": ["집앞", "집 앞", "주공9단지"],
+      "217000147": ["집 건너편", "차량등록사업소"]
+    }
   }
 }

@@ -10,10 +10,10 @@ import utils
 class GithubManager(object):
 
     def __init__(self):
-        self.config = utils.Config().github
+        self.config = utils.Config()
 
-        self.username = self.config["USERNAME"]
-        password = self.config["PASSWORD"]
+        self.username = self.config.open_api['github']['USERNAME']
+        password = self.config.open_api['github']['PASSWORD']
         self.github = Github(self.username, password)
         self.events = None
 

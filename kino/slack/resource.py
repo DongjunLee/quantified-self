@@ -47,6 +47,11 @@ class MsgResource:
     SEND_MESSAGE_ICON = ":speech_balloon: "
     DAILY_COMMIT_ICON = ":octocat: "
 
+    PROFILE_WAKE_UP = "안녕히 주무셨나요? 좋은 아침입니다^^ :sun_with_face:"
+    PROFILE_WORK_START = "오늘 하루도 화이팅입니다!ㅎㅎ :raised_hands:"
+    PROFILE_WORK_END = "고생하셨습니다! 푹 쉬시면서, 자기발전도 하시고 알찬 저녁 보내세요. :night_with_stars:"
+    PROFILE_GO_TO_BED = "이제 주무실 시간입니다. 좋은 꿈 꾸세요 :first_quarter_moon_with_face:"
+
     WEATHER = "날씨 정보를 알려드립니다."
     WEATHER_ICON = ":full_moon_with_face: "
     WEATHER_ICONS = {

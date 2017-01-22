@@ -14,9 +14,9 @@ class TogglManager(object):
         self.logger = utils.Logger().get_logger()
 
         self.toggl = Toggl()
-        self.toggl.setAPIKey(self.config.toggl['TOKEN'])
+        self.toggl.setAPIKey(self.config.open_api['toggl']['TOKEN'])
 
-        wid = self.toggl.getWorkspace(name=self.config.toggl['WORKSPACE_NAME'])['id']
+        wid = self.toggl.getWorkspace(name=self.config.open_api['toggl']['WORKSPACE_NAME'])['id']
         self.toggl.setWorkspaceId(wid)
 
         self.entity = TogglProjectEntity().entity

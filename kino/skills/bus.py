@@ -17,7 +17,7 @@ class Bus(object):
 
         self.ansan_bus = self.data_handler.read_file("ansan_bus.json")
         self.ansan_station = self.data_handler.read_file("ansan_station.json")
-        self.service_key = self.config.bus['TOKEN']
+        self.service_key = self.config.open_api['gbis']['TOKEN']
 
     def arrive_info(self, station_id):
         url = "http://openapi.gbis.go.kr/ws/rest/busarrivalservice/station?"

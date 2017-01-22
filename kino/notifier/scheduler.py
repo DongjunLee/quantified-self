@@ -5,7 +5,7 @@ import schedule
 import random
 import threading
 
-import functions
+import skills
 import nlp
 import notifier
 import slack
@@ -46,7 +46,7 @@ class Scheduler(object):
             else:
                 current_alarm_data["time"] = params
                 state.next_step(num=2)
-                functions.FunctionManager().read()
+                skills.FunctionManager().read()
                 self.slackbot.send_message(text=MsgResource.SCHEDULER_CREATE_STEP3)
 
             self.data_handler.read_json_then_edit_data(self.fname, "alarm", a_index, current_alarm_data)
@@ -58,7 +58,7 @@ class Scheduler(object):
             self.data_handler.read_json_then_edit_data(self.fname, "alarm", a_index, current_alarm_data)
 
             state.next_step()
-            functions.FunctionManager().read()
+            skills.FunctionManager().read()
             self.slackbot.send_message(text=MsgResource.SCHEDULER_CREATE_STEP3)
 
         # 함수
@@ -84,9 +84,9 @@ class Scheduler(object):
             step_0(params)
 
     def create_with_ner(self, time_of_day=None, time_unit=None,
-                        period=None, functions=None, params=None):
+                        period=None, skills=None, params=None):
 
-        if functions is None:
+        if skills is None:
             self.slackbot.send_message(text=MsgResource.WORKER_FUNCTION_NOT_FOUND)
             return
         else:
@@ -123,19 +123,19 @@ class Scheduler(object):
 
         f_params = {}
         if params is not None:
-            for p in params:
-                key, value = p
-                f_params[key] = value
+            for k,v in params.items():
+                if v is None:
+                    continue
+                f_params[k] = v
 
         alarm_data = {
             "between_id": time_of_day,
             "period": period,
             "time": time,
-            "f_name": functions,
+            "f_name": skills,
             "f_params": f_params
         }
 
-        print(str(alarm_data))
         alarm_data = dict((k, v) for k, v in alarm_data.items() if v)
         self.data_handler.read_json_then_add_data(self.fname, "alarm", alarm_data)
         self.slackbot.send_message(text=MsgResource.CREATE)
@@ -168,19 +168,19 @@ class Scheduler(object):
 
     def __alarm_in_between(self, between, a_index, alarm_data, repeat=False):
         f_name = alarm_data['f_name']
-        f_detail = functions.FunctionManager().functions[f_name]
+        f_detail = skills.FunctionManager().functions[f_name]
 
         if repeat:
-            alarm_detail = "Alarm " + a_index + " (repeat: "+ alarm_data['period'] + ")\n"
+            key = "Alarm " + a_index + " (repeat: "+ alarm_data['period'] + ")"
         else:
-            alarm_detail = "Alarm " + a_index + " (time: " + alarm_data['time'] + ")\n"
+            key = "Alarm " + a_index + " (time: " + alarm_data['time'] + ")"
 
-        alarm_detail += "            " + f_detail['icon'] + f_name + ", " + str(alarm_data.get('f_params', ''))
-        registered_alarm = "등록된 알람 리스트."
+        value = f_detail['icon'] + f_name + ", " + str(alarm_data.get('f_params', ''))
+        registered_alarm = "registered_alarm"
         if registered_alarm in between:
-            between[registered_alarm].append(alarm_detail)
+            between[registered_alarm][key] = value
         else:
-            between[registered_alarm] = [alarm_detail]
+            between[registered_alarm] = {key: value}
         return between
 
     def update(self, step=0, params=None):
@@ -221,4 +221,3 @@ class Scheduler(object):
             locals()[step_num](params)
         else:
             step_0(params)
-

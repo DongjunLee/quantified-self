@@ -21,7 +21,7 @@ class Happy(object):
 
         def step_0(params):
             self.slackbot.send_message(text=MsgResource.HAPPY_QUESTION_STEP_0)
-            state.start("functions/Happy", "question")
+            state.start("skills/Happy", "question")
 
         def step_1(params):
             if params is None:
@@ -71,24 +71,3 @@ class Happy(object):
             self.plot.make_line(time, happy_point_list, f_name, x_ticks=x_ticks,
                                 x_label="Happy Point", y_label="Time", title=title)
             self.slackbot.file_upload(f_name, title=title, comment=MsgResource.HAPPY_REPORT)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

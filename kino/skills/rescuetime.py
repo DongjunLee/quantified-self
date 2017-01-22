@@ -7,10 +7,12 @@ import requests
 
 import slack
 from slack import MsgResource
+import utils
 
 class RescueTime(object):
 
     def __init__(self):
+        self.config = utils.Config()
         self.slackbot = slack.SlackerAdapter()
         self.plot = slack.Plot
 
@@ -44,7 +46,7 @@ class RescueTime(object):
             "rs": "hour",
             "rb": start,
             "re": end,
-            "rtapi_key": "B63F6OpJt_JqI1E3BOXM5cmy8xI2ld28DPDeQ9Rs"
+            "rtapi_key": self.config.open_api['rescue_time']['TOKEN']
         }
 
         for k,v in params.items():

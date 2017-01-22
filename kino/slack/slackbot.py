@@ -8,17 +8,17 @@ class SlackerAdapter(object):
 
     def __init__(self):
         self.config = utils.Config()
-        self.slacker = Slacker(self.config.kino['SLACK_BOT_TOKEN'])
+        self.slacker = Slacker(self.config.slack['TOKEN'])
 
     def send_message(self, channel=None, text=None, attachments=None):
         if channel is None:
-            channel = self.config.kino['DEFAULT_CHANNEL']
+            channel = self.config.slack['DEFAULT_CHANNEL']
         self.slacker.chat.post_message(channel=channel, text=text,
                                        attachments=attachments, as_user=True)
 
     def file_upload(self, f_name, channel=None, title=None, comment=None):
         if channel is None:
-            channel = self.config.kino['DEFAULT_CHANNEL']
+            channel = self.config.slack['DEFAULT_CHANNEL']
         self.slacker.files.upload(f_name, channels=channel, title=title
                                   , initial_comment=comment)
 

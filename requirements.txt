@@ -15,3 +15,4 @@ slackbot==0.4.1
 slacker==0.9.24
 websocket-client==0.37.0
 websockets==3.2
+xmljson==0.1.7
