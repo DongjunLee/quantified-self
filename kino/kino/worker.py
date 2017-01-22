@@ -47,17 +47,17 @@ class Worker(object):
     def __set_profile_schedule(self):
         profile = utils.Profile()
 
-        schedule.every().day.at(profile.get_wake_up_time).do(
+        schedule.every().day.at(profile.get_wake_up_time()).do(
                 self.__run_threaded, 'send_message', MsgResource.PROFILE_WAKE_UP)
 
-        working_start, working_end = profile.get_working_hour_time.split("~")
+        working_start, working_end = profile.get_working_hour_time().split("~")
         schedule.every().day.at(working_start).do(
                 self.__run_threaded, 'send_message', MsgResource.PROFILE_WORK_START)
 
         schedule.every().day.at(working_end).do(
                 self.__run_threaded, 'send_message', MsgResource.PROFILE_WORK_END)
 
-        schedule.every().day.at(profile.get_go_to_bed_time).do(
+        schedule.every().day.at(profile.get_go_to_bed_time()).do(
                 self.__run_threaded, 'send_message', MsgResource.PROFILE_GO_TO_BED)
 
     def __set_custom_schedule(self):
