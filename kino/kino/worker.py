@@ -50,7 +50,7 @@ class Worker(object):
         schedule.every().day.at(profile.get_wake_up_time).do(
                 self.__run_threaded, 'send_message', MsgResource.PROFILE_WAKE_UP)
 
-        working_start, working_end = profile.get_working_hour_time.split(":")
+        working_start, working_end = profile.get_working_hour_time.split("~")
         schedule.every().day.at(working_start).do(
                 self.__run_threaded, 'send_message', MsgResource.PROFILE_WORK_START)
 
