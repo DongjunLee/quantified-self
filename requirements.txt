@@ -16,3 +16,9 @@ slacker==0.9.24
 websocket-client==0.37.0
 websockets==3.2
 xmljson==0.1.7
+arrow==0.10.0
+matplotlib==2.0.0
+todoist==0.0.1
+python-forecastio==1.3.5
+guppy==1.11.0
+>>>>>>> Stashed changes
