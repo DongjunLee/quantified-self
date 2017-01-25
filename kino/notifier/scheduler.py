@@ -23,7 +23,7 @@ class Scheduler(object):
 
     def create(self, step=0, params=None):
 
-        state = utils.State()
+        state = nlp.State()
 
         # 알람 생성 시작
         def step_0(params):
@@ -201,7 +201,7 @@ class Scheduler(object):
 
     def delete(self, step=0, params=None):
 
-        state = utils.State()
+        state = nlp.State()
 
         def step_0(params):
             self.slackbot.send_message(text=MsgResource.SCHEDULER_DELETE_START)

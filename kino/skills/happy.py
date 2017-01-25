@@ -3,6 +3,7 @@ import arrow
 import collections
 import re
 
+import nlp
 import slack
 from slack import MsgResource
 import utils
@@ -17,7 +18,7 @@ class Happy(object):
         self.plot = slack.Plot
 
     def question(self, step=0, params=None):
-        state = utils.State()
+        state = nlp.State()
 
         def step_0(params):
             self.slackbot.send_message(text=MsgResource.HAPPY_QUESTION_STEP_0)

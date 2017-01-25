@@ -1,6 +1,11 @@
 
 from utils.data_handler import DataHandler
 
+class DialogManager(object):
+
+    def __init__(self):
+        pass
+
 class State(object):
 
     def __init__(self):
@@ -10,16 +15,21 @@ class State(object):
 
     def is_do_something(self):
         self.__check()
-        if self.current == {}:
-            return False
-        else:
+        if ("kind" in self.current) and (self.current["kind"] == "FLOW"):
             return True
+        else:
+            return False
 
     def __check(self):
         self.current = self.data_handler.read_file(self.fname)
 
-    def start(self, class_name, func_name):
-        doing = {"class": class_name, "def": func_name, "step": 1}
+    def start(self, class_name, func_name, kind="FLOW"):
+        doing = {
+            "class": class_name,
+            "def": func_name,
+            "step": 1,
+            "kind": kind
+        }
         self.data_handler.write_file(self.fname, doing)
 
     def next_step(self, num=1):

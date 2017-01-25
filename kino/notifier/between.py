@@ -2,6 +2,7 @@
 
 import random
 
+import nlp
 import slack
 from slack import MsgResource
 import utils
@@ -17,7 +18,7 @@ class Between(object):
 
     def create(self, step=0, params=None):
 
-        state = utils.State()
+        state = nlp.State()
 
         def step_0(params):
             self.slackbot.send_message(text=MsgResource.BETWEEN_CREATE_START)
@@ -90,7 +91,7 @@ class Between(object):
 
     def delete(self, step=0, params=None):
 
-        state = utils.State()
+        state = nlp.State()
 
         def step_0(params):
             self.slackbot.send_message(text=MsgResource.BETWEEN_DELETE_START)

@@ -12,7 +12,7 @@ class MsgRouter(object):
 
     def __init__(self):
         self.disintegrator = nlp.Disintegrator()
-        self.state = utils.State()
+        self.state = nlp.State()
         self.slackbot = slack.SlackerAdapter()
         self.logger = utils.Logger().get_logger()
         self.ner = nlp.NamedEntitiyRecognizer()
