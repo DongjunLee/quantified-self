@@ -18,6 +18,7 @@ class Between(object):
 
     def create(self, step=0, params=None):
 
+        dialog_manager = nlp.DialogManager()
         state = nlp.State()
 
         def step_0(params):
@@ -44,8 +45,8 @@ class Between(object):
             state.complete()
             self.slackbot.send_message(text=MsgResource.CREATE)
 
-        if state.is_do_something():
-            current_step = state.current["step"]
+        if dialog_manager.is_on_flow():
+            current_step = dialog_manager.current_state()["step"]
             step_num = "step_" + str(current_step)
             locals()[step_num](params)
         else:
@@ -91,6 +92,7 @@ class Between(object):
 
     def delete(self, step=0, params=None):
 
+        dialog_manager = nlp.DialogManager()
         state = nlp.State()
 
         def step_0(params):
@@ -105,8 +107,8 @@ class Between(object):
             state.complete()
             self.slackbot.send_message(text=MsgResource.DELETE)
 
-        if state.is_do_something():
-            current_step = state.current["step"]
+        if dialog_manager.is_on_flow():
+            current_step = dialog_manager.current_state()["step"]
             step_num = "step_" + str(current_step)
             locals()[step_num](params)
         else:
