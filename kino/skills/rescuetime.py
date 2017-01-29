@@ -64,7 +64,7 @@ class RescueTime(object):
     def get_point(self):
         response = self.__data_summary_request().json()
         today = response[0]
-        return utils.Score().percent(today['productivity_pulse'], 10, 80)
+        return utils.Score().percent(today['productivity_pulse'], 100, 80)
 
     def __data_summary_request(self):
         url = "https://www.rescuetime.com/anapi/daily_summary_feed?"

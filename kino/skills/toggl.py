@@ -124,8 +124,11 @@ class TogglManager(object):
         }
 
         today = self.toggl.getDetailedReport(data)
-        total_hours = round(today['total_grand']/60/60/10)
-        return utils.Score().percent(total_hours, 50, 800)
+        if today['total_grand']:
+            total_hours = round(today['total_grand']/60/60/10)
+        else:
+            total_hours = 0
+        return utils.Score().percent(total_hours, 100, 800)
 
 class TogglProjectEntity(object):
     class __Entity:

@@ -54,7 +54,7 @@ class TodoistManager(object):
     def __get_point(self, task_list):
         point = 0
         for task in task_list:
-            point += (task['priority'] - 1)
+            point += (task['priority'] + 1)
         return point
 
     def __get_today_task(self):
@@ -118,7 +118,7 @@ class TodoistManager(object):
         overdue_task_point = self.__get_overdue_task(kind="point")
         today_task_point = self.__get_point(self.__get_today_task())
 
-        max_point = 30
+        max_point = 100
         total_minus_point = overdue_task_point + today_task_point
         if total_minus_point > max_point:
             total_minus_point = max_point

@@ -79,4 +79,4 @@ class GithubManager(object):
 
     def get_point(self):
         commit_count = sum(self.commit(timely="ten_days"))
-        return utils.Score().percent(commit_count, 10, 10)
+        return utils.Score().percent(commit_count, 100, 10)
