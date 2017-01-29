@@ -44,12 +44,7 @@ class Happy(object):
             self.slackbot.send_message(text=MsgResource.HAPPY_QUESTION_STEP_1(happy_point))
             state.complete()
 
-        if state.is_do_something():
-            current_step = state.current["step"]
-            step_num = "step_" + str(current_step)
-            locals()[step_num](params)
-        else:
-            step_0(params)
+        locals()["step_" + str(step)](params)
 
     def report(self, timely="daily"):
         if timely == "daily":

@@ -22,8 +22,6 @@ class Scheduler(object):
         self.template = slack.MsgTemplate()
 
     def create(self, step=0, params=None):
-
-        dialog_manager = nlp.DialogManager()
         state = nlp.State()
 
         # 알람 생성 시작
@@ -77,12 +75,7 @@ class Scheduler(object):
             state.complete()
             self.slackbot.send_message(text=MsgResource.CREATE)
 
-        if dialog_manager.is_on_flow():
-            current_step = dialog_manager.current_state()["step"]
-            step_num = "step_" + str(current_step)
-            locals()[step_num](params)
-        else:
-            step_0(params)
+        locals()["step_" + str(step)](params)
 
     def create_with_ner(self, time_of_day=None, time_unit=None,
                         period=None, skills=None, params=None):
@@ -201,8 +194,6 @@ class Scheduler(object):
             self.slackbot.send_message(text=MsgResource.ERROR)
 
     def delete(self, step=0, params=None):
-
-        dialog_manager = nlp.DialogManager()
         state = nlp.State()
 
         def step_0(params):
@@ -217,9 +208,4 @@ class Scheduler(object):
             state.complete()
             self.slackbot.send_message(text=MsgResource.DELETE)
 
-        if dialog_manager.is_on_flow():
-            current_step = dialog_manager.current_state()["step"]
-            step_num = "step_" + str(current_step)
-            locals()[step_num](params)
-        else:
-            step_0(params)
+        locals()["step_" + str(step)](params)
