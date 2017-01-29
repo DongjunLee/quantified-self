@@ -54,5 +54,6 @@
 
 ## Features
 
-![functions](images/functions.png)
+![functions](images/functions1.png)
+![functions](images/functions2.png)
 
