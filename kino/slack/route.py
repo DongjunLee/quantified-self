@@ -24,6 +24,17 @@ class MsgRouter(object):
 
         dialog_manager = nlp.DialogManager()
 
+        # Check Dialog, Exercise
+        if dialog_manager.is_call_write_diary(simple_text):
+            skills.Summary().do_write_diary()
+            self.slackbot.send_message(text=MsgResource.APPLAUD)
+            return
+
+        if dialog_manager.is_call_do_exercise(simple_text):
+            skills.Summary().do_exercise()
+            self.slackbot.send_message(text=MsgResource.APPLAUD)
+            return
+
         # Check Flow
         if dialog_manager.is_on_flow():
             route_class, behave, step_num = dialog_manager.get_flow()
@@ -71,8 +82,8 @@ class MsgRouter(object):
         if func_name is not None:
             if dialog_manager.is_toggl_timer(func_name):
                 f_params = {"description": text[text.index("toggl")+5:]}
-
-            f_params = dialog_manager.filter_f_params(text, func_name)
+            else:
+                f_params = dialog_manager.filter_f_params(text, func_name)
 
             state = nlp.State()
             state.skill_memory(func_name, f_params)

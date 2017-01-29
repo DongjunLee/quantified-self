@@ -76,6 +76,18 @@ class DialogManager(object):
         else:
             return False
 
+    def is_call_write_diary(self, text):
+        if "일기 쓰다" in text:
+            return True
+        else:
+            return False
+
+    def is_call_do_exercise(self, text):
+        if "운동 하다" in text:
+            return True
+        else:
+            return False
+
 class State(object):
 
     FLOW = "flow"
