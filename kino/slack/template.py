@@ -9,7 +9,6 @@ class MsgTemplate(object):
 
     def make_schedule_template(self, pretext, data):
         sorted(data.items())
-        print(data)
         attachments = []
         for k,v in data.items():
             if k == "index":
@@ -44,7 +43,7 @@ class MsgTemplate(object):
             if 'registered_alarm' in v:
                 for d_k, d_v in v['registered_alarm'].items():
                     field = {
-                        "title": d_k,
+                        "title": " - " + d_k,
                         "value": d_v,
                         "short": "true"
                     }
@@ -172,14 +171,15 @@ class MsgTemplate(object):
     def make_summary_template(self, data):
         attachments = []
         a_dict = {}
-        a_dict['fallback'] = "종합점수 정보. "
-        a_dict['text'] = "종합점수 입니다."
-        a_dict['mrkdwn_in'] = ["text", "pretext"]
 
         a_dict['color'] = data['Color']
         total_score = data['Total']
         del data['Color']
         del data['Total']
+
+        a_dict['fallback'] = "종합점수:  " + str(total_score)
+        a_dict['text'] = "종합점수 입니다."
+        a_dict['mrkdwn_in'] = ["text", "pretext"]
 
         fields = []
         for k,v in data.items():
