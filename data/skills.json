@@ -35,6 +35,12 @@
     "description": "행복도 리포트",
     "icon": ":smile_cat: "
   },
+  "total_score": {
+    "keyword": ["종합 점수"],
+    "params": [],
+    "description": "종합 점수. \n - 생산성(RescueTime, Github Commit, Todoist, Toggl)\n - 평균 행복도 \n - 운동여부, 일기여부",
+    "icon": ":robot_face: "
+  },
   "rescuetime_efficiency": {
     "keyword": ["레스큐타임 효율성", "작업 효율", "생산성 차트"],
     "params": ["timely"],

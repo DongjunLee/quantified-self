@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .skills import Functions
+from .summary import Summary
 from .bus import Bus
 from .github import GithubManager
 from .happy import Happy
@@ -12,6 +13,7 @@ from .toggl import TogglManager
 from .weather import Weather
 
 __all__ = ['Functions',
+           'Summary',
            'Bus',
            'FunctionManager',
            'GithubManager',

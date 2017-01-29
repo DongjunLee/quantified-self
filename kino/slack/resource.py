@@ -134,3 +134,14 @@ class MsgResource:
     TODAY_SUMMARY = "오늘 하루 요약을 시작하겠습니다!"
 
     BUS_ICON = ":bus: "
+
+
+    def SCORE_COLOR(score):
+        if score >= 90:
+            return "#438C56"
+        elif score >= 75:
+            return "#2B60DE"
+        elif score >= 60:
+            return "#FF8040"
+        else:
+            return "#C11B17"

@@ -115,6 +115,18 @@ class TogglManager(object):
             self.toggl.getDetailedReportPDF(data, f_name)
             self.slackbot.file_upload(f_name, title=timely + " 상세 리포트", comment=MsgResource.TOGGL_REPORT)
 
+    def get_point(self):
+        now = arrow.now()
+        data = {
+            'since': now.format('YYYY-MM-DD'),
+            'until': now.format('YYYY-MM-DD'),
+            'calculate': 'time'
+        }
+
+        today = self.toggl.getDetailedReport(data)
+        total_hours = round(today['total_grand']/60/60/10)
+        return utils.Score().percent(total_hours, 50, 800)
+
 class TogglProjectEntity(object):
     class __Entity:
         def __init__(self):

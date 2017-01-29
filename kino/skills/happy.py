@@ -48,7 +48,7 @@ class Happy(object):
 
     def report(self, timely="daily"):
         if timely == "daily":
-            happy_data = self.data_handler.read_file(self.fname)
+            happy_data = self.get_data()
 
             def convert_time(time):
                 hour, minute = time[0].split(":")
@@ -67,3 +67,6 @@ class Happy(object):
             self.plot.make_line(time, happy_point_list, f_name, x_ticks=x_ticks,
                                 x_label="Happy Point", y_label="Time", title=title)
             self.slackbot.file_upload(f_name, title=title, comment=MsgResource.HAPPY_REPORT)
+
+    def get_data(self):
+        return self.data_handler.read_file(self.fname)

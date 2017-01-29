@@ -60,3 +60,12 @@ class RescueTime(object):
             biasavg = round(float(sum(biaslist))/len(biaslist),1)
             avg_data.append((time, biasavg))
         return avg_data
+
+    def get_point(self):
+        response = self.__data_summary_request().json()
+        today = response[0]
+        return utils.Score().percent(today['productivity_pulse'], 10, 80)
+
+    def __data_summary_request(self):
+        url = "https://www.rescuetime.com/anapi/daily_summary_feed?"
+        return requests.get(url + "key=" + self.config.open_api['rescue_time']['TOKEN'])

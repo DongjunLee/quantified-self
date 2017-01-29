@@ -168,3 +168,36 @@ class MsgTemplate(object):
 
         attachments.append(a_dict)
         return attachments
+
+    def make_summary_template(self, data):
+        attachments = []
+        a_dict = {}
+        a_dict['fallback'] = "종합점수 정보. "
+        a_dict['text'] = "종합점수 입니다."
+        a_dict['mrkdwn_in'] = ["text", "pretext"]
+
+        a_dict['color'] = data['Color']
+        total_score = data['Total']
+        del data['Color']
+        del data['Total']
+
+        fields = []
+        for k,v in data.items():
+            field = {}
+
+            field['title'] = k
+            field['value'] = str(v)
+            field['short'] = "true"
+            fields.append(field)
+
+        field = {
+            "title": "Total Score",
+            "value": str(total_score) + " 점"
+        }
+        fields.append(field)
+
+        a_dict['fields'] = fields
+
+        attachments.append(a_dict)
+        return attachments
+

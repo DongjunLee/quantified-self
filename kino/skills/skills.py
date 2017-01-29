@@ -35,6 +35,10 @@ class Functions(object):
         happy = skills.Happy()
         happy.report(timely=timely)
 
+    def total_score(self):
+        summary = skills.Summary()
+        summary.total_score()
+
     def rescuetime_efficiency(self, timely="daily"):
         rescuetime = skills.RescueTime()
         rescuetime.efficiency(timely=timely)
