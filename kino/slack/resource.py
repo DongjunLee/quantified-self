@@ -47,10 +47,10 @@ class MsgResource:
     SEND_MESSAGE_ICON = ":speech_balloon: "
     DAILY_COMMIT_ICON = ":octocat: "
 
-    PROFILE_WAKE_UP = "안녕히 주무셨나요? 좋은 아침입니다^^ :sun_with_face:"
+    PROFILE_WAKE_UP = ":bell: 이제 일어날 시간 입니다! :bell: "
     PROFILE_WORK_START = "오늘 하루도 화이팅입니다!ㅎㅎ :raised_hands:"
     PROFILE_WORK_END = "고생하셨습니다! 푹 쉬시면서, 자기발전도 하시고 알찬 저녁 보내세요. :night_with_stars:"
-    PROFILE_GO_TO_BED = "이제 주무실 시간입니다. 좋은 꿈 꾸세요 :first_quarter_moon_with_face:"
+    PROFILE_GO_TO_BED = ":sleeping_accommodation: 이제 주무실 시간입니다! "
 
     WEATHER = "날씨 정보를 알려드립니다."
     WEATHER_ICON = ":full_moon_with_face: "
@@ -146,3 +146,7 @@ class MsgResource:
             return "#C11B17"
 
     APPLAUD = ":clap::clap::clap: 멋지십니다!ㅎㅎ"
+    GOOD_MORNING = "안녕히 주무셨나요? 좋은 아침입니다^^ :sun_with_face:"
+    def SLEEP_TIME(bed_time, wakeup_time, diff):
+        return bed_time + " ~ " + wakeup_time + ", 총 " + diff + "h 동안 잠을 주무셨습니다."
+    GOOD_NIGHT = "이제 주무시는 군요. 좋은 꿈 꾸세요 :first_quarter_moon_with_face:"

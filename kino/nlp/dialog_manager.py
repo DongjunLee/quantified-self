@@ -1,13 +1,19 @@
 
+import arrow
+
 import nlp
 import notifier
 import skills
+import slack
+from slack import MsgResource
 from utils.data_handler import DataHandler
 
 class DialogManager(object):
 
     def __init__(self):
         self.state = State()
+        self.slackbot = slack.SlackerAdapter()
+        self.data_handler = DataHandler()
 
     def current_state(self):
         self.state.check()
@@ -76,14 +82,46 @@ class DialogManager(object):
         else:
             return False
 
-    def is_call_write_diary(self, text):
+    def call_write_diary(self, text):
         if "일기 쓰다" in text:
+            skills.Summary().record_write_diary()
+            self.slackbot.send_message(text=MsgResource.APPLAUD)
             return True
         else:
             return False
 
-    def is_call_do_exercise(self, text):
+    def call_do_exercise(self, text):
         if "운동 하다" in text:
+            skills.Summary().record_exercise()
+            self.slackbot.send_message(text=MsgResource.APPLAUD)
+            return True
+        else:
+            return False
+
+    def call_good_morning(self, text):
+        if "굿모닝" == text:
+            self.slackbot.send_message(text=MsgResource.GOOD_MORNING)
+
+            skills.Summary().record_good_morning()
+            record = self.data_handler.read_record()
+
+            good_morning = arrow.get(record['GoodMorning'])
+            good_night = arrow.get(record['GoodNight'])
+
+            sleep_time = (good_morning - good_night).seconds / 60 / 60
+            sleep_time = round(sleep_time*100)/100
+
+            self.slackbot.send_message(text=MsgResource.SLEEP_TIME(
+                good_night.format("HH:mm"), good_morning.format("HH:mm"), str(sleep_time)
+            ))
+            return True
+        else:
+            return False
+
+    def call_good_night(self, text):
+        if "굿나잇" == text:
+            skills.Summary().record_good_night()
+            self.slackbot.send_message(text=MsgResource.GOOD_NIGHT)
             return True
         else:
             return False

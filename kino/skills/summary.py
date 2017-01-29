@@ -16,9 +16,10 @@ class Summary(object):
         template = slack.MsgTemplate()
 
         today_data = self.__total_score("today")
-        color = MsgResource.SCORE_COLOR(today_data['Total'])
-
         self.data_handler.edit_record(today_data)
+
+        color = MsgResource.SCORE_COLOR(today_data['Total'])
+        today_data['Color'] = color
 
         yesterday_data = self.__total_score("yesterday")
         for k,v in today_data.items():
@@ -41,7 +42,13 @@ class Summary(object):
                 else:
                     today_data[k] = "X"
 
-        today_data['Color'] = color
+        record = self.data_handler.read_record()
+        good_morning = arrow.get(record['GoodMorning'])
+        now = arrow.now()
+        activity_time = (now - good_morning).seconds / 60 / 60
+        activity_time = round(activity_time*100)/100
+        today_data['Activity Time'] = good_morning.format("HH:mm") + " ~ " + now.format("HH:mm") + " : " + str(activity_time) + "h"
+
         attachments = template.make_summary_template(today_data)
         slackbot.send_message(attachments=attachments)
 
@@ -100,8 +107,17 @@ class Summary(object):
         else:
             return 0
 
-    def do_write_diary(self):
+    def record_write_diary(self):
         self.data_handler.edit_record(('Diary', True))
 
-    def do_exercise(self):
+    def record_exercise(self):
         self.data_handler.edit_record(('Exercise', True))
+
+    def record_good_morning(self):
+        now = arrow.now()
+        self.data_handler.edit_record(('GoodMorning', str(now)))
+
+    def record_good_night(self):
+        now = arrow.now()
+        self.data_handler.edit_record(('GoodNight', str(now)))
+

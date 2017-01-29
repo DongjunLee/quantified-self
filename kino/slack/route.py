@@ -1,9 +1,7 @@
-import re
 
 import skills
 import nlp
 import kino
-import notifier
 import slack
 from slack import MsgResource
 import utils
@@ -24,15 +22,14 @@ class MsgRouter(object):
 
         dialog_manager = nlp.DialogManager()
 
-        # Check Dialog, Exercise
-        if dialog_manager.is_call_write_diary(simple_text):
-            skills.Summary().do_write_diary()
-            self.slackbot.send_message(text=MsgResource.APPLAUD)
+        # Check GoodMorning, Exercise, Dialog, GoodNight
+        if dialog_manager.call_write_diary(simple_text):
             return
-
-        if dialog_manager.is_call_do_exercise(simple_text):
-            skills.Summary().do_exercise()
-            self.slackbot.send_message(text=MsgResource.APPLAUD)
+        if dialog_manager.call_do_exercise(simple_text):
+            return
+        if dialog_manager.call_good_morning(simple_text):
+            return
+        if dialog_manager.call_good_night(simple_text):
             return
 
         # Check Flow
