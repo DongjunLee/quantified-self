@@ -10,10 +10,10 @@ import utils
 class GithubManager(object):
 
     def __init__(self):
-        self.config = utils.Config().github
+        self.config = utils.Config()
 
-        self.username = self.config["USERNAME"]
-        password = self.config["PASSWORD"]
+        self.username = self.config.open_api['github']['USERNAME']
+        password = self.config.open_api['github']['PASSWORD']
         self.github = Github(self.username, password)
         self.events = None
 
@@ -49,6 +49,14 @@ class GithubManager(object):
                                x_label="Commit Count", title=title)
             self.slackbot.file_upload(f_name, title=title, comment=MsgResource.GITHUB_COMMIT_WEEKLY)
 
+        elif timely == "ten_days":
+            commit_count_list = []
+            for i in range(-9, 1, 1):
+                point_start = self.__time_point(i)
+                point_end = self.__time_point(i+1)
+                commit_count_list.append(self.__get_event_count(point_start, point_end))
+            return commit_count_list
+
     def __time_point(self, days):
         today = arrow.now()
         point_date = today.replace(days=days)
@@ -69,3 +77,6 @@ class GithubManager(object):
                 break
         return len(commit_events)
 
+    def get_point(self):
+        commit_count = sum(self.commit(timely="ten_days"))
+        return utils.Score().percent(commit_count, 100, 10)

@@ -2,6 +2,7 @@
 
 import random
 
+import nlp
 import slack
 from slack import MsgResource
 import utils
@@ -16,8 +17,7 @@ class Between(object):
         self.template = slack.MsgTemplate()
 
     def create(self, step=0, params=None):
-
-        state = State()
+        state = nlp.State()
 
         def step_0(params):
             self.slackbot.send_message(text=MsgResource.BETWEEN_CREATE_START)
@@ -43,12 +43,7 @@ class Between(object):
             state.complete()
             self.slackbot.send_message(text=MsgResource.CREATE)
 
-        if state.is_do_something():
-            current_step = state.current["step"]
-            step_num = "step_" + str(current_step)
-            locals()[step_num](params)
-        else:
-            step_0(params)
+        locals()["step_" + str(step)](params)
 
     def __generate_color_code(self):
         r = lambda: random.randint(0,255)
@@ -89,8 +84,7 @@ class Between(object):
             self.slackbot.send_message(text=MsgResource.ERROR)
 
     def delete(self, step=0, params=None):
-
-        state = State()
+        state = nlp.State()
 
         def step_0(params):
             self.slackbot.send_message(text=MsgResource.BETWEEN_DELETE_START)
@@ -104,11 +98,4 @@ class Between(object):
             state.complete()
             self.slackbot.send_message(text=MsgResource.DELETE)
 
-        if state.is_do_something():
-            current_step = state.current["step"]
-            step_num = "step_" + str(current_step)
-            locals()[step_num](params)
-        else:
-            step_0(params)
-
-
+        locals()["step_" + str(step)](params)

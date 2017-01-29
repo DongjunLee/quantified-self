@@ -1,22 +1,18 @@
 # -*- coding: utf-8 -*-
 
+import datetime
+
 from utils.data_handler import DataHandler
 
 class Config(object):
     class __Config:
         def __init__(self):
-            self.data_handler = DataHandler()
-            self.fname = "config.json"
+            config = DataHandler().read_file("config.json")
 
-            config = self.__read_config()
-            self.kino = config["kino"]
-            self.github = config["github"]
-            self.weather = config["weather"]
-            self.todoist = config["todoist"]
-            self.toggl = config["toggl"]
-
-        def __read_config(self):
-            return self.data_handler.read_file(self.fname)
+            self.bot = config["bot"]
+            self.slack = config["slack"]
+            self.profile = config["profile"]
+            self.open_api = config["open_api"]
 
     instance = None
     def __init__(self):

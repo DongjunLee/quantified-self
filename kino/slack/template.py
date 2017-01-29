@@ -39,22 +39,24 @@ class MsgTemplate(object):
             else:
                 a_dict['color'] = "#438C56"
 
-            text = ""
-            for d_k,d_v in v.items():
-                if type(d_v) == type([]):
-                    text += MsgResource.ORANGE_DIAMOND_ICON + d_k + "\n"
-                    for element in d_v:
-                        text += MsgResource.WHITE_ELEMENT_ICON + element + "\n"
-                else:
-                    text += MsgResource.ORANGE_DIAMOND_ICON + d_k + ": " + d_v + "\n"
-            a_dict['text'] = text
+            fields = []
+            if 'registered_alarm' in v:
+                for d_k, d_v in v['registered_alarm'].items():
+                    field = {
+                        "title": " - " + d_k,
+                        "value": d_v,
+                        "short": "true"
+                    }
+                    fields.append(field)
 
+            a_dict['fields'] = fields
+            a_dict['text'] = ""
             a_dict['mrkdwn_in'] = ["text", "pretext"]
 
             attachments.append(a_dict)
         return attachments
 
-    def make_function_template(self, pretext, data):
+    def make_skill_template(self, pretext, data):
         sorted(data.items())
         attachments = []
         a_dict = {}
@@ -144,3 +146,65 @@ class MsgTemplate(object):
 
             attachments.append(a_dict)
         return attachments
+
+    def make_bus_stop_template(self, data):
+        attachments = []
+        a_dict = {}
+        a_dict['fallback'] = "Bus 도착정보. "
+        a_dict['text'] = "Bus 도착정보 입니다."
+        a_dict['mrkdwn_in'] = ["text", "pretext"]
+        a_dict['color'] = "#438C56"
+
+        fields = []
+        for k,v in data.items():
+            field = {}
+
+            field['title'] = MsgResource.BUS_ICON + str(k) + "번 버스"
+            field['value'] = MsgResource.ORANGE_DIAMOND_ICON + v['bus1'] + "\n" + MsgResource.ORANGE_DIAMOND_ICON + v['bus2']
+            field['short'] = "true"
+            fields.append(field)
+        a_dict['fields'] = fields
+
+        attachments.append(a_dict)
+        return attachments
+
+    def make_summary_template(self, data):
+        attachments = []
+        a_dict = {}
+
+        a_dict['color'] = data['Color']
+        total_score = data['Total']
+        del data['Color']
+        del data['Total']
+
+        a_dict['fallback'] = "종합점수:  " + str(total_score)
+        a_dict['text'] = "종합점수 입니다."
+        a_dict['mrkdwn_in'] = ["text", "pretext"]
+
+        fields = []
+        field = {
+            "title": "Activity Time",
+            "value": data['Activity Time']
+        }
+        fields.append(field)
+        del data['Activity Time']
+
+        for k,v in data.items():
+            field = {}
+
+            field['title'] = k
+            field['value'] = str(v)
+            field['short'] = "true"
+            fields.append(field)
+
+        field = {
+            "title": "Total Score",
+            "value": str(total_score) + " 점"
+        }
+        fields.append(field)
+
+        a_dict['fields'] = fields
+
+        attachments.append(a_dict)
+        return attachments
+

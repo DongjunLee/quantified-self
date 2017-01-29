@@ -47,6 +47,11 @@ class MsgResource:
     SEND_MESSAGE_ICON = ":speech_balloon: "
     DAILY_COMMIT_ICON = ":octocat: "
 
+    PROFILE_WAKE_UP = ":bell: 이제 일어날 시간 입니다! :bell: "
+    PROFILE_WORK_START = "오늘 하루도 화이팅입니다!ㅎㅎ :raised_hands:"
+    PROFILE_WORK_END = "고생하셨습니다! 푹 쉬시면서, 자기발전도 하시고 알찬 저녁 보내세요. :night_with_stars:"
+    PROFILE_GO_TO_BED = ":sleeping_accommodation: 이제 주무실 시간입니다! "
+
     WEATHER = "날씨 정보를 알려드립니다."
     WEATHER_ICON = ":full_moon_with_face: "
     WEATHER_ICONS = {
@@ -66,7 +71,7 @@ class MsgResource:
     YOUTUBE_ICON = ":video_camera: "
 
     TODOIST_ICON = ":memo: "
-    TODOIST_TODAY_BREIFING = "오늘의 브리핑을 시작하겠습니다."
+    TODOIST_TODAY_SCHEDULE = "오늘의 스케쥴을 알려드리겠습니다."
     def TODOIST_OVERDUE(task_count): return "기한이 지난 일이 " + str(task_count) + "개 있습니다."
     def TODOIST_TODAY(task_count): return "오늘 할일의 수는 " + str(task_count) + "개 입니다."
     def TODOIST_KARMA(trend):
@@ -85,8 +90,8 @@ class MsgResource:
         }
         return priority_color[priority]
     TODOIST_TIME = "에 예정되어 있습니다."
-    TODOIST_TODAY_SUMMARY = "오늘 하루 요약을 시작하겠습니다."
-    def TODOIST_SUMMARY_OVERDUE(task_count):
+    TODOIST_FEEDBACK = "오늘 Todoist 작업내역 입니다."
+    def TODOIST_FEEDBACK_OVERDUE(task_count):
         if task_count > 5:
             return "아직 처리해야할 일들이 " + str(task_count) + "개나 남았습니다. ㅠㅠ"
         elif task_count > 0:
@@ -94,7 +99,7 @@ class MsgResource:
         else:
             return "오.. 예정되었던 일들을 전부 처리하셨군요! 이제 푹 쉬세요. :+1: "
 
-    def TODOIST_SUMMARY_EVENT(a_count, c_count, u_count):
+    def TODOIST_FEEDBACK_EVENT(a_count, c_count, u_count):
         return "오늘은 총 {} 개의 할일들을 추가하였고, {} 개의 일들을 완료하였으며, {} 개의 일들을 완료하지 못하고 연기하였습니다.".format(a_count, c_count, u_count)
 
     MAXIM_ICON = ":scales: "
@@ -106,5 +111,42 @@ class MsgResource:
     TOGGL_DO_NOTHING =  "지금은 아무런 작업도 하고 있지 않으십니다."
     def TOGGL_TIMER_CHECK(minute): return "작업을 진행하신지 " + str(minute) + "분 경과하였습니다."
     TOGGL_NOTI_RELAY = "작업을 너무 오래하고 계십니다! 잠시 멈추고 십분만 휴식하시죠!!"
-    TOGGL_REPORT = "Toggl에 저장되어있는 일주일간의 Report 입니다."
+    TOGGL_REPORT = "Toggl에 저장되어있는 Report 입니다."
 
+    HAPPY_QUESTION_STEP_0 = "지금 현재 행복도는 10점 만점에 몇점인가요??"
+    def HAPPY_QUESTION_STEP_1(happy):
+        happy = int(happy)
+        if happy >= 100:
+            return "기분 최고!! :laughing: "
+        elif happy >= 90:
+            return "행복하시군요ㅎㅎ 보기 좋습니다. :smile: "
+        elif happy >= 80:
+            return "슬며시 미소를 짓고 계신 것 같아요ㅎㅎ :smiley: "
+        elif happy >= 70:
+            return "기분이 그냥 그러시군요! :simple_smile: "
+        else:
+            return "무슨 일 있으신가요? 기분이 안 좋아보입니다ㅠㅠ :angry: "
+    HAPPY_REPORT = "행복도 Report 입니다."
+
+    RESCUETIME_EFFICIENCY = "RescueTime 생산성 차트입니다."
+
+    TODAY_BREIFING = "오늘 하루 브리핑을 시작하겠습니다!"
+    TODAY_SUMMARY = "오늘 하루 요약을 시작하겠습니다!"
+
+    BUS_ICON = ":bus: "
+
+    def SCORE_COLOR(score):
+        if score >= 90:
+            return "#438C56"
+        elif score >= 75:
+            return "#38ACEC"
+        elif score >= 60:
+            return "#FF8040"
+        else:
+            return "#C11B17"
+
+    APPLAUD = ":clap::clap::clap: 멋지십니다!ㅎㅎ"
+    GOOD_MORNING = "안녕히 주무셨나요? 좋은 아침입니다^^ :sun_with_face:"
+    def SLEEP_TIME(bed_time, wakeup_time, diff):
+        return bed_time + " ~ " + wakeup_time + ", 총 " + diff + "h 동안 잠을 주무셨습니다."
+    GOOD_NIGHT = "이제 주무시는 군요. 좋은 꿈 꾸세요 :first_quarter_moon_with_face:"

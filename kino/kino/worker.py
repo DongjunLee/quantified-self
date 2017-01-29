@@ -4,7 +4,7 @@ import json
 import schedule
 import threading
 
-import functions
+import skills
 import nlp
 import notifier
 import slack
@@ -21,27 +21,71 @@ class Worker(object):
         self.ner = nlp.NamedEntitiyRecognizer()
 
     def create(self):
-        time_of_day = self.ner.parse(self.ner.time_of_day, self.input)
-        time_unit = self.ner.parse(self.ner.time_unit, self.input, get_all=True)
-        period = self.ner.parse(self.ner.period, self.input)
-        func_name = self.ner.parse(self.ner.functions, self.input)
-        params = self.ner.parse(self.ner.params[func_name], self.input)
+        ner_dict = {k: self.ner.parse(v, self.input) for k,v in self.ner.schedule.items()}
+        time_unit = self.ner.parse(self.ner.schedule['time_unit'], self.input, get_all=True)
+        ner_dict['time_unit'] = time_unit
 
-        ner_dict = {
-            "time_of_day": time_of_day,
-            "time_unit": time_unit,
-            "period": period,
-            "functions": func_name,
-            "params": params
-        }
+        skill_keywords = {k: v['keyword'] for k,v in self.ner.skills.items()}
+        func_name = self.ner.parse(skill_keywords, self.input)
+        ner_dict['skills'] = func_name
+
+        params = {k: self.ner.parse(v, self.input) for k,v in self.ner.params.items()}
+        ner_dict['params'] = params
+        print(str(ner_dict))
+
         notifier.Scheduler().create_with_ner(**ner_dict)
 
     def run(self):
-        self.__set_schedules()
+        self.set_schedules()
         schedule.run_continuously(interval=1)
         self.slackbot.send_message(text=MsgResource.WORKER_START)
 
-    def __set_schedules(self):
+    def set_schedules(self):
+        self.__set_profile_schedule()
+        self.__set_custom_schedule()
+
+    def __set_profile_schedule(self):
+        profile = utils.Profile()
+        function = skills.FunctionManager().load_function
+
+        schedule.every().day.at(profile.get_wake_up_time()).do(
+                self.__run_threaded, function, {
+                    "repeat": False,
+                    "func_name": 'send_message',
+                    "params": {
+                        "text": MsgResource.PROFILE_WAKE_UP
+                    }
+                })
+
+        working_start, working_end = profile.get_working_hour_time().split("~")
+        schedule.every().day.at(working_start).do(
+                self.__run_threaded, function, {
+                    "repeat": False,
+                    "func_name": 'send_message',
+                    "params": {
+                        "text": MsgResource.PROFILE_WORK_START
+                    }
+                })
+
+        schedule.every().day.at(working_end).do(
+                self.__run_threaded, function, {
+                    "repeat": False,
+                    "func_name": 'send_message',
+                    "params": {
+                        "text": MsgResource.PROFILE_WORK_END
+                    }
+                })
+
+        schedule.every().day.at(profile.get_go_to_bed_time()).do(
+                self.__run_threaded, function, {
+                    "repeat": False,
+                    "func_name": 'send_message',
+                    "params": {
+                        "text": MsgResource.PROFILE_GO_TO_BED
+                    }
+                })
+
+    def __set_custom_schedule(self):
         schedule_fname = "schedule.json"
         schedule_data = self.data_handler.read_file(schedule_fname)
         alarm_data = schedule_data.get('alarm', {})
@@ -61,7 +105,7 @@ class Worker(object):
                 }
 
                 try:
-                    function = functions.FunctionManager().load_function
+                    function = skills.FunctionManager().load_function
                     schedule.every().day.at(time).do(self.__run_threaded,
                                                             function, param)
                 except Exception as e:
@@ -85,12 +129,11 @@ class Worker(object):
                 }
 
                 try:
-                    function = functions.FunctionManager().load_function
+                    function = skills.FunctionManager().load_function
                     getattr(schedule.every(number), datetime_unit).do(self.__run_threaded,
                                                                     function, param)
                 except Exception as e:
                     print("Error: " + e)
-
 
     def __replace_datetime_unit_ko2en(self, datetime_unit):
         ko2en_dict = {

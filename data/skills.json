@@ -1,0 +1,98 @@
+{
+  "send_message": {
+    "keyword": ["메시지 보내기"],
+    "params": ["text"],
+    "description": "텍스트 메시지 전송",
+    "icon": ":speech_balloon: "
+  },
+  "bus_stop": {
+    "keyword": ["버스 도착", "버스도착", "버스 언제", "버스 조회", "버스조회"],
+    "params": ["station_id"],
+    "description": "버스 도착 정보 조회",
+    "icon": ":oncoming_bus: "
+  },
+  "forecast": {
+    "keyword": ["날씨", "예보"],
+    "params": ["timely"],
+    "description": "날씨예보",
+    "icon": ":sun_with_face: "
+  },
+  "github_commit": {
+    "keyword": ["깃허브", "github", "커밋", "commit"],
+    "params": ["timely"],
+    "description": "Github commit 여부를 확인",
+    "icon": ":octocat: "
+  },
+  "happy": {
+    "keyword": ["행복도 조사", "행복도 질문", "happy question"],
+    "params": [],
+    "description": "행복도 조사",
+    "icon": ":smile: "
+  },
+  "happy_report": {
+    "keyword": ["행복도 리포트", "happy report"],
+    "params": [],
+    "description": "행복도 리포트",
+    "icon": ":smile_cat: "
+  },
+  "total_score": {
+    "keyword": ["종합 점수"],
+    "params": [],
+    "description": "종합 점수. \n - 생산성(RescueTime, Github Commit, Todoist, Toggl)\n - 평균 행복도 \n - 운동여부, 일기여부",
+    "icon": ":robot_face: "
+  },
+  "rescuetime_efficiency": {
+    "keyword": ["레스큐타임 효율성", "작업 효율", "생산성 차트"],
+    "params": ["timely"],
+    "description": "RescueTime Efficiency 차트",
+    "icon": ":chart_with_upwards_trend: "
+  },
+  "today_briefing": {
+    "keyword": ["하루 브리핑", "오늘하루 브리핑"],
+    "params": [],
+    "description": "하루 브리핑 \n - 오늘의 날씨 \n - Todoist 스케쥴",
+    "icon": ":city_sunset:  "
+  },
+  "today_summary": {
+    "keyword": ["하루 마무리", "하루 요약"],
+    "params": [],
+    "description": "하루 요약 \n - Todoist 피드백 \n - Toggl 작업리포트 \n - RescueTime 생산성 차트 \n - 행복도 리포트 \n - 일일 커밋",
+    "icon": ":night_with_stars: "
+  },
+  "todoist_schedule": {
+    "keyword": ["스케쥴", "할일 안내", "todoist schedule"],
+    "params": [],
+    "description": "Todoist에 등록되어 있는 스케쥴 안내",
+    "icon": ":calendar:  "
+  },
+  "todoist_feedback": {
+    "keyword": ["할일 피드백", "todoist feedback"],
+    "params": [],
+    "description": "Todoist의 작업내역 피드백",
+    "icon": ":memo: "
+  },
+  "toggl_timer": {
+    "keyword": ["toggl"],
+    "params": [],
+    "description": "Toggl Timer",
+    "icon": ":watch: "
+  },
+  "toggl_checker": {
+    "keyword": ["작업 시간", "작업시간", "경과 시간", "경과시간", "시간 체크", "시간체크"],
+    "params": [],
+    "description": "Toggl Timer 30분 단위 시간체크",
+    "icon": ":bell: "
+  },
+  "toggl_report": {
+    "keyword": ["토글 리포트", "작업 리포트"],
+    "params": ["kind", "timely"],
+    "description": "Toggl Report 작업 리포트",
+    "icon": ":bar_chart: "
+  },
+  "maxim_nietzsche": {
+    "keyword": ["니체 명언", "니체의 말"],
+    "params": [],
+    "description": "니체의 명언",
+    "icon": ":scales: "
+  }
+}

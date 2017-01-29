@@ -16,9 +16,9 @@ class Weather(object):
         self.template = slack.MsgTemplate()
 
         geolocator = GoogleV3()
-        self.location = geolocator.geocode(self.config.weather["HOME"])
+        self.location = geolocator.geocode(utils.Profile().get_location())
 
-        api_key = self.config.weather["DARK_SKY_SECRET_KEY"]
+        api_key = self.config.open_api['dark_sky']['TOKEN']
         lat = self.location.latitude
         lon = self.location.longitude
         self.forecastio = forecastio.load_forecast(api_key, lat, lon)
@@ -27,10 +27,10 @@ class Weather(object):
         if timely == 'current':
             currently = self.forecastio.currently()
             self.__forecast(currently, timely)
-        elif timely == 'hourly':
+        elif timely == 'daily':
             hourly = self.forecastio.hourly()
             self.__forecast(hourly, timely)
-        elif timely == 'daily':
+        elif timely == 'weekly':
             daily = self.forecastio.daily()
             self.__forecast(daily, timely)
 

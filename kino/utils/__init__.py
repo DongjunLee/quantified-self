@@ -3,9 +3,11 @@
 from .config import Config
 from .data_handler import DataHandler
 from .logger import Logger
-from .state import State
+from .profile import Profile
+from .score import Score
 
 __all__ = ['Config',
            'DataHandler',
            'Logger',
-           'State']
+           'Profile',
+           'Score']

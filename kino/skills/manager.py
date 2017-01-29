@@ -4,7 +4,7 @@ import datetime
 import json
 import schedule
 
-import functions
+import skills
 import slack
 import utils
 
@@ -13,7 +13,7 @@ class FunctionManager(object):
     def __init__(self, text=None):
         self.input = text
         self.slackbot = slack.SlackerAdapter()
-        self.functions = functions.Functions().registered
+        self.functions = skills.Functions().registered
         self.template = slack.MsgTemplate()
         self.logger = utils.Logger().get_logger()
 
@@ -29,7 +29,7 @@ class FunctionManager(object):
             self.__excute(func_name, params)
 
     def __excute(self, func_name, params):
-        getattr(functions.Functions(), func_name)(**params)
+        getattr(skills.Functions(), func_name)(**params)
 
     def __is_between(self, start_time, end_time):
         now = datetime.datetime.now()
@@ -48,5 +48,5 @@ class FunctionManager(object):
             return False
 
     def read(self):
-        attachments = self.template.make_function_template("", self.functions)
+        attachments = self.template.make_skill_template("", self.functions)
         self.slackbot.send_message(attachments=attachments)
