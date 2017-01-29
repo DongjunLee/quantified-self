@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import arrow
 import json
 
 class DataHandler(object):
 
     def __init__(self):
         self.data_path = "../data/"
+        self.record_path = "record/"
 
     def read_file(self, fname):
         try:
@@ -68,4 +70,27 @@ class DataHandler(object):
         current_category_data = category_data[c_index]
         return c_index, current_category_data
 
+    def read_record(self, days=0):
+        date = arrow.now().replace(days=days)
+        fname = self.record_path + date.format('YYYY-MM-DD') + ".json"
+        return self.read_file(fname)
 
+    def write_record(self, data, days=0):
+        date = arrow.now().replace(days=days)
+        fname = self.record_path + date.format('YYYY-MM-DD') + ".json"
+        self.write_file(fname, data)
+
+    def edit_record(self, data, days=0):
+        record = self.read_record(days=days)
+        if type(data) == tuple:
+            record[data[0]] = data[1]
+        elif type(data) == dict:
+            for k,v in data.items():
+                record[k] = v
+        self.write_record(record, days=days)
+
+    def edit_record_happy(self, data, days=0):
+        record = self.read_record(days=days)
+        happy_data = record.get('happy', {})
+        happy_data[data[0]] = data[1]
+        self.edit_record(('happy', happy_data), days=days)

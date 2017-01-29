@@ -14,7 +14,6 @@ class Happy(object):
         self.input = text
         self.slackbot = slack.SlackerAdapter()
         self.data_handler = utils.DataHandler()
-        self.fname = "happy/" + arrow.now().format('YYYY-MM-DD') + ".json"
         self.plot = slack.Plot
 
     def question(self, step=0, params=None):
@@ -35,11 +34,8 @@ class Happy(object):
 
             now = arrow.now()
             time = now.format('HH:mm')
-
             happy_point = numbers[0]
-            happy_data = self.data_handler.read_file(self.fname)
-            happy_data[time] = happy_point
-            self.data_handler.write_file(self.fname, happy_data)
+            self.data_handler.edit_record_happy((time, happy_point))
 
             self.slackbot.send_message(text=MsgResource.HAPPY_QUESTION_STEP_1(happy_point))
             state.complete()
@@ -48,7 +44,7 @@ class Happy(object):
 
     def report(self, timely="daily"):
         if timely == "daily":
-            happy_data = self.get_data()
+            happy_data = self.data_handler.read_record().get('happy', {})
 
             def convert_time(time):
                 hour, minute = time[0].split(":")
@@ -67,6 +63,3 @@ class Happy(object):
             self.plot.make_line(time, happy_point_list, f_name, x_ticks=x_ticks,
                                 x_label="Happy Point", y_label="Time", title=title)
             self.slackbot.file_upload(f_name, title=title, comment=MsgResource.HAPPY_REPORT)
-
-    def get_data(self):
-        return self.data_handler.read_file(self.fname)

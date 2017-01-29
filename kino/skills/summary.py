@@ -9,7 +9,7 @@ import utils
 class Summary(object):
 
     def __init__(self):
-        pass
+        self.data_handler = utils.DataHandler()
 
     def total_score(self):
         slackbot = slack.SlackerAdapter()
@@ -18,13 +18,16 @@ class Summary(object):
         today_data = self.__total_score("today")
         color = MsgResource.SCORE_COLOR(today_data['Total'])
 
+        self.data_handler.edit_record(today_data)
+
         yesterday_data = self.__total_score("yesterday")
         for k,v in today_data.items():
             if type(v) == float:
-                diff = v - yesterday_data.get(k, False)
-                if not diff:
+                y_point = yesterday_data.get(k, False)
+                if not y_point:
                     continue
                 else:
+                    diff = v - y_point
                     diff = round(diff*100)/100
 
                 if diff > 0:
@@ -32,6 +35,11 @@ class Summary(object):
                 else:
                     diff = str(diff)
                 today_data[k] = str(v) + " (" + diff + ")"
+            elif type(v) == bool:
+                if v:
+                    today_data[k] = "O"
+                else:
+                    today_data[k] = "X"
 
         today_data['Color'] = color
         attachments = template.make_summary_template(today_data)
@@ -42,9 +50,9 @@ class Summary(object):
             productive = self.__productive_score()
             happy = self.__happy_score()
 
-            today_data = self.__get_data("today")
-            diary = today_data.get('diary', False)
-            exercise = today_data.get('exercise', False)
+            today_data = self.data_handler.read_record()
+            diary = today_data.get('Diary', False)
+            exercise = today_data.get('Exercise', False)
 
             score = utils.Score()
             total = score.percent(happy, 50, 100) + score.percent(productive, 40, 100)
@@ -62,40 +70,38 @@ class Summary(object):
             }
             return data
         elif timely == "yesterday":
-            return self.__get_data("yesterday")
-
+            return self.data_handler.read_record(days=-1)
 
     def __productive_score(self):
         rescue_time_point = skills.RescueTime().get_point()
         toggl_point = skills.TogglManager().get_point()
         github_point = skills.GithubManager().get_point()
         todoist_point = skills.TodoistManager().get_point()
+
+        data = {
+            "rescue_time": round(rescue_time_point*100)/100,
+            "toggl": round(toggl_point*100)/100,
+            "github": round(github_point*100)/100,
+            "todoist": round(todoist_point*100)/100
+        }
+        self.data_handler.edit_record(('productive', data))
+
+        score = utils.Score()
+        rescue_time_point = score.percent(rescue_time_point, 10, 100)
+        github_point = score.percent(github_point, 10, 100)
+        todoist_point = score.percent(todoist_point, 30, 100)
+        toggl_point = score.percent(toggl_point, 50, 100)
         return (rescue_time_point + github_point + todoist_point + toggl_point)
 
     def __happy_score(self):
-        happy_data = skills.Happy().get_data()
-        return sum(list(map(lambda x: int(x), happy_data.values()))) / len(happy_data)
-
-    def __get_data(self, timely):
-        data_handler = utils.DataHandler()
-        if timely == "today":
-            date = arrow.now()
-        elif timely == "yesterday":
-            date = arrow.now().replace(days=-1)
-        fname = "summary/" + date.format('YYYY-MM-DD') + ".json"
-        return data_handler.read_file(fname)
-
-    def __write_data(self, data):
-        data_handler = utils.DataHandler()
-        fname = "summary/" + arrow.now().format('YYYY-MM-DD') + ".json"
-        return data_handler.write_file(fname, data)
+        happy_data = self.data_handler.read_record().get('happy', {})
+        if len(happy_data) > 0:
+            return sum(list(map(lambda x: int(x), happy_data.values()))) / len(happy_data)
+        else:
+            return 0
 
     def do_write_diary(self):
-        today_data = self.__get_data("today")
-        today_data['diary'] = True
-        self.__write_data(today_data)
+        self.data_handler.edit_record(('Diary', True))
 
     def do_exercise(self):
-        today_data = self.__get_data("today")
-        today_data['exercise'] = True
-        self.__write_data(today_data)
+        self.data_handler.edit_record(('Exercise', True))
