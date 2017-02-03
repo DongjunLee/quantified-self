@@ -1,4 +1,3 @@
-import os
 
 from slacker import Slacker
 
@@ -29,5 +28,5 @@ class SlackerAdapter(object):
     def get_bot_id(self):
         users = self.slacker.users.list().body['members']
         for user in users:
-            if user['name'] == "kino":
+            if user['name'] == self.config.bot["BOT_NAME"].lower():
                 return user['id']

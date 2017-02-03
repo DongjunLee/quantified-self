@@ -12,7 +12,7 @@ class MsgRouter(object):
         self.slackbot = slack.SlackerAdapter()
         self.logger = utils.Logger().get_logger()
 
-    def route(self, text=None, user=None):
+    def route(self, text=None, user=None, channel=None):
         self.logger.info("raw input: " + text)
 
         # Preprocessing
