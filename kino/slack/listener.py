@@ -15,7 +15,7 @@ class MsgListener(object):
         self.msg = json.loads(msg)
 
         msg_type = self.msg.get("type", None)
-        if msg_type == "message" and not self.__is_self_message():
+        if msg_type == "message" and not self.__is_self():
             try:
                 self.router.route(text=self.msg['text'], user=self.msg['user'])
             except Exception as e:
