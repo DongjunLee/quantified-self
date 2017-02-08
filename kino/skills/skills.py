@@ -52,6 +52,7 @@ class Functions(object):
 
         weather = skills.Weather()
         weather.read(timely="daily")
+        weather.air_quality()
 
         todoist = skills.TodoistManager()
         todoist.schedule()

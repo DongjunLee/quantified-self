@@ -56,7 +56,7 @@
   "today_briefing": {
     "keyword": ["하루 브리핑", "오늘하루 브리핑"],
     "params": [],
-    "description": "하루 브리핑 \n - 오늘의 날씨 \n - Todoist 스케쥴",
+    "description": "하루 브리핑 \n - 오늘의 날씨, 미세먼지 \n - Todoist 스케쥴",
     "icon": ":city_sunset:  "
   },
   "today_summary": {
