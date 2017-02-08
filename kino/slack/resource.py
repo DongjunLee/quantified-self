@@ -150,3 +150,23 @@ class MsgResource:
     def SLEEP_TIME(bed_time, wakeup_time, diff):
         return bed_time + " ~ " + wakeup_time + ", 총 " + diff + "h 동안 잠을 주무셨습니다."
     GOOD_NIGHT = "이제 주무시는 군요. 좋은 꿈 꾸세요 :first_quarter_moon_with_face:"
+
+    def AIR_QUALITY_COLOR(grade):
+        if grade == 1:
+            return "#1E90FF"
+        elif grade == 2:
+            return "#90EE90"
+        elif grade == 3:
+            return "#FF6347"
+        else:
+            return "#DC143C"
+
+    def AIR_QUALITY_TEXT(grade):
+        if grade == 1:
+            return "좋음"
+        elif grade == 2:
+            return "보통"
+        elif grade == 3:
+            return "나쁨"
+        else:
+            return "매우 나쁨"

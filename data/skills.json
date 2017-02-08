@@ -17,6 +17,12 @@
     "description": "날씨예보",
     "icon": ":sun_with_face: "
   },
+  "air_quality": {
+    "keyword": ["공기질", "미세먼지"],
+    "params": [],
+    "description": "공기질 예보",
+    "icon": ":factory: "
+  },
   "github_commit": {
     "keyword": ["깃허브", "github", "커밋", "commit"],
     "params": ["timely"],

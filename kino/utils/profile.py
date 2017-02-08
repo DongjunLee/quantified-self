@@ -36,7 +36,7 @@ class Profile(object):
         hour, minute = time_text.split(":")
         return ( int(hour), int(minute) )
 
-    def get_location(self):
+    def get_location(self, station=False):
         start_time, end_time = self.get_working_hour_time(parsed=True)
         start_h, start_m = start_time
         end_h, end_m = end_time
@@ -46,7 +46,12 @@ class Profile(object):
         end = now.replace(hour=end_h, minute=end_m, second=0, microsecond=0)
 
         if (start <= now <= end):
-            return self.location['WORK_PLACE']
+            if station:
+                return self.location['WORK_PLACE_STATION_NAME']
+            else:
+                return self.location['WORK_PLACE']
         else:
-            return self.location['HOME']
-
+            if station:
+                return self.location['HOME_STATION_NAME']
+            else:
+                return self.location['HOME']

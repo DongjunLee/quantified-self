@@ -21,7 +21,11 @@ class Functions(object):
 
     def forecast(self, timely="current"):
         weather = skills.Weather()
-        weather.read(timely=timely)
+        weather.forecase(timely=timely)
+
+    def air_quality(self):
+        weather = skills.Weather()
+        weather.air_quality()
 
     def github_commit(self, timely="daily"):
         github = skills.GithubManager()

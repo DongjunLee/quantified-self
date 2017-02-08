@@ -128,6 +128,41 @@ class MsgTemplate(object):
         attachments.append(a_dict)
         return attachments
 
+    def make_air_quality_template(self, data):
+        attachments = []
+
+        cai = data['cai']
+
+        a_dict = {}
+        a_dict['color'] = MsgResource.AIR_QUALITY_COLOR(cai['grade'])
+        a_dict['fallback'] = cai['description'] + " : " + cai['value']
+        a_dict['text'] = "대기질 정보 입니다."
+        a_dict['mrkdwn_in'] = ["text", "pretext"]
+
+        fields = []
+        field = {
+            "title": cai['description'],
+            "value": cai['value'] + "점"
+        }
+        fields.append(field)
+        del data['cai']
+        del data['pm25']
+
+        for k,v in data.items():
+            if type(v) == str:
+                continue
+            field = {}
+
+            field['title'] = v['description']
+            field['value'] = v['value'] + v['unit'] + "\n" + MsgResource.AIR_QUALITY_TEXT(v['grade'])
+            field['short'] = "true"
+            fields.append(field)
+        fields.append(field)
+
+        a_dict['fields'] = fields
+
+        attachments.append(a_dict)
+        return attachments
 
     def make_todoist_specific_time_task_template(self, tasks):
         attachments = []
