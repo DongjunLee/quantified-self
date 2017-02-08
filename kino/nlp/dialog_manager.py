@@ -99,7 +99,7 @@ class DialogManager(object):
             return False
 
     def call_good_morning(self, text):
-        if "굿모닝" == text:
+        if "굿모닝" in text:
             self.slackbot.send_message(text=MsgResource.GOOD_MORNING)
 
             skills.Summary().record_good_morning()
@@ -119,7 +119,7 @@ class DialogManager(object):
             return False
 
     def call_good_night(self, text):
-        if "굿나잇" == text:
+        if "굿나잇" in text:
             skills.Summary().record_good_night()
             self.slackbot.send_message(text=MsgResource.GOOD_NIGHT)
             return True
@@ -149,6 +149,7 @@ class State(object):
         self.data_handler.write_file(self.fname, doing)
 
     def next_step(self, num=1):
+        self.check()
         step_num = self.current['step'] + num
         self.current['step'] = step_num
         self.data_handler.write_file(self.fname, self.current)
