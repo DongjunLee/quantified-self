@@ -115,14 +115,28 @@ class MsgTemplate(object):
         a_dict['fallback'] = MsgResource.WEATHER_ICONS[icon] + " " + fallback
         a_dict['color'] = "#438C56"
 
-        text = address + " 의 "
-        if temperature is None:
-            text += "날씨는 "
-        else:
-            text += "현재 날씨는 " + "{:.3}".format(temperature) + "도에 "
-        text += "\n" + MsgResource.WEATHER_ICONS[icon] + " " + summary + " 입니다."
-        a_dict['text'] = text
+        fields = [
+            {
+                "title": "Address",
+                "value": address
+            },
+            {
+                "title": "ICON",
+                "value": MsgResource.WEATHER_ICONS[icon],
+                "short": "true"
+            },
+            {
+                "title": "Temperature",
+                "value": "{:.3}".format(temperature) + "도",
+                "short": "true"
+            },
+            {
+                "title": "Summary",
+                "value": summary
+            }
+        ]
 
+        a_dict['fields'] = fields
         a_dict['mrkdwn_in'] = ["text", "pretext"]
 
         attachments.append(a_dict)
