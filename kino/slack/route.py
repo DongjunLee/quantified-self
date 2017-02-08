@@ -2,6 +2,7 @@
 import skills
 import nlp
 import kino
+import notifier
 import slack
 from slack import MsgResource
 import utils

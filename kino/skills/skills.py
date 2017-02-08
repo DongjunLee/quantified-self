@@ -21,7 +21,7 @@ class Functions(object):
 
     def forecast(self, timely="current"):
         weather = skills.Weather()
-        weather.forecase(timely=timely)
+        weather.forecast(timely=timely)
 
     def air_quality(self):
         weather = skills.Weather()

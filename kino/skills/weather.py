@@ -22,20 +22,19 @@ class Weather(object):
         api_key = self.config.open_api['dark_sky']['TOKEN']
         lat = location.latitude
         lon = location.longitude
-        forecastio = forecastio.load_forecast(api_key, lat, lon)
+        dark_sky = forecastio.load_forecast(api_key, lat, lon)
 
         if timely == 'current':
-            currently = forecastio.currently()
-            self.__forecast(currently, timely)
+            currently = dark_sky.currently()
+            self.__forecast(currently, timely, location.address)
         elif timely == 'daily':
-            hourly = forecastio.hourly()
-            self.__forecast(hourly, timely)
+            hourly = dark_sky.hourly()
+            self.__forecast(hourly, timely, location.address)
         elif timely == 'weekly':
-            daily = forecastio.daily()
-            self.__forecast(daily, timely)
+            daily = dark_sky.daily()
+            self.__forecast(daily, timely, location.address)
 
-    def __forecast(self, forecast, timely):
-        address = self.location.address
+    def __forecast(self, forecast, timely, address):
         icon = forecast.icon
         summary = forecast.summary
 
