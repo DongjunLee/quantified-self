@@ -139,6 +139,4 @@ class Summary(object):
         plot = slack.Plot
         plot.make_line(date, data, f_name, legend=legend, x_ticks=x_ticks,
                             x_label="Total Point", y_label="Days", title=title)
-        self.slackbot.file_upload(f_name, title=title, comment=MsgResource.HAPPY_REPORT)
-
-
+        self.slackbot.file_upload(f_name, title=title, comment=MsgResource.TOTAL_REPORT)

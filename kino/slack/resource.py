@@ -113,7 +113,7 @@ class MsgResource:
     TOGGL_NOTI_RELAY = "작업을 너무 오래하고 계십니다! 잠시 멈추고 십분만 휴식하시죠!!"
     TOGGL_REPORT = "Toggl에 저장되어있는 Report 입니다."
 
-    HAPPY_QUESTION_STEP_0 = "지금 현재 행복도는 10점 만점에 몇점인가요??"
+    HAPPY_QUESTION_STEP_0 = "지금 현재 행복도는 100점 만점에 몇점인가요??"
     def HAPPY_QUESTION_STEP_1(happy):
         happy = int(happy)
         if happy >= 100:
@@ -132,6 +132,8 @@ class MsgResource:
 
     TODAY_BREIFING = "오늘 하루 브리핑을 시작하겠습니다!"
     TODAY_SUMMARY = "오늘 하루 요약을 시작하겠습니다!"
+
+    TOTAL_REPORT = "종합점수 Report 입니다."
 
     BUS_ICON = ":bus: "
 
