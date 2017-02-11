@@ -10,18 +10,18 @@ class Summary(object):
 
     def __init__(self):
         self.data_handler = utils.DataHandler()
+        self.slackbot = slack.SlackerAdapter()
 
     def total_score(self):
-        slackbot = slack.SlackerAdapter()
         template = slack.MsgTemplate()
 
-        today_data = self.__total_score("today")
+        today_data = self.__get_total_score()
         self.data_handler.edit_record(today_data)
 
         color = MsgResource.SCORE_COLOR(today_data['Total'])
         today_data['Color'] = color
 
-        yesterday_data = self.__total_score("yesterday")
+        yesterday_data = self.__get_total_score(-1)
         for k,v in today_data.items():
             if type(v) == float:
                 y_point = yesterday_data.get(k, False)
@@ -50,10 +50,10 @@ class Summary(object):
         today_data['Activity Time'] = good_morning.format("HH:mm") + " ~ " + now.format("HH:mm") + " : " + str(activity_time) + "h"
 
         attachments = template.make_summary_template(today_data)
-        slackbot.send_message(attachments=attachments)
+        self.slackbot.send_message(attachments=attachments)
 
-    def __total_score(self, timely):
-        if timely == "today":
+    def __get_total_score(self, days="today"):
+        if days == "today":
             productive = self.__productive_score()
             happy = self.__happy_score()
 
@@ -76,8 +76,8 @@ class Summary(object):
                 "Total": round(total*100)/100
             }
             return data
-        elif timely == "yesterday":
-            return self.data_handler.read_record(days=-1)
+        elif type(days) == int:
+            return self.data_handler.read_record(days=days)
 
     def __productive_score(self):
         rescue_time_point = skills.RescueTime().get_point()
@@ -120,4 +120,25 @@ class Summary(object):
     def record_good_night(self):
         now = arrow.now()
         self.data_handler.edit_record(('GoodNight', str(now)))
+
+    def total_chart(self):
+        records = []
+        for i in range(-6, 1, 1):
+            records.append(self.__get_total_score(i))
+
+        date = [-6, -5, -4, -3, -2, -1, 0]
+        x_ticks = ['6 day before', '5 day before', '4 day before', '3 day before', '2 day before', 'yesterday', 'today']
+        legend = ['Happy', 'Productive', 'Total']
+        data = []
+        for l in legend:
+            data.append(list(map(lambda x: x[l], records)))
+
+        f_name = "total_weekly_report.png"
+        title = "Total Report"
+
+        plot = slack.Plot
+        plot.make_line(date, data, f_name, legend=legend, x_ticks=x_ticks,
+                            x_label="Total Point", y_label="Days", title=title)
+        self.slackbot.file_upload(f_name, title=title, comment=MsgResource.HAPPY_REPORT)
+
 

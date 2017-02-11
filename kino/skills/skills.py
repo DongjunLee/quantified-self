@@ -43,6 +43,10 @@ class Functions(object):
         summary = skills.Summary()
         summary.total_score()
 
+    def total_chart(self):
+        summary = skills.Summary()
+        summary.total_chart()
+
     def rescuetime_efficiency(self, timely="daily"):
         rescuetime = skills.RescueTime()
         rescuetime.efficiency(timely=timely)
