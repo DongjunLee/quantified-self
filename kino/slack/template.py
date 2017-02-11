@@ -115,32 +115,21 @@ class MsgTemplate(object):
         a_dict['fallback'] = MsgResource.WEATHER_ICONS[icon] + " " + fallback
         a_dict['color'] = "#438C56"
 
-        fields = [
-            {
-                "title": "Address",
-                "value": address
-            },
-            {
-                "title": "ICON",
-                "value": MsgResource.WEATHER_ICONS[icon],
-                "short": "true"
-            },
-            {
-                "title": "Temperature",
-                "value": "{:.3}".format(temperature) + "도",
-                "short": "true"
-            },
-            {
-                "title": "Summary",
-                "value": summary
-            }
-        ]
+        fields = []
+        fields.append(self.field("Address", address))
+        fields.append(self.field("Sky Icon", MsgResource.WEATHER_ICONS[icon], short="true"))
+        if temperature:
+            fields.append(self.field("Temperature", "{:.3}".format(temperature) + "도", short="true"))
+        fields.append(self.field("Summary", summary))
 
         a_dict['fields'] = fields
         a_dict['mrkdwn_in'] = ["text", "pretext"]
 
         attachments.append(a_dict)
         return attachments
+
+    def field(self, title, value, short="false"):
+        return {"title": title, "value": value, "short": short}
 
     def make_air_quality_template(self, data):
         attachments = []
@@ -150,7 +139,7 @@ class MsgTemplate(object):
         a_dict = {}
         a_dict['color'] = MsgResource.AIR_QUALITY_COLOR(cai['grade'])
         a_dict['fallback'] = cai['description'] + " : " + cai['value']
-        a_dict['text'] = "대기질 정보 입니다."
+        a_dict['title'] = "대기질 정보 입니다."
         a_dict['mrkdwn_in'] = ["text", "pretext"]
 
         fields = []
@@ -169,6 +158,7 @@ class MsgTemplate(object):
 
             field['title'] = v['description']
             field['value'] = v['value'] + v['unit'] + "\n" + MsgResource.AIR_QUALITY_TEXT(v['grade'])
+            print(v['grade'])
             field['short'] = "true"
             fields.append(field)
         fields.append(field)

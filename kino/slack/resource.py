@@ -152,6 +152,7 @@ class MsgResource:
     GOOD_NIGHT = "이제 주무시는 군요. 좋은 꿈 꾸세요 :first_quarter_moon_with_face:"
 
     def AIR_QUALITY_COLOR(grade):
+        grade = int(grade)
         if grade == 1:
             return "#1E90FF"
         elif grade == 2:
@@ -162,6 +163,7 @@ class MsgResource:
             return "#DC143C"
 
     def AIR_QUALITY_TEXT(grade):
+        grade = int(grade)
         if grade == 1:
             return "좋음"
         elif grade == 2:

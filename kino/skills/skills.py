@@ -51,7 +51,7 @@ class Functions(object):
         self.slackbot.send_message(text=MsgResource.TODAY_BREIFING)
 
         weather = skills.Weather()
-        weather.read(timely="daily")
+        weather.forecast(timely="daily")
         weather.air_quality()
 
         todoist = skills.TodoistManager()
