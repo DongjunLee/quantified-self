@@ -165,7 +165,6 @@ class Worker(object):
         job_thread.start()
 
     def stop(self):
-        self.__set_schedules()
         schedule.clear()
 
         self.slackbot.send_message(text=MsgResource.WORKER_STOP)
