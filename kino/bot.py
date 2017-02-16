@@ -29,7 +29,7 @@ def start_session():
             ws = await websockets.connect(endpoint)
             while True:
                 message_json = await ws.recv()
-                listener.handle_only_message(message_json)
+                listener.handle_message(message_json)
 
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
