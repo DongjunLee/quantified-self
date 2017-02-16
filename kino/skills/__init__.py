@@ -5,6 +5,7 @@ from .summary import Summary
 from .bus import Bus
 from .github import GithubManager
 from .happy import Happy
+from .ifttt import IFTTT
 from .rescuetime import RescueTime
 from .manager import FunctionManager
 from .maxim import Maxim
@@ -18,6 +19,7 @@ __all__ = ['Functions',
            'FunctionManager',
            'GithubManager',
            'Happy',
+           'IFTTT',
            'RescueTime',
            'Maxim',
            'TodoistManager',
