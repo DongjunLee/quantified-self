@@ -89,8 +89,8 @@ class DataHandler(object):
                 record[k] = v
         self.write_record(record, days=days)
 
-    def edit_record_happy(self, data, days=0):
+    def edit_record_with_category(self, category, data, days=0):
         record = self.read_record(days=days)
-        happy_data = record.get('happy', {})
-        happy_data[data[0]] = data[1]
-        self.edit_record(('happy', happy_data), days=days)
+        category_data = record.get(category, {})
+        category_data[data[0]] = data[1]
+        self.edit_record((category, category_data), days=days)

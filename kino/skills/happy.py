@@ -35,7 +35,7 @@ class Happy(object):
             now = arrow.now()
             time = now.format('HH:mm')
             happy_point = numbers[0]
-            self.data_handler.edit_record_happy((time, happy_point))
+            self.data_handler.edit_record_with_category('happy', (time, happy_point))
 
             self.slackbot.send_message(text=MsgResource.HAPPY_QUESTION_STEP_1(happy_point))
             state.complete()
