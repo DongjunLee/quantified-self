@@ -28,7 +28,7 @@ class Scheduler(object):
         def step_0(params):
             self.slackbot.send_message(text=MsgResource.SCHEDULER_CREATE_START)
             self.data_handler.read_json_then_add_data(self.fname, "alarm", {})
-            state.start("notifier/Scheduler", "create")
+            state.flow_start("notifier/Scheduler", "create")
             if notifier.Between().read() == "success":
                 self.slackbot.send_message(text=MsgResource.SCHEDULER_CREATE_STEP1)
             else:
@@ -40,11 +40,11 @@ class Scheduler(object):
 
             if params.startswith("#"):
                 current_alarm_data["between_id"] = params
-                state.next_step()
+                state.flow_next_step()
                 self.slackbot.send_message(text=MsgResource.SCHEDULER_CREATE_STEP2)
             else:
                 current_alarm_data["time"] = params
-                state.next_step(num=2)
+                state.flow_next_step(num=2)
                 skills.FunctionManager().read()
                 self.slackbot.send_message(text=MsgResource.SCHEDULER_CREATE_STEP3)
 
@@ -56,7 +56,7 @@ class Scheduler(object):
             current_alarm_data["period"] = params
             self.data_handler.read_json_then_edit_data(self.fname, "alarm", a_index, current_alarm_data)
 
-            state.next_step()
+            state.flow_next_step()
             skills.FunctionManager().read()
             self.slackbot.send_message(text=MsgResource.SCHEDULER_CREATE_STEP3)
 
@@ -72,7 +72,7 @@ class Scheduler(object):
                 current_alarm_data["f_name"] = params.strip()
             self.data_handler.read_json_then_edit_data(self.fname, "alarm", a_index, current_alarm_data)
 
-            state.complete()
+            state.flow_complete()
             self.slackbot.send_message(text=MsgResource.CREATE)
 
         locals()["step_" + str(step)](params)
@@ -199,13 +199,13 @@ class Scheduler(object):
         def step_0(params):
             self.slackbot.send_message(text=MsgResource.SCHEDULER_DELETE_START)
             if self.read() == "success":
-                state.start("notifier/Scheduler", "delete")
+                state.flow_start("notifier/Scheduler", "delete")
 
         def step_1(params):
             a_index = params
             self.data_handler.read_json_then_delete(self.fname, "alarm", a_index)
 
-            state.complete()
+            state.flow_complete()
             self.slackbot.send_message(text=MsgResource.DELETE)
 
         locals()["step_" + str(step)](params)

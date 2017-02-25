@@ -22,7 +22,7 @@ class Between(object):
         def step_0(params):
             self.slackbot.send_message(text=MsgResource.BETWEEN_CREATE_START)
             self.data_handler.read_json_then_add_data(self.fname, "between", {})
-            state.start("notifier/Between", "create")
+            state.flow_start("notifier/Between", "create")
 
             self.slackbot.send_message(text=MsgResource.BETWEEN_CREATE_STEP1)
 
@@ -31,7 +31,7 @@ class Between(object):
             current_between_data['time_interval'] = params
             self.data_handler.read_json_then_edit_data(self.fname, "between", b_index, current_between_data)
 
-            state.next_step()
+            state.flow_next_step()
             self.slackbot.send_message(text=MsgResource.BETWEEN_CREATE_STEP2)
 
         def step_2(params):
@@ -40,7 +40,7 @@ class Between(object):
             current_between_data['description'] = params
             self.data_handler.read_json_then_edit_data(self.fname, "between", b_index, current_between_data)
 
-            state.complete()
+            state.flow_complete()
             self.slackbot.send_message(text=MsgResource.CREATE)
 
         locals()["step_" + str(step)](params)
@@ -89,13 +89,13 @@ class Between(object):
         def step_0(params):
             self.slackbot.send_message(text=MsgResource.BETWEEN_DELETE_START)
             if self.read() == "success":
-                state.start("notifier/Between", "delete")
+                state.flow_start("notifier/Between", "delete")
 
         def step_1(params):
             b_index = params
             self.data_handler.read_json_then_delete(self.fname, "between", b_index)
 
-            state.complete()
+            state.flow_complete()
             self.slackbot.send_message(text=MsgResource.DELETE)
 
         locals()["step_" + str(step)](params)

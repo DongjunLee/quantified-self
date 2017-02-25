@@ -20,35 +20,36 @@ class DialogManager(object):
         return self.state.current
 
     def is_on_flow(self):
-        self.state.check()
-        if ("kind" in self.state.current) and self.state.current["kind"] == State.FLOW:
+        current_state = self.current_state()
+        if "step" in current_state.get(State.FLOW, {}):
             return True
         else:
             return False
 
     def get_flow(self):
-        current_state = self.current_state()
-        classname = current_state["class"]
-        class_dir, class_name = classname.split("/")
-        route_class = getattr(globals()[class_dir], class_name)()
-        behave = current_state["def"]
-        step_num = current_state["step"]
-        return route_class, behave, step_num
+        flow = self.current_state()[State.FLOW]
+        return self.__return_state(flow, State.FLOW)
 
     def is_on_memory(self):
-        self.state.check()
-        if ("kind" in self.state.current) and self.state.current["kind"] == State.MEMORY:
+        current_state = self.current_state()
+        if "step" in current_state.get(State.MEMORY, {}):
             return True
         else:
             return False
 
     def get_memory(self):
-        current_state = self.current_state()
-        classname = current_state["class"]
+        memory = self.current_state()[State.MEMORY]
+        return self.__return_state(memory, State.MEMORY)
+
+    def __return_state(self, state, kind):
+        classname = state["class"]
         class_dir, class_name = classname.split("/")
         route_class = getattr(globals()[class_dir], class_name)()
-        behave = current_state["def"]
-        params = current_state["params"]
+        behave = state["def"]
+        if kind == State.FLOW:
+            params = state["step"]
+        elif kind == State.MEMORY:
+            params = state["params"]
         return route_class, behave, params
 
     def is_call_repeat_skill(self, text):
@@ -130,6 +131,7 @@ class State(object):
 
     FLOW = "flow"
     MEMORY = "memory"
+    ACTION = "action"
 
     def __init__(self):
         self.data_handler = DataHandler()
@@ -139,29 +141,44 @@ class State(object):
     def check(self):
         self.current = self.data_handler.read_file(self.fname)
 
-    def start(self, class_name, func_name):
+    def flow_start(self, class_name, func_name):
         doing = {
             "class": class_name,
             "def": func_name,
-            "step": 1,
-            "kind": self.FLOW
+            "step": 1
         }
-        self.data_handler.write_file(self.fname, doing)
-
-    def next_step(self, num=1):
         self.check()
-        step_num = self.current['step'] + num
-        self.current['step'] = step_num
+        self.current[self.FLOW] = doing
         self.data_handler.write_file(self.fname, self.current)
 
-    def complete(self):
-        self.data_handler.write_file(self.fname, {})
+    def flow_next_step(self, num=1):
+        self.check()
+        current_flow = self.current[self.FLOW]
+        step_num = current_flow['step'] + num
+        current_flow['step'] = step_num
+        self.data_handler.write_file(self.fname, self.current)
 
-    def skill_memory(self, func_name, params):
+    def flow_complete(self):
+        self.check()
+        self.current[self.FLOW] = {}
+        self.data_handler.write_file(self.fname, self.current)
+
+    def memory_skill(self, func_name, params):
         memory = {
             "class": "skills/Functions",
             "def": func_name,
-            "params": params,
-            "kind": self.MEMORY
+            "params": params
         }
-        self.data_handler.write_file(self.fname, memory)
+        self.check()
+        self.current[self.MEMORY] = memory
+        self.data_handler.write_file(self.fname, self.current)
+
+    def do_action(self, action, time):
+        time = arrow.get(time)
+        do = {
+            "action": action,
+            "time": str(time)
+        }
+        self.check()
+        self.current[self.ACTION] = do
+        self.data_handler.write_file(self.fname, self.current)

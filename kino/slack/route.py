@@ -113,6 +113,6 @@ class MsgRouter(object):
             f_params = self.dialog_manager.filter_f_params(self.text, func_name)
 
         state = nlp.State()
-        state.skill_memory(func_name, f_params)
+        state.memory_skill(func_name, f_params)
         self.logger.info("From call skills - route to: " + func_name + ", " + str(f_params))
         getattr(skills.Functions(), func_name)(**f_params)
