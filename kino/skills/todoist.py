@@ -1,6 +1,7 @@
 
 import arrow
 from dateutil.parser import parse
+import re
 from pytz import timezone
 import todoist
 
@@ -58,6 +59,7 @@ class TodoistManager(object):
         return point
 
     def __get_today_task(self):
+        self.todoist_api.sync()
         return self.todoist_api.query(['today'])[0]['data']
 
     def __get_specific_time_task(self, today_task):
@@ -113,6 +115,35 @@ class TodoistManager(object):
             elif event_type == 'updated':
                 updated_task_count += 1
         return added_task_count, completed_task_count, updated_task_count
+
+    def complete_by_toggl(self, description, time):
+        min_re = "\d+분"
+        description = description.strip()
+        is_contain_item = False
+
+        tasks = self.__get_today_task()
+        for t in tasks:
+            if description in t['content']:
+                content = t['content']
+                assigned_time = re.search(min_re, content)
+                if assigned_time is not None:
+                    assigned_time = int(assigned_time.group()[:-1])
+                item = self.todoist_api.items.get_by_id(t['id'])
+                is_contain_item = True
+                break;
+
+        if is_contain_item is False:
+            print('todoist에 관련된 일이 없습니다.')
+        else:
+            if assigned_time is None:
+                item.complete()
+            else:
+                if time >= assigned_time:
+                    item.complete()
+                else:
+                    content = content.replace(str(assigned_time), str(assigned_time-time))
+                    item.update(content=content)
+            self.todoist_api.commit()
 
     def get_point(self):
         overdue_task_point = self.__get_overdue_task(kind="point")

@@ -4,6 +4,7 @@ from toggl import Toggl
 
 import slack
 from slack import MsgResource
+import skills
 import utils
 
 class TogglManager(object):
@@ -47,6 +48,9 @@ class TogglManager(object):
 
             self.slackbot.send_message(text=MsgResource.TOGGL_STOP)
             self.slackbot.send_message(text=MsgResource.TOGGL_STOP_SUMMARY(description, diff_min))
+
+            todoist = skills.TodoistManager()
+            todoist.complete_by_toggl(description, int(diff_min))
 
     def __get_pid(self, name=None):
         project = self.toggl.getWorkspaceProject(name=name)
