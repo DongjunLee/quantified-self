@@ -20,7 +20,13 @@ class MsgRouter(object):
         self.simple_text = disintegrator.convert2simple(sentence=text)
         self.logger.info("clean input: " + self.simple_text)
 
-    def route(self, text=None, user=None, channel=None, direct=False, ifttt=False):
+    def route(self, text=None, user=None, channel=None,
+              direct=False, ifttt=False, presence=None):
+
+        if presence is not None:
+            nlp.State().presence_log(presence)
+            return
+
         if ifttt:
             self.__on_relay(text)
             return
@@ -28,14 +34,10 @@ class MsgRouter(object):
         self.logger.info("raw input: " + text)
         self.preprocessing(text)
 
-        # Check GoodMorning, Exercise, Dialog, GoodNight
+        # Check Exercise, Diary
         if self.dialog_manager.call_write_diary(self.simple_text):
             return
         if self.dialog_manager.call_do_exercise(self.simple_text):
-            return
-        if self.dialog_manager.call_good_morning(self.simple_text):
-            return
-        if self.dialog_manager.call_good_night(self.simple_text):
             return
 
         # Check Flow

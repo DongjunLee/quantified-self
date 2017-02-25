@@ -113,14 +113,6 @@ class Summary(object):
     def record_exercise(self):
         self.data_handler.edit_record(('Exercise', True))
 
-    def record_good_morning(self):
-        now = arrow.now()
-        self.data_handler.edit_record(('GoodMorning', str(now)))
-
-    def record_good_night(self):
-        now = arrow.now()
-        self.data_handler.edit_record(('GoodNight', str(now)))
-
     def total_chart(self):
         records = []
         for i in range(-6, 1, 1):

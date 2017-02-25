@@ -11,25 +11,26 @@ import utils
 slackbot = slack.SlackerAdapter()
 
 logger = utils.Logger().get_logger()
-logger.info('start real time messaging session!')
+
+config = utils.Config()
+MASTER_NAME = config.bot["MASTER_NAME"]
+BOT_NAME = config.bot["BOT_NAME"]
+hello_text = "{}님 안녕하세요! \n저는 개인비서 {} 라고 합니다.\n반갑습니다.".format(MASTER_NAME, BOT_NAME)
+slackbot.send_message(text=hello_text)
 
 def start_session():
     try:
-        config = utils.Config()
-        MASTER_NAME = config.bot["MASTER_NAME"]
-        BOT_NAME = config.bot["BOT_NAME"]
-        hello_text = "{}님 안녕하세요! \n저는 개인비서 {} 라고 합니다.\n반갑습니다.".format(MASTER_NAME, BOT_NAME)
-        slackbot.send_message(text=hello_text)
-
         # Start RTM
         endpoint = slackbot.start_real_time_messaging_session()
         listener = slack.MsgListener()
+        logger.info('start real time messaging session!')
 
         async def execute_bot():
             ws = await websockets.connect(endpoint)
             while True:
-                message_json = await ws.recv()
-                listener.handle_message(message_json)
+                receive_json = await ws.recv()
+                listener.handle_message(receive_json)
+                listener.handle_presence_change(receive_json)
 
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)

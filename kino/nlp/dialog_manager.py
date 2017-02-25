@@ -16,6 +16,7 @@ class DialogManager(object):
         self.state = State()
         self.slackbot = slack.SlackerAdapter()
         self.data_handler = DataHandler()
+        self.arrow_util = utils.ArrowUtil()
 
     def current_state(self):
         self.state.check()
@@ -104,39 +105,38 @@ class DialogManager(object):
         else:
             return False
 
-    def call_good_morning(self, text):
-        if "굿모닝" in text:
+    def check_wake_up(self, text):
+        record = self.data_handler.read_record()
+        if 'wake_up' in record.get('activity', {}):
+            return
+
+        state = State()
+        state.check()
+        presence_log = state.current[state.SLEEP]
+        if self.arrow_util.is_between((6,0), (11,0)) and presence_log['presence'] == 'away':
             self.slackbot.send_message(text=MsgResource.GOOD_MORNING)
 
-            skills.Summary().record_good_morning()
-            record = self.data_handler.read_record()
+            go_to_bed_time = arrow.get(presence_log['time'])
+            wake_up_time = arrow.now()
 
-            good_morning = arrow.get(record['GoodMorning'])
-            good_night = arrow.get(record['GoodNight'])
+            self.data_handler.edit_record_with_category('activity', ('go_to_bed', str(go_to_bed_time)))
+            self.data_handler.edit_record_with_category('activity', ('wake_up', str(wake_up_time)))
 
-            sleep_time = (good_morning - good_night).seconds / 60 / 60
+            sleep_time = (wake_up_time - go_to_bed_time).seconds / 60 / 60
             sleep_time = round(sleep_time*100)/100
+
+            self.data_handler.edit_record('Sleep', str(sleep_time))
 
             self.slackbot.send_message(text=MsgResource.SLEEP_TIME(
                 good_night.format("HH:mm"), good_morning.format("HH:mm"), str(sleep_time)
             ))
-            return True
-        else:
-            return False
-
-    def call_good_night(self, text):
-        if "굿나잇" in text:
-            skills.Summary().record_good_night()
-            self.slackbot.send_message(text=MsgResource.GOOD_NIGHT)
-            return True
-        else:
-            return False
 
 class State(object):
 
     FLOW = "flow"
     MEMORY = "memory"
     ACTION = "action"
+    SLEEP = "sleep"
 
     def __init__(self):
         self.data_handler = DataHandler()
@@ -146,15 +146,18 @@ class State(object):
     def check(self):
         self.current = self.data_handler.read_file(self.fname)
 
+    def save(self, key, value):
+        self.check()
+        self.current[key] = value
+        self.data_handler.write_file(self.fname, self.current)
+
     def flow_start(self, class_name, func_name):
-        doing = {
+        data = {
             "class": class_name,
             "def": func_name,
             "step": 1
         }
-        self.check()
-        self.current[self.FLOW] = doing
-        self.data_handler.write_file(self.fname, self.current)
+        self.save(self.FLOW, data)
 
     def flow_next_step(self, num=1):
         self.check()
@@ -164,26 +167,27 @@ class State(object):
         self.data_handler.write_file(self.fname, self.current)
 
     def flow_complete(self):
-        self.check()
-        self.current[self.FLOW] = {}
-        self.data_handler.write_file(self.fname, self.current)
+        self.save(self.FLOW, {})
 
     def memory_skill(self, func_name, params):
-        memory = {
+        data = {
             "class": "skills/Functions",
             "def": func_name,
             "params": params
         }
-        self.check()
-        self.current[self.MEMORY] = memory
-        self.data_handler.write_file(self.fname, self.current)
+        self.save(self.MEMORY, data)
 
     def do_action(self, event):
-        time = utils.ArrowUtil().get_action_time(event['time'])
-        do = {
+        time = self.arrow_util.get_action_time(event['time'])
+        data = {
             "action": event['action'],
             "time": str(time)
         }
-        self.check()
-        self.current[self.ACTION] = do
-        self.data_handler.write_file(self.fname, self.current)
+        self.save(self.ACTION, data)
+
+    def presence_log(self, log):
+        data = {
+            "presence": log['presence'],
+            "time": str(arrow.now())
+        }
+        self.save(self.SLEEP, data)

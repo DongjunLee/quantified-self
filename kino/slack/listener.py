@@ -85,4 +85,19 @@ class MsgListener(object):
     def __parse_attachments(self):
         pass
 
+    def handle_presence_change(self, presence):
+        presence = json.loads(presence)
+        if self.__is_presence() and not self.__is_bot():
+            try:
+                self.router.route(presence=presence)
+            except Exception as e:
+                self.logger.error("Presence Listener Error: ", e)
+                self.slackbot.send_message(text=slack.MsgResource.ERROR)
+
+    def __is_presence(self):
+        msg_type = self.msg.get("type", None)
+        if msg_type == "presence_change":
+            return True
+        else:
+            return False
 
