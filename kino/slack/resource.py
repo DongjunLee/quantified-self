@@ -174,3 +174,5 @@ class MsgResource:
             return "나쁨"
         else:
             return "매우 나쁨"
+
+    IN_OUT_ERROR = "핸드폰이 꺼졌다가 켜진 것 같습니다ㅠㅠ"

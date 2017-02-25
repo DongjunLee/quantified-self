@@ -1,11 +1,13 @@
 
 import arrow
+from dateutil import tz
 
 import nlp
 import notifier
 import skills
 import slack
 from slack import MsgResource
+import utils
 from utils.data_handler import DataHandler
 
 class DialogManager(object):
@@ -40,6 +42,9 @@ class DialogManager(object):
     def get_memory(self):
         memory = self.current_state()[State.MEMORY]
         return self.__return_state(memory, State.MEMORY)
+
+    def get_action(self):
+        return self.current_state()[State.ACTION]
 
     def __return_state(self, state, kind):
         classname = state["class"]
@@ -173,10 +178,10 @@ class State(object):
         self.current[self.MEMORY] = memory
         self.data_handler.write_file(self.fname, self.current)
 
-    def do_action(self, action, time):
-        time = arrow.get(time)
+    def do_action(self, event):
+        time = utils.ArrowUtil().get_action_time(event['time'])
         do = {
-            "action": action,
+            "action": event['action'],
             "time": str(time)
         }
         self.check()
