@@ -20,6 +20,8 @@ class Functions(object):
         bus.arrive_info(station_id)
 
     def forecast(self, timely="current"):
+        if timely is None:
+            timely = 'current'
         weather = skills.Weather()
         weather.forecast(timely=timely)
 
@@ -28,6 +30,8 @@ class Functions(object):
         weather.air_quality()
 
     def github_commit(self, timely="daily"):
+        if timely is None:
+            timely = 'daily'
         github = skills.GithubManager()
         github.commit(timely=timely)
 
@@ -36,6 +40,8 @@ class Functions(object):
         happy.question()
 
     def happy_report(self, timely="daily"):
+        if timely is None:
+            timely = 'daily'
         happy = skills.Happy()
         happy.report(timely=timely)
 
@@ -48,6 +54,8 @@ class Functions(object):
         summary.total_chart()
 
     def rescuetime_efficiency(self, timely="daily"):
+        if timely is None:
+            timely = 'daily'
         rescuetime = skills.RescueTime()
         rescuetime.efficiency(timely=timely)
 
@@ -96,6 +104,10 @@ class Functions(object):
         toggl.check_toggl_timer()
 
     def toggl_report(self, kind="chart", timely="weekly"):
+        if kind is None:
+            kind = 'chart'
+        if timely is None:
+            timely = 'weekly'
         toggl = skills.TogglManager()
         toggl.report(kind=kind, timely=timely)
 
