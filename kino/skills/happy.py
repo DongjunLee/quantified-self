@@ -21,7 +21,7 @@ class Happy(object):
 
         def step_0(params):
             self.slackbot.send_message(text=MsgResource.HAPPY_QUESTION_STEP_0)
-            state.start("skills/Happy", "question")
+            state.flow_start("skills/Happy", "question")
 
         def step_1(params):
             if params is None:
@@ -38,7 +38,7 @@ class Happy(object):
             self.data_handler.edit_record_with_category('happy', (time, happy_point))
 
             self.slackbot.send_message(text=MsgResource.HAPPY_QUESTION_STEP_1(happy_point))
-            state.complete()
+            state.flow_complete()
 
         locals()["step_" + str(step)](params)
 
