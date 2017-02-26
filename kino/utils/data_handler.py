@@ -71,12 +71,12 @@ class DataHandler(object):
         return c_index, current_category_data
 
     def read_record(self, days=0):
-        date = arrow.now().replace(days=days)
+        date = arrow.now().replace(days=int(days))
         fname = self.record_path + date.format('YYYY-MM-DD') + ".json"
         return self.read_file(fname)
 
     def write_record(self, data, days=0):
-        date = arrow.now().replace(days=days)
+        date = arrow.now().replace(days=int(days))
         fname = self.record_path + date.format('YYYY-MM-DD') + ".json"
         self.write_file(fname, data)
 

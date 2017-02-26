@@ -24,7 +24,9 @@ class MsgRouter(object):
               direct=False, ifttt=False, presence=None):
 
         if presence is not None:
+            self.dialog_manager.check_wake_up(presence)
             nlp.State().presence_log(presence)
+            self.logger.info("presence: " + str(presence))
             return
 
         if ifttt:

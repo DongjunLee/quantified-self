@@ -87,9 +87,9 @@ class MsgListener(object):
 
     def handle_presence_change(self, presence):
         presence = json.loads(presence)
-        if self.__is_presence() and not self.__is_bot():
+        if self.__is_presence() and not self.__is_self():
             try:
-                self.router.route(presence=presence)
+                self.router.route(presence=presence['presence'])
             except Exception as e:
                 self.logger.error("Presence Listener Error: ", e)
                 self.slackbot.send_message(text=slack.MsgResource.ERROR)

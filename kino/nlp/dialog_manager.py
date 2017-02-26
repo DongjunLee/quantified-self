@@ -105,15 +105,17 @@ class DialogManager(object):
         else:
             return False
 
-    def check_wake_up(self, text):
+    def check_wake_up(self, presence):
         record = self.data_handler.read_record()
         if 'wake_up' in record.get('activity', {}):
+            print('Already wake up.')
             return
 
         state = State()
         state.check()
         presence_log = state.current[state.SLEEP]
-        if self.arrow_util.is_between((6,0), (11,0)) and presence_log['presence'] == 'away':
+        if (self.arrow_util.is_between((6,0), (11,0)) and
+            presence_log['presence'] == 'away' and presence == 'active'):
             self.slackbot.send_message(text=MsgResource.GOOD_MORNING)
 
             go_to_bed_time = arrow.get(presence_log['time'])
@@ -125,10 +127,10 @@ class DialogManager(object):
             sleep_time = (wake_up_time - go_to_bed_time).seconds / 60 / 60
             sleep_time = round(sleep_time*100)/100
 
-            self.data_handler.edit_record('Sleep', str(sleep_time))
+            self.data_handler.edit_record(('Sleep', str(sleep_time)))
 
             self.slackbot.send_message(text=MsgResource.SLEEP_TIME(
-                good_night.format("HH:mm"), good_morning.format("HH:mm"), str(sleep_time)
+                go_to_bed_time.format("HH:mm"), wake_up_time.format("HH:mm"), str(sleep_time)
             ))
 
 class State(object):
@@ -186,9 +188,9 @@ class State(object):
         }
         self.save(self.ACTION, data)
 
-    def presence_log(self, log):
+    def presence_log(self, presence):
         data = {
-            "presence": log['presence'],
+            "presence": presence,
             "time": str(arrow.now())
         }
         self.save(self.SLEEP, data)
