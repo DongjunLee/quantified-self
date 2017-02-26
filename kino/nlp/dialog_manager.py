@@ -45,7 +45,7 @@ class DialogManager(object):
         return self.__return_state(memory, State.MEMORY)
 
     def get_action(self):
-        return self.current_state()[State.ACTION]
+        return self.current_state().get(State.ACTION, None)
 
     def __return_state(self, state, kind):
         classname = state["class"]
@@ -139,6 +139,7 @@ class State(object):
     SLEEP = "sleep"
 
     def __init__(self):
+        self.arrow_util = utils.ArrowUtil()
         self.data_handler = DataHandler()
         self.fname = "state.json"
         self.current = None

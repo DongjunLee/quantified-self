@@ -21,6 +21,10 @@ class IFTTT(object):
         prev_event = self.dialog_manager.get_action()
         nlp.State().do_action(event)
 
+        if prev_event is None:
+            self.slackbot.send_message(text=event['msg'])
+            return
+
         action = event.get('action', '')
         if action.startswith("IN") or action.startswith("OUT"):
             self.IN_OUT_handle(prev_event, event)
@@ -30,7 +34,7 @@ class IFTTT(object):
     def IN_OUT_handle(self, prev, event):
         if self.__is_error(prev, event):
             print("IFTTT error.")
-            return;
+            return
 
         if self.__is_phone_error(prev, event):
             self.slackbot.send_message(text=MsgResource.IN_OUT_ERROR)
