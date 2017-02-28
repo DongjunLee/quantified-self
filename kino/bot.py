@@ -29,7 +29,6 @@ def start_session():
             ws = await websockets.connect(endpoint)
             while True:
                 receive_json = await ws.recv()
-                print(receive_json)
                 listener.handle_message(receive_json)
                 listener.handle_presence_change(receive_json)
 

@@ -43,11 +43,14 @@ class Summary(object):
                     today_data[k] = "X"
 
         record = self.data_handler.read_record()
-        good_morning = arrow.get(record['GoodMorning'])
-        now = arrow.now()
-        activity_time = (now - good_morning).seconds / 60 / 60
-        activity_time = round(activity_time*100)/100
-        today_data['Activity Time'] = good_morning.format("HH:mm") + " ~ " + now.format("HH:mm") + " : " + str(activity_time) + "h"
+        activity = record['activity']
+
+        go_to_bed_time = arrow.get(activity['go_to_bed'])
+        wake_up_time = arrow.get(activity['wake_up'])
+
+        sleep_time = (go_to_bed_time - wake_up_time).seconds / 60 / 60
+        sleep_time = round(sleep_time*100)/100
+        today_data['Sleep Time'] = go_to_bed_time.format("HH:mm") + " ~ " + wake_up_time.format("HH:mm") + " : " + str(sleep_time) + "h"
 
         attachments = template.make_summary_template(today_data)
         self.slackbot.send_message(attachments=attachments)
