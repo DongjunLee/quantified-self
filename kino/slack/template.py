@@ -222,11 +222,11 @@ class MsgTemplate(object):
 
         fields = []
         field = {
-            "title": "Activity Time",
-            "value": data['Activity Time']
+            "title": "Sleep Time",
+            "value": data['Sleep Time']
         }
         fields.append(field)
-        del data['Activity Time']
+        del data['Sleep Time']
 
         for k,v in data.items():
             field = {}
