@@ -50,5 +50,5 @@ class SlackerAdapter(object):
         for user in users:
             if user['name'] == self.config.bot["BOT_NAME"].lower():
                 bot_id = user['id']
-                data_handler.edit_cache(('bot_id', bot_id))
+                self.data_handler.edit_cache(('bot_id', bot_id))
                 return bot_id
