@@ -9,7 +9,10 @@ class ArrowUtil(object):
 
     def get_action_time(self, time):
         time_str = time.strip().replace('at', '')
-        return arrow.get(time_str, 'MMMM DD, YYYY  hh:mma', tzinfo=tz.tzlocal())
+        if time_str == "now":
+            return arrow.get(arrow.now(), tzinfo=tz.tzlocal())
+        else:
+            return arrow.get(time_str, 'MMMM D, YYYY  hh:mma', tzinfo=tz.tzlocal())
 
     def get_curr_time_diff(self, start=None, stop=None):
         if type(start) is str:
