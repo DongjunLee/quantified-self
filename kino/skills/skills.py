@@ -15,9 +15,11 @@ class Functions(object):
     def send_message(self, text=None):
         self.slackbot.send_message(text=text)
 
-    def bus_stop(self, station_id=None):
+    def bus_stop(self, station_id=None, real_time=None):
+        if real_time is None:
+            real_time = False
         bus = skills.Bus()
-        bus.arrive_info(station_id)
+        bus.arrive_info(station_id, real_time=real_time)
 
     def forecast(self, timely="current"):
         if timely is None:

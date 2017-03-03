@@ -7,7 +7,7 @@
   },
   "bus_stop": {
     "keyword": ["버스 도착", "버스도착", "버스 언제", "버스 조회", "버스조회"],
-    "params": ["station_id"],
+    "params": ["station_id", "real_time"],
     "description": "버스 도착 정보 조회",
     "icon": ":oncoming_bus: "
   },
