@@ -52,10 +52,18 @@ class MsgListener(object):
             return False
 
     def __is_bot(self):
-        if self.msg.get("subtype", None) == "bot_message":
+        if "bot_id" in self.msg:
             return True
-        else:
-            return False
+
+        subtype = self.msg.get("subtype", None)
+        if subtype == "bot_message":
+            return True
+        if subtype == "message_changed":
+            message = self.msg.get("message", None)
+            if "bot_id" in message:
+                return True
+
+        return False
 
     def __is_ifttt(self):
         if self.msg.get("username", None) == "IFTTT":
