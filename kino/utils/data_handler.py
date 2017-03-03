@@ -94,3 +94,13 @@ class DataHandler(object):
         category_data = record.get(category, {})
         category_data[data[0]] = data[1]
         self.edit_record((category, category_data), days=days)
+
+    def read_cache(self):
+        fname = "cache.json"
+        return self.read_file(fname)
+
+    def edit_cache(self, data):
+        fname = "cache.json"
+        cache = self.read_cache()
+        cache[data[0]] = data[1]
+        self.write_file(fname, cache)
