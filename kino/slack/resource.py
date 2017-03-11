@@ -179,3 +179,5 @@ class MsgResource:
 
     def TRANSLATED_TEXT(result):
         return "번역된 결과는 다음과 같습니다. \n - " + result
+
+    FLOW_HAPPY = ":ear: 행복도 점수 대답을 기다리고 있습니다!"

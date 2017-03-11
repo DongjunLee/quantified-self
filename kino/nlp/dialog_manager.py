@@ -29,9 +29,12 @@ class DialogManager(object):
         else:
             return False
 
-    def get_flow(self):
+    def get_flow(self, is_raw=False):
         flow = self.current_state()[State.FLOW]
-        return self.__return_state(flow, State.FLOW)
+        if is_raw:
+            return flow
+        else:
+            return self.__return_state(flow, State.FLOW)
 
     def is_on_memory(self):
         current_state = self.current_state()
@@ -132,6 +135,16 @@ class DialogManager(object):
             self.slackbot.send_message(text=MsgResource.SLEEP_TIME(
                 go_to_bed_time.format("HH:mm"), wake_up_time.format("HH:mm"), str(sleep_time)
             ))
+
+            weather = skills.Weather()
+            weather.forecast(timely="daily")
+            weather.air_quality()
+
+    def show_flow(self, presence):
+        if presence == "active":
+            flow = self.get_flow(is_raw=True)
+            if flow['class'] == "skills/Happy":
+                self.slackbot.send_message(text=MsgResource.FLOW_HAPPY)
 
 class State(object):
 

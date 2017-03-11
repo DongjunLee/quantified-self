@@ -25,6 +25,8 @@ class MsgRouter(object):
 
         if presence is not None:
             self.dialog_manager.check_wake_up(presence)
+            self.dialog_manager.show_flow(presence)
+
             nlp.State().presence_log(presence)
             self.logger.info("presence: " + str(presence))
             return

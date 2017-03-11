@@ -72,10 +72,6 @@ class Functions(object):
     def today_briefing(self):
         self.slackbot.send_message(text=MsgResource.TODAY_BREIFING)
 
-        weather = skills.Weather()
-        weather.forecast(timely="daily")
-        weather.air_quality()
-
         todoist = skills.TodoistManager()
         todoist.schedule()
 
@@ -96,10 +92,6 @@ class Functions(object):
 
         github = skills.GithubManager()
         github.commit(timely="daily")
-
-    def todoist_schedule(self):
-        todoist = skills.TodoistManager()
-        todoist.schedule()
 
     def todoist_feedback(self):
         todoist = skills.TodoistManager()

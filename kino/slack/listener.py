@@ -87,7 +87,6 @@ class MsgListener(object):
             text = ""
             for attachment in self.msg["attachments"]:
                 text += attachment["text"]
-            print(text)
             return text
 
     def __parse_attachments(self):

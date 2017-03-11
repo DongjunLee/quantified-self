@@ -20,8 +20,12 @@ class Happy(object):
         state = nlp.State()
 
         def step_0(params):
-            self.slackbot.send_message(text=MsgResource.HAPPY_QUESTION_STEP_0)
-            state.flow_start("skills/Happy", "question")
+            flow = self.get_flow(is_raw=True)
+            if flow['class'] == "skills/Happy":
+                pass
+            else:
+                self.slackbot.send_message(text=MsgResource.HAPPY_QUESTION_STEP_0)
+                state.flow_start("skills/Happy", "question")
 
         def step_1(params):
             if params is None:
