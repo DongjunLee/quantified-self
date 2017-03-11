@@ -119,7 +119,7 @@ class MsgTemplate(object):
         fields.append(self.field("Address", address))
         fields.append(self.field("Sky Icon", MsgResource.WEATHER_ICONS[icon], short="true"))
         if temperature:
-            fields.append(self.field("Temperature", "{:.3}".format(temperature) + "도", short="true"))
+            fields.append(self.field("Temperature", temperature, short="true"))
         fields.append(self.field("Summary", summary))
 
         a_dict['fields'] = fields
