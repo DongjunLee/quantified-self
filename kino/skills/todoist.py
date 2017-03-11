@@ -116,34 +116,39 @@ class TodoistManager(object):
                 updated_task_count += 1
         return added_task_count, completed_task_count, updated_task_count
 
-    def complete_by_toggl(self, description, time):
-        min_re = "\d+분"
-        description = description.strip()
-        is_contain_item = False
-
+    def __get_task_by_name(self, name):
         tasks = self.__get_today_task()
         for t in tasks:
-            if description in t['content']:
+            if name in t['content']:
                 content = t['content']
+                min_re = "\d+분"
                 assigned_time = re.search(min_re, content)
                 if assigned_time is not None:
                     assigned_time = int(assigned_time.group()[:-1])
-                item = self.todoist_api.items.get_by_id(t['id'])
-                is_contain_item = True
-                break;
+                return t, assigned_time
+        return None, None
 
-        if is_contain_item is False:
+    def complete_by_toggl(self, description, time):
+        description = description.strip()
+        is_contain_item = False
+
+        task, assigned_time = self.__get_task_by_name(description)
+        if task is None:
             print('todoist에 관련된 일이 없습니다.')
         else:
-            if assigned_time is None:
-                item.complete()
+            self.__complete(task, assigned_time=assigned_time, time=time)
+
+    def __complete(self, task, assigned_time=None, time=None):
+        item = self.todoist_api.items.get_by_id(task['id'])
+        if (assigned_time is None) or (time >= assigned_time):
+            if "매" in task['date_string']:
+                self.todoist_api.items.update_date_complete(task['id'], date_string=task['date_string'])
             else:
-                if time >= assigned_time:
-                    item.complete()
-                else:
-                    content = content.replace(str(assigned_time), str(assigned_time-time))
-                    item.update(content=content)
-            self.todoist_api.commit()
+                item.complete()
+        else:
+            content = task['content'].replace(str(assigned_time), str(assigned_time-time))
+            item.update(content=content)
+        self.todoist_api.commit()
 
     def get_point(self):
         overdue_task_point = self.__get_overdue_task(kind="point")
