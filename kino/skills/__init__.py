@@ -6,6 +6,7 @@ from .bus import Bus
 from .github import GithubManager
 from .happy import Happy
 from .ifttt import IFTTT
+from .naver import Naver
 from .rescuetime import RescueTime
 from .manager import FunctionManager
 from .maxim import Maxim
@@ -20,6 +21,7 @@ __all__ = ['Functions',
            'GithubManager',
            'Happy',
            'IFTTT',
+           'Naver',
            'RescueTime',
            'Maxim',
            'TodoistManager',

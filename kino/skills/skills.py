@@ -55,6 +55,14 @@ class Functions(object):
         summary = skills.Summary()
         summary.total_chart()
 
+    def translate(self, english="", source="en", target="ko"):
+        if source is None:
+            source = "en"
+        if target is None:
+            target = "ko"
+        naver = skills.Naver()
+        naver.translate(english, source=source, target=target)
+
     def rescuetime_efficiency(self, timely="daily"):
         if timely is None:
             timely = 'daily'

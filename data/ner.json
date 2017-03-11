@@ -63,6 +63,9 @@
     },
     "real_time": {
       "true": ["실시간"]
+    },
+    "english": {
+      "pattern": "[A-Za-z][A-Za-z ]+"
     }
   }
 }

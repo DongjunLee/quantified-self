@@ -176,3 +176,6 @@ class MsgResource:
             return "매우 나쁨"
 
     IN_OUT_ERROR = "핸드폰이 꺼졌다가 켜진 것 같습니다ㅠㅠ"
+
+    def TRANSLATED_TEXT(result):
+        return "번역된 결과는 다음과 같습니다. \n - " + result

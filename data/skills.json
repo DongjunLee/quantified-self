@@ -53,6 +53,12 @@
     "description": "종합 차트. \n - 일주일동안의 생산성, 행복도, 종합점수 차트",
     "icon": ":robot_face: "
   },
+  "translate": {
+    "keyword": ["번역"],
+    "params": ["english", "source", "target"],
+    "description": "언어 번역",
+    "icon": ":crystal_ball: "
+  },
   "rescuetime_efficiency": {
     "keyword": ["레스큐타임 효율성", "작업 효율", "생산성 차트"],
     "params": ["timely"],
