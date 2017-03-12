@@ -20,8 +20,9 @@ class Happy(object):
         state = nlp.State()
 
         def step_0(params):
-            flow = self.get_flow(is_raw=True)
-            if flow['class'] == "skills/Happy":
+            flow = nlp.DialogManager().get_flow(is_raw=True)
+            print(flow)
+            if flow.get('class', None) == "skills/Happy":
                 pass
             else:
                 self.slackbot.send_message(text=MsgResource.HAPPY_QUESTION_STEP_0)

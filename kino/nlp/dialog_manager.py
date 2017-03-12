@@ -143,7 +143,7 @@ class DialogManager(object):
     def show_flow(self, presence):
         if presence == "active":
             flow = self.get_flow(is_raw=True)
-            if flow['class'] == "skills/Happy":
+            if flow.get('class', None) == "skills/Happy":
                 self.slackbot.send_message(text=MsgResource.FLOW_HAPPY)
 
 class State(object):
