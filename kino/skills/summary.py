@@ -43,14 +43,31 @@ class Summary(object):
                     today_data[k] = "X"
 
         record = self.data_handler.read_record()
-        activity = record['activity']
+        activity = record.get('activity', {})
 
-        go_to_bed_time = arrow.get(activity['go_to_bed'])
-        wake_up_time = arrow.get(activity['wake_up'])
+        arrow_util = utils.ArrowUtil()
 
-        sleep_time = (wake_up_time - go_to_bed_time).seconds / 60 / 60
-        sleep_time = round(sleep_time*100)/100
-        today_data['Sleep Time'] = go_to_bed_time.format("HH:mm") + " ~ " + wake_up_time.format("HH:mm") + " : " + str(sleep_time) + "h"
+        # Sleep Time
+        go_to_bed = activity.get('go_to_bed', None)
+        wake_up = activity.get('wake_up', None)
+
+        if (go_to_bed is not None and wake_up is not None):
+            go_to_bed_time = arrow.get(go_to_bed)
+            wake_up_time = arrow.get(wake_up)
+
+            sleep_hour = arrow_util.get_curr_time_diff(start=go_to_bed_time, stop=wake_up_time, base_hour=True)
+            today_data['Sleep'] = go_to_bed_time.format("HH:mm") + " ~ " + wake_up_time.format("HH:mm") + " : " + str(sleep_hour) + "h"
+
+        # Working Hour
+        in_company = activity.get('in_company', None)
+        out_company = activity.get('out_company', None)
+
+        if (in_company is not None and out_company is not None):
+            in_company_time = arrow.get(in_company)
+            out_company_time = arrow.get(out_company)
+
+            working_hour = arrow_util.get_curr_time_diff(start=in_company_time, stop=out_company_time, base_hour=True)
+            today_data['Working Hour'] = in_company_time.format("HH:mm") + " ~ " + out_company_time.format("HH:mm") + " : " + str(working_hour) + "h"
 
         attachments = template.make_summary_template(today_data)
         self.slackbot.send_message(attachments=attachments)

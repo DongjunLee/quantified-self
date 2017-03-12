@@ -45,7 +45,7 @@ class IFTTT(object):
 
             if getattr(self, "is_" + action)(time):
                 self.slackbot.send_message(text=msg)
-                self.data_handler.edit_record_with_category('action', (action, str(time)))
+                self.data_handler.edit_record_with_category('activity', (action.lower(), str(time)))
 
     def __is_error(self, prev, event):
         if event['action'].startswith("IN") and prev['action'].startswith("IN"):
@@ -80,7 +80,7 @@ class IFTTT(object):
             return False
 
     def is_OUT_COMPANY(self, time):
-        if self.arrow_util.is_between((21,30), (23,0), now=time):
+        if self.arrow_util.is_between((18,30), (23,0), now=time):
             return True
         else:
             return False

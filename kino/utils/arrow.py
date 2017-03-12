@@ -14,7 +14,7 @@ class ArrowUtil(object):
         else:
             return arrow.get(time_str, 'MMMM D, YYYY  hh:mma', tzinfo=tz.tzlocal())
 
-    def get_curr_time_diff(self, start=None, stop=None):
+    def get_curr_time_diff(self, start=None, stop=None, base_hour=False):
         if type(start) is str:
             start = arrow.get(start)
         if type(stop) is str:
@@ -24,7 +24,10 @@ class ArrowUtil(object):
             stop = arrow.utcnow()
 
         diff = (stop - start).seconds / 60
-        return int(diff)
+        if base_hour:
+            return round(diff/60*100)/100
+        else:
+            return int(diff)
 
     def is_between(self, start_time, end_time, now=None):
         if now is None:

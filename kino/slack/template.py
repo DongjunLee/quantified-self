@@ -221,13 +221,6 @@ class MsgTemplate(object):
         a_dict['mrkdwn_in'] = ["text", "pretext"]
 
         fields = []
-        field = {
-            "title": "Sleep Time",
-            "value": data['Sleep Time']
-        }
-        fields.append(field)
-        del data['Sleep Time']
-
         for k,v in data.items():
             field = {}
 
