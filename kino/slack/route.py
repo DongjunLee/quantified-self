@@ -38,12 +38,6 @@ class MsgRouter(object):
         self.logger.info("raw input: " + text)
         self.preprocessing(text)
 
-        # Check Exercise, Diary
-        if self.dialog_manager.call_write_diary(self.simple_text):
-            return
-        if self.dialog_manager.call_do_exercise(self.simple_text):
-            return
-
         # Check Flow
         if self.dialog_manager.is_on_flow():
             self.__on_flow()

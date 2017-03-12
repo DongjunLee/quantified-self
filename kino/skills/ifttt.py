@@ -28,6 +28,8 @@ class IFTTT(object):
         action = event.get('action', '')
         if action.startswith("IN") or action.startswith("OUT"):
             self.IN_OUT_handle(prev_event, event)
+        elif action.startswith("TODO"):
+            self.TODO_handle(event)
         else:
             self.slackbot.send_message(text=event['msg'])
 
@@ -84,3 +86,11 @@ class IFTTT(object):
             return True
         else:
             return False
+
+    def TODO_handle(self, event):
+        msg = event['msg']
+        self.slackbot.send_message(text=msg)
+
+        if event['action'].endswith("COMPLATE"):
+            self.dialog_manager.call_write_diary(msg)
+            self.dialog_manager.call_do_exercise(msg)

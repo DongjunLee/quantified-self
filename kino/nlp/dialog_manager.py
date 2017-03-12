@@ -93,20 +93,14 @@ class DialogManager(object):
             return False
 
     def call_write_diary(self, text):
-        if "일기 쓰다" in text:
+        if "일기" in text:
             skills.Summary().record_write_diary()
             self.slackbot.send_message(text=MsgResource.APPLAUD)
-            return True
-        else:
-            return False
 
     def call_do_exercise(self, text):
-        if "운동 하다" in text:
+        if "운동" in text:
             skills.Summary().record_exercise()
             self.slackbot.send_message(text=MsgResource.APPLAUD)
-            return True
-        else:
-            return False
 
     def check_wake_up(self, presence):
         record = self.data_handler.read_record()
