@@ -7,7 +7,7 @@
   },
   "bus_stop": {
     "keyword": ["버스 도착", "버스도착", "버스 언제", "버스 조회", "버스조회"],
-    "params": ["station_id"],
+    "params": ["station_id", "real_time"],
     "description": "버스 도착 정보 조회",
     "icon": ":oncoming_bus: "
   },
@@ -16,6 +16,12 @@
     "params": ["timely"],
     "description": "날씨예보",
     "icon": ":sun_with_face: "
+  },
+  "air_quality": {
+    "keyword": ["공기질", "미세먼지"],
+    "params": [],
+    "description": "공기질 예보",
+    "icon": ":factory: "
   },
   "github_commit": {
     "keyword": ["깃허브", "github", "커밋", "commit"],
@@ -39,7 +45,19 @@
     "keyword": ["종합 점수"],
     "params": [],
     "description": "종합 점수. \n - 생산성(RescueTime, Github Commit, Todoist, Toggl)\n - 평균 행복도 \n - 운동여부, 일기여부",
+    "icon": ":chart: "
+  },
+  "total_chart": {
+    "keyword": ["종합 차트"],
+    "params": [],
+    "description": "종합 차트. \n - 일주일동안의 생산성, 행복도, 종합점수 차트",
     "icon": ":robot_face: "
+  },
+  "translate": {
+    "keyword": ["번역"],
+    "params": ["english", "source", "target"],
+    "description": "언어 번역",
+    "icon": ":crystal_ball: "
   },
   "rescuetime_efficiency": {
     "keyword": ["레스큐타임 효율성", "작업 효율", "생산성 차트"],
@@ -50,7 +68,7 @@
   "today_briefing": {
     "keyword": ["하루 브리핑", "오늘하루 브리핑"],
     "params": [],
-    "description": "하루 브리핑 \n - 오늘의 날씨 \n - Todoist 스케쥴",
+    "description": "하루 브리핑 \n - 오늘의 날씨, 미세먼지 \n - Todoist 스케쥴",
     "icon": ":city_sunset:  "
   },
   "today_summary": {
@@ -58,12 +76,6 @@
     "params": [],
     "description": "하루 요약 \n - Todoist 피드백 \n - Toggl 작업리포트 \n - RescueTime 생산성 차트 \n - 행복도 리포트 \n - 일일 커밋",
     "icon": ":night_with_stars: "
-  },
-  "todoist_schedule": {
-    "keyword": ["스케쥴", "할일 안내", "todoist schedule"],
-    "params": [],
-    "description": "Todoist에 등록되어 있는 스케쥴 안내",
-    "icon": ":calendar:  "
   },
   "todoist_feedback": {
     "keyword": ["할일 피드백", "todoist feedback"],

@@ -4,6 +4,7 @@ from toggl import Toggl
 
 import slack
 from slack import MsgResource
+import skills
 import utils
 
 class TogglManager(object):
@@ -43,10 +44,13 @@ class TogglManager(object):
         else:
             stop = self.toggl.stopTimeEntry(current_timer['id'])
             description = stop['data'].get('description', 'no description')
-            diff_min = self.__get_curr_time_diff(start=stop['data']['start'], stop=stop['data']['stop'])
+            diff_min = utils.ArrowUtil().get_curr_time_diff(start=stop['data']['start'], stop=stop['data']['stop'])
 
             self.slackbot.send_message(text=MsgResource.TOGGL_STOP)
             self.slackbot.send_message(text=MsgResource.TOGGL_STOP_SUMMARY(description, diff_min))
+
+            todoist = skills.TodoistManager()
+            todoist.complete_by_toggl(description, int(diff_min))
 
     def __get_pid(self, name=None):
         project = self.toggl.getWorkspaceProject(name=name)
@@ -62,7 +66,7 @@ class TogglManager(object):
         if current_timer is None:
             return
 
-        diff_min = self.__get_curr_time_diff(start=current_timer['start'])
+        diff_min = utils.ArrowUtil().get_curr_time_diff(start=current_timer['start'])
         self.logger.info("diff_min: " + str(diff_min))
         diff_min_divide_10 = int(diff_min/10)
         if diff_min > 100:
@@ -72,20 +76,6 @@ class TogglManager(object):
                 if diff_min_divide_10 == i:
                     self.slackbot.send_message(text=MsgResource.TOGGL_TIMER_CHECK(diff_min))
                     break
-
-    def __get_curr_time_diff(self, start=None, stop=None):
-        if type(start) is str:
-            start = arrow.get(start)
-        if type(stop) is str:
-            stop = arrow.get(stop)
-
-        if stop is None:
-            stop = arrow.utcnow()
-
-        self.logger.info(str(stop))
-
-        diff = (stop - start).seconds / 60
-        return int(diff)
 
     def report(self, kind="chart", timely="weekly"):
 

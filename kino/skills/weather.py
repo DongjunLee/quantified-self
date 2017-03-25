@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import datetime
+import arrow
 import forecastio
+from airkoreaPy import AirKorea
 from geopy.geocoders import GoogleV3
 
 import slack
@@ -15,38 +16,54 @@ class Weather(object):
         self.slackbot = slack.SlackerAdapter()
         self.template = slack.MsgTemplate()
 
+    def forecast(self, timely='current'):
         geolocator = GoogleV3()
-        self.location = geolocator.geocode(utils.Profile().get_location())
+        location = geolocator.geocode(utils.Profile().get_location())
 
         api_key = self.config.open_api['dark_sky']['TOKEN']
-        lat = self.location.latitude
-        lon = self.location.longitude
-        self.forecastio = forecastio.load_forecast(api_key, lat, lon)
+        lat = location.latitude
+        lon = location.longitude
+        dark_sky = forecastio.load_forecast(api_key, lat, lon)
 
-    def read(self, timely='current'):
         if timely == 'current':
-            currently = self.forecastio.currently()
-            self.__forecast(currently, timely)
+            currently = dark_sky.currently()
+            self.__forecast(currently, timely, location.address)
         elif timely == 'daily':
-            hourly = self.forecastio.hourly()
-            self.__forecast(hourly, timely)
+            hourly = dark_sky.hourly()
+            self.__forecast(hourly, timely, location.address)
         elif timely == 'weekly':
-            daily = self.forecastio.daily()
-            self.__forecast(daily, timely)
+            daily = dark_sky.daily()
+            self.__forecast(daily, timely, location.address)
 
-    def __forecast(self, forecast, timely):
-
-        address = self.location.address
+    def __forecast(self, forecast, timely, address):
         icon = forecast.icon
         summary = forecast.summary
 
         if timely == 'current':
-            temperature = forecast.temperature
-            fallback = summary + " " + str(temperature) + "도"
+            temperature = str(forecast.temperature) + "도"
+            fallback = summary + " " + temperature
         else:
-            temperature = None
-            fallback = summary
+            temperature = self.__hourly_temperature(forecast)
+            fallback = summary + " " + temperature
 
         attachments = self.template.make_weather_template(address, icon, summary, temperature=temperature, fallback=fallback)
         self.slackbot.send_message(attachments=attachments)
 
+    def __hourly_temperature(self, forecast):
+        hourly_temp = []
+        h = forecast.data
+        for i in range(0, 24, 3):
+            time = arrow.get(h[i].d['time']).format('d일 HH:mm')
+            temperature = h[i].d['temperature']
+            hourly_temp.append("- " + time + ": " + str(temperature) + "도")
+        hourly_temp = "\n".join(hourly_temp)
+        return hourly_temp
+
+    def air_quality(self):
+        api_key = self.config.open_api['airkorea']['TOKEN']
+        airkorea = AirKorea(api_key)
+
+        station_name = utils.Profile().get_location(station=True)
+        response = airkorea.forecast(station_name)
+        attachments = self.template.make_air_quality_template(response)
+        self.slackbot.send_message(attachments=attachments)

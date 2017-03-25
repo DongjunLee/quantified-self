@@ -20,8 +20,13 @@ class Happy(object):
         state = nlp.State()
 
         def step_0(params):
-            self.slackbot.send_message(text=MsgResource.HAPPY_QUESTION_STEP_0)
-            state.start("skills/Happy", "question")
+            flow = nlp.DialogManager().get_flow(is_raw=True)
+            print(flow)
+            if flow.get('class', None) == "skills/Happy":
+                pass
+            else:
+                self.slackbot.send_message(text=MsgResource.HAPPY_QUESTION_STEP_0)
+                state.flow_start("skills/Happy", "question")
 
         def step_1(params):
             if params is None:
@@ -35,10 +40,10 @@ class Happy(object):
             now = arrow.now()
             time = now.format('HH:mm')
             happy_point = numbers[0]
-            self.data_handler.edit_record_happy((time, happy_point))
+            self.data_handler.edit_record_with_category('happy', (time, happy_point))
 
             self.slackbot.send_message(text=MsgResource.HAPPY_QUESTION_STEP_1(happy_point))
-            state.complete()
+            state.flow_complete()
 
         locals()["step_" + str(step)](params)
 

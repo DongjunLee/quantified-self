@@ -1,5 +1,7 @@
 
 class MsgResource:
+    def HELLO(master_name, bot_name):
+        return "{}님 안녕하세요! \n저는 개인비서 {} 라고 합니다.\n반갑습니다.".format(master_name, bot_name)
     ERROR = "에러가 발생하였습니다."
     NOT_UNDERSTANDING = "무슨 말인지 잘 모르겠어요. 저를 똑똑하게 만들어주세요!!"
     CREATE = "등록이 완료되었습니다!"
@@ -7,6 +9,8 @@ class MsgResource:
     READ = "등록된 리스트입니다."
     UPDATE = "변경이 완료되었습니다."
     DELETE = "삭제 완료!"
+
+    NAP = "헛.. 죄송합니다. 제가 잠시 졸고 있었습니다ㅠㅠ"
 
     WORKER_START = "넵, 일 열심히 하겠습니다ㅎㅎ"
     WORKER_STOP = "휴.. 드디어 휴식시간이군요!\n필요하실 때 언제나 불러주세요ㅎㅎ"
@@ -113,7 +117,7 @@ class MsgResource:
     TOGGL_NOTI_RELAY = "작업을 너무 오래하고 계십니다! 잠시 멈추고 십분만 휴식하시죠!!"
     TOGGL_REPORT = "Toggl에 저장되어있는 Report 입니다."
 
-    HAPPY_QUESTION_STEP_0 = "지금 현재 행복도는 10점 만점에 몇점인가요??"
+    HAPPY_QUESTION_STEP_0 = "지금 현재 행복도는 100점 만점에 몇점인가요??"
     def HAPPY_QUESTION_STEP_1(happy):
         happy = int(happy)
         if happy >= 100:
@@ -133,6 +137,8 @@ class MsgResource:
     TODAY_BREIFING = "오늘 하루 브리핑을 시작하겠습니다!"
     TODAY_SUMMARY = "오늘 하루 요약을 시작하겠습니다!"
 
+    TOTAL_REPORT = "종합점수 Report 입니다."
+
     BUS_ICON = ":bus: "
 
     def SCORE_COLOR(score):
@@ -150,3 +156,32 @@ class MsgResource:
     def SLEEP_TIME(bed_time, wakeup_time, diff):
         return bed_time + " ~ " + wakeup_time + ", 총 " + diff + "h 동안 잠을 주무셨습니다."
     GOOD_NIGHT = "이제 주무시는 군요. 좋은 꿈 꾸세요 :first_quarter_moon_with_face:"
+
+    def AIR_QUALITY_COLOR(grade):
+        grade = int(grade)
+        if grade == 1:
+            return "#1E90FF"
+        elif grade == 2:
+            return "#90EE90"
+        elif grade == 3:
+            return "#FF6347"
+        else:
+            return "#DC143C"
+
+    def AIR_QUALITY_TEXT(grade):
+        grade = int(grade)
+        if grade == 1:
+            return "좋음"
+        elif grade == 2:
+            return "보통"
+        elif grade == 3:
+            return "나쁨"
+        else:
+            return "매우 나쁨"
+
+    IN_OUT_ERROR = "핸드폰이 꺼졌다가 켜진 것 같습니다ㅠㅠ"
+
+    def TRANSLATED_TEXT(result):
+        return "번역된 결과는 다음과 같습니다. \n - " + result
+
+    FLOW_HAPPY = ":ear: 행복도 점수 대답을 기다리고 있습니다!"

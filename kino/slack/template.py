@@ -115,29 +115,68 @@ class MsgTemplate(object):
         a_dict['fallback'] = MsgResource.WEATHER_ICONS[icon] + " " + fallback
         a_dict['color'] = "#438C56"
 
-        text = address + " 의 "
-        if temperature is None:
-            text += "날씨는 "
-        else:
-            text += "현재 날씨는 " + "{:.3}".format(temperature) + "도에 "
-        text += "\n" + MsgResource.WEATHER_ICONS[icon] + " " + summary + " 입니다."
-        a_dict['text'] = text
+        fields = []
+        fields.append(self.field("Address", address))
+        fields.append(self.field("Sky Icon", MsgResource.WEATHER_ICONS[icon], short="true"))
+        if temperature:
+            fields.append(self.field("Temperature", temperature, short="true"))
+        fields.append(self.field("Summary", summary))
 
+        a_dict['fields'] = fields
         a_dict['mrkdwn_in'] = ["text", "pretext"]
 
         attachments.append(a_dict)
         return attachments
 
+    def field(self, title, value, short="false"):
+        return {"title": title, "value": value, "short": short}
+
+    def make_air_quality_template(self, data):
+        attachments = []
+
+        cai = data['cai']
+
+        a_dict = {}
+        a_dict['color'] = MsgResource.AIR_QUALITY_COLOR(cai['grade'])
+        a_dict['fallback'] = cai['description'] + " : " + cai['value']
+        a_dict['title'] = "대기질 정보 입니다."
+        a_dict['mrkdwn_in'] = ["text", "pretext"]
+
+        fields = []
+        field = {
+            "title": cai['description'],
+            "value": cai['value'] + "점"
+        }
+        fields.append(field)
+        del data['cai']
+        del data['pm25']
+
+        for k,v in data.items():
+            if type(v) == str:
+                continue
+            field = {}
+
+            field['title'] = v['description']
+            field['value'] = v['value'] + v['unit'] + "\n" + MsgResource.AIR_QUALITY_TEXT(v['grade'])
+            field['short'] = "true"
+            fields.append(field)
+        fields.append(field)
+
+        a_dict['fields'] = fields
+
+        attachments.append(a_dict)
+        return attachments
 
     def make_todoist_specific_time_task_template(self, tasks):
         attachments = []
 
+        fallback = "\n" + "\n".join(list(map(lambda x: x[2] + ": " + x[1], tasks)))
         for t in tasks:
             project_name, title, time, priority = t
 
             a_dict = {}
             a_dict['title'] = project_name + ": " + title
-            a_dict['fallback'] = time + " " + title
+            a_dict['fallback'] = fallback
             a_dict['color'] = MsgResource.TODOIST_PRIORITY_COLOR(priority)
 
             text = MsgResource.CLOCK_ICON + " " + time + " " + MsgResource.TODOIST_TIME
@@ -182,13 +221,6 @@ class MsgTemplate(object):
         a_dict['mrkdwn_in'] = ["text", "pretext"]
 
         fields = []
-        field = {
-            "title": "Activity Time",
-            "value": data['Activity Time']
-        }
-        fields.append(field)
-        del data['Activity Time']
-
         for k,v in data.items():
             field = {}
 

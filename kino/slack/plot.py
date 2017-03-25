@@ -11,7 +11,7 @@ class Plot(object):
     def __init__(self):
         pass
 
-    def make_bar(x, y, f_name, title=None,
+    def make_bar(x, y, f_name, title=None, legend=None,
                        x_label=None, y_label=None, x_ticks=None, y_ticks=None):
         fig = plt.figure()
 
@@ -27,10 +27,14 @@ class Plot(object):
             plt.yticks(y_ticks)
 
         plt.bar(x, y, align='center')
+
+        if legend is not None:
+            plt.legend(legend)
+
         plt.savefig(f_name)
         plt.close(fig)
 
-    def make_line(x, y, f_name, title=None,
+    def make_line(x, y, f_name, title=None, legend=None,
                        x_label=None, y_label=None, x_ticks=None, y_ticks=None):
         fig = plt.figure()
 
@@ -45,7 +49,15 @@ class Plot(object):
         if y_ticks is not None:
             plt.yticks(y_ticks)
 
-        plt.plot(x, y)
+        if isinstance(y[0], list):
+            for data in y:
+                plt.plot(x, data)
+        else:
+            plt.plot(x, y)
+
+        if legend is not None:
+            plt.legend(legend)
+
         plt.savefig(f_name)
         plt.close(fig)
 

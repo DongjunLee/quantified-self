@@ -19,7 +19,7 @@ class Bus(object):
         self.ansan_station = self.data_handler.read_file("ansan_station.json")
         self.service_key = self.config.open_api['gbis']['TOKEN']
 
-    def arrive_info(self, station_id):
+    def arrive_info(self, station_id, real_time=False):
         url = "http://openapi.gbis.go.kr/ws/rest/busarrivalservice/station?"
         url += "serviceKey=" + self.service_key + "&stationId=" + station_id
 
@@ -54,7 +54,10 @@ class Bus(object):
             self.slackbot.send_message(text=MsgResource.ERROR)
 
         attachments = self.template.make_bus_stop_template(result)
-        self.slackbot.send_message(attachments=attachments)
+        if real_time:
+            self.slackbot.update_message(attachments=attachments)
+        else:
+            self.slackbot.send_message(attachments=attachments)
 
     def __request(self, url):
         req = requests.get(url)

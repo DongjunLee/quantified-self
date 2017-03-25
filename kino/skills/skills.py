@@ -15,15 +15,25 @@ class Functions(object):
     def send_message(self, text=None):
         self.slackbot.send_message(text=text)
 
-    def bus_stop(self, station_id=None):
+    def bus_stop(self, station_id=None, real_time=None):
+        if real_time is None:
+            real_time = False
         bus = skills.Bus()
-        bus.arrive_info(station_id)
+        bus.arrive_info(station_id, real_time=real_time)
 
     def forecast(self, timely="current"):
+        if timely is None:
+            timely = 'current'
         weather = skills.Weather()
-        weather.read(timely=timely)
+        weather.forecast(timely=timely)
+
+    def air_quality(self):
+        weather = skills.Weather()
+        weather.air_quality()
 
     def github_commit(self, timely="daily"):
+        if timely is None:
+            timely = 'daily'
         github = skills.GithubManager()
         github.commit(timely=timely)
 
@@ -32,6 +42,8 @@ class Functions(object):
         happy.question()
 
     def happy_report(self, timely="daily"):
+        if timely is None:
+            timely = 'daily'
         happy = skills.Happy()
         happy.report(timely=timely)
 
@@ -39,16 +51,25 @@ class Functions(object):
         summary = skills.Summary()
         summary.total_score()
 
+    def total_chart(self):
+        summary = skills.Summary()
+        summary.total_chart()
+
+    def translate(self, english="", source="en", target="ko"):
+        if source is None:
+            source = "en"
+        if target is None:
+            target = "ko"
+        naver = skills.Naver()
+        naver.translate(english, source=source, target=target)
+
     def rescuetime_efficiency(self, timely="daily"):
+        if timely is None:
+            timely = 'daily'
         rescuetime = skills.RescueTime()
         rescuetime.efficiency(timely=timely)
 
     def today_briefing(self):
-        self.slackbot.send_message(text=MsgResource.TODAY_BREIFING)
-
-        weather = skills.Weather()
-        weather.read(timely="daily")
-
         todoist = skills.TodoistManager()
         todoist.schedule()
 
@@ -70,10 +91,6 @@ class Functions(object):
         github = skills.GithubManager()
         github.commit(timely="daily")
 
-    def todoist_schedule(self):
-        todoist = skills.TodoistManager()
-        todoist.schedule()
-
     def todoist_feedback(self):
         todoist = skills.TodoistManager()
         todoist.feedback()
@@ -87,6 +104,10 @@ class Functions(object):
         toggl.check_toggl_timer()
 
     def toggl_report(self, kind="chart", timely="weekly"):
+        if kind is None:
+            kind = 'chart'
+        if timely is None:
+            timely = 'weekly'
         toggl = skills.TogglManager()
         toggl.report(kind=kind, timely=timely)
 
