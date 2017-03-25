@@ -70,8 +70,6 @@ class Functions(object):
         rescuetime.efficiency(timely=timely)
 
     def today_briefing(self):
-        self.slackbot.send_message(text=MsgResource.TODAY_BREIFING)
-
         todoist = skills.TodoistManager()
         todoist.schedule()
 
