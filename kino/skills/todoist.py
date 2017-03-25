@@ -62,6 +62,11 @@ class TodoistManager(object):
         self.todoist_api.sync()
         return self.todoist_api.query(['today'])[0]['data']
 
+    def get_repeat_task_count(self):
+        task = self.__get_today_task()
+        task = list(filter(lambda t: '분' in t['content'], task))
+        return len(task)
+
     def __get_specific_time_task(self, today_task):
         specific_task_list = []
         for t in today_task:
