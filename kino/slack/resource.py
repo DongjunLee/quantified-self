@@ -1,5 +1,7 @@
 
 class MsgResource:
+    def HELLO(master_name, bot_name):
+        return "{}님 안녕하세요! \n저는 개인비서 {} 라고 합니다.\n반갑습니다.".format(master_name, bot_name)
     ERROR = "에러가 발생하였습니다."
     NOT_UNDERSTANDING = "무슨 말인지 잘 모르겠어요. 저를 똑똑하게 만들어주세요!!"
     CREATE = "등록이 완료되었습니다!"
@@ -7,6 +9,8 @@ class MsgResource:
     READ = "등록된 리스트입니다."
     UPDATE = "변경이 완료되었습니다."
     DELETE = "삭제 완료!"
+
+    NAP = "헛.. 죄송합니다. 제가 잠시 졸고 있었습니다ㅠㅠ"
 
     WORKER_START = "넵, 일 열심히 하겠습니다ㅎㅎ"
     WORKER_STOP = "휴.. 드디어 휴식시간이군요!\n필요하실 때 언제나 불러주세요ㅎㅎ"

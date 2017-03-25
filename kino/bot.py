@@ -5,6 +5,7 @@ import time
 import websockets
 
 import slack
+from slack import MsgResource
 import utils
 
 # Send a message to channel (init)
@@ -15,15 +16,17 @@ logger = utils.Logger().get_logger()
 config = utils.Config()
 MASTER_NAME = config.bot["MASTER_NAME"]
 BOT_NAME = config.bot["BOT_NAME"]
-hello_text = "{}님 안녕하세요! \n저는 개인비서 {} 라고 합니다.\n반갑습니다.".format(MASTER_NAME, BOT_NAME)
-slackbot.send_message(text=hello_text)
+slackbot.send_message(text=MsgResource.HELLO(MASTER_NAME, BOT_NAME))
 
-def start_session():
+def start_session(nap=False):
     try:
         # Start RTM
         endpoint = slackbot.start_real_time_messaging_session()
         listener = slack.MsgListener()
         logger.info('start real time messaging session!')
+
+        if nap:
+            slackbot.send_message(text=MsgResource.NAP)
 
         async def execute_bot():
             ws = await websockets.connect(endpoint)
@@ -37,9 +40,9 @@ def start_session():
         asyncio.get_event_loop().run_until_complete(execute_bot())
         asyncio.get_event_loop().run_forever()
     except Exception as e:
-        logger.error("Session Error.")
+        logger.error("Session Error. restart in 5 minutes..")
         logger.error(repr(e))
         time.sleep(5*60)
-        start_session()
+        start_session(nap=True)
 
 start_session()
