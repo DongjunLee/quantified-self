@@ -31,7 +31,6 @@ class Worker(object):
 
         params = {k: self.ner.parse(v, self.input) for k,v in self.ner.params.items()}
         ner_dict['params'] = params
-        print(str(ner_dict))
 
         notifier.Scheduler().create_with_ner(**ner_dict)
 
