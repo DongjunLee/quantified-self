@@ -52,8 +52,8 @@ class Weather(object):
     def __hourly_temperature(self, forecast):
         hourly_temp = []
         h = forecast.data
-        for i in range(0, 15, 3):
-            time = arrow.get(h[i].d['time']).format('HH:mm')
+        for i in range(0, 24, 3):
+            time = arrow.get(h[i].d['time']).format('d일 HH:mm')
             temperature = h[i].d['temperature']
             hourly_temp.append("- " + time + ": " + str(temperature) + "도")
         hourly_temp = "\n".join(hourly_temp)

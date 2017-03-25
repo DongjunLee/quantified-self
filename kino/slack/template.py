@@ -158,7 +158,6 @@ class MsgTemplate(object):
 
             field['title'] = v['description']
             field['value'] = v['value'] + v['unit'] + "\n" + MsgResource.AIR_QUALITY_TEXT(v['grade'])
-            print(v['grade'])
             field['short'] = "true"
             fields.append(field)
         fields.append(field)
@@ -171,12 +170,13 @@ class MsgTemplate(object):
     def make_todoist_specific_time_task_template(self, tasks):
         attachments = []
 
+        fallback = "\n" + "\n".join(list(map(lambda x: x[2] + ": " + x[1], tasks)))
         for t in tasks:
             project_name, title, time, priority = t
 
             a_dict = {}
             a_dict['title'] = project_name + ": " + title
-            a_dict['fallback'] = time + " " + title
+            a_dict['fallback'] = fallback
             a_dict['color'] = MsgResource.TODOIST_PRIORITY_COLOR(priority)
 
             text = MsgResource.CLOCK_ICON + " " + time + " " + MsgResource.TODOIST_TIME
