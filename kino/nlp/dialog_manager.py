@@ -102,6 +102,13 @@ class DialogManager(object):
             skills.Summary().record_exercise()
             self.slackbot.send_message(text=MsgResource.APPLAUD)
 
+    def call_is_holiday(self, dnd):
+        skills.Summary().record_holiday(dnd)
+        if dnd:
+            self.slackbot.send_message(text=MsgResource.HOLIDAY)
+        else:
+            self.slackbot.send_message(text=MsgResource.WEEKDAY)
+
     def check_wake_up(self, presence):
         record = self.data_handler.read_record()
         if 'wake_up' in record.get('activity', {}):
@@ -114,6 +121,7 @@ class DialogManager(object):
         if (self.arrow_util.is_between((6,0), (11,0)) and
             presence_log['presence'] == 'away' and presence == 'active'):
             self.slackbot.send_message(text=MsgResource.GOOD_MORNING)
+            self.call_is_holiday(self.arrow_util.is_weekday())
 
             go_to_bed_time = arrow.get(presence_log['time'])
             wake_up_time = arrow.now()

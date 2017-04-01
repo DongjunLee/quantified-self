@@ -21,7 +21,7 @@ class MsgRouter(object):
         self.logger.info("clean input: " + self.simple_text)
 
     def route(self, text=None, user=None, channel=None,
-              direct=False, ifttt=False, presence=None):
+              direct=False, ifttt=False, presence=None, dnd=None):
 
         if presence is not None:
             self.dialog_manager.check_wake_up(presence)
@@ -29,6 +29,10 @@ class MsgRouter(object):
 
             nlp.State().presence_log(presence)
             self.logger.info("presence: " + str(presence))
+            return
+
+        if dnd is not None:
+            self.dialog_manager.call_is_holiday(dnd)
             return
 
         if ifttt:

@@ -53,7 +53,8 @@ class Worker(object):
                     "func_name": 'send_message',
                     "params": {
                         "text": MsgResource.PROFILE_WAKE_UP
-                    }
+                    },
+                    "holiday": False
                 })
 
         working_start, working_end = profile.get_working_hour_time().split("~")
@@ -63,7 +64,8 @@ class Worker(object):
                     "func_name": 'send_message',
                     "params": {
                         "text": MsgResource.PROFILE_WORK_START
-                    }
+                    },
+                    "holiday": False
                 })
 
         schedule.every().day.at(working_end).do(
@@ -72,7 +74,8 @@ class Worker(object):
                     "func_name": 'send_message',
                     "params": {
                         "text": MsgResource.PROFILE_WORK_END
-                    }
+                    },
+                    "holiday": False
                 })
 
         schedule.every().day.at(profile.get_go_to_bed_time()).do(

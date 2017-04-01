@@ -45,3 +45,11 @@ class ArrowUtil(object):
             return True
         else:
             return False
+
+    def is_weekday(self):
+        t = arrow.now()
+        day_of_week = t.weekday()
+        if day_of_week < 5:
+            return True
+        else:
+            return False

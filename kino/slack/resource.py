@@ -154,6 +154,8 @@ class MsgResource:
             return "#C11B17"
 
     APPLAUD = ":clap::clap::clap: 멋지십니다!ㅎㅎ"
+    WEEKDAY = "오늘은 평일이시군요! :walking: "
+    HOLIDAY = "오늘은 쉬는 날 이시군요! :raising_hand:"
     GOOD_MORNING = "안녕히 주무셨나요? 좋은 아침입니다^^ :sun_with_face:"
     def SLEEP_TIME(bed_time, wakeup_time, diff):
         return bed_time + " ~ " + wakeup_time + ", 총 " + diff + "h 동안 잠을 주무셨습니다."

@@ -32,8 +32,7 @@ def start_session(nap=False):
             ws = await websockets.connect(endpoint)
             while True:
                 receive_json = await ws.recv()
-                listener.handle_message(receive_json)
-                listener.handle_presence_change(receive_json)
+                listener.handle(receive_json)
 
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)

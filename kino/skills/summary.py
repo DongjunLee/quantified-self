@@ -129,11 +129,25 @@ class Summary(object):
         self.data_handler.edit_record(('productive', data))
 
         score = utils.Score()
-        rescue_time_point = score.percent(rescue_time_point, 10, 100)
-        github_point = score.percent(github_point, 10, 100)
-        todoist_point = score.percent(todoist_point, 50, 100)
-        toggl_point = score.percent(toggl_point, 30, 100)
-        return (rescue_time_point + github_point + todoist_point + toggl_point)
+
+        base_point = 0
+        rescue_time_ratio = 10
+        github_ratio = 10
+        todoist_ratio = 50
+        toggl_ratio = 30
+
+        if self.is_holiday():
+            base_point = 50
+            rescue_time_ratio /= 2
+            github_ratio /= 2
+            todoist_ratio /= 2
+            toggl_ratio /= 2
+
+        rescue_time_point = score.percent(rescue_time_point, rescue_time_ratio, 100)
+        github_point = score.percent(github_point, github_ratio, 100)
+        todoist_point = score.percent(todoist_point, todoist_ratio, 100)
+        toggl_point = score.percent(toggl_point, toggl_ratio, 100)
+        return (base_point + rescue_time_point + github_point + todoist_point + toggl_point)
 
     def __happy_score(self):
         happy_data = self.data_handler.read_record().get('happy', {})
@@ -146,7 +160,7 @@ class Summary(object):
         activity_data = self.data_handler.read_record().get('activity', {})
 
         go_to_bed_time = arrow.get(activity_data.get('go_to_bed', None))
-        wake_up_time = arrow.get(activity_data.get('wake_up', 'hohoho'))
+        wake_up_time = arrow.get(activity_data.get('wake_up', None))
 
         sleep_time = (wake_up_time - go_to_bed_time).seconds / 60 / 60
         sleep_time = sleep_time*100
@@ -162,13 +176,26 @@ class Summary(object):
 
     def __repeat_task_score(self):
         todoist = skills.TodoistManager()
-        return 10 - (2.5 * todoist.get_repeat_task_count())
+        minus_point = 2.5
+        if self.is_holiday():
+            minus_point /= 2
+        return 10 - (minus_point * todoist.get_repeat_task_count())
 
     def record_write_diary(self):
         self.data_handler.edit_record(('Diary', True))
 
     def record_exercise(self):
         self.data_handler.edit_record(('Exercise', True))
+
+    def record_holiday(self, dnd):
+        self.data_handler.edit_record(('Holiday', dnd))
+
+    def is_holiday(self):
+        record = self.data_handler.read_record()
+        if record['Holiday']:
+            return True
+        else:
+            return False
 
     def total_chart(self):
         records = []

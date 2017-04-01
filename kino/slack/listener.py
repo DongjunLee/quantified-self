@@ -11,8 +11,13 @@ class MsgListener(object):
         self.slackbot = slack.SlackerAdapter()
         self.logger = utils.Logger().get_logger()
 
-    def handle_message(self, msg):
+    def handle(self, msg):
         self.msg = json.loads(msg)
+        self.handle_message()
+        self.handle_presence_change()
+        self.handle_dnd_change()
+
+    def handle_message(self):
         if self.__is_message():
             is_bot = self.__is_bot()
             if not self.__is_self() and not is_bot:
@@ -92,11 +97,10 @@ class MsgListener(object):
     def __parse_attachments(self):
         pass
 
-    def handle_presence_change(self, presence):
-        presence = json.loads(presence)
+    def handle_presence_change(self):
         if self.__is_presence() and not self.__is_self():
             try:
-                self.router.route(presence=presence['presence'])
+                self.router.route(presence=self.msg['presence'])
             except Exception as e:
                 self.logger.error("Presence Listener Error: ", e)
                 self.slackbot.send_message(text=slack.MsgResource.ERROR)
@@ -107,4 +111,21 @@ class MsgListener(object):
             return True
         else:
             return False
+
+    def handle_dnd_change(self):
+        if self.__is_dnd_updated_user() and not self.__is_self():
+            try:
+                dnd = self.msg['dnd_status']
+                self.router.route(dnd=dnd['dnd_enabled'])
+            except Exception as e:
+                self.logger.error("dnd_change Listener Error: ", e)
+                self.slackbot.send_message(text=slack.MsgResource.ERROR)
+
+    def __is_dnd_updated_user(self):
+        msg_type = self.msg.get("type", None)
+        if msg_type == "dnd_updated_user":
+            return True
+        else:
+            return False
+
 
