@@ -28,7 +28,7 @@ class Summary(object):
                 if not y_point:
                     continue
                 else:
-                    diff = v - y_point
+                    diff = v - float(y_point)
                     diff = round(diff*100)/100
 
                 if diff > 0:

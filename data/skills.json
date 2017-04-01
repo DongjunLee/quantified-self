@@ -77,11 +77,23 @@
     "description": "하루 요약 \n - Todoist 피드백 \n - Toggl 작업리포트 \n - RescueTime 생산성 차트 \n - 행복도 리포트 \n - 일일 커밋",
     "icon": ":night_with_stars: "
   },
+  "todoist_auto_update": {
+    "keyword": ["지난 작업 업데이트", "기한지난 작업 업데이트", "overdue task update"],
+    "params": [],
+    "description": "Todoist의 기한지난 작업들 오늘로 업데이트",
+    "icon": ":clipboard: "
+  },
   "todoist_feedback": {
     "keyword": ["할일 피드백", "todoist feedback"],
     "params": [],
     "description": "Todoist의 작업내역 피드백",
     "icon": ":memo: "
+  },
+  "todoist_remain": {
+    "keyword": ["남은 작업", "remain task"],
+    "params": [],
+    "description": "Todoist의 남은 작업 안내",
+    "icon": ":page_with_curl: "
   },
   "toggl_timer": {
     "keyword": ["toggl"],

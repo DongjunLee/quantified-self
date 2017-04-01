@@ -105,6 +105,8 @@ class MsgResource:
 
     def TODOIST_FEEDBACK_EVENT(a_count, c_count, u_count):
         return "오늘은 총 {} 개의 할일들을 추가하였고, {} 개의 일들을 완료하였으며, {} 개의 일들을 완료하지 못하고 연기하였습니다.".format(a_count, c_count, u_count)
+    TODOIST_REMAIN = "아직 남아있는 작업 리스트입니다. "
+    TODOIST_AUTO_UPDATE = "기한이 지난 작업들을 제가 오늘로 업데이트 하였습니다. "
 
     MAXIM_ICON = ":scales: "
 

@@ -167,19 +167,19 @@ class MsgTemplate(object):
         attachments.append(a_dict)
         return attachments
 
-    def make_todoist_specific_time_task_template(self, tasks):
+    def make_todoist_task_template(self, tasks):
         attachments = []
 
-        fallback = "\n" + "\n".join(list(map(lambda x: x[2] + ": " + x[1], tasks)))
+        fallback = "\n" + "\n".join(list(map(lambda x: x[2] + ": " + x[1] + "(" + x[0] + ")", tasks)))
         for t in tasks:
             project_name, title, time, priority = t
 
             a_dict = {}
-            a_dict['title'] = project_name + ": " + title
+            a_dict['title'] = "[" + project_name + "]: " + title
             a_dict['fallback'] = fallback
             a_dict['color'] = MsgResource.TODOIST_PRIORITY_COLOR(priority)
 
-            text = MsgResource.CLOCK_ICON + " " + time + " " + MsgResource.TODOIST_TIME
+            text = MsgResource.CLOCK_ICON + " " + time
             a_dict['text'] = text
             a_dict['mrkdwn_in'] = ["text", "pretext"]
 

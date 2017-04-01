@@ -29,8 +29,8 @@ class TodoistManager(object):
         task_text = MsgResource.TODOIST_OVERDUE(overdue_task_count) + "\n" + MsgResource.TODOIST_TODAY(today_task_count)
         self.slackbot.send_message(text=task_text, channel=channel)
 
-        specific_task_list = self.__get_specific_time_task(today_task)
-        attachments = self.template.make_todoist_specific_time_task_template(specific_task_list)
+        specific_task_list = list(filter(lambda x: x[2] != "anytime", self.__get_task(today_task)))
+        attachments = self.template.make_todoist_task_template(specific_task_list)
         self.slackbot.send_message(attachments=attachments, channel=channel)
 
         karma_trend = self.__get_karma_trend()
@@ -38,19 +38,19 @@ class TodoistManager(object):
         self.slackbot.send_message(text=karma_trend_text, channel=channel)
 
     def __get_overdue_task(self, kind="count"):
-        overdue_task_count = 0
-        point = 0
+        task_list = []
         # 7 day ~ 1 day before
         for i in range(7,0,-1):
             query = str(i) + ' day before'
             before = self.todoist_api.query([query])[0]['data']
-            overdue_task_count += len(before)
-            point += self.__get_point(before)
+            task_list += before
 
-        if kind == "count":
-            return overdue_task_count
+        if kind == "all":
+            return task_list
+        elif kind == "count":
+            return len(task_list)
         elif kind == "point":
-            return point
+            return self.__get_point(task_list)
 
     def __get_point(self, task_list):
         point = 0
@@ -67,18 +67,31 @@ class TodoistManager(object):
         task = list(filter(lambda t: '분' in t['content'], task))
         return len(task)
 
-    def __get_specific_time_task(self, today_task):
-        specific_task_list = []
+    def remain_task(self):
+        today_task = self.__get_today_task()
+        remain_task_list = self.__get_task(today_task)
+
+        remain_task_count = len(remain_task_list)
+        if remain_task_count > 0:
+            self.slackbot.send_message(text=MsgResource.TODOIST_REMAIN)
+        self.slackbot.send_message(text=MsgResource.TODOIST_FEEDBACK_OVERDUE(remain_task_count))
+
+        attachments = self.template.make_todoist_task_template(remain_task_list)
+        self.slackbot.send_message(attachments=attachments)
+
+    def __get_task(self, today_task):
+        task_list = []
         for t in today_task:
+            due_time = "anytime"
             if ':' in t['date_string'] or '분' in t['date_string']:
                 due_time = parse(t['due_date']).astimezone(timezone('Asia/Seoul'))
                 due_time = due_time.strftime("%H:%M")
 
-                project = self.todoist_api.projects.get_data(t['project_id'])
-                project_name = project['project']['name']
+            project = self.todoist_api.projects.get_data(t['project_id'])
+            project_name = project['project']['name']
 
-                specific_task_list.append( (project_name, t['content'], due_time, t['priority']) )
-        return specific_task_list
+            task_list.append( (project_name, t['content'], due_time, t['priority']) )
+        return task_list
 
     def __get_karma_trend(self):
         user = self.todoist_api.user.login(self.config.open_api['todoist']['ID'], self.config.open_api['todoist']['PASSWORD'])
@@ -164,3 +177,14 @@ class TodoistManager(object):
         if total_minus_point > max_point:
             total_minus_point = max_point
         return max_point - total_minus_point
+
+    def auto_update_tasks(self):
+        overdue_task_list = self.__get_overdue_task(kind="all")
+        today_format = arrow.now().format("YYYY-M-DDT00:00")
+        for task in overdue_task_list:
+            self.todoist_api.items.update_date_complete(
+                    task['id'], date_string=task['date_string'],
+                    new_date_utc=today_format, is_forward=0)
+        self.todoist_api.commit()
+        self.slackbot.send_message(text=MsgResource.TODOIST_AUTO_UPDATE)
+

@@ -91,9 +91,17 @@ class Functions(object):
         github = skills.GithubManager()
         github.commit(timely="daily")
 
+    def todoist_auto_update(self):
+        todoist = skills.TodoistManager()
+        todoist.auto_update_tasks()
+
     def todoist_feedback(self):
         todoist = skills.TodoistManager()
         todoist.feedback()
+
+    def todoist_remain(self):
+        todoist = skills.TodoistManager()
+        todoist.remain_task()
 
     def toggl_timer(self, description=None):
         toggl = skills.TogglManager()
