@@ -54,7 +54,7 @@ class Worker(object):
                     "params": {
                         "text": MsgResource.PROFILE_WAKE_UP
                     },
-                    "holiday": False
+                    "not_holiday": True
                 })
 
         working_start, working_end = profile.get_working_hour_time().split("~")
@@ -65,7 +65,7 @@ class Worker(object):
                     "params": {
                         "text": MsgResource.PROFILE_WORK_START
                     },
-                    "holiday": False
+                    "not_holiday": True
                 })
 
         schedule.every().day.at(working_end).do(
@@ -75,7 +75,7 @@ class Worker(object):
                     "params": {
                         "text": MsgResource.PROFILE_WORK_END
                     },
-                    "holiday": False
+                    "not_holiday": True
                 })
 
         schedule.every().day.at(profile.get_go_to_bed_time()).do(

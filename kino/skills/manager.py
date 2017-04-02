@@ -17,9 +17,9 @@ class FunctionManager(object):
         self.logger = utils.Logger().get_logger()
 
     def load_function(self, start_time=None, end_time=None,
-                      func_name=None, params=None, repeat=False, holiday=False):
+                      func_name=None, params=None, repeat=False, not_holiday=False):
 
-        if holiday == False and skills.Summary().is_holiday() == True:
+        if not_holiday and skills.Summary().is_holiday() == True:
             return
 
         if not repeat:
