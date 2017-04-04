@@ -87,6 +87,13 @@ class Worker(object):
                     }
                 })
 
+        schedule.every().day.at(profile.get_check_go_to_bed_time()).do(
+                self.__run_threaded, function, {
+                    "repeat": False,
+                    "func_name": 'check_go_to_bed',
+                    "params": {}
+                })
+
     def __set_custom_schedule(self):
         schedule_fname = "schedule.json"
         schedule_data = self.data_handler.read_file(schedule_fname)

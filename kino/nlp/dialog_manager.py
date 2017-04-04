@@ -121,12 +121,14 @@ class DialogManager(object):
         if (self.arrow_util.is_between((6,0), (11,0)) and
             presence_log['presence'] == 'away' and presence == 'active'):
             self.slackbot.send_message(text=MsgResource.GOOD_MORNING)
-            self.call_is_holiday(self.arrow_util.is_weekday())
 
-            go_to_bed_time = arrow.get(presence_log['time'])
+            is_holiday = self.arrow_util.is_weekday() == False
+            self.call_is_holiday(is_holiday)
+
+            activity = record.get('activity', {})
+            go_to_bed_time = arrow.get(activity.get('go_to_bed', None))
+
             wake_up_time = arrow.now()
-
-            self.data_handler.edit_record_with_category('activity', ('go_to_bed', str(go_to_bed_time)))
             self.data_handler.edit_record_with_category('activity', ('wake_up', str(wake_up_time)))
 
             sleep_time = (wake_up_time - go_to_bed_time).seconds / 60 / 60

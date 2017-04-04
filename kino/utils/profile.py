@@ -28,6 +28,12 @@ class Profile(object):
         else:
            return self.schedule['GO_TO_BED']
 
+    def get_check_go_to_bed_time(self, parsed=False):
+        if parsed:
+           return self.__parse_during_time(self.schedule['CHECK_GO_TO_BED'])
+        else:
+           return self.schedule['CHECK_GO_TO_BED']
+
     def __parse_during_time(self, during_text):
         start_time, end_time = during_text.split("~")
         return (self.__parse_time(start_time), self.__parse_time(end_time))

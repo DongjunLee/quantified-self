@@ -1,6 +1,7 @@
 
 import arrow
 
+import nlp
 import skills
 import slack
 from slack import MsgResource
@@ -196,6 +197,14 @@ class Summary(object):
             return True
         else:
             return False
+
+    def check_go_to_bed(self):
+        state = nlp.State()
+        state.check()
+        presence_log = state.current[state.SLEEP]
+        if presence_log['presence'] == 'away':
+            go_to_bed_time = arrow.get(presence_log['time'])
+            self.data_handler.edit_record_with_category('activity', ('go_to_bed', str(go_to_bed_time)))
 
     def total_chart(self):
         records = []

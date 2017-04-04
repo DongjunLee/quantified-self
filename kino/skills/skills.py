@@ -12,6 +12,10 @@ class Functions(object):
         self.slackbot = slack.SlackerAdapter()
         self.registered = RegisteredFuctions().list
 
+    def check_go_to_bed(self):
+        summary = skills.Summary()
+        summary.check_go_to_bed()
+
     def send_message(self, text=None):
         self.slackbot.send_message(text=text)
 
