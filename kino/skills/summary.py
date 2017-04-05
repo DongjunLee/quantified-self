@@ -12,6 +12,7 @@ class Summary(object):
     def __init__(self):
         self.data_handler = utils.DataHandler()
         self.slackbot = slack.SlackerAdapter()
+        self.profile = utils.Profile()
 
     def total_score(self):
         template = slack.MsgTemplate()
@@ -86,17 +87,17 @@ class Summary(object):
             bat = today_data.get('BAT', False)
 
             score = utils.Score()
-            total = (score.percent(happy, 30, 100)
-                      + score.percent(productive, 30, 100)
-                      + score.percent(sleep, 20, 100)
+            total = (score.percent(happy, self.profile.get_score('HAPPY'), 100)
+                      + score.percent(productive, self.profile.get_score('PRODUCTIVE'), 100)
+                      + score.percent(sleep, self.profile.get_score('SLEEP'), 100)
                       + repeat)
 
             if diary:
-                total += 5
+                total += self.profile.get_score('DIARY')
             if exercise:
-                total += 5
+                total += self.profile.get_score('EXERCISE')
             if bat:
-                total += 5
+                total += self.profile.get_score('BAT')
 
             data = {
                 "Productive": round(productive*100)/100,
@@ -132,17 +133,19 @@ class Summary(object):
         score = utils.Score()
 
         base_point = 0
-        rescue_time_ratio = 10
-        github_ratio = 10
-        todoist_ratio = 50
-        toggl_ratio = 30
+        rescue_time_ratio = self.profile.get_score('productives')['RESCUE_TIME']
+        github_ratio = self.profile.get_score('productives')['GITHUB']
+        todoist_ratio = self.profile.get_score('productives')['TODOIST']
+        toggl_ratio = self.profile.get_score('productives')['TOGGL']
 
         if self.is_holiday():
-            base_point = 50
-            rescue_time_ratio /= 2
-            github_ratio /= 2
-            todoist_ratio /= 2
-            toggl_ratio /= 2
+            base_point = self.profile.get_score('HOLIDAY_BASE')
+            holiday_ratio = self.profile.get_score('HOLIDAY_RATIO')
+
+            rescue_time_ratio *= holiday_ratio
+            github_ratio *= holiday_ratio
+            todoist_ratio *= holiday_ratio
+            toggl_ratio *= holiday_ratio
 
         rescue_time_point = score.percent(rescue_time_point, rescue_time_ratio, 100)
         github_point = score.percent(github_point, github_ratio, 100)
@@ -193,10 +196,12 @@ class Summary(object):
 
     def is_holiday(self):
         record = self.data_handler.read_record()
-        if record['Holiday']:
-            return True
+        holiday = record.get('Holiday', None)
+        if holiday is None:
+            arrow_util = utils.ArrowUtil()
+            return not arrow_util.is_weekday()
         else:
-            return False
+            return holiday
 
     def check_go_to_bed(self):
         state = nlp.State()
