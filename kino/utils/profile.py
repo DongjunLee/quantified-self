@@ -6,33 +6,17 @@ import utils
 class Profile(object):
 
     def __init__(self):
-        self.profile = utils.Config().profile
-        self.schedule = self.profile['schedule']
-        self.location = self.profile['location']
+        profile = utils.Config().profile
+        self.schedule = profile['schedule']
+        self.location = profile['location']
+        self.task = profile['task']
+        self.score = profile['score']
 
-    def get_wake_up_time(self, parsed=False):
+    def get_schedule(self, keyword, parsed=False):
         if parsed:
-            return self.__parse_during_time(self.schedule['WAKE_UP'])
+            return self.__parse_during_time(self.schedule[keyword])
         else:
-            return self.schedule['WAKE_UP']
-
-    def get_working_hour_time(self, parsed=False):
-        if parsed:
-            return self.__parse_during_time(self.schedule['WORKING'])
-        else:
-            return self.schedule['WORKING']
-
-    def get_go_to_bed_time(self, parsed=False):
-        if parsed:
-           return self.__parse_during_time(self.schedule['GO_TO_BED'])
-        else:
-           return self.schedule['GO_TO_BED']
-
-    def get_check_go_to_bed_time(self, parsed=False):
-        if parsed:
-           return self.__parse_during_time(self.schedule['CHECK_GO_TO_BED'])
-        else:
-           return self.schedule['CHECK_GO_TO_BED']
+            return self.schedule[keyword]
 
     def __parse_during_time(self, during_text):
         start_time, end_time = during_text.split("~")
@@ -61,3 +45,9 @@ class Profile(object):
                 return self.location['HOME_STATION_NAME']
             else:
                 return self.location['HOME']
+
+    def get_task(self, keyword):
+        return self.task[keyword]
+
+    def get_score(self, keyword):
+        return self.score[keyword]

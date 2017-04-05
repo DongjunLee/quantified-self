@@ -19,6 +19,7 @@ class Worker(object):
         self.data_handler = utils.DataHandler()
         self.logger = utils.Logger().get_logger()
         self.ner = nlp.NamedEntitiyRecognizer()
+        self.function = skills.FunctionManager().load_function
 
     def create(self):
         ner_dict = {k: self.ner.parse(v, self.input) for k,v in self.ner.schedule.items()}
@@ -45,54 +46,36 @@ class Worker(object):
 
     def __set_profile_schedule(self):
         profile = utils.Profile()
-        function = skills.FunctionManager().load_function
 
-        schedule.every().day.at(profile.get_wake_up_time()).do(
-                self.__run_threaded, function, {
-                    "repeat": False,
-                    "func_name": 'send_message',
-                    "params": {
-                        "text": MsgResource.PROFILE_WAKE_UP
-                    },
-                    "not_holiday": True
-                })
+        self.__excute_profile_schedule(
+                profile.get_schedule('WAKE_UP'), False,
+                'send_message', {"text": MsgResource.PROFILE_WAKE_UP}, True)
 
-        working_start, working_end = profile.get_working_hour_time().split("~")
-        schedule.every().day.at(working_start).do(
-                self.__run_threaded, function, {
-                    "repeat": False,
-                    "func_name": 'send_message',
-                    "params": {
-                        "text": MsgResource.PROFILE_WORK_START
-                    },
-                    "not_holiday": True
-                })
+        self.__excute_profile_schedule(
+                profile.get_schedule('WORK_START'), False,
+                'send_message', {"text": MsgResource.PROFILE_WORK_START}, True)
 
-        schedule.every().day.at(working_end).do(
-                self.__run_threaded, function, {
-                    "repeat": False,
-                    "func_name": 'send_message',
-                    "params": {
-                        "text": MsgResource.PROFILE_WORK_END
-                    },
-                    "not_holiday": True
-                })
+        self.__excute_profile_schedule(
+                profile.get_schedule('WORK_END'), False,
+                'send_message', {"text": MsgResource.PROFILE_WORK_END}, True)
 
-        schedule.every().day.at(profile.get_go_to_bed_time()).do(
-                self.__run_threaded, function, {
-                    "repeat": False,
-                    "func_name": 'send_message',
-                    "params": {
-                        "text": MsgResource.PROFILE_GO_TO_BED
-                    }
-                })
+        self.__excute_profile_schedule(
+                profile.get_schedule('GO_TO_BED'), False,
+                'send_message', {"text": MsgResource.PROFILE_GO_TO_BED}, False)
 
-        schedule.every().day.at(profile.get_check_go_to_bed_time()).do(
-                self.__run_threaded, function, {
-                    "repeat": False,
-                    "func_name": 'check_go_to_bed',
-                    "params": {}
-                })
+        self.__excute_profile_schedule(
+                profile.get_schedule('CHECK_GO_TO_BED'), False,
+                'check_go_to_bed', {}, False)
+
+    def __excute_profile_schedule(self, time, repeat, func_name, params, not_holiday):
+        schedule.every().day.at(time).do(
+            self.__run_threaded, self.function, {
+                "repeat": repeat,
+                "func_name": func_name,
+                "params": params,
+                "not_holiday": not_holiday
+            }
+        )
 
     def __set_custom_schedule(self):
         schedule_fname = "schedule.json"
