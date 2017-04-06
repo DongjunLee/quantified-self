@@ -27,7 +27,7 @@ class Profile(object):
     def get_location(self, station=False):
         data_handler = utils.DataHandler()
         record = data_handler.read_record()
-        activity = record.get('activity', None)
+        activity = record.get('activity', {})
 
         in_company = activity.get('in_company', None)
         out_company = activity.get('out_company', None)

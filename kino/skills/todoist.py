@@ -134,15 +134,6 @@ class TodoistManager(object):
                 updated_task_count += 1
         return added_task_count, completed_task_count, updated_task_count
 
-    def __get_task_by_name(self, name):
-        tasks = self.__get_today_task()
-        for t in tasks:
-            content = t['content']
-            if name in content:
-                assigned_time = self.__parse_assigned_time(content)
-                return t, assigned_time
-        return None, None
-
     def __parse_assigned_time(self, content):
         min_re = "\d+분"
         assigned_time = re.search(min_re, content)
@@ -160,6 +151,17 @@ class TodoistManager(object):
             print('todoist에 관련된 일이 없습니다.')
         else:
             self.__complete(task, assigned_time=assigned_time, time=time)
+
+    def __get_task_by_name(self, name):
+        name = name.split(" - ")[0]
+
+        tasks = self.__get_today_task()
+        for t in tasks:
+            content = t['content']
+            if name in content:
+                assigned_time = self.__parse_assigned_time(content)
+                return t, assigned_time
+        return None, None
 
     def __complete(self, task, assigned_time=None, time=None):
         item = self.todoist_api.items.get_by_id(task['id'])
