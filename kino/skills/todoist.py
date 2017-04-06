@@ -183,8 +183,10 @@ class TodoistManager(object):
         profile = utils.Profile()
         if "매일" in task['date_string']:
             task_duration = profile.get_task('EVERY_DAY_DURATION')
+        elif "평일" in task['date_string']:
+            task_duration = profile.get_task('EVERY_WEEKDAY_DURATION')
         else:
-            task_duration = profile.get_task('WEEKDAY_DURATION')
+            task_duration = profile.get_task('SOME_WEEKDAY_DURATION')
         content = task['content'].replace(str(assigned_time), str(task_duration))
         item.update(content=content)
 
