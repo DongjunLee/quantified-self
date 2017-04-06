@@ -1,6 +1,4 @@
 
-import datetime
-
 import utils
 
 class Profile(object):
@@ -27,15 +25,31 @@ class Profile(object):
         return ( int(hour), int(minute) )
 
     def get_location(self, station=False):
-        start_time, end_time = self.get_working_hour_time(parsed=True)
-        start_h, start_m = start_time
-        end_h, end_m = end_time
+        data_handler = utils.DataHandler()
+        record = data_handler.read_record()
+        activity = record.get('activity', None)
 
-        now = datetime.datetime.now()
-        start = now.replace(hour=start_h, minute=start_m, second=0, microsecond=0)
-        end = now.replace(hour=end_h, minute=end_m, second=0, microsecond=0)
+        in_company = activity.get('in_company', None)
+        out_company = activity.get('out_company', None)
+        in_home = activity.get('in_home', None)
 
-        if (start <= now <= end):
+        is_work = False
+        if in_company is not None:
+            if out_company is None:
+                is_work = True
+            elif in_home is not None:
+                is_work = False
+            else:
+                arrow_util = utils.ArrowUtil()
+                diff = arrow_util.get_curr_time_diff(start=out_company, base_hour=True)
+                if diff > 1:
+                    is_work = False
+                else:
+                    is_work = True
+        else:
+            is_work = False
+
+        if is_work:
             if station:
                 return self.location['WORK_PLACE_STATION_NAME']
             else:
