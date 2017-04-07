@@ -2,6 +2,7 @@
 
 from slack import MsgResource
 
+
 class MsgTemplate(object):
 
     def __init__(self):
@@ -10,7 +11,7 @@ class MsgTemplate(object):
     def make_schedule_template(self, pretext, data):
         sorted(data.items())
         attachments = []
-        for k,v in data.items():
+        for k, v in data.items():
             if k == "index":
                 continue
 
@@ -27,7 +28,8 @@ class MsgTemplate(object):
             else:
                 icon = MsgResource.TIMER_ICON
 
-            a_dict['title'] = icon + k + " " + v['description'] + " : " + v['time_interval']
+            a_dict['title'] = icon + k + " " + \
+                v['description'] + " : " + v['time_interval']
             del v['description']
             del v['time_interval']
 
@@ -76,10 +78,12 @@ class MsgTemplate(object):
 
             field['title'] = f_detail["icon"] + f_name
 
-            text = MsgResource.ORANGE_DIAMOND_ICON + f_detail['description'] + "\n"
+            text = MsgResource.ORANGE_DIAMOND_ICON + \
+                f_detail['description'] + "\n"
             if len(f_detail['params']) != 0:
                 text += MsgResource.ORANGE_DIAMOND_ICON + "params" + "\n"
-                text += MsgResource.WHITE_ELEMENT_ICON + ", ".join(f_detail['params'])
+                text += MsgResource.WHITE_ELEMENT_ICON + \
+                    ", ".join(f_detail['params'])
             field['value'] = text
             field['short'] = "true"
             fields.append(field)
@@ -98,7 +102,7 @@ class MsgTemplate(object):
         a_dict['color'] = "#438C56"
 
         text = guide + "\n\n"
-        for k,v in example.items():
+        for k, v in example.items():
             text += MsgResource.ORANGE_DIAMOND_ICON + k + ": " + v + "\n"
         a_dict['text'] = text
 
@@ -107,7 +111,13 @@ class MsgTemplate(object):
         attachments.append(a_dict)
         return attachments
 
-    def make_weather_template(self, address, icon, summary, temperature=None, fallback="weather fallback"):
+    def make_weather_template(
+            self,
+            address,
+            icon,
+            summary,
+            temperature=None,
+            fallback="weather fallback"):
         attachments = []
 
         a_dict = {}
@@ -117,7 +127,11 @@ class MsgTemplate(object):
 
         fields = []
         fields.append(self.field("Address", address))
-        fields.append(self.field("Sky Icon", MsgResource.WEATHER_ICONS[icon], short="true"))
+        fields.append(
+            self.field(
+                "Sky Icon",
+                MsgResource.WEATHER_ICONS[icon],
+                short="true"))
         if temperature:
             fields.append(self.field("Temperature", temperature, short="true"))
         fields.append(self.field("Summary", summary))
@@ -151,13 +165,14 @@ class MsgTemplate(object):
         del data['cai']
         del data['pm25']
 
-        for k,v in data.items():
-            if type(v) == str:
+        for k, v in data.items():
+            if isinstance(v, str):
                 continue
             field = {}
 
             field['title'] = v['description']
-            field['value'] = v['value'] + v['unit'] + "\n" + MsgResource.AIR_QUALITY_TEXT(v['grade'])
+            field['value'] = v['value'] + v['unit'] + "\n" + \
+                MsgResource.AIR_QUALITY_TEXT(v['grade'])
             field['short'] = "true"
             fields.append(field)
         fields.append(field)
@@ -170,7 +185,8 @@ class MsgTemplate(object):
     def make_todoist_task_template(self, tasks):
         attachments = []
 
-        fallback = "\n" + "\n".join(list(map(lambda x: x[2] + ": " + x[1] + "(" + x[0] + ")", tasks)))
+        fallback = "\n" + \
+            "\n".join(list(map(lambda x: x[2] + ": " + x[1] + "(" + x[0] + ")", tasks)))
         for t in tasks:
             project_name, title, time, priority = t
 
@@ -195,11 +211,12 @@ class MsgTemplate(object):
         a_dict['color'] = "#438C56"
 
         fields = []
-        for k,v in data.items():
+        for k, v in data.items():
             field = {}
 
             field['title'] = MsgResource.BUS_ICON + str(k) + "번 버스"
-            field['value'] = MsgResource.ORANGE_DIAMOND_ICON + v['bus1'] + "\n" + MsgResource.ORANGE_DIAMOND_ICON + v['bus2']
+            field['value'] = MsgResource.ORANGE_DIAMOND_ICON + \
+                v['bus1'] + "\n" + MsgResource.ORANGE_DIAMOND_ICON + v['bus2']
             field['short'] = "true"
             fields.append(field)
         a_dict['fields'] = fields
@@ -221,7 +238,7 @@ class MsgTemplate(object):
         a_dict['mrkdwn_in'] = ["text", "pretext"]
 
         fields = []
-        for k,v in data.items():
+        for k, v in data.items():
             field = {}
 
             field['title'] = k
@@ -239,4 +256,3 @@ class MsgTemplate(object):
 
         attachments.append(a_dict)
         return attachments
-

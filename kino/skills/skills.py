@@ -5,6 +5,7 @@ import slack
 from slack import MsgResource
 import utils
 
+
 class Functions(object):
 
     def __init__(self):
@@ -127,12 +128,14 @@ class Functions(object):
         maxim = skills.Maxim()
         maxim.nietzsche()
 
+
 class RegisteredFuctions(object):
     class __List:
         def __init__(self):
             self.list = utils.DataHandler().read_file("skills.json")
 
     instance = None
+
     def __init__(self):
         if not RegisteredFuctions.instance:
             RegisteredFuctions.instance = RegisteredFuctions.__List()

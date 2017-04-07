@@ -8,6 +8,7 @@ import slack
 from slack import MsgResource
 import utils
 
+
 class Happy(object):
 
     def __init__(self, text=None):
@@ -25,7 +26,8 @@ class Happy(object):
             if flow.get('class', None) == "skills/Happy":
                 pass
             else:
-                self.slackbot.send_message(text=MsgResource.HAPPY_QUESTION_STEP_0)
+                self.slackbot.send_message(
+                    text=MsgResource.HAPPY_QUESTION_STEP_0)
                 state.flow_start("skills/Happy", "question")
 
         def step_1(params):
@@ -40,9 +42,11 @@ class Happy(object):
             now = arrow.now()
             time = now.format('HH:mm')
             happy_point = numbers[0]
-            self.data_handler.edit_record_with_category('happy', (time, happy_point))
+            self.data_handler.edit_record_with_category(
+                'happy', (time, happy_point))
 
-            self.slackbot.send_message(text=MsgResource.HAPPY_QUESTION_STEP_1(happy_point))
+            self.slackbot.send_message(
+                text=MsgResource.HAPPY_QUESTION_STEP_1(happy_point))
             state.flow_complete()
 
         locals()["step_" + str(step)](params)
@@ -56,15 +60,23 @@ class Happy(object):
                 total_minute = int(hour) * 60 + int(minute)
                 return total_minute
 
-            ordered_happy_data = collections.OrderedDict(sorted(happy_data.items(), key=convert_time))
+            ordered_happy_data = collections.OrderedDict(
+                sorted(happy_data.items(), key=convert_time))
 
-            x_ticks = list(ordered_happy_data.keys()) # time
+            x_ticks = list(ordered_happy_data.keys())  # time
             time = list(range(len(x_ticks)))
-            happy_point_list = list(ordered_happy_data.values()) # happy_point
+            happy_point_list = list(ordered_happy_data.values())  # happy_point
 
             f_name = "happy_daily_report.png"
             title = "Happy Report"
 
-            self.plot.make_line(time, happy_point_list, f_name, x_ticks=x_ticks,
-                                x_label="Happy Point", y_label="Time", title=title)
-            self.slackbot.file_upload(f_name, title=title, comment=MsgResource.HAPPY_REPORT)
+            self.plot.make_line(
+                time,
+                happy_point_list,
+                f_name,
+                x_ticks=x_ticks,
+                x_label="Happy Point",
+                y_label="Time",
+                title=title)
+            self.slackbot.file_upload(
+                f_name, title=title, comment=MsgResource.HAPPY_REPORT)

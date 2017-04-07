@@ -9,12 +9,14 @@ import slack
 from slack import MsgResource
 import utils
 
+
 class TodoistManager(object):
 
     def __init__(self, text=None):
         self.input = text
         self.config = utils.Config()
-        self.todoist_api = todoist.TodoistAPI(self.config.open_api['todoist']['TOKEN'])
+        self.todoist_api = todoist.TodoistAPI(
+            self.config.open_api['todoist']['TOKEN'])
 
         self.slackbot = slack.SlackerAdapter()
         self.template = slack.MsgTemplate()
@@ -26,11 +28,16 @@ class TodoistManager(object):
         today_task = self.__get_today_task()
         today_task_count = len(today_task)
 
-        task_text = MsgResource.TODOIST_OVERDUE(overdue_task_count) + "\n" + MsgResource.TODOIST_TODAY(today_task_count)
+        task_text = MsgResource.TODOIST_OVERDUE(
+            overdue_task_count) + "\n" + MsgResource.TODOIST_TODAY(today_task_count)
         self.slackbot.send_message(text=task_text, channel=channel)
 
-        specific_task_list = list(filter(lambda x: x[2] != "anytime", self.__get_task(today_task)))
-        attachments = self.template.make_todoist_task_template(specific_task_list)
+        specific_task_list = list(
+            filter(
+                lambda x: x[2] != "anytime",
+                self.__get_task(today_task)))
+        attachments = self.template.make_todoist_task_template(
+            specific_task_list)
         self.slackbot.send_message(attachments=attachments, channel=channel)
 
         karma_trend = self.__get_karma_trend()
@@ -40,7 +47,7 @@ class TodoistManager(object):
     def __get_overdue_task(self, kind="count"):
         task_list = []
         # 7 day ~ 1 day before
-        for i in range(7,0,-1):
+        for i in range(7, 0, -1):
             query = str(i) + ' day before'
             before = self.todoist_api.query([query])[0]['data']
             task_list += before
@@ -74,9 +81,11 @@ class TodoistManager(object):
         remain_task_count = len(remain_task_list)
         if remain_task_count > 0:
             self.slackbot.send_message(text=MsgResource.TODOIST_REMAIN)
-        self.slackbot.send_message(text=MsgResource.TODOIST_FEEDBACK_OVERDUE(remain_task_count))
+        self.slackbot.send_message(
+            text=MsgResource.TODOIST_FEEDBACK_OVERDUE(remain_task_count))
 
-        attachments = self.template.make_todoist_task_template(remain_task_list)
+        attachments = self.template.make_todoist_task_template(
+            remain_task_list)
         self.slackbot.send_message(attachments=attachments)
 
     def __get_task(self, today_task):
@@ -84,17 +93,22 @@ class TodoistManager(object):
         for t in today_task:
             due_time = "anytime"
             if ':' in t['date_string'] or '분' in t['date_string']:
-                due_time = parse(t['due_date']).astimezone(timezone('Asia/Seoul'))
+                due_time = parse(
+                    t['due_date']).astimezone(
+                    timezone('Asia/Seoul'))
                 due_time = due_time.strftime("%H:%M")
 
             project = self.todoist_api.projects.get_data(t['project_id'])
             project_name = project['project']['name']
 
-            task_list.append( (project_name, t['content'], due_time, t['priority']) )
+            task_list.append(
+                (project_name, t['content'], due_time, t['priority']))
         return task_list
 
     def __get_karma_trend(self):
-        user = self.todoist_api.user.login(self.config.open_api['todoist']['ID'], self.config.open_api['todoist']['PASSWORD'])
+        user = self.todoist_api.user.login(
+            self.config.open_api['todoist']['ID'],
+            self.config.open_api['todoist']['PASSWORD'])
         return user['karma_trend']
 
     def feedback(self, channel=None):
@@ -104,11 +118,13 @@ class TodoistManager(object):
         today_task = self.__get_today_task()
         today_task_count = len(today_task)
 
-        overdue_today_text = MsgResource.TODOIST_FEEDBACK_OVERDUE(overdue_task_count+today_task_count)
+        overdue_today_text = MsgResource.TODOIST_FEEDBACK_OVERDUE(
+            overdue_task_count + today_task_count)
         self.slackbot.send_message(text=overdue_today_text, channel=channel)
 
         added_count, completed_count, updated_count = self.__get_event_counts()
-        event_text = MsgResource.TODOIST_FEEDBACK_EVENT(added_count, completed_count, updated_count)
+        event_text = MsgResource.TODOIST_FEEDBACK_EVENT(
+            added_count, completed_count, updated_count)
         self.slackbot.send_message(text=event_text, channel=channel)
 
     def __get_event_counts(self):
@@ -121,7 +137,9 @@ class TodoistManager(object):
         start, end = today.span('day')
 
         for log in activity_log_list:
-            event_date = arrow.get(log['event_date'], 'DD MMM YYYY HH:mm:ss Z').to('Asia/Seoul')
+            event_date = arrow.get(
+                log['event_date'],
+                'DD MMM YYYY HH:mm:ss Z').to('Asia/Seoul')
             if event_date < start or event_date > end:
                 continue
 
@@ -168,11 +186,13 @@ class TodoistManager(object):
         if (assigned_time is None) or (time >= assigned_time):
             self.__update_task_duration(item, task, assigned_time)
             if "매" in task['date_string']:
-                self.todoist_api.items.update_date_complete(task['id'], date_string=task['date_string'])
+                self.todoist_api.items.update_date_complete(
+                    task['id'], date_string=task['date_string'])
             else:
                 item.complete()
         else:
-            content = task['content'].replace(str(assigned_time), str(assigned_time-time))
+            content = task['content'].replace(
+                str(assigned_time), str(assigned_time - time))
             item.update(content=content)
         self.todoist_api.commit()
 
@@ -187,7 +207,8 @@ class TodoistManager(object):
             task_duration = profile.get_task('EVERY_WEEKDAY_DURATION')
         else:
             task_duration = profile.get_task('SOME_WEEKDAY_DURATION')
-        content = task['content'].replace(str(assigned_time), str(task_duration))
+        content = task['content'].replace(
+            str(assigned_time), str(task_duration))
         item.update(content=content)
 
     def get_point(self):
@@ -208,8 +229,7 @@ class TodoistManager(object):
             assigned_time = self.__parse_assigned_time(task['content'])
             self.__update_task_duration(item, task, assigned_time)
             self.todoist_api.items.update_date_complete(
-                    task['id'], date_string=task['date_string'],
-                    new_date_utc=today_format, is_forward=0)
+                task['id'], date_string=task['date_string'],
+                new_date_utc=today_format, is_forward=0)
         self.todoist_api.commit()
         self.slackbot.send_message(text=MsgResource.TODOIST_AUTO_UPDATE)
-

@@ -1,5 +1,6 @@
 import slack
 
+
 class Guide(object):
 
     def __init__(self):
@@ -7,7 +8,8 @@ class Guide(object):
         self.template = slack.MsgTemplate()
 
     def help(self):
-        attachments = self.template.make_help_template(self.__guide(), self.__example())
+        attachments = self.template.make_help_template(
+            self.__guide(), self.__example())
         self.slackbot.send_message(attachments=attachments)
 
     def __guide(self):

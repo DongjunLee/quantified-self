@@ -5,8 +5,8 @@ from .disintegrator import Disintegrator
 from .ner import NamedEntitiyRecognizer
 
 __all__ = [
-            'Disintegrator',
-            'NamedEntitiyRecognizer',
-            'DialogManager',
-            'State'
-          ]
+    'Disintegrator',
+    'NamedEntitiyRecognizer',
+    'DialogManager',
+    'State'
+]

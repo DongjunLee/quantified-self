@@ -7,6 +7,7 @@ from slack import MsgResource
 import skills
 import utils
 
+
 class TogglManager(object):
 
     def __init__(self):
@@ -17,7 +18,8 @@ class TogglManager(object):
         self.toggl = Toggl()
         self.toggl.setAPIKey(self.config.open_api['toggl']['TOKEN'])
 
-        wid = self.toggl.getWorkspace(name=self.config.open_api['toggl']['WORKSPACE_NAME'])['id']
+        wid = self.toggl.getWorkspace(
+            name=self.config.open_api['toggl']['WORKSPACE_NAME'])['id']
         self.toggl.setWorkspaceId(wid)
 
         self.entity = TogglProjectEntity().entity
@@ -44,17 +46,20 @@ class TogglManager(object):
         else:
             stop = self.toggl.stopTimeEntry(current_timer['id'])
             description = stop['data'].get('description', 'no description')
-            diff_min = utils.ArrowUtil().get_curr_time_diff(start=stop['data']['start'], stop=stop['data']['stop'])
+            diff_min = utils.ArrowUtil().get_curr_time_diff(
+                start=stop['data']['start'], stop=stop['data']['stop'])
 
             self.slackbot.send_message(text=MsgResource.TOGGL_STOP)
-            self.slackbot.send_message(text=MsgResource.TOGGL_STOP_SUMMARY(description, diff_min))
+            self.slackbot.send_message(
+                text=MsgResource.TOGGL_STOP_SUMMARY(
+                    description, diff_min))
 
             todoist = skills.TodoistManager()
             todoist.complete_by_toggl(description, int(diff_min))
 
     def __get_pid(self, name=None):
         project = self.toggl.getWorkspaceProject(name=name)
-        if project == None:
+        if project is None:
             pid = None
         else:
             pid = project['id']
@@ -66,15 +71,17 @@ class TogglManager(object):
         if current_timer is None:
             return
 
-        diff_min = utils.ArrowUtil().get_curr_time_diff(start=current_timer['start'])
+        diff_min = utils.ArrowUtil().get_curr_time_diff(
+            start=current_timer['start'])
         self.logger.info("diff_min: " + str(diff_min))
-        diff_min_divide_10 = int(diff_min/10)
+        diff_min_divide_10 = int(diff_min / 10)
         if diff_min > 100:
             self.slackbot.send_message(text=MsgResource.TOGGL_NOTI_RELAY)
         else:
             for i in range(3, 10, 3):
                 if diff_min_divide_10 == i:
-                    self.slackbot.send_message(text=MsgResource.TOGGL_TIMER_CHECK(diff_min))
+                    self.slackbot.send_message(
+                        text=MsgResource.TOGGL_TIMER_CHECK(diff_min))
                     break
 
     def report(self, kind="chart", timely="weekly"):
@@ -95,15 +102,24 @@ class TogglManager(object):
         if kind == "basic":
             f_name = "basic-report.pdf"
             self.toggl.getWeeklyReportPDF(data, f_name)
-            self.slackbot.file_upload(f_name, title=timely + " 기본 리포트", comment=MsgResource.TOGGL_REPORT)
+            self.slackbot.file_upload(
+                f_name,
+                title=timely + " 기본 리포트",
+                comment=MsgResource.TOGGL_REPORT)
         elif kind == "chart":
             f_name = "chart-report.pdf"
             self.toggl.getSummaryReportPDF(data, f_name)
-            self.slackbot.file_upload(f_name, title=timely + " 차트 리포트", comment=MsgResource.TOGGL_REPORT)
+            self.slackbot.file_upload(
+                f_name,
+                title=timely + " 차트 리포트",
+                comment=MsgResource.TOGGL_REPORT)
         elif kind == "detail":
             f_name = "detail-report.pdf"
             self.toggl.getDetailedReportPDF(data, f_name)
-            self.slackbot.file_upload(f_name, title=timely + " 상세 리포트", comment=MsgResource.TOGGL_REPORT)
+            self.slackbot.file_upload(
+                f_name,
+                title=timely + " 상세 리포트",
+                comment=MsgResource.TOGGL_REPORT)
 
     def get_point(self):
         now = arrow.now()
@@ -115,10 +131,11 @@ class TogglManager(object):
 
         today = self.toggl.getDetailedReport(data)
         if today['total_grand']:
-            total_hours = round(today['total_grand']/60/60/10)
+            total_hours = round(today['total_grand'] / 60 / 60 / 10)
         else:
             total_hours = 0
         return utils.Score().percent(total_hours, 100, 800)
+
 
 class TogglProjectEntity(object):
     class __Entity:
@@ -126,6 +143,7 @@ class TogglProjectEntity(object):
             self.entity = utils.DataHandler().read_file("toggl.json")
 
     instance = None
+
     def __init__(self):
         if not TogglProjectEntity.instance:
             TogglProjectEntity.instance = TogglProjectEntity.__Entity()

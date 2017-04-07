@@ -9,6 +9,7 @@ from geopy.geocoders import GoogleV3
 import slack
 import utils
 
+
 class Weather(object):
 
     def __init__(self, text=None):
@@ -47,14 +48,17 @@ class Weather(object):
             temperature = self.__hourly_temperature(forecast)
             fallback = summary + " " + temperature
 
-        attachments = self.template.make_weather_template(address, icon, summary, temperature=temperature, fallback=fallback)
+        attachments = self.template.make_weather_template(
+            address, icon, summary, temperature=temperature, fallback=fallback)
         self.slackbot.send_message(attachments=attachments)
 
     def __hourly_temperature(self, forecast):
         hourly_temp = []
         h = forecast.data
         for i in range(0, 24, 3):
-            time = arrow.get(h[i].d['time'], tzinfo=tz.tzlocal()).format('D일 H시')
+            time = arrow.get(
+                h[i].d['time'],
+                tzinfo=tz.tzlocal()).format('D일 H시')
             temperature = h[i].d['temperature']
             hourly_temp.append("- " + time + ": " + str(temperature) + "도")
         hourly_temp = "\n".join(hourly_temp)

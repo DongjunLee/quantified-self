@@ -7,6 +7,7 @@ import slack
 from slack import MsgResource
 import utils
 
+
 class MsgRouter(object):
 
     def __init__(self):
@@ -48,7 +49,8 @@ class MsgRouter(object):
             return
 
         # Check Memory
-        if self.dialog_manager.is_on_memory() and self.dialog_manager.is_call_repeat_skill(self.text):
+        if self.dialog_manager.is_on_memory(
+        ) and self.dialog_manager.is_call_repeat_skill(self.text):
             self.__on_memory()
             return
 
@@ -60,7 +62,7 @@ class MsgRouter(object):
         ner = nlp.NamedEntitiyRecognizer()
 
         # Check - CRUD (Worker, Schedule, Between, FunctionManager)
-        kino_keywords = {k: v['keyword'] for k,v in ner.kino.items()}
+        kino_keywords = {k: v['keyword'] for k, v in ner.kino.items()}
         classname = ner.parse(kino_keywords, self.simple_text)
 
         if classname is not None:
@@ -68,7 +70,7 @@ class MsgRouter(object):
             return
 
         # Check - skills
-        skill_keywords = {k: v['keyword'] for k,v in ner.skills.items()}
+        skill_keywords = {k: v['keyword'] for k, v in ner.skills.items()}
         func_name = ner.parse(skill_keywords, self.text)
         if func_name is not None:
             self.__call_skills(func_name)
@@ -84,12 +86,20 @@ class MsgRouter(object):
 
     def __on_flow(self):
         route_class, behave, step_num = self.dialog_manager.get_flow()
-        self.logger.info("From Flow - route to: " + route_class.__class__.__name__ + ", " + str(behave))
+        self.logger.info(
+            "From Flow - route to: " +
+            route_class.__class__.__name__ +
+            ", " +
+            str(behave))
         getattr(route_class, behave)(step=step_num, params=self.text)
 
     def __on_memory(self):
         route_class, func_name, params = self.dialog_manager.get_memory()
-        self.logger.info("From Memory - route to: " + route_class.__class__.__name__ + ", " + str(func_name))
+        self.logger.info(
+            "From Memory - route to: " +
+            route_class.__class__.__name__ +
+            ", " +
+            str(func_name))
         f_params = self.dialog_manager.filter_f_params(self.text, func_name)
         if not f_params == {}:
             params = f_params
@@ -98,7 +108,11 @@ class MsgRouter(object):
     def __call_help(self):
         route_class = kino.Guide()
         behave = "help"
-        self.logger.info("route to: " + route_class.__class__.__name__ + ", " + str(behave))
+        self.logger.info(
+            "route to: " +
+            route_class.__class__.__name__ +
+            ", " +
+            str(behave))
         getattr(route_class, behave)()
 
     def __call_CRUD(self, ner, classname):
@@ -107,16 +121,26 @@ class MsgRouter(object):
         behave_ner = ner.kino[classname]['behave']
         behave = ner.parse(behave_ner, self.simple_text)
 
-        self.logger.info("route to: " + route_class.__class__.__name__ + ", " + str(behave))
+        self.logger.info(
+            "route to: " +
+            route_class.__class__.__name__ +
+            ", " +
+            str(behave))
         getattr(route_class, behave)()
 
     def __call_skills(self, func_name):
         if self.dialog_manager.is_toggl_timer(func_name):
-            f_params = {"description": self.text[self.text.index("toggl")+5:]}
+            f_params = {
+                "description": self.text[self.text.index("toggl") + 5:]}
         else:
-            f_params = self.dialog_manager.filter_f_params(self.text, func_name)
+            f_params = self.dialog_manager.filter_f_params(
+                self.text, func_name)
 
         state = nlp.State()
         state.memory_skill(func_name, f_params)
-        self.logger.info("From call skills - route to: " + func_name + ", " + str(f_params))
+        self.logger.info(
+            "From call skills - route to: " +
+            func_name +
+            ", " +
+            str(f_params))
         getattr(skills.Functions(), func_name)(**f_params)

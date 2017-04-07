@@ -2,6 +2,7 @@ import arrow
 import datetime
 from dateutil import tz
 
+
 class ArrowUtil(object):
 
     def __init__(self):
@@ -12,12 +13,15 @@ class ArrowUtil(object):
         if time_str == "now":
             return arrow.get(arrow.now(), tzinfo=tz.tzlocal())
         else:
-            return arrow.get(time_str, 'MMMM D, YYYY  hh:mma', tzinfo=tz.tzlocal())
+            return arrow.get(
+                time_str,
+                'MMMM D, YYYY  hh:mma',
+                tzinfo=tz.tzlocal())
 
     def get_curr_time_diff(self, start=None, stop=None, base_hour=False):
-        if type(start) is str:
+        if isinstance(start, str):
             start = arrow.get(start)
-        if type(stop) is str:
+        if isinstance(stop, str):
             stop = arrow.get(stop)
 
         if stop is None:
@@ -25,7 +29,7 @@ class ArrowUtil(object):
 
         diff = (stop - start).seconds / 60
         if base_hour:
-            return round(diff/60*100)/100
+            return round(diff / 60 * 100) / 100
         else:
             return int(diff)
 
@@ -37,9 +41,14 @@ class ArrowUtil(object):
         end_h, end_m = end_time
 
         if end_h == 24 and end_m == 0:
-            end_h = 23; end_m = 59
+            end_h = 23
+            end_m = 59
 
-        start = now.replace(hour=start_h, minute=start_m, second=0, microsecond=0)
+        start = now.replace(
+            hour=start_h,
+            minute=start_m,
+            second=0,
+            microsecond=0)
         end = now.replace(hour=end_h, minute=end_m, second=0, microsecond=0)
         if (start < now < end):
             return True

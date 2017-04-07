@@ -1,7 +1,8 @@
 
 class MsgResource:
     def HELLO(master_name, bot_name):
-        return "{}님 안녕하세요! \n저는 개인비서 {} 라고 합니다.\n반갑습니다.".format(master_name, bot_name)
+        return "{}님 안녕하세요! \n저는 개인비서 {} 라고 합니다.\n반갑습니다.".format(
+            master_name, bot_name)
     ERROR = "에러가 발생하였습니다."
     NOT_UNDERSTANDING = "무슨 말인지 잘 모르겠어요. 저를 똑똑하게 만들어주세요!!"
     CREATE = "등록이 완료되었습니다!"
@@ -76,8 +77,13 @@ class MsgResource:
 
     TODOIST_ICON = ":memo: "
     TODOIST_TODAY_SCHEDULE = "오늘의 스케쥴을 알려드리겠습니다."
-    def TODOIST_OVERDUE(task_count): return "기한이 지난 일이 " + str(task_count) + "개 있습니다."
-    def TODOIST_TODAY(task_count): return "오늘 할일의 수는 " + str(task_count) + "개 입니다."
+
+    def TODOIST_OVERDUE(task_count): return "기한이 지난 일이 " + \
+        str(task_count) + "개 있습니다."
+
+    def TODOIST_TODAY(task_count): return "오늘 할일의 수는 " + \
+        str(task_count) + "개 입니다."
+
     def TODOIST_KARMA(trend):
         karma_trend_text = {
             "up": "최근 생산성이 올랐습니다. 이대로 쭉 갑시다!ㅎㅎ",
@@ -85,6 +91,7 @@ class MsgResource:
             "down": "최근 생산성이 떨어지고 있습니다. 할일목록을 잘 관리해주세요! ㅠㅠ"
         }
         return karma_trend_text[trend]
+
     def TODOIST_PRIORITY_COLOR(priority):
         priority_color = {
             1: '#CACACA',
@@ -95,6 +102,7 @@ class MsgResource:
         return priority_color[priority]
     TODOIST_TIME = "에 예정되어 있습니다."
     TODOIST_FEEDBACK = "오늘 Todoist 작업내역 입니다."
+
     def TODOIST_FEEDBACK_OVERDUE(task_count):
         if task_count > 5:
             return "아직 처리해야할 일들이 " + str(task_count) + "개나 남았습니다. ㅠㅠ"
@@ -104,7 +112,8 @@ class MsgResource:
             return "오.. 예정되었던 일들을 전부 처리하셨군요! 이제 푹 쉬세요. :+1: "
 
     def TODOIST_FEEDBACK_EVENT(a_count, c_count, u_count):
-        return "오늘은 총 {} 개의 할일들을 추가하였고, {} 개의 일들을 완료하였으며, {} 개의 일들을 완료하지 못하고 연기하였습니다.".format(a_count, c_count, u_count)
+        return "오늘은 총 {} 개의 할일들을 추가하였고, {} 개의 일들을 완료하였으며, {} 개의 일들을 완료하지 못하고 연기하였습니다.".format(
+            a_count, c_count, u_count)
     TODOIST_REMAIN = "아직 남아있는 작업 리스트입니다. "
     TODOIST_AUTO_UPDATE = "기한이 지난 작업들을 제가 오늘로 업데이트 하였습니다. "
 
@@ -112,14 +121,18 @@ class MsgResource:
 
     TOGGL_START = "Toggl을 시작합니다."
     TOGGL_STOP = "Toggl을 중지합니다."
+
     def TOGGL_STOP_SUMMARY(description, diff_min):
         return description + " 작업을 " + str(diff_min) + "분 동안 진행하셨습니다."
-    TOGGL_DO_NOTHING =  "지금은 아무런 작업도 하고 있지 않으십니다."
-    def TOGGL_TIMER_CHECK(minute): return "작업을 진행하신지 " + str(minute) + "분 경과하였습니다."
+    TOGGL_DO_NOTHING = "지금은 아무런 작업도 하고 있지 않으십니다."
+
+    def TOGGL_TIMER_CHECK(minute): return "작업을 진행하신지 " + \
+        str(minute) + "분 경과하였습니다."
     TOGGL_NOTI_RELAY = "작업을 너무 오래하고 계십니다! 잠시 멈추고 십분만 휴식하시죠!!"
     TOGGL_REPORT = "Toggl에 저장되어있는 Report 입니다."
 
     HAPPY_QUESTION_STEP_0 = "지금 현재 행복도는 100점 만점에 몇점인가요??"
+
     def HAPPY_QUESTION_STEP_1(happy):
         happy = int(happy)
         if happy >= 100:
@@ -157,6 +170,7 @@ class MsgResource:
     WEEKDAY = "오늘은 평일이군요! 달리시죠ㅎㅎ :running: "
     HOLIDAY = "오늘은 쉬는 날 이군요! 쉬면서 가세요ㅎㅎ :walking: "
     GOOD_MORNING = "안녕히 주무셨나요? 좋은 아침입니다^^ :sun_with_face:"
+
     def SLEEP_TIME(bed_time, wakeup_time, diff):
         return bed_time + " ~ " + wakeup_time + ", 총 " + diff + "h 동안 잠을 주무셨습니다."
     GOOD_NIGHT = "이제 주무시는 군요. 좋은 꿈 꾸세요 :first_quarter_moon_with_face:"

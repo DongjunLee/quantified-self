@@ -4,6 +4,7 @@ import random
 import slack
 import utils
 
+
 class Maxim(object):
 
     def __init__(self, text=None):

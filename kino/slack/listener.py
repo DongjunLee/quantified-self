@@ -3,6 +3,7 @@ import json
 import slack
 import utils
 
+
 class MsgListener(object):
 
     def __init__(self):
@@ -29,16 +30,21 @@ class MsgListener(object):
 
     def handle_user_message(self):
         try:
-            self.router.route(text=self.msg['text'], user=self.msg['user'],
-                              channel=self.msg['channel'], direct=self.__is__direct())
+            self.router.route(
+                text=self.msg['text'],
+                user=self.msg['user'],
+                channel=self.msg['channel'],
+                direct=self.__is__direct())
         except Exception as e:
             self.logger.error("USER Listener Error: ", e)
             self.slackbot.send_message(text=slack.MsgResource.ERROR)
 
     def handle_ifttt_message(self):
         try:
-            self.router.route(text=self.__make_full_text(), direct=self.__is__direct(),
-                              ifttt=True)
+            self.router.route(
+                text=self.__make_full_text(),
+                direct=self.__is__direct(),
+                ifttt=True)
         except Exception as e:
             self.logger.error("IFTTT Listener Error: ", e)
             self.slackbot.send_message(text=slack.MsgResource.ERROR)
@@ -80,7 +86,10 @@ class MsgListener(object):
         text = self.msg.get("text", "")
         channel = self.msg.get("channel", "")
         slack_bot_id = self.slackbot.get_bot_id()
-        if text.startswith("<@"+ slack_bot_id + ">") or channel.startswith("D"):
+        if text.startswith(
+            "<@" +
+            slack_bot_id +
+                ">") or channel.startswith("D"):
             return True
         else:
             return False
@@ -127,5 +136,3 @@ class MsgListener(object):
             return True
         else:
             return False
-
-

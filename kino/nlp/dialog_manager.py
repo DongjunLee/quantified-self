@@ -10,6 +10,7 @@ from slack import MsgResource
 import utils
 from utils.data_handler import DataHandler
 
+
 class DialogManager(object):
 
     def __init__(self):
@@ -77,11 +78,11 @@ class DialogManager(object):
         ner = nlp.NamedEntitiyRecognizer()
 
         func_param_list = ner.skills[func_name]['params']
-        params = {k: ner.parse(v, text) for k,v in ner.params.items()}
+        params = {k: ner.parse(v, text) for k, v in ner.params.items()}
 
         f_params = {}
         if params is not None:
-            for k,v in params.items():
+            for k, v in params.items():
                 if k in func_param_list:
                     f_params[k] = v
         return f_params
@@ -118,8 +119,8 @@ class DialogManager(object):
         state = State()
         state.check()
         presence_log = state.current[state.SLEEP]
-        if (self.arrow_util.is_between((6,0), (11,0)) and
-            presence_log['presence'] == 'away' and presence == 'active'):
+        if (self.arrow_util.is_between((6, 0), (11, 0)) and
+                presence_log['presence'] == 'away' and presence == 'active'):
             self.slackbot.send_message(text=MsgResource.GOOD_MORNING)
 
             is_holiday = self.arrow_util.is_weekday() == False
@@ -129,16 +130,19 @@ class DialogManager(object):
             go_to_bed_time = arrow.get(activity.get('go_to_bed', None))
 
             wake_up_time = arrow.now()
-            self.data_handler.edit_record_with_category('activity', ('wake_up', str(wake_up_time)))
+            self.data_handler.edit_record_with_category(
+                'activity', ('wake_up', str(wake_up_time)))
 
             sleep_time = (wake_up_time - go_to_bed_time).seconds / 60 / 60
-            sleep_time = round(sleep_time*100)/100
+            sleep_time = round(sleep_time * 100) / 100
 
             self.data_handler.edit_record(('Sleep', str(sleep_time)))
 
-            self.slackbot.send_message(text=MsgResource.SLEEP_TIME(
-                go_to_bed_time.format("HH:mm"), wake_up_time.format("HH:mm"), str(sleep_time)
-            ))
+            self.slackbot.send_message(
+                text=MsgResource.SLEEP_TIME(
+                    go_to_bed_time.format("HH:mm"),
+                    wake_up_time.format("HH:mm"),
+                    str(sleep_time)))
 
             weather = skills.Weather()
             weather.forecast(timely="daily")
@@ -149,6 +153,7 @@ class DialogManager(object):
             flow = self.get_flow(is_raw=True)
             if flow.get('class', None) == "skills/Happy":
                 self.slackbot.send_message(text=MsgResource.FLOW_HAPPY)
+
 
 class State(object):
 

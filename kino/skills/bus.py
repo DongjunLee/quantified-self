@@ -7,6 +7,7 @@ import slack
 from slack import MsgResource
 import utils
 
+
 class Bus(object):
 
     def __init__(self):
@@ -42,15 +43,17 @@ class Bus(object):
                 if location1 == {}:
                     bus1 += "도착 정보가 없습니다."
                 else:
-                    bus1 += str(location1) + "번째 전 전류장 ("  + str(predict1) + "분)"
+                    bus1 += str(location1) + \
+                        "번째 전 전류장 (" + str(predict1) + "분)"
                 bus2 = ""
                 if location2 == {}:
                     bus2 += "도착 정보가 없습니다."
                 else:
-                    bus2 += str(location2) + "번째 전 전류장 ("  + str(predict2) + "분)"
+                    bus2 += str(location2) + \
+                        "번째 전 전류장 (" + str(predict2) + "분)"
 
                 result[bus_number] = {"bus1": bus1, "bus2": bus2}
-        except:
+        except BaseException:
             self.slackbot.send_message(text=MsgResource.ERROR)
 
         attachments = self.template.make_bus_stop_template(result)

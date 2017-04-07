@@ -7,6 +7,7 @@ import slack
 from slack import MsgResource
 import utils
 
+
 class IFTTT(object):
 
     def __init__(self):
@@ -47,42 +48,47 @@ class IFTTT(object):
 
             if getattr(self, "is_" + action)(time):
                 self.slackbot.send_message(text=msg)
-                self.data_handler.edit_record_with_category('activity', (action.lower(), str(time)))
+                self.data_handler.edit_record_with_category(
+                    'activity', (action.lower(), str(time)))
 
     def __is_error(self, prev, event):
-        if event['action'].startswith("IN") and prev['action'].startswith("IN"):
+        if event['action'].startswith(
+                "IN") and prev['action'].startswith("IN"):
             return True
-        if event['action'].startswith("OUT") and prev['action'].startswith("OUT"):
+        if event['action'].startswith(
+                "OUT") and prev['action'].startswith("OUT"):
             return True
         return False
 
     def __is_phone_error(self, prev, event):
         THRESHOLD = 300
-        if event['action'].startswith("IN") and prev['action'].startswith("OUT"):
-            if (self.arrow_util.get_action_time(event['time']) - arrow.get(prev['time'])).seconds <= THRESHOLD:
+        if event['action'].startswith(
+                "IN") and prev['action'].startswith("OUT"):
+            if (self.arrow_util.get_action_time(
+                    event['time']) - arrow.get(prev['time'])).seconds <= THRESHOLD:
                 return True
         return False
 
     def is_IN_HOME(self, time):
-        if self.arrow_util.is_between((20,0), (24,0), now=time):
+        if self.arrow_util.is_between((20, 0), (24, 0), now=time):
             return True
         else:
             return False
 
     def is_OUT_HOME(self, time):
-        if self.arrow_util.is_between((7,0), (9,0), now=time):
+        if self.arrow_util.is_between((7, 0), (9, 0), now=time):
             return True
         else:
             return False
 
     def is_IN_COMPANY(self, time):
-        if self.arrow_util.is_between((9,0), (11,0), now=time):
+        if self.arrow_util.is_between((9, 0), (11, 0), now=time):
             return True
         else:
             return False
 
     def is_OUT_COMPANY(self, time):
-        if self.arrow_util.is_between((18,30), (23,0), now=time):
+        if self.arrow_util.is_between((18, 30), (23, 0), now=time):
             return True
         else:
             return False

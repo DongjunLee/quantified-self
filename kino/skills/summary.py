@@ -7,6 +7,7 @@ import slack
 from slack import MsgResource
 import utils
 
+
 class Summary(object):
 
     def __init__(self):
@@ -24,21 +25,21 @@ class Summary(object):
         today_data['Color'] = color
 
         yesterday_data = self.__get_total_score(-1)
-        for k,v in today_data.items():
-            if type(v) == float:
+        for k, v in today_data.items():
+            if isinstance(v, float):
                 y_point = yesterday_data.get(k, False)
                 if not y_point:
                     continue
                 else:
                     diff = v - float(y_point)
-                    diff = round(diff*100)/100
+                    diff = round(diff * 100) / 100
 
                 if diff > 0:
                     diff = "+" + str(diff)
                 else:
                     diff = str(diff)
                 today_data[k] = str(v) + " (" + diff + ")"
-            elif type(v) == bool:
+            elif isinstance(v, bool):
                 if v:
                     today_data[k] = "O"
                 else:
@@ -57,8 +58,10 @@ class Summary(object):
             go_to_bed_time = arrow.get(go_to_bed)
             wake_up_time = arrow.get(wake_up)
 
-            sleep_hour = arrow_util.get_curr_time_diff(start=go_to_bed_time, stop=wake_up_time, base_hour=True)
-            today_data['Sleep'] = go_to_bed_time.format("HH:mm") + " ~ " + wake_up_time.format("HH:mm") + " : " + str(sleep_hour) + "h (" + str(today_data['Sleep']) + ")"
+            sleep_hour = arrow_util.get_curr_time_diff(
+                start=go_to_bed_time, stop=wake_up_time, base_hour=True)
+            today_data['Sleep'] = go_to_bed_time.format("HH:mm") + " ~ " + wake_up_time.format(
+                "HH:mm") + " : " + str(sleep_hour) + "h (" + str(today_data['Sleep']) + ")"
 
         # Working Hour
         in_company = activity.get('in_company', None)
@@ -68,8 +71,10 @@ class Summary(object):
             in_company_time = arrow.get(in_company)
             out_company_time = arrow.get(out_company)
 
-            working_hour = arrow_util.get_curr_time_diff(start=in_company_time, stop=out_company_time, base_hour=True)
-            today_data['Working Hour'] = in_company_time.format("HH:mm") + " ~ " + out_company_time.format("HH:mm") + " : " + str(working_hour) + "h"
+            working_hour = arrow_util.get_curr_time_diff(
+                start=in_company_time, stop=out_company_time, base_hour=True)
+            today_data['Working Hour'] = in_company_time.format(
+                "HH:mm") + " ~ " + out_company_time.format("HH:mm") + " : " + str(working_hour) + "h"
 
         attachments = template.make_summary_template(today_data)
         self.slackbot.send_message(attachments=attachments)
@@ -87,10 +92,20 @@ class Summary(object):
             bat = today_data.get('BAT', False)
 
             score = utils.Score()
-            total = (score.percent(happy, self.profile.get_score('HAPPY'), 100)
-                      + score.percent(productive, self.profile.get_score('PRODUCTIVE'), 100)
-                      + score.percent(sleep, self.profile.get_score('SLEEP'), 100)
-                      + repeat)
+            total = (
+                score.percent(
+                    happy,
+                    self.profile.get_score('HAPPY'),
+                    100) +
+                score.percent(
+                    productive,
+                    self.profile.get_score('PRODUCTIVE'),
+                    100) +
+                score.percent(
+                    sleep,
+                    self.profile.get_score('SLEEP'),
+                    100) +
+                repeat)
 
             if diary:
                 total += self.profile.get_score('DIARY')
@@ -100,15 +115,15 @@ class Summary(object):
                 total += self.profile.get_score('BAT')
 
             data = {
-                "Productive": round(productive*100)/100,
-                "Happy": round(happy*100)/100,
-                "Sleep": round(sleep*100)/100,
+                "Productive": round(productive * 100) / 100,
+                "Happy": round(happy * 100) / 100,
+                "Sleep": round(sleep * 100) / 100,
                 "Diary": diary,
                 "Exercise": exercise,
-                "Total": round(total*100)/100
+                "Total": round(total * 100) / 100
             }
             return data
-        elif type(days) == int:
+        elif isinstance(days, int):
             data = self.data_handler.read_record(days=days)
             column_list = ["Productive", "Happy", "Sleep", "Total"]
             for c in column_list:
@@ -123,17 +138,18 @@ class Summary(object):
         todoist_point = skills.TodoistManager().get_point()
 
         data = {
-            "rescue_time": round(rescue_time_point*100)/100,
-            "toggl": round(toggl_point*100)/100,
-            "github": round(github_point*100)/100,
-            "todoist": round(todoist_point*100)/100
+            "rescue_time": round(rescue_time_point * 100) / 100,
+            "toggl": round(toggl_point * 100) / 100,
+            "github": round(github_point * 100) / 100,
+            "todoist": round(todoist_point * 100) / 100
         }
         self.data_handler.edit_record(('productive', data))
 
         score = utils.Score()
 
         base_point = 0
-        rescue_time_ratio = self.profile.get_score('productives')['RESCUE_TIME']
+        rescue_time_ratio = self.profile.get_score('productives')[
+            'RESCUE_TIME']
         github_ratio = self.profile.get_score('productives')['GITHUB']
         todoist_ratio = self.profile.get_score('productives')['TODOIST']
         toggl_ratio = self.profile.get_score('productives')['TOGGL']
@@ -147,16 +163,23 @@ class Summary(object):
             todoist_ratio *= holiday_ratio
             toggl_ratio *= holiday_ratio
 
-        rescue_time_point = score.percent(rescue_time_point, rescue_time_ratio, 100)
+        rescue_time_point = score.percent(
+            rescue_time_point, rescue_time_ratio, 100)
         github_point = score.percent(github_point, github_ratio, 100)
         todoist_point = score.percent(todoist_point, todoist_ratio, 100)
         toggl_point = score.percent(toggl_point, toggl_ratio, 100)
-        return (base_point + rescue_time_point + github_point + todoist_point + toggl_point)
+        return (
+            base_point +
+            rescue_time_point +
+            github_point +
+            todoist_point +
+            toggl_point)
 
     def __happy_score(self):
         happy_data = self.data_handler.read_record().get('happy', {})
         if len(happy_data) > 0:
-            return sum(list(map(lambda x: int(x), happy_data.values()))) / len(happy_data)
+            return sum(
+                list(map(lambda x: int(x), happy_data.values()))) / len(happy_data)
         else:
             return 0
 
@@ -167,7 +190,7 @@ class Summary(object):
         wake_up_time = arrow.get(activity_data.get('wake_up', None))
 
         sleep_time = (wake_up_time - go_to_bed_time).seconds / 60 / 60
-        sleep_time = sleep_time*100
+        sleep_time = sleep_time * 100
 
         if sleep_time > 800:
             sleep_time -= (sleep_time - 800)
@@ -209,7 +232,8 @@ class Summary(object):
         presence_log = state.current[state.SLEEP]
         if presence_log['presence'] == 'away':
             go_to_bed_time = arrow.get(presence_log['time'])
-            self.data_handler.edit_record_with_category('activity', ('go_to_bed', str(go_to_bed_time)))
+            self.data_handler.edit_record_with_category(
+                'activity', ('go_to_bed', str(go_to_bed_time)))
 
     def total_chart(self):
         records = []
@@ -217,7 +241,14 @@ class Summary(object):
             records.append(self.__get_total_score(i))
 
         date = [-6, -5, -4, -3, -2, -1, 0]
-        x_ticks = ['6 day before', '5 day before', '4 day before', '3 day before', '2 day before', 'yesterday', 'today']
+        x_ticks = [
+            '6 day before',
+            '5 day before',
+            '4 day before',
+            '3 day before',
+            '2 day before',
+            'yesterday',
+            'today']
         legend = ['Happy', 'Productive', 'Sleep', 'Total']
         data = []
         for l in legend:
@@ -228,5 +259,6 @@ class Summary(object):
 
         plot = slack.Plot
         plot.make_line(date, data, f_name, legend=legend, x_ticks=x_ticks,
-                            x_label="Total Point", y_label="Days", title=title)
-        self.slackbot.file_upload(f_name, title=title, comment=MsgResource.TOTAL_REPORT)
+                       x_label="Total Point", y_label="Days", title=title)
+        self.slackbot.file_upload(
+            f_name, title=title, comment=MsgResource.TOTAL_REPORT)

@@ -1,6 +1,7 @@
 
 import utils
 
+
 class Profile(object):
 
     def __init__(self):
@@ -22,7 +23,7 @@ class Profile(object):
 
     def __parse_time(self, time_text):
         hour, minute = time_text.split(":")
-        return ( int(hour), int(minute) )
+        return (int(hour), int(minute))
 
     def get_location(self, station=False):
         data_handler = utils.DataHandler()
@@ -41,7 +42,8 @@ class Profile(object):
                 is_work = False
             else:
                 arrow_util = utils.ArrowUtil()
-                diff = arrow_util.get_curr_time_diff(start=out_company, base_hour=True)
+                diff = arrow_util.get_curr_time_diff(
+                    start=out_company, base_hour=True)
                 if diff > 1:
                     is_work = False
                 else:

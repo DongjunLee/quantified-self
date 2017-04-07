@@ -1,4 +1,4 @@
-#coding: UTF-8
+# coding: UTF-8
 
 import asyncio
 import time
@@ -17,6 +17,7 @@ config = utils.Config()
 MASTER_NAME = config.bot["MASTER_NAME"]
 BOT_NAME = config.bot["BOT_NAME"]
 slackbot.send_message(text=MsgResource.HELLO(MASTER_NAME, BOT_NAME))
+
 
 def start_session(nap=False):
     try:
@@ -41,7 +42,8 @@ def start_session(nap=False):
     except Exception as e:
         logger.error("Session Error. restart in 5 minutes..")
         logger.error(repr(e))
-        time.sleep(5*60)
+        time.sleep(5 * 60)
         start_session(nap=True)
+
 
 start_session()

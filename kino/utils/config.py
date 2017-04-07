@@ -4,6 +4,7 @@ import datetime
 
 from utils.data_handler import DataHandler
 
+
 class Config(object):
     class __Config:
         def __init__(self):
@@ -15,6 +16,7 @@ class Config(object):
             self.open_api = config["open_api"]
 
     instance = None
+
     def __init__(self):
         if not Config.instance:
             Config.instance = Config.__Config()

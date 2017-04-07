@@ -9,6 +9,7 @@ import slack
 from slack import MsgResource
 import utils
 
+
 class RescueTime(object):
 
     def __init__(self):
@@ -31,11 +32,19 @@ class RescueTime(object):
         avg_data = self.__get_avg_data(total_data)
 
         f_name = "rescuetime_efficiency.png"
-        title = 'Data from ' + start + ' to '+ end
+        title = 'Data from ' + start + ' to ' + end
 
-        self.plot.make_efficiency_date(total_data, avg_data, f_name,
-                                       x_label="Efficiency", y_label="Hours", title=title)
-        self.slackbot.file_upload(f_name, title=title, comment=MsgResource.RESCUETIME_EFFICIENCY)
+        self.plot.make_efficiency_date(
+            total_data,
+            avg_data,
+            f_name,
+            x_label="Efficiency",
+            y_label="Hours",
+            title=title)
+        self.slackbot.file_upload(
+            f_name,
+            title=title,
+            comment=MsgResource.RESCUETIME_EFFICIENCY)
 
     def __data_request(self, start, end):
         url = "https://www.rescuetime.com/anapi/data/?"
@@ -49,7 +58,7 @@ class RescueTime(object):
             "rtapi_key": self.config.open_api['rescue_time']['TOKEN']
         }
 
-        for k,v in params.items():
+        for k, v in params.items():
             url += "&" + k + "=" + v
         return requests.get(url)
 
@@ -57,7 +66,7 @@ class RescueTime(object):
         avg_data = []
         for time, row in itertools.groupby(total_data, lambda x: x[0]):
             biaslist = [float(x[1]) for x in row]
-            biasavg = round(float(sum(biaslist))/len(biaslist),1)
+            biasavg = round(float(sum(biaslist)) / len(biaslist), 1)
             avg_data.append((time, biasavg))
         return avg_data
 
@@ -68,4 +77,7 @@ class RescueTime(object):
 
     def __data_summary_request(self):
         url = "https://www.rescuetime.com/anapi/daily_summary_feed?"
-        return requests.get(url + "key=" + self.config.open_api['rescue_time']['TOKEN'])
+        return requests.get(
+            url +
+            "key=" +
+            self.config.open_api['rescue_time']['TOKEN'])

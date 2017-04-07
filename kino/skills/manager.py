@@ -7,6 +7,7 @@ import skills
 import slack
 import utils
 
+
 class FunctionManager(object):
 
     def __init__(self, text=None):
@@ -16,10 +17,16 @@ class FunctionManager(object):
         self.template = slack.MsgTemplate()
         self.logger = utils.Logger().get_logger()
 
-    def load_function(self, start_time=None, end_time=None,
-                      func_name=None, params=None, repeat=False, not_holiday=False):
+    def load_function(
+            self,
+            start_time=None,
+            end_time=None,
+            func_name=None,
+            params=None,
+            repeat=False,
+            not_holiday=False):
 
-        if not_holiday and skills.Summary().is_holiday() == True:
+        if not_holiday and skills.Summary().is_holiday():
             return
 
         if not repeat:
@@ -29,7 +36,11 @@ class FunctionManager(object):
             self.__excute(func_name, params)
 
     def __excute(self, func_name, params):
-        self.logger.info("load_function: " + str(func_name) + ", " + str(params))
+        self.logger.info(
+            "load_function: " +
+            str(func_name) +
+            ", " +
+            str(params))
         getattr(skills.Functions(), func_name)(**params)
 
     def read(self):

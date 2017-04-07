@@ -3,6 +3,7 @@
 import arrow
 import json
 
+
 class DataHandler(object):
 
     def __init__(self):
@@ -21,7 +22,7 @@ class DataHandler(object):
         try:
             with open(self.data_path + fname, 'r') as infile:
                 return infile.read()
-        except:
+        except BaseException:
             return ""
 
     def write_file(self, fname, data):
@@ -33,7 +34,7 @@ class DataHandler(object):
         category_data = total_data.get(category, {})
 
         if category_data == {}:
-            total_data[category]= category_data
+            total_data[category] = category_data
             c_index = 1
         else:
             c_index = category_data['index'] + 1
@@ -82,10 +83,10 @@ class DataHandler(object):
 
     def edit_record(self, data, days=0):
         record = self.read_record(days=days)
-        if type(data) == tuple:
+        if isinstance(data, tuple):
             record[data[0]] = data[1]
-        elif type(data) == dict:
-            for k,v in data.items():
+        elif isinstance(data, dict):
+            for k, v in data.items():
                 record[k] = v
         self.write_record(record, days=days)
 

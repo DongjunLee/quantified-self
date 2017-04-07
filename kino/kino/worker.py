@@ -11,6 +11,7 @@ import slack
 from slack import MsgResource
 import utils
 
+
 class Worker(object):
 
     def __init__(self, text):
@@ -22,15 +23,20 @@ class Worker(object):
         self.function = skills.FunctionManager().load_function
 
     def create(self):
-        ner_dict = {k: self.ner.parse(v, self.input) for k,v in self.ner.schedule.items()}
-        time_unit = self.ner.parse(self.ner.schedule['time_unit'], self.input, get_all=True)
+        ner_dict = {k: self.ner.parse(v, self.input)
+                    for k, v in self.ner.schedule.items()}
+        time_unit = self.ner.parse(
+            self.ner.schedule['time_unit'],
+            self.input,
+            get_all=True)
         ner_dict['time_unit'] = time_unit
 
-        skill_keywords = {k: v['keyword'] for k,v in self.ner.skills.items()}
+        skill_keywords = {k: v['keyword'] for k, v in self.ner.skills.items()}
         func_name = self.ner.parse(skill_keywords, self.input)
         ner_dict['skills'] = func_name
 
-        params = {k: self.ner.parse(v, self.input) for k,v in self.ner.params.items()}
+        params = {k: self.ner.parse(v, self.input)
+                  for k, v in self.ner.params.items()}
         ner_dict['params'] = params
 
         notifier.Scheduler().create_with_ner(**ner_dict)
@@ -48,26 +54,32 @@ class Worker(object):
         profile = utils.Profile()
 
         self.__excute_profile_schedule(
-                profile.get_schedule('WAKE_UP'), False,
-                'send_message', {"text": MsgResource.PROFILE_WAKE_UP}, True)
+            profile.get_schedule('WAKE_UP'), False,
+            'send_message', {"text": MsgResource.PROFILE_WAKE_UP}, True)
 
         self.__excute_profile_schedule(
-                profile.get_schedule('WORK_START'), False,
-                'send_message', {"text": MsgResource.PROFILE_WORK_START}, True)
+            profile.get_schedule('WORK_START'), False,
+            'send_message', {"text": MsgResource.PROFILE_WORK_START}, True)
 
         self.__excute_profile_schedule(
-                profile.get_schedule('WORK_END'), False,
-                'send_message', {"text": MsgResource.PROFILE_WORK_END}, True)
+            profile.get_schedule('WORK_END'), False, 'send_message', {
+                "text": MsgResource.PROFILE_WORK_END}, True)
 
         self.__excute_profile_schedule(
-                profile.get_schedule('GO_TO_BED'), False,
-                'send_message', {"text": MsgResource.PROFILE_GO_TO_BED}, False)
+            profile.get_schedule('GO_TO_BED'), False,
+            'send_message', {"text": MsgResource.PROFILE_GO_TO_BED}, False)
 
         self.__excute_profile_schedule(
-                profile.get_schedule('CHECK_GO_TO_BED'), False,
-                'check_go_to_bed', {}, False)
+            profile.get_schedule('CHECK_GO_TO_BED'), False,
+            'check_go_to_bed', {}, False)
 
-    def __excute_profile_schedule(self, time, repeat, func_name, params, not_holiday):
+    def __excute_profile_schedule(
+            self,
+            time,
+            repeat,
+            func_name,
+            params,
+            not_holiday):
         schedule.every().day.at(time).do(
             self.__run_threaded, self.function, {
                 "repeat": repeat,
@@ -83,8 +95,8 @@ class Worker(object):
         alarm_data = schedule_data.get('alarm', {})
         between_data = schedule_data.get('between', {})
 
-        for k,v in alarm_data.items():
-            if type(v) != type({}):
+        for k, v in alarm_data.items():
+            if not isinstance(v, type({})):
                 continue
 
             if 'time' in v:
@@ -99,14 +111,15 @@ class Worker(object):
                 try:
                     function = skills.FunctionManager().load_function
                     schedule.every().day.at(time).do(self.__run_threaded,
-                                                            function, param)
+                                                     function, param)
                 except Exception as e:
                     print("Function Schedule Error: ", e)
                     self.slackbot.send_message(text=MsgResource.ERROR)
 
             if 'between_id' in v:
                 between = between_data[v['between_id']]
-                start_time, end_time = self.__time_interval2start_end(between['time_interval'])
+                start_time, end_time = self.__time_interval2start_end(
+                    between['time_interval'])
                 # Repeat
                 period = v['period'].split(" ")
                 number = int(period[0])
@@ -122,8 +135,12 @@ class Worker(object):
 
                 try:
                     function = skills.FunctionManager().load_function
-                    getattr(schedule.every(number), datetime_unit).do(self.__run_threaded,
-                                                                    function, param)
+                    getattr(
+                        schedule.every(number),
+                        datetime_unit).do(
+                        self.__run_threaded,
+                        function,
+                        param)
                 except Exception as e:
                     print("Error: " + e)
 
