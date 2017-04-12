@@ -40,7 +40,8 @@ class IFTTT(object):
             return
 
         if self.__is_phone_error(prev, event):
-            self.slackbot.send_message(text=MsgResource.IN_OUT_ERROR)
+            pass
+            #self.slackbot.send_message(text=MsgResource.IN_OUT_ERROR)
         else:
             action = event['action']
             time = self.arrow_util.get_action_time(event['time'])
@@ -70,7 +71,8 @@ class IFTTT(object):
         return False
 
     def is_IN_HOME(self, time):
-        if self.arrow_util.is_between((20, 0), (24, 0), now=time):
+        if self.arrow_util.is_between((20, 0), (24, 0), now=time) or \
+                self.arrow_util.is_between((0, 0), (2, 0), now=time):
             return True
         else:
             return False
@@ -82,21 +84,30 @@ class IFTTT(object):
             return False
 
     def is_IN_COMPANY(self, time):
-        if self.arrow_util.is_between((9, 0), (11, 0), now=time):
+        activity = self.data_handler.read_record().get('activity', None)
+        if self.arrow_util.is_between((9, 0), (11, 30), now=time) and \
+                activity.get('is_company', None) is None:
             return True
         else:
             return False
 
     def is_OUT_COMPANY(self, time):
-        if self.arrow_util.is_between((18, 30), (23, 0), now=time):
+        if self.arrow_util.is_between((17, 30), (23, 0), now=time):
             return True
         else:
             return False
 
     def TODO_handle(self, event):
+        time = self.arrow_util.get_action_time(event['time'])
+        minute = time.format("mm")
+
         msg = event['msg']
+        if minute == "00":
+            msg = "*기한이 지난* " + msg.replace("완료", "오늘로 갱신")
+        else:
+            if event['action'].endswith("COMPLATE"):
+                self.dialog_manager.call_write_diary(msg)
+                self.dialog_manager.call_do_exercise(msg)
+
         self.slackbot.send_message(text=msg)
 
-        if event['action'].endswith("COMPLATE"):
-            self.dialog_manager.call_write_diary(msg)
-            self.dialog_manager.call_do_exercise(msg)
