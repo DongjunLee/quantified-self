@@ -1,11 +1,11 @@
 import arrow
-from dateutil import tz
 import json
 
 import nlp
 import slack
 from slack import MsgResource
 import utils
+from utils import ArrowUtil
 
 
 class IFTTT(object):
@@ -13,7 +13,6 @@ class IFTTT(object):
     def __init__(self):
         self.slackbot = slack.SlackerAdapter()
         self.dialog_manager = nlp.DialogManager()
-        self.arrow_util = utils.ArrowUtil()
         self.data_handler = utils.DataHandler()
 
     def relay(self, text):
@@ -44,7 +43,7 @@ class IFTTT(object):
             #self.slackbot.send_message(text=MsgResource.IN_OUT_ERROR)
         else:
             action = event['action']
-            time = self.arrow_util.get_action_time(event['time'])
+            time = ArrowUtil.get_action_time(event['time'])
             msg = event['msg']
 
             if getattr(self, "is_" + action)(time):
@@ -65,40 +64,40 @@ class IFTTT(object):
         THRESHOLD = 300
         if event['action'].startswith(
                 "IN") and prev['action'].startswith("OUT"):
-            if (self.arrow_util.get_action_time(
+            if (ArrowUtil.get_action_time(
                     event['time']) - arrow.get(prev['time'])).seconds <= THRESHOLD:
                 return True
         return False
 
     def is_IN_HOME(self, time):
-        if self.arrow_util.is_between((20, 0), (24, 0), now=time) or \
-                self.arrow_util.is_between((0, 0), (2, 0), now=time):
+        if ArrowUtil.is_between((20, 0), (24, 0), now=time) or \
+                ArrowUtil.is_between((0, 0), (2, 0), now=time):
             return True
         else:
             return False
 
     def is_OUT_HOME(self, time):
-        if self.arrow_util.is_between((7, 0), (9, 0), now=time):
+        if ArrowUtil.is_between((7, 0), (9, 0), now=time):
             return True
         else:
             return False
 
     def is_IN_COMPANY(self, time):
         activity = self.data_handler.read_record().get('activity', None)
-        if self.arrow_util.is_between((9, 0), (11, 30), now=time) and \
+        if ArrowUtil.is_between((9, 0), (11, 30), now=time) and \
                 activity.get('is_company', None) is None:
             return True
         else:
             return False
 
     def is_OUT_COMPANY(self, time):
-        if self.arrow_util.is_between((17, 30), (23, 0), now=time):
+        if ArrowUtil.is_between((17, 30), (23, 0), now=time):
             return True
         else:
             return False
 
     def TODO_handle(self, event):
-        time = self.arrow_util.get_action_time(event['time'])
+        time = ArrowUtil.get_action_time(event['time'])
         minute = time.format("mm")
 
         msg = event['msg']

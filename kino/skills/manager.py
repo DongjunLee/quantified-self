@@ -6,6 +6,7 @@ import schedule
 import skills
 import slack
 import utils
+from utils import ArrowUtil
 
 
 class FunctionManager(object):
@@ -32,7 +33,7 @@ class FunctionManager(object):
         if not repeat:
             self.__excute(func_name, params)
             return schedule.CancelJob
-        elif (repeat) and (utils.ArrowUtil().is_between(start_time, end_time)):
+        elif (repeat) and (ArrowUtil.is_between(start_time, end_time)):
             self.__excute(func_name, params)
 
     def __excute(self, func_name, params):

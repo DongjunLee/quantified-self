@@ -1,5 +1,6 @@
 
 import utils
+from utils import ArrowUtil
 
 
 class Profile(object):
@@ -41,8 +42,7 @@ class Profile(object):
             elif in_home is not None:
                 is_work = False
             else:
-                arrow_util = utils.ArrowUtil()
-                diff = arrow_util.get_curr_time_diff(
+                diff = ArrowUtil.get_curr_time_diff(
                     start=out_company, base_hour=True)
                 if diff > 1:
                     is_work = False

@@ -1,14 +1,11 @@
 
 import arrow
-from dateutil import tz
 
 import nlp
-import notifier
 import skills
 import slack
 from slack import MsgResource
-import utils
-from utils.data_handler import DataHandler
+from utils import ArrowUtil, DataHandler
 
 
 class DialogManager(object):
@@ -17,7 +14,6 @@ class DialogManager(object):
         self.state = State()
         self.slackbot = slack.SlackerAdapter()
         self.data_handler = DataHandler()
-        self.arrow_util = utils.ArrowUtil()
 
     def current_state(self):
         self.state.check()
@@ -119,11 +115,11 @@ class DialogManager(object):
         state = State()
         state.check()
         presence_log = state.current[state.SLEEP]
-        if (self.arrow_util.is_between((6, 0), (11, 0)) and
+        if (ArrowUtil.is_between((6, 0), (11, 0)) and
                 presence_log['presence'] == 'away' and presence == 'active'):
             self.slackbot.send_message(text=MsgResource.GOOD_MORNING)
 
-            is_holiday = self.arrow_util.is_weekday() == False
+            is_holiday = ArrowUtil.is_weekday() == False
             self.call_is_holiday(is_holiday)
 
             activity = record.get('activity', {})
@@ -163,7 +159,6 @@ class State(object):
     SLEEP = "sleep"
 
     def __init__(self):
-        self.arrow_util = utils.ArrowUtil()
         self.data_handler = DataHandler()
         self.fname = "state.json"
         self.current = None
@@ -203,7 +198,7 @@ class State(object):
         self.save(self.MEMORY, data)
 
     def do_action(self, event):
-        time = self.arrow_util.get_action_time(event['time'])
+        time = ArrowUtil.get_action_time(event['time'])
         data = {
             "action": event['action'],
             "time": str(time)

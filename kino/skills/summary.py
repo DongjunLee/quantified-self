@@ -6,6 +6,7 @@ import skills
 import slack
 from slack import MsgResource
 import utils
+from utils import ArrowUtil
 
 
 class Summary(object):
@@ -48,8 +49,6 @@ class Summary(object):
         record = self.data_handler.read_record()
         activity = record.get('activity', {})
 
-        arrow_util = utils.ArrowUtil()
-
         # Sleep Time
         go_to_bed = activity.get('go_to_bed', None)
         wake_up = activity.get('wake_up', None)
@@ -58,7 +57,7 @@ class Summary(object):
             go_to_bed_time = arrow.get(go_to_bed)
             wake_up_time = arrow.get(wake_up)
 
-            sleep_hour = arrow_util.get_curr_time_diff(
+            sleep_hour = ArrowUtil.get_curr_time_diff(
                 start=go_to_bed_time, stop=wake_up_time, base_hour=True)
             today_data['Sleep'] = go_to_bed_time.format("HH:mm") + " ~ " + wake_up_time.format(
                 "HH:mm") + " : " + str(sleep_hour) + "h (" + str(today_data['Sleep']) + ")"
@@ -71,7 +70,7 @@ class Summary(object):
             in_company_time = arrow.get(in_company)
             out_company_time = arrow.get(out_company)
 
-            working_hour = arrow_util.get_curr_time_diff(
+            working_hour = ArrowUtil.get_curr_time_diff(
                 start=in_company_time, stop=out_company_time, base_hour=True)
             today_data['Working Hour'] = in_company_time.format(
                 "HH:mm") + " ~ " + out_company_time.format("HH:mm") + " : " + str(working_hour) + "h"
@@ -221,8 +220,7 @@ class Summary(object):
         record = self.data_handler.read_record()
         holiday = record.get('Holiday', None)
         if holiday is None:
-            arrow_util = utils.ArrowUtil()
-            return not arrow_util.is_weekday()
+            return not ArrowUtil.is_weekday()
         else:
             return holiday
 
