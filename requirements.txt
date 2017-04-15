@@ -10,4 +10,5 @@ todoist-python
 python-forecastio
 geopy
 konlpy
+JPype1-py3
 PyGithub
