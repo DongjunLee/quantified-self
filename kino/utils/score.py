@@ -4,7 +4,8 @@ class Score(object):
     def __init__(self):
         pass
 
-    def percent(self, point, max_point, threshold):
+    @staticmethod
+    def percent(point, max_point, threshold):
         if point >= threshold:
             score = max_point
         else:

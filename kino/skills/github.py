@@ -6,6 +6,7 @@ from github import Github
 import slack
 from slack import MsgResource
 import utils
+from utils import Score
 
 
 class GithubManager(object):
@@ -101,4 +102,4 @@ class GithubManager(object):
 
     def get_point(self):
         commit_count = sum(self.commit(timely="ten_days"))
-        return utils.Score().percent(commit_count, 100, 10)
+        return Score.percent(commit_count, 100, 10)

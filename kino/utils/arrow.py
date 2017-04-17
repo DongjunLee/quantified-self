@@ -8,8 +8,8 @@ class ArrowUtil(object):
     def __init__(self):
         pass
 
-    @classmethod
-    def get_action_time(cls, time):
+    @staticmethod
+    def get_action_time(time):
         time_str = time.strip().replace('at', '')
         if time_str == "now":
             return arrow.get(arrow.now(), tzinfo=tz.tzlocal())
@@ -19,8 +19,8 @@ class ArrowUtil(object):
                 'MMMM D, YYYY  hh:mma',
                 tzinfo=tz.tzlocal())
 
-    @classmethod
-    def get_curr_time_diff(cls, start=None, stop=None, base_hour=False):
+    @staticmethod
+    def get_curr_time_diff(start=None, stop=None, base_hour=False):
         if isinstance(start, str):
             start = arrow.get(start)
         if isinstance(stop, str):
@@ -35,8 +35,8 @@ class ArrowUtil(object):
         else:
             return int(diff)
 
-    @classmethod
-    def is_between(cls, start_time, end_time, now=None):
+    @staticmethod
+    def is_between(start_time, end_time, now=None):
         if now is None:
             now = datetime.datetime.now()
 
@@ -58,8 +58,8 @@ class ArrowUtil(object):
         else:
             return False
 
-    @classmethod
-    def is_weekday(cls):
+    @staticmethod
+    def is_weekday():
         t = arrow.now()
         day_of_week = t.weekday()
         if day_of_week < 5:

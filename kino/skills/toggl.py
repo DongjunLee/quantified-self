@@ -6,6 +6,7 @@ import slack
 from slack import MsgResource
 import skills
 import utils
+from utils import Score
 
 
 class TogglManager(object):
@@ -134,7 +135,7 @@ class TogglManager(object):
             total_hours = round(today['total_grand'] / 60 / 60 / 10)
         else:
             total_hours = 0
-        return utils.Score().percent(total_hours, 100, 800)
+        return Score.percent(total_hours, 100, 800)
 
 
 class TogglProjectEntity(object):

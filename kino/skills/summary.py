@@ -6,7 +6,7 @@ import skills
 import slack
 from slack import MsgResource
 import utils
-from utils import ArrowUtil
+from utils import ArrowUtil, Score
 
 
 class Summary(object):
@@ -90,17 +90,16 @@ class Summary(object):
             exercise = today_data.get('Exercise', False)
             bat = today_data.get('BAT', False)
 
-            score = utils.Score()
             total = (
-                score.percent(
+                Score.percent(
                     happy,
                     self.profile.get_score('HAPPY'),
                     100) +
-                score.percent(
+                Score.percent(
                     productive,
                     self.profile.get_score('PRODUCTIVE'),
                     100) +
-                score.percent(
+                Score.percent(
                     sleep,
                     self.profile.get_score('SLEEP'),
                     100) +
@@ -144,8 +143,6 @@ class Summary(object):
         }
         self.data_handler.edit_record(('productive', data))
 
-        score = utils.Score()
-
         base_point = 0
         rescue_time_ratio = self.profile.get_score('productives')[
             'RESCUE_TIME']
@@ -162,11 +159,11 @@ class Summary(object):
             todoist_ratio *= holiday_ratio
             toggl_ratio *= holiday_ratio
 
-        rescue_time_point = score.percent(
+        rescue_time_point = Score.percent(
             rescue_time_point, rescue_time_ratio, 100)
-        github_point = score.percent(github_point, github_ratio, 100)
-        todoist_point = score.percent(todoist_point, todoist_ratio, 100)
-        toggl_point = score.percent(toggl_point, toggl_ratio, 100)
+        github_point = Score.percent(github_point, github_ratio, 100)
+        todoist_point = Score.percent(todoist_point, todoist_ratio, 100)
+        toggl_point = Score.percent(toggl_point, toggl_ratio, 100)
         return (
             base_point +
             rescue_time_point +
@@ -197,8 +194,7 @@ class Summary(object):
         if sleep_time > 700:
             sleep_time = 700
 
-        score = utils.Score()
-        return score.percent(sleep_time, 100, 700)
+        return Score.percent(sleep_time, 100, 700)
 
     def __repeat_task_score(self):
         todoist = skills.TodoistManager()
