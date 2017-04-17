@@ -78,23 +78,13 @@ class Functions(object):
         todoist = skills.TodoistManager()
         todoist.schedule()
 
-    def today_summary(self):
+    def today_summary(self, timely=None):
         self.slackbot.send_message(text=MsgResource.TODAY_SUMMARY)
-
-        todoist = skills.TodoistManager()
-        todoist.feedback()
-
-        toggl = skills.TogglManager()
-        toggl.report(kind="chart", timely="daily")
-
-        rescuetime = skills.RescueTime()
-        rescuetime.efficiency(timely="daily")
-
-        happy = skills.Happy()
-        happy.report(timely="daily")
-
-        github = skills.GithubManager()
-        github.commit(timely="daily")
+        self.todoist_feedback()
+        self.toggl_report(timely=timely)
+        self.rescuetime_efficiency(timely=timely)
+        self.happy_report(timely=timely)
+        self.github_commit(timely=timely)
 
     def todoist_auto_update(self):
         todoist = skills.TodoistManager()
