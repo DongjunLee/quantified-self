@@ -71,8 +71,10 @@ class DataHandler(object):
         current_category_data = category_data[c_index]
         return c_index, current_category_data
 
-    def read_record(self, days=0):
+    def read_record(self, days=0, date_string=None):
         date = arrow.now().replace(days=int(days))
+        if date is not None:
+            date = arrow.get(date_string)
         fname = self.record_path + date.format('YYYY-MM-DD') + ".json"
         return self.read_file(fname)
 

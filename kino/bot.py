@@ -13,11 +13,13 @@ slackbot = slack.SlackerAdapter()
 
 logger = utils.Logger().get_logger()
 
+# load skill data
+utils.SkillData()
+
 config = utils.Config()
 MASTER_NAME = config.bot["MASTER_NAME"]
 BOT_NAME = config.bot["BOT_NAME"]
 slackbot.send_message(text=MsgResource.HELLO(MASTER_NAME, BOT_NAME))
-
 
 def start_session(nap=False):
     try:

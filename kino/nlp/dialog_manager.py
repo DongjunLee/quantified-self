@@ -40,9 +40,12 @@ class DialogManager(object):
         else:
             return False
 
-    def get_memory(self):
+    def get_memory(self, get_text=False):
         memory = self.current_state()[State.MEMORY]
-        return self.__return_state(memory, State.MEMORY)
+        if get_text:
+            return memory.get("text", None)
+        else:
+            return self.__return_state(memory, State.MEMORY)
 
     def get_action(self):
         return self.current_state().get(State.ACTION, None)
@@ -109,7 +112,6 @@ class DialogManager(object):
     def check_wake_up(self, presence):
         record = self.data_handler.read_record()
         if 'wake_up' in record.get('activity', {}):
-            print('Already wake up.')
             return
 
         state = State()
@@ -144,11 +146,18 @@ class DialogManager(object):
             weather.forecast(timely="daily")
             weather.air_quality()
 
-    def show_flow(self, presence):
+    def check_flow(self, presence):
         if presence == "active":
             flow = self.get_flow(is_raw=True)
             if flow.get('class', None) == "skills/Happy":
                 self.slackbot.send_message(text=MsgResource.FLOW_HAPPY)
+
+    def check_predictor(self, presence):
+        flow = self.get_flow(is_raw=True)
+        flow_class = flow.get('class', None)
+        if presence == "active" and flow_class is None:
+            functions = skills.Functions()
+            functions.predict_skill()
 
 
 class State(object):
@@ -189,8 +198,9 @@ class State(object):
     def flow_complete(self):
         self.save(self.FLOW, {})
 
-    def memory_skill(self, func_name, params):
+    def memory_skill(self, text, func_name, params):
         data = {
+            "text": text,
             "class": "skills/Functions",
             "def": func_name,
             "params": params

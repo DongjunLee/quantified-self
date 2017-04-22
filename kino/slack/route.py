@@ -22,11 +22,20 @@ class MsgRouter(object):
         self.logger.info("clean input: " + self.simple_text)
 
     def route(self, text=None, user=None, channel=None,
-              direct=False, ifttt=False, presence=None, dnd=None):
+              direct=False, ifttt=False, presence=None, dnd=None, predict=False):
+
+        if predict:
+            # Check - skills
+            skill_keywords = {k: v['keyword'] for k, v in ner.skills.items()}
+            func_name = ner.parse(skill_keywords, self.text)
+            if func_name is not None:
+                self.__call_skills(func_name)
+                return
 
         if presence is not None:
             self.dialog_manager.check_wake_up(presence)
-            self.dialog_manager.show_flow(presence)
+            self.dialog_manager.check_flow(presence)
+            self.dialog_manager.check_predictor(presence)
 
             nlp.State().presence_log(presence)
             self.logger.info("presence: " + str(presence))
@@ -49,8 +58,8 @@ class MsgRouter(object):
             return
 
         # Check Memory
-        if self.dialog_manager.is_on_memory(
-        ) and self.dialog_manager.is_call_repeat_skill(self.text):
+        if self.dialog_manager.is_on_memory() \
+                and self.dialog_manager.is_call_repeat_skill(self.text):
             self.__on_memory()
             return
 
@@ -74,6 +83,7 @@ class MsgRouter(object):
         func_name = ner.parse(skill_keywords, self.text)
         if func_name is not None:
             self.__call_skills(func_name)
+            self.__memory_predictor_skills()
             return
 
         self.logger.info("not understanding")
@@ -137,10 +147,19 @@ class MsgRouter(object):
                 self.text, func_name)
 
         state = nlp.State()
-        state.memory_skill(func_name, f_params)
+        state.memory_skill(self.text, func_name, f_params)
         self.logger.info(
             "From call skills - route to: " +
             func_name +
             ", " +
             str(f_params))
         getattr(skills.Functions(), func_name)(**f_params)
+
+    def __memory_predictor_skills(self):
+        data_loader = utils.DataLoader()
+        X = data_loader.make_X()[0]
+        y = data_loader.make_y(self.text)
+        if y is not None:
+            print('in')
+            skill_data = utils.SkillData()
+            skill_data.q.put_nowait((X, y))
