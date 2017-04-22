@@ -10,6 +10,7 @@ from .naver import Naver
 from .rescuetime import RescueTime
 from .manager import FunctionManager
 from .maxim import Maxim
+from .predictor import Predictor
 from .todoist import TodoistManager
 from .toggl import TogglManager
 from .weather import Weather
@@ -24,6 +25,7 @@ __all__ = ['Functions',
            'Naver',
            'RescueTime',
            'Maxim',
+           'Predictor',
            'TodoistManager',
            'TogglManager',
            'Weather']

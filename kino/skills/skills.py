@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import skills
-import slack
-from slack import MsgResource
+from slack import MsgResource, SlackerAdapter
 import utils
 
 
@@ -10,7 +9,7 @@ class Functions(object):
 
     def __init__(self):
         self.data_handler = utils.DataHandler()
-        self.slackbot = slack.SlackerAdapter()
+        self.slackbot = SlackerAdapter()
         self.registered = RegisteredFuctions().list
 
     def check_go_to_bed(self):
@@ -51,6 +50,14 @@ class Functions(object):
             timely = 'daily'
         happy = skills.Happy()
         happy.report(timely=timely)
+
+    def predict_skill(self):
+        skill_data = utils.SkillData()
+        data_X, data_y = utils.DataLoader().make_data_set(skill_data.q)
+
+        predictor = skills.Predictor()
+        predictor.fit(data_X, data_y)
+        predictor.predict()
 
     def total_score(self):
         summary = skills.Summary()

@@ -66,3 +66,14 @@ class ArrowUtil(object):
             return True
         else:
             return False
+
+    @staticmethod
+    def convert_now2data():
+        now = arrow.now()
+        day_of_week = now.isoweekday()
+        hour = int(now.format('HH'))
+        minute = int(now.format('mm'))
+        is_holiday = ArrowUtil.is_weekday()
+
+        return (day_of_week, hour, minute, is_holiday)
+
