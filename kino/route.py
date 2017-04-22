@@ -1,22 +1,46 @@
 
-import skills
-import nlp
-import kino
-import notifier
-import slack
-from slack import MsgResource
-import utils
+from .functions import Functions
+from .functions import FunctionRunner
+
+from .dialog.dialog_manager import DialogManager
+from .dialog.presence import PreseneManager
+
+from .kino.worker import Worker
+
+from .nlp.disintegrator import Disintegrator
+from .nlp.ner import NamedEntitiyRecognizer
+
+from .notifier.between import Between
+from .notifier.scheduler import Scheduler
+from .notifier.skill_list import SkillList
+
+from .kino.help import Guide
+from .kino.worker import Worker
+
+from .slack.resource import MsgResource
+from .slack.slackbot import SlackerAdapter
+
+from .skills.ifttt import IFTTT
+from .skills.happy import Happy
+
+from .utils.data_loader import DataLoader
+from .utils.data_loader import SkillData
+from .utils.logger import Logger
+from .utils.state import State
+
 
 
 class MsgRouter(object):
 
     def __init__(self):
-        self.slackbot = slack.SlackerAdapter()
-        self.logger = utils.Logger().get_logger()
-        self.dialog_manager = nlp.DialogManager()
+        self.slackbot = SlackerAdapter()
+        self.logger = Logger().get_logger()
+        self.dialog_manager = DialogManager()
+        self.presence_manager = PreseneManager()
+        self.f_runner = FunctionRunner()
 
     def preprocessing(self, text):
-        disintegrator = nlp.Disintegrator()
+        disintegrator = Disintegrator()
         self.text = text
         self.simple_text = disintegrator.convert2simple(sentence=text)
         self.logger.info("clean input: " + self.simple_text)
@@ -33,11 +57,11 @@ class MsgRouter(object):
                 return
 
         if presence is not None:
-            self.dialog_manager.check_wake_up(presence)
-            self.dialog_manager.check_flow(presence)
-            self.dialog_manager.check_predictor(presence)
+            self.presence_manager.check_wake_up(presence)
+            self.presence_manager.check_flow(presence)
+            self.presence_manager.check_predictor(presence)
 
-            nlp.State().presence_log(presence)
+            State().presence_log(presence)
             self.logger.info("presence: " + str(presence))
             return
 
@@ -68,7 +92,7 @@ class MsgRouter(object):
             self.__call_help()
             return
 
-        ner = nlp.NamedEntitiyRecognizer()
+        ner = NamedEntitiyRecognizer()
 
         # Check - CRUD (Worker, Schedule, Between, FunctionManager)
         kino_keywords = {k: v['keyword'] for k, v in ner.kino.items()}
@@ -91,11 +115,11 @@ class MsgRouter(object):
         return
 
     def __on_relay(self, text):
-        ifttt = skills.IFTTT()
+        ifttt = IFTTT()
         ifttt.relay(text)
 
     def __on_flow(self):
-        route_class, behave, step_num = self.dialog_manager.get_flow()
+        route_class, behave, step_num = self.dialog_manager.get_flow(globals=globals())
         self.logger.info(
             "From Flow - route to: " +
             route_class.__class__.__name__ +
@@ -104,19 +128,19 @@ class MsgRouter(object):
         getattr(route_class, behave)(step=step_num, params=self.text)
 
     def __on_memory(self):
-        route_class, func_name, params = self.dialog_manager.get_memory()
+        route_class, func_name, params = self.dialog_manager.get_memory(globals=globals())
         self.logger.info(
             "From Memory - route to: " +
             route_class.__class__.__name__ +
             ", " +
             str(func_name))
-        f_params = self.dialog_manager.filter_f_params(self.text, func_name)
+        f_params = self.f_runner.filter_f_params(self.text, func_name)
         if not f_params == {}:
             params = f_params
         getattr(route_class, func_name)(**params)
 
     def __call_help(self):
-        route_class = kino.Guide()
+        route_class = Guide()
         behave = "help"
         self.logger.info(
             "route to: " +
@@ -126,8 +150,7 @@ class MsgRouter(object):
         getattr(route_class, behave)()
 
     def __call_CRUD(self, ner, classname):
-        class_dir, class_name = classname.split("/")
-        route_class = getattr(globals()[class_dir], class_name)(text=self.text)
+        route_class = globals()[classname](text=self.text)
         behave_ner = ner.kino[classname]['behave']
         behave = ner.parse(behave_ner, self.simple_text)
 
@@ -143,23 +166,22 @@ class MsgRouter(object):
             f_params = {
                 "description": self.text[self.text.index("toggl") + 5:]}
         else:
-            f_params = self.dialog_manager.filter_f_params(
-                self.text, func_name)
+            f_params = self.f_runner.filter_f_params(self.text, func_name)
 
-        state = nlp.State()
+        state = State()
         state.memory_skill(self.text, func_name, f_params)
         self.logger.info(
             "From call skills - route to: " +
             func_name +
             ", " +
             str(f_params))
-        getattr(skills.Functions(), func_name)(**f_params)
+        getattr(Functions(), func_name)(**f_params)
 
     def __memory_predictor_skills(self):
-        data_loader = utils.DataLoader()
+        data_loader = DataLoader()
         X = data_loader.make_X()[0]
         y = data_loader.make_y(self.text)
         if y is not None:
             print('in')
-            skill_data = utils.SkillData()
+            skill_data = SkillData()
             skill_data.q.put_nowait((X, y))

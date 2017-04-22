@@ -2,7 +2,7 @@
 
 import re
 
-from utils.data_handler import DataHandler
+from ..utils.data_handler import DataHandler
 
 
 class NamedEntitiyRecognizer(object):

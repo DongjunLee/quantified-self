@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from slack import MsgResource
+from .resource import MsgResource
 
 
 class MsgTemplate(object):

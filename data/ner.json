@@ -1,6 +1,6 @@
 {
   "kino": {
-    "kino/Worker": {
+    "Worker": {
       "keyword": ["키노"],
       "behave": {
         "create": ["있다", "추가", "일거리"],
@@ -8,7 +8,7 @@
         "stop": ["중지", "멈추다", "그만"]
       }
     },
-    "notifier/Scheduler": {
+    "Scheduler": {
       "keyword": ["알람"],
       "behave": {
         "create": ["등록", "추가"],
@@ -16,7 +16,7 @@
         "delete": ["삭제", "제거", "없애다"]
       }
     },
-    "notifier/Between": {
+    "Between": {
       "keyword": ["시간대"],
       "behave": {
         "create": ["등록", "추가"],
@@ -24,7 +24,7 @@
         "delete": ["삭제", "제거", "없애다"]
       }
     },
-    "skills/FunctionManager": {
+    "SkillList": {
       "keyword": ["함수", "기능", "뭘"],
       "behave": {
         "read": ["보다", "보이다", "보기", "확인", "뭐 있다", "하다"]

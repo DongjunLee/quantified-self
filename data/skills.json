@@ -41,12 +41,6 @@
     "description": "행복도 리포트",
     "icon": ":smile_cat: "
   },
-  "predict_skill": {
-    "keyword": ["예언"],
-    "params": [],
-    "description": "지금 사용하려는 스킬을 예언",
-    "icon": ":crystal_ball: "
-  },
   "total_score": {
     "keyword": ["종합 점수"],
     "params": [],

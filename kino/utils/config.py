@@ -2,7 +2,7 @@
 
 import datetime
 
-from utils.data_handler import DataHandler
+from .data_handler import DataHandler
 
 
 class Config(object):

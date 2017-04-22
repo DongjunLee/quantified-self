@@ -1,49 +1,16 @@
-# -*- coding: utf-8 -*-
 
-import json
-import schedule
+from .slack.slackbot import SlackerAdapter
+from .slack.template import MsgTemplate
 
-import skills
-import slack
-import utils
-from utils import ArrowUtil
 
 
 class FunctionManager(object):
 
-    def __init__(self, text=None):
-        self.input = text
-        self.slackbot = slack.SlackerAdapter()
-        self.functions = skills.Functions().registered
-        self.template = slack.MsgTemplate()
-        self.logger = utils.Logger().get_logger()
-
-    def load_function(
-            self,
-            start_time=None,
-            end_time=None,
-            func_name=None,
-            params=None,
-            repeat=False,
-            not_holiday=False):
-
-        if not_holiday and skills.Summary().is_holiday():
-            return
-
-        if not repeat:
-            self.__excute(func_name, params)
-            return schedule.CancelJob
-        elif (repeat) and (ArrowUtil.is_between(start_time, end_time)):
-            self.__excute(func_name, params)
-
-    def __excute(self, func_name, params):
-        self.logger.info(
-            "load_function: " +
-            str(func_name) +
-            ", " +
-            str(params))
-        getattr(skills.Functions(), func_name)(**params)
+    def __init__(self):
+        self.slackbot = SlackerAdapter()
+        self.template = MsgTemplate()
 
     def read(self):
         attachments = self.template.make_skill_template("", self.functions)
         self.slackbot.send_message(attachments=attachments)
+

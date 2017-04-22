@@ -5,18 +5,20 @@ import arrow
 import itertools
 import requests
 
-import slack
-from slack import MsgResource
-import utils
-from utils import Score
+from ..slack.resource import MsgResource
+from ..slack.slackbot import SlackerAdapter
+from ..slack.plot import Plot
+
+from ..utils.config import Config
+from ..utils.data_handler import DataHandler
+from ..utils.score import Score
 
 
 class RescueTime(object):
 
     def __init__(self):
-        self.config = utils.Config()
-        self.slackbot = slack.SlackerAdapter()
-        self.plot = slack.Plot
+        self.config = Config()
+        self.slackbot = SlackerAdapter()
 
     def efficiency(self, timely="daily"):
         now = arrow.now()
@@ -35,7 +37,7 @@ class RescueTime(object):
         f_name = "rescuetime_efficiency.png"
         title = 'Data from ' + start + ' to ' + end
 
-        self.plot.make_efficiency_date(
+        Plot.make_efficiency_date(
             total_data,
             avg_data,
             f_name,

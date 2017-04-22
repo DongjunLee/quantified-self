@@ -1,16 +1,21 @@
 import json
 
-import slack
-import utils
+from .route import MsgRouter
+
+from .slack.resource import MsgResource
+from .slack.slackbot import SlackerAdapter
+
+from .utils.config import Config
+from .utils.logger import Logger
 
 
 class MsgListener(object):
 
     def __init__(self):
-        self.config = utils.Config()
-        self.router = slack.MsgRouter()
-        self.slackbot = slack.SlackerAdapter()
-        self.logger = utils.Logger().get_logger()
+        self.config = Config()
+        self.router = MsgRouter()
+        self.slackbot = SlackerAdapter()
+        self.logger = Logger().get_logger()
 
     def handle(self, msg):
         self.msg = json.loads(msg)
@@ -36,8 +41,9 @@ class MsgListener(object):
                 channel=self.msg['channel'],
                 direct=self.__is__direct())
         except Exception as e:
-            self.logger.error("USER Listener Error: ", e)
-            self.slackbot.send_message(text=slack.MsgResource.ERROR)
+            self.logger.error(f"USER Listener Error: {e}")
+            self.logger.exception("user")
+            self.slackbot.send_message(text=MsgResource.ERROR)
 
     def handle_ifttt_message(self):
         try:
@@ -46,8 +52,9 @@ class MsgListener(object):
                 direct=self.__is__direct(),
                 ifttt=True)
         except Exception as e:
-            self.logger.error("IFTTT Listener Error: ", e)
-            self.slackbot.send_message(text=slack.MsgResource.ERROR)
+            self.logger.error(f"IFTTT Listener Error: {e}")
+            self.logger.exception("ifttt")
+            self.slackbot.send_message(text=MsgResource.ERROR)
 
     def __is_message(self):
         msg_type = self.msg.get("type", None)
@@ -111,8 +118,9 @@ class MsgListener(object):
             try:
                 self.router.route(presence=self.msg['presence'])
             except Exception as e:
-                self.logger.error("Presence Listener Error: ", e)
-                self.slackbot.send_message(text=slack.MsgResource.ERROR)
+                self.logger.error(f"Presence Listener Error: {e}")
+                self.logger.exception("presence")
+                self.slackbot.send_message(text=MsgResource.ERROR)
 
     def __is_presence(self):
         msg_type = self.msg.get("type", None)
@@ -127,8 +135,9 @@ class MsgListener(object):
                 dnd = self.msg['dnd_status']
                 self.router.route(dnd=dnd['dnd_enabled'])
             except Exception as e:
-                self.logger.error("dnd_change Listener Error: ", e)
-                self.slackbot.send_message(text=slack.MsgResource.ERROR)
+                self.logger.error(f"dnd_change Listener Error: {e}")
+                self.logger.exception("dnd")
+                self.slackbot.send_message(text=MsgResource.ERROR)
 
     def __is_dnd_updated_user(self):
         msg_type = self.msg.get("type", None)

@@ -1,25 +1,28 @@
 import arrow
 import json
 
-import nlp
-import slack
-from slack import MsgResource
-import utils
-from utils import ArrowUtil
+from ..dialog.dialog_manager import DialogManager
+
+from ..slack.resource import MsgResource
+from ..slack.slackbot import SlackerAdapter
+
+from ..utils.arrow import ArrowUtil
+from ..utils.data_handler import DataHandler
+from ..utils.state import State
 
 
 class IFTTT(object):
 
     def __init__(self):
-        self.slackbot = slack.SlackerAdapter()
-        self.dialog_manager = nlp.DialogManager()
-        self.data_handler = utils.DataHandler()
+        self.slackbot = SlackerAdapter()
+        self.dialog_manager = DialogManager()
+        self.data_handler = DataHandler()
 
     def relay(self, text):
         event = json.loads(text)
 
         prev_event = self.dialog_manager.get_action()
-        nlp.State().do_action(event)
+        State().do_action(event)
 
         if prev_event is None:
             self.slackbot.send_message(text=event['msg'])
@@ -105,8 +108,9 @@ class IFTTT(object):
             msg = "*기한이 지난* " + msg.replace("완료", "오늘로 갱신")
         else:
             if event['action'].endswith("COMPLATE"):
-                self.dialog_manager.call_write_diary(msg)
-                self.dialog_manager.call_do_exercise(msg)
+                if "일기" in msg:
+                    Summary().record_write_diary()
+                if "운동" in msg:
+                    Summary().record_exercise()
 
         self.slackbot.send_message(text=msg)
-

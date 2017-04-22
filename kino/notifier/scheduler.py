@@ -5,32 +5,38 @@ import schedule
 import random
 import threading
 
-import skills
-import nlp
-import notifier
-import slack
-from slack import MsgResource
-import utils
+from .skill_list import SkillList
+
+from .between import Between
+
+from ..functions import RegisteredFuctions
+
+from ..slack.resource import MsgResource
+from ..slack.slackbot import SlackerAdapter
+from ..slack.template import MsgTemplate
+
+from ..utils.data_handler import DataHandler
+from ..utils.state import State
 
 
 class Scheduler(object):
 
     def __init__(self, text=None):
         self.input = text
-        self.slackbot = slack.SlackerAdapter()
-        self.data_handler = utils.DataHandler()
+        self.slackbot = SlackerAdapter()
+        self.data_handler = DataHandler()
         self.fname = "schedule.json"
-        self.template = slack.MsgTemplate()
+        self.template = MsgTemplate()
 
     def create(self, step=0, params=None):
-        state = nlp.State()
+        state = State()
 
         # 알람 생성 시작
         def step_0(params):
             self.slackbot.send_message(text=MsgResource.SCHEDULER_CREATE_START)
             self.data_handler.read_json_then_add_data(self.fname, "alarm", {})
             state.flow_start("notifier/Scheduler", "create")
-            if notifier.Between().read() == "success":
+            if Between().read() == "success":
                 self.slackbot.send_message(
                     text=MsgResource.SCHEDULER_CREATE_STEP1)
             else:
@@ -50,7 +56,7 @@ class Scheduler(object):
             else:
                 current_alarm_data["time"] = params
                 state.flow_next_step(num=2)
-                skills.FunctionManager().read()
+                SkillList().read()
                 self.slackbot.send_message(
                     text=MsgResource.SCHEDULER_CREATE_STEP3)
 
@@ -66,7 +72,7 @@ class Scheduler(object):
                 self.fname, "alarm", a_index, current_alarm_data)
 
             state.flow_next_step()
-            skills.FunctionManager().read()
+            SkillList().read()
             self.slackbot.send_message(text=MsgResource.SCHEDULER_CREATE_STEP3)
 
         # 함수
@@ -181,7 +187,7 @@ class Scheduler(object):
 
     def __alarm_in_between(self, between, a_index, alarm_data, repeat=False):
         f_name = alarm_data['f_name']
-        f_detail = skills.FunctionManager().functions[f_name]
+        f_detail = RegisteredFuctions().list[f_name]
 
         if repeat:
             key = "Alarm " + a_index + \
@@ -220,7 +226,7 @@ class Scheduler(object):
             self.slackbot.send_message(text=MsgResource.ERROR)
 
     def delete(self, step=0, params=None):
-        state = nlp.State()
+        state = State()
 
         def step_0(params):
             self.slackbot.send_message(text=MsgResource.SCHEDULER_DELETE_START)

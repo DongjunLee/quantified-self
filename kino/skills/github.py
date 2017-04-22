@@ -1,26 +1,26 @@
 import arrow
 import datetime
-
 from github import Github
 
-import slack
-from slack import MsgResource
-import utils
-from utils import Score
+from ..slack.resource import MsgResource
+from ..slack.slackbot import SlackerAdapter
+from ..slack.plot import Plot
+
+from ..utils.config import Config
+from ..utils.score import Score
 
 
 class GithubManager(object):
 
     def __init__(self):
-        self.config = utils.Config()
+        self.config = Config()
 
         self.username = self.config.open_api['github']['USERNAME']
         password = self.config.open_api['github']['PASSWORD']
         self.github = Github(self.username, password)
         self.events = None
 
-        self.slackbot = slack.SlackerAdapter()
-        self.plot = slack.Plot
+        self.slackbot = SlackerAdapter()
 
     def commit(self, timely="daily"):
         if timely == "daily":
@@ -58,7 +58,7 @@ class GithubManager(object):
             f_name = "github_weekly_commit.png"
             title = "Github Commit"
 
-            self.plot.make_bar(
+            Plot.make_bar(
                 date,
                 commit_count_list,
                 f_name,

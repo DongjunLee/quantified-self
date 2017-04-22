@@ -1,11 +1,12 @@
-import slack
+from ..slack.slackbot import SlackerAdapter
+from ..slack.template import MsgTemplate
 
 
 class Guide(object):
 
     def __init__(self):
-        self.slackbot = slack.SlackerAdapter()
-        self.template = slack.MsgTemplate()
+        self.slackbot = SlackerAdapter()
+        self.template = MsgTemplate()
 
     def help(self):
         attachments = self.template.make_help_template(

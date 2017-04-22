@@ -202,6 +202,6 @@ class MsgResource:
     IN_OUT_ERROR = "핸드폰이 꺼졌다가 켜진 것 같습니다ㅠㅠ"
 
     def TRANSLATED_TEXT(result):
-        return f"번역된 결과는 다음과 같습니다. \n - {resultl}"
+        return f"번역된 결과는 다음과 같습니다. \n - {result}"
 
     FLOW_HAPPY = ":ear: 행복도 점수 대답을 기다리고 있습니다!"

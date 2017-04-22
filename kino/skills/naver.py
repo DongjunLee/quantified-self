@@ -1,15 +1,16 @@
 import requests
 
-import slack
-from slack import MsgResource
-import utils
+from ..slack.resource import MsgResource
+from ..slack.slackbot import SlackerAdapter
+
+from ..utils.config import Config
 
 
 class Naver(object):
 
     def __init__(self):
-        self.config = utils.Config()
-        self.slackbot = slack.SlackerAdapter()
+        self.config = Config()
+        self.slackbot = SlackerAdapter()
         self.headers = {
             "X-Naver-Client-Id": self.config.open_api['naver']['CLIENT_ID'],
             "X-Naver-Client-Secret": self.config.open_api['naver']['CLIENT_SECRET']}

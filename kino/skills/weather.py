@@ -6,21 +6,24 @@ import forecastio
 from airkoreaPy import AirKorea
 from geopy.geocoders import GoogleV3
 
-import slack
-import utils
+from ..slack.slackbot import SlackerAdapter
+from ..slack.template import MsgTemplate
+
+from ..utils.config import Config
+from ..utils.profile import Profile
 
 
 class Weather(object):
 
     def __init__(self, text=None):
         self.input = text
-        self.config = utils.Config()
-        self.slackbot = slack.SlackerAdapter()
-        self.template = slack.MsgTemplate()
+        self.config = Config()
+        self.slackbot = SlackerAdapter()
+        self.template = MsgTemplate()
 
     def forecast(self, timely='current'):
         geolocator = GoogleV3()
-        location = geolocator.geocode(utils.Profile().get_location())
+        location = geolocator.geocode(Profile().get_location())
 
         api_key = self.config.open_api['dark_sky']['TOKEN']
         lat = location.latitude
@@ -68,7 +71,7 @@ class Weather(object):
         api_key = self.config.open_api['airkorea']['TOKEN']
         airkorea = AirKorea(api_key)
 
-        station_name = utils.Profile().get_location(station=True)
+        station_name = Profile().get_location(station=True)
         response = airkorea.forecast(station_name)
         attachments = self.template.make_air_quality_template(response)
         self.slackbot.send_message(attachments=attachments)

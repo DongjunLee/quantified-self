@@ -1,12 +1,13 @@
 
-import utils
-from utils import ArrowUtil
+from .arrow import ArrowUtil
+from .config import Config
+from .data_handler import DataHandler
 
 
 class Profile(object):
 
     def __init__(self):
-        profile = utils.Config().profile
+        profile = Config().profile
         self.schedule = profile['schedule']
         self.location = profile['location']
         self.task = profile['task']
@@ -27,7 +28,7 @@ class Profile(object):
         return (int(hour), int(minute))
 
     def get_location(self, station=False):
-        data_handler = utils.DataHandler()
+        data_handler = DataHandler()
         record = data_handler.read_record()
         activity = record.get('activity', {})
 

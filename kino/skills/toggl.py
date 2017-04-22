@@ -2,19 +2,24 @@
 import arrow
 from toggl import Toggl
 
-import slack
-from slack import MsgResource
-import skills
-import utils
-from utils import Score
+from ..slack.resource import MsgResource
+from ..slack.slackbot import SlackerAdapter
+
+from ..skills.todoist import TodoistManager
+
+from ..utils.arrow import ArrowUtil
+from ..utils.data_handler import DataHandler
+from ..utils.config import Config
+from ..utils.logger import Logger
+from ..utils.score import Score
 
 
 class TogglManager(object):
 
     def __init__(self):
-        self.config = utils.Config()
-        self.slackbot = slack.SlackerAdapter()
-        self.logger = utils.Logger().get_logger()
+        self.config = Config()
+        self.slackbot = SlackerAdapter()
+        self.logger = Logger().get_logger()
 
         self.toggl = Toggl()
         self.toggl.setAPIKey(self.config.open_api['toggl']['TOKEN'])
@@ -47,7 +52,7 @@ class TogglManager(object):
         else:
             stop = self.toggl.stopTimeEntry(current_timer['id'])
             description = stop['data'].get('description', 'no description')
-            diff_min = utils.ArrowUtil().get_curr_time_diff(
+            diff_min = ArrowUtil.get_curr_time_diff(
                 start=stop['data']['start'], stop=stop['data']['stop'])
 
             self.slackbot.send_message(text=MsgResource.TOGGL_STOP)
@@ -55,7 +60,7 @@ class TogglManager(object):
                 text=MsgResource.TOGGL_STOP_SUMMARY(
                     description, diff_min))
 
-            todoist = skills.TodoistManager()
+            todoist = TodoistManager()
             todoist.complete_by_toggl(description, int(diff_min))
 
     def __get_pid(self, name=None):
@@ -72,7 +77,7 @@ class TogglManager(object):
         if current_timer is None:
             return
 
-        diff_min = utils.ArrowUtil().get_curr_time_diff(
+        diff_min = ArrowUtil.get_curr_time_diff(
             start=current_timer['start'])
         self.logger.info("diff_min: " + str(diff_min))
         diff_min_divide_10 = int(diff_min / 10)
@@ -141,7 +146,7 @@ class TogglManager(object):
 class TogglProjectEntity(object):
     class __Entity:
         def __init__(self):
-            self.entity = utils.DataHandler().read_file("toggl.json")
+            self.entity = DataHandler().read_file("toggl.json")
 
     instance = None
 

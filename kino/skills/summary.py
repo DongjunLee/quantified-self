@@ -1,23 +1,32 @@
 
 import arrow
 
-import nlp
-import skills
-import slack
-from slack import MsgResource
-import utils
-from utils import ArrowUtil, Score
+from .rescue_time import RescueTime
+from .toggl import TogglManager
+from .todoist import TodoistManager
+from .github import GithubManager
+
+from ..slack.resource import MsgResource
+from ..slack.slackbot import SlackerAdapter
+from ..slack.template import MsgTemplate
+from ..slack.plot import Plot
+
+from ..utils.arrow import ArrowUtil
+from ..utils.data_handler import DataHandler
+from ..utils.profile import Profile
+from ..utils.score import Score
+from ..utils.state import State
 
 
 class Summary(object):
 
     def __init__(self):
-        self.data_handler = utils.DataHandler()
-        self.slackbot = slack.SlackerAdapter()
-        self.profile = utils.Profile()
+        self.data_handler = DataHandler()
+        self.slackbot = SlackerAdapter()
+        self.profile = Profile()
 
     def total_score(self):
-        template = slack.MsgTemplate()
+        template = MsgTemplate()
 
         today_data = self.__get_total_score()
         self.data_handler.edit_record(today_data)
@@ -130,10 +139,10 @@ class Summary(object):
             return data
 
     def __productive_score(self):
-        rescue_time_point = skills.RescueTime().get_point()
-        toggl_point = skills.TogglManager().get_point()
-        github_point = skills.GithubManager().get_point()
-        todoist_point = skills.TodoistManager().get_point()
+        rescue_time_point = RescueTime().get_point()
+        toggl_point = TogglManager().get_point()
+        github_point = GithubManager().get_point()
+        todoist_point = TodoistManager().get_point()
 
         data = {
             "rescue_time": round(rescue_time_point * 100) / 100,
@@ -197,7 +206,7 @@ class Summary(object):
         return Score.percent(sleep_time, 100, 700)
 
     def __repeat_task_score(self):
-        todoist = skills.TodoistManager()
+        todoist = TodoistManager()
         minus_point = 2.5
         if self.is_holiday():
             minus_point /= 2
@@ -221,7 +230,7 @@ class Summary(object):
             return holiday
 
     def check_go_to_bed(self):
-        state = nlp.State()
+        state = State()
         state.check()
         presence_log = state.current[state.SLEEP]
         if presence_log['presence'] == 'away':
@@ -251,8 +260,7 @@ class Summary(object):
         f_name = "total_weekly_report.png"
         title = "Total Report"
 
-        plot = slack.Plot
-        plot.make_line(date, data, f_name, legend=legend, x_ticks=x_ticks,
+        Plot.make_line(date, data, f_name, legend=legend, x_ticks=x_ticks,
                        x_label="Total Point", y_label="Days", title=title)
         self.slackbot.file_upload(
             f_name, title=title, comment=MsgResource.TOTAL_REPORT)

@@ -2,12 +2,13 @@
 
 import arrow
 import json
+import os
 
 
 class DataHandler(object):
 
     def __init__(self):
-        self.data_path = "../data/"
+        self.data_path = "data/"
         self.record_path = "record/"
 
     def read_file(self, fname):
@@ -73,7 +74,7 @@ class DataHandler(object):
 
     def read_record(self, days=0, date_string=None):
         date = arrow.now().replace(days=int(days))
-        if date is not None:
+        if date_string is not None:
             date = arrow.get(date_string)
         fname = self.record_path + date.format('YYYY-MM-DD') + ".json"
         return self.read_file(fname)

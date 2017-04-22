@@ -3,32 +3,35 @@ import arrow
 import collections
 import re
 
-import nlp
-import slack
-from slack import MsgResource
-import utils
+from ..dialog.dialog_manager import DialogManager
+
+from ..slack.resource import MsgResource
+from ..slack.slackbot import SlackerAdapter
+from ..slack.plot import Plot
+
+from ..utils.data_handler import DataHandler
+from ..utils.score import Score
+from ..utils.state import State
 
 
 class Happy(object):
 
     def __init__(self, text=None):
         self.input = text
-        self.slackbot = slack.SlackerAdapter()
-        self.data_handler = utils.DataHandler()
-        self.plot = slack.Plot
+        self.slackbot = SlackerAdapter()
+        self.data_handler = DataHandler()
 
     def question(self, step=0, params=None):
-        state = nlp.State()
+        state = State()
 
         def step_0(params):
-            flow = nlp.DialogManager().get_flow(is_raw=True)
-            print(flow)
-            if flow.get('class', None) == "skills/Happy":
+            flow = DialogManager().get_flow(is_raw=True)
+            if flow.get('class', None) == "Happy":
                 pass
             else:
                 self.slackbot.send_message(
                     text=MsgResource.HAPPY_QUESTION_STEP_0)
-                state.flow_start("skills/Happy", "question")
+                state.flow_start("Happy", "question")
 
         def step_1(params):
             if params is None:
@@ -70,7 +73,7 @@ class Happy(object):
             f_name = "happy_daily_report.png"
             title = "Happy Report"
 
-            self.plot.make_line(
+            Plot.make_line(
                 time,
                 happy_point_list,
                 f_name,

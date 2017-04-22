@@ -4,8 +4,11 @@ import re
 from dateutil import tz
 from queue import Queue
 
-import nlp
-from utils import DataHandler, Skill
+from ..dialog.dialog_manager import DialogManager
+
+from .arrow import ArrowUtil
+from .data_handler import DataHandler
+from .classes import Skill
 
 
 class DataLoader(object):
@@ -32,17 +35,19 @@ class DataLoader(object):
         raw_data = data_handler.read_text("raw_data")
 
         q = RemoveOldDataQueue(self.max_qsize)
+
+        skill_list = list(map(lambda x: x[0], Skill.classes))
         prev_line = ""
         for line in raw_data.split("\n"):
             if "raw input:" not in line:
                 continue
 
             prev_func = len(Skill.classes) # default value
-            for idx, keyword_list in enumerate(Skill.classes):
+            for idx, keyword_list in enumerate(skill_list):
                 if all(k in prev_line for k in keyword_list):
                     prev_func = idx
 
-            for idx, keyword_list in enumerate(Skill.classes):
+            for idx, keyword_list in enumerate(skill_list):
                 if all(k in line for k in keyword_list):
                     x = self.convert_data(line, prev_func)
                     if x is None:
@@ -74,20 +79,22 @@ class DataLoader(object):
     def make_X(self):
         day_of_week, hour, minute, is_holiday = ArrowUtil.convert_now2data()
 
-        memory_text = nlp.DialogManager().get_memory(get_text=True)
+        memory_text = DialogManager().get_memory(get_text=True)
 
         prev_func = len(Skill.classes)
         if memory_text is None:
             pass
         else:
-            for idx, keyword_list in enumerate(Skill.classes):
+            skill_list = list(map(lambda x: x[0], Skill.classes))
+            for idx, keyword_list in enumerate(skill_list):
                 if all(k in memory_text for k in keyword_list):
                     prev_func = idx
 
         return np.array([[day_of_week, hour, minute, prev_func, is_holiday]], dtype=np.int32)
 
     def make_y(self, text):
-        for idx, keyword_list in enumerate(Skill.classes):
+        skill_list = list(map(lambda x: x[0], Skill.classes))
+        for idx, keyword_list in enumerate(skill_list):
             if all(k in text for k in keyword_list):
                 return idx
         return None

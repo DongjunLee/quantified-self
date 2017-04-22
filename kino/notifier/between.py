@@ -2,23 +2,25 @@
 
 import random
 
-import nlp
-import slack
-from slack import MsgResource
-import utils
+from ..slack.resource import MsgResource
+from ..slack.slackbot import SlackerAdapter
+from ..slack.template import MsgTemplate
+
+from ..utils.data_handler import DataHandler
+from ..utils.state import State
 
 
 class Between(object):
 
     def __init__(self, text=None):
         self.input = text
-        self.slackbot = slack.SlackerAdapter()
-        self.data_handler = utils.DataHandler()
+        self.slackbot = SlackerAdapter()
+        self.data_handler = DataHandler()
         self.fname = "schedule.json"
-        self.template = slack.MsgTemplate()
+        self.template = MsgTemplate()
 
     def create(self, step=0, params=None):
-        state = nlp.State()
+        state = State()
 
         def step_0(params):
             self.slackbot.send_message(text=MsgResource.BETWEEN_CREATE_START)
@@ -94,7 +96,7 @@ class Between(object):
             self.slackbot.send_message(text=MsgResource.ERROR)
 
     def delete(self, step=0, params=None):
-        state = nlp.State()
+        state = State()
 
         def step_0(params):
             self.slackbot.send_message(text=MsgResource.BETWEEN_DELETE_START)

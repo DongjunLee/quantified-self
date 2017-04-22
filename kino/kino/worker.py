@@ -4,23 +4,30 @@ import json
 import schedule
 import threading
 
-import skills
-import nlp
-import notifier
-import slack
-from slack import MsgResource
-import utils
+from ..functions import FunctionRunner
+
+from ..nlp.ner import NamedEntitiyRecognizer
+
+from ..notifier.scheduler import Scheduler
+
+from ..slack.resource import MsgResource
+from ..slack.slackbot import SlackerAdapter
+
+from ..utils.data_handler import DataHandler
+from ..utils.logger import Logger
+from ..utils.profile import Profile
+
 
 
 class Worker(object):
 
     def __init__(self, text):
         self.input = text
-        self.slackbot = slack.SlackerAdapter()
-        self.data_handler = utils.DataHandler()
-        self.logger = utils.Logger().get_logger()
-        self.ner = nlp.NamedEntitiyRecognizer()
-        self.function = skills.FunctionManager().load_function
+        self.slackbot = SlackerAdapter()
+        self.data_handler = DataHandler()
+        self.logger = Logger().get_logger()
+        self.ner = NamedEntitiyRecognizer()
+        self.function_runner = FunctionRunner().load_function
 
     def create(self):
         ner_dict = {k: self.ner.parse(v, self.input)
@@ -39,7 +46,7 @@ class Worker(object):
                   for k, v in self.ner.params.items()}
         ner_dict['params'] = params
 
-        notifier.Scheduler().create_with_ner(**ner_dict)
+        Scheduler().create_with_ner(**ner_dict)
 
     def run(self):
         self.set_schedules()
@@ -51,7 +58,7 @@ class Worker(object):
         self.__set_custom_schedule()
 
     def __set_profile_schedule(self):
-        profile = utils.Profile()
+        profile = Profile()
 
         self.__excute_profile_schedule(
             profile.get_schedule('WAKE_UP'), False,
@@ -81,7 +88,7 @@ class Worker(object):
             params,
             not_holiday):
         schedule.every().day.at(time).do(
-            self.__run_threaded, self.function, {
+            self.__run_threaded, self.function_runner, {
                 "repeat": repeat,
                 "func_name": func_name,
                 "params": params,
@@ -109,9 +116,8 @@ class Worker(object):
                 }
 
                 try:
-                    function = skills.FunctionManager().load_function
                     schedule.every().day.at(time).do(self.__run_threaded,
-                                                     function, param)
+                                                     self.function_runner, param)
                 except Exception as e:
                     print("Function Schedule Error: ", e)
                     self.slackbot.send_message(text=MsgResource.ERROR)
@@ -134,12 +140,11 @@ class Worker(object):
                 }
 
                 try:
-                    function = skills.FunctionManager().load_function
                     getattr(
                         schedule.every(number),
                         datetime_unit).do(
                         self.__run_threaded,
-                        function,
+                        self.function_runner,
                         param)
                 except Exception as e:
                     print("Error: " + e)

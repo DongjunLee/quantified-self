@@ -5,21 +5,24 @@ import re
 from pytz import timezone
 import todoist
 
-import slack
-from slack import MsgResource
-import utils
+from ..slack.resource import MsgResource
+from ..slack.slackbot import SlackerAdapter
+from ..slack.template import MsgTemplate
+
+from ..utils.config import Config
+from ..utils.profile import Profile
 
 
 class TodoistManager(object):
 
     def __init__(self, text=None):
         self.input = text
-        self.config = utils.Config()
+        self.config = Config()
         self.todoist_api = todoist.TodoistAPI(
             self.config.open_api['todoist']['TOKEN'])
 
-        self.slackbot = slack.SlackerAdapter()
-        self.template = slack.MsgTemplate()
+        self.slackbot = SlackerAdapter()
+        self.template = MsgTemplate()
 
     def schedule(self, channel=None):
         self.slackbot.send_message(text=MsgResource.TODOIST_TODAY_SCHEDULE)
@@ -200,7 +203,7 @@ class TodoistManager(object):
         if assigned_time is None:
             return
 
-        profile = utils.Profile()
+        profile = Profile()
         if "매일" in task['date_string']:
             task_duration = profile.get_task('EVERY_DAY_DURATION')
         elif "평일" in task['date_string']:

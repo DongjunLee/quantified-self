@@ -1,15 +1,16 @@
 
 from slacker import Slacker
 
-import utils
+from ..utils.config import Config
+from ..utils.data_handler import DataHandler
 
 
 class SlackerAdapter(object):
 
     def __init__(self):
-        self.config = utils.Config()
+        self.config = Config()
         self.slacker = Slacker(self.config.slack['TOKEN'])
-        self.data_handler = utils.DataHandler()
+        self.data_handler = DataHandler()
 
     def send_message(self, channel=None, text=None, attachments=None):
         if channel is None:

@@ -2,9 +2,14 @@ import arrow
 import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
 
-import slack
-import skills
-from utils import ArrowUtil, Skill, DataLoader
+from .maxim import Maxim
+
+from ..functions import FunctionRunner
+
+from ..utils.arrow import ArrowUtil
+from ..utils.data_loader import DataLoader
+from ..utils.data_loader import SkillData
+from ..utils.classes import Skill
 
 
 class Predictor(object):
@@ -12,22 +17,25 @@ class Predictor(object):
     def __init__(self, n_neighbors=8):
         self.knn = KNeighborsClassifier(n_neighbors=n_neighbors, weights='distance')
 
-    def fit(self, data_x, data_y):
-        self.knn.fit(data_x, data_y)
+        skill_data = SkillData()
+        data_X, data_y = DataLoader().make_data_set(skill_data.q)
+        self.knn.fit(data_X, data_y)
 
-    def predict(self):
+    def predict_skill(self):
         data_loader = DataLoader()
         test_x = data_loader.make_X()
 
         predict = self.knn.predict(test_x)[0]
         confidence = max(self.knn.predict_proba(test_x)[0])
-        description = " ".join(Skill.classes[predict])
-        print(predict, confidence, description)
+        description = " ".join(Skill.classes[predict][0])
+        func_name = Skill.classes[predict][1]
+        print(predict, confidence, description, func_name)
 
         if confidence >= 0.75:
-            router = slack.MsgRouter()
-            router.route(text=description)
+            runner = FunctionRunner()
+            params = runner.filter_f_params(description, func_name)
+            runner.load_function(func_name=func_name, params=params)
         else:
             print("Skip. confidence is low.")
-            functions = skills.Functions()
-            functions.maxim_nietzsche()
+            maxim = Maxim()
+            maxim.nietzsche()

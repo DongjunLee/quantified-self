@@ -3,18 +3,21 @@ import requests
 import xml.etree.ElementTree as ET
 from xmljson import yahoo as yh
 
-import slack
-from slack import MsgResource
-import utils
+from ..slack.resource import MsgResource
+from ..slack.template import MsgTemplate
+from ..slack.slackbot import SlackerAdapter
+
+from ..utils.config import Config
+from ..utils.data_handler import DataHandler
 
 
 class Bus(object):
 
     def __init__(self):
-        self.slackbot = slack.SlackerAdapter()
-        self.template = slack.MsgTemplate()
-        self.data_handler = utils.DataHandler()
-        self.config = utils.Config()
+        self.slackbot = SlackerAdapter()
+        self.template = MsgTemplate()
+        self.data_handler = DataHandler()
+        self.config = Config()
 
         self.ansan_bus = self.data_handler.read_file("ansan_bus.json")
         self.ansan_station = self.data_handler.read_file("ansan_station.json")
