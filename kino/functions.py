@@ -170,7 +170,7 @@ class FunctionRunner(object):
             repeat=False,
             not_holiday=False):
 
-        if not_holiday and skills.Summary().is_holiday():
+        if not_holiday and Summary().is_holiday():
             return
 
         if not repeat:

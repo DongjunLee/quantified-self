@@ -13,7 +13,7 @@ from .utils.data_handler import DataHandler
 from .utils.state import State
 
 
-class DialogManager(object):
+class DNDManager(object):
 
     def __init__(self):
         self.state = State()
