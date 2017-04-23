@@ -17,7 +17,7 @@ class DNDManager(object):
 
     def __init__(self):
         self.state = State()
-        self.slackbot = slack.SlackerAdapter()
+        self.slackbot = SlackerAdapter()
         self.data_handler = DataHandler()
 
     def call_is_holiday(self, dnd):
