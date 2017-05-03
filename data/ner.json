@@ -1,7 +1,7 @@
 {
   "kino": {
     "Worker": {
-      "keyword": ["키노"],
+      "keyword": ["일 "],
       "behave": {
         "create": ["있다", "추가", "일거리"],
         "run": ["시작"],

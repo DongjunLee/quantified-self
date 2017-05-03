@@ -1,6 +1,8 @@
 import arrow
 import json
 
+from .summary import Summary
+
 from ..dialog.dialog_manager import DialogManager
 
 from ..slack.resource import MsgResource
