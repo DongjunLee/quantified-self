@@ -2,7 +2,7 @@
 import arrow
 
 from .dialog_manager import DialogManager
-from .dnd import DNDManager
+from .dnd import DoNotDisturbManager
 
 from ..nlp.ner import NamedEntitiyRecognizer
 
@@ -38,7 +38,7 @@ class PreseneManager(object):
                 presence_log['presence'] == 'away' and presence == 'active'):
             self.slackbot.send_message(text=MsgResource.GOOD_MORNING)
 
-            dnd_manager = DNDManager()
+            dnd_manager = DoNotDisturbManager()
 
             is_holiday = ArrowUtil.is_weekday() == False
             dnd_manager.call_is_holiday(is_holiday)

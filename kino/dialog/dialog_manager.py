@@ -78,10 +78,3 @@ class DialogManager(object):
             return True
         else:
             return False
-
-    def call_is_holiday(self, dnd):
-        Summary().record_holiday(dnd)
-        if dnd:
-            self.slackbot.send_message(text=MsgResource.HOLIDAY)
-        else:
-            self.slackbot.send_message(text=MsgResource.WEEKDAY)

@@ -3,6 +3,7 @@ from .functions import Functions
 from .functions import FunctionRunner
 
 from .dialog.dialog_manager import DialogManager
+from .dialog.dnd import DoNotDisturbManager
 from .dialog.presence import PreseneManager
 
 from .kino.worker import Worker
@@ -35,8 +36,11 @@ class MsgRouter(object):
     def __init__(self):
         self.slackbot = SlackerAdapter()
         self.logger = Logger().get_logger()
+
         self.dialog_manager = DialogManager()
         self.presence_manager = PreseneManager()
+        self.dnd_manager = DoNotDisturbManager()
+
         self.f_runner = FunctionRunner()
 
     def preprocessing(self, text):
@@ -66,7 +70,7 @@ class MsgRouter(object):
             return
 
         if dnd is not None:
-            self.dialog_manager.call_is_holiday(dnd)
+            self.dnd_manager.call_is_holiday(dnd)
             return
 
         if ifttt:
