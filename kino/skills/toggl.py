@@ -1,10 +1,12 @@
 
 import arrow
+import random
 from toggl import Toggl
 
 from ..slack.resource import MsgResource
 from ..slack.slackbot import SlackerAdapter
 
+from ..skills.question import Attention
 from ..skills.todoist import TodoistManager
 
 from ..utils.arrow import ArrowUtil
@@ -89,6 +91,11 @@ class TogglManager(object):
                     self.slackbot.send_message(
                         text=MsgResource.TOGGL_TIMER_CHECK(diff_min))
                     break
+
+        q_ratio = random.randint(1, 10)
+        if q_ratio >= 9:
+            attention = Attention()
+            attention.question()
 
     def report(self, kind="chart", timely="weekly"):
 

@@ -24,6 +24,7 @@ class Summary(object):
         self.data_handler = DataHandler()
         self.slackbot = SlackerAdapter()
         self.profile = Profile()
+        self.column_list = ["Attention", "Productive", "Happy", "Sleep", "Total"]
 
     def total_score(self):
         template = MsgTemplate()
@@ -89,6 +90,7 @@ class Summary(object):
 
     def __get_total_score(self, days="today"):
         if days == "today":
+            attention = self.__attention_score()
             productive = self.__productive_score()
             happy = self.__happy_score()
             sleep = self.__sleep_score()
@@ -100,6 +102,10 @@ class Summary(object):
             bat = today_data.get('BAT', False)
 
             total = (
+                Score.percent(
+                    happy,
+                    self.profile.get_score('ATTENTION'),
+                    100) +
                 Score.percent(
                     happy,
                     self.profile.get_score('HAPPY'),
@@ -122,6 +128,8 @@ class Summary(object):
                 total += self.profile.get_score('BAT')
 
             data = {
+                "Attention": round(attention * 100) / 100,
+                "Happy": round(happy * 100) / 100,
                 "Productive": round(productive * 100) / 100,
                 "Happy": round(happy * 100) / 100,
                 "Sleep": round(sleep * 100) / 100,
@@ -132,8 +140,7 @@ class Summary(object):
             return data
         elif isinstance(days, int):
             data = self.data_handler.read_record(days=days)
-            column_list = ["Productive", "Happy", "Sleep", "Total"]
-            for c in column_list:
+            for c in self.column_list:
                 if c not in data:
                     data[c] = 0
             return data
@@ -179,6 +186,14 @@ class Summary(object):
             github_point +
             todoist_point +
             toggl_point)
+
+    def __attention_score(self):
+        attention_data = self.data_handler.read_record().get('attention', {})
+        if len(attention_data) > 0:
+            return sum(
+                list(map(lambda x: int(x), attention_data.values()))) / len(attention_data)
+        else:
+            return 0
 
     def __happy_score(self):
         happy_data = self.data_handler.read_record().get('happy', {})
@@ -252,7 +267,7 @@ class Summary(object):
             '2 day before',
             'yesterday',
             'today']
-        legend = ['Happy', 'Productive', 'Sleep', 'Total']
+        legend = self.column_list
         data = []
         for l in legend:
             data.append(list(map(lambda x: x[l], records)))
