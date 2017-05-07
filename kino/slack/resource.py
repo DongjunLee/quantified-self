@@ -132,6 +132,22 @@ class MsgResource:
     TOGGL_NOTI_RELAY = "작업을 너무 오래하고 계십니다! 잠시 멈추고 십분만 휴식하시죠!!"
     TOGGL_REPORT = "Toggl에 저장되어있는 Report 입니다."
 
+    ATTENTION_QUESTION_STEP_0 = "현재 작업에 대해서 얼마나 집중하고 계신가요? (100점 만점)"
+
+    def ATTENTION_QUESTION_STEP_1(happy):
+        happy = int(happy)
+        if happy >= 92:
+            return "몰입력 최고군요! :laughing: "
+        elif happy >= 85:
+            return "일이 재미있으시군요! ㅎㅎ :smile: "
+        elif happy >= 77:
+            return "할만한 일인 것 같아요! :smiley: "
+        elif happy >= 70:
+            return "좀 어렵거나, 재미없으신 일인 것 같군요..! :simple_smile: "
+        else:
+            return "하기 싫은 작업을 하시는 중이셨군요..ㅠㅠ :angry: "
+    ATTENTION_REPORT = "집중도 Report 입니다."
+
     HAPPY_QUESTION_STEP_0 = "지금 현재 행복도는 100점 만점에 몇점인가요??"
 
     def HAPPY_QUESTION_STEP_1(happy):
@@ -205,3 +221,4 @@ class MsgResource:
         return f"번역된 결과는 다음과 같습니다. \n - {result}"
 
     FLOW_HAPPY = ":ear: 행복도 점수 대답을 기다리고 있습니다!"
+    FLOW_ATTENTION = ":ear: 집중도 점수 대답을 기다리고 있습니다!"

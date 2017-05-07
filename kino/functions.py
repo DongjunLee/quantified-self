@@ -7,9 +7,10 @@ from .nlp.ner import NamedEntitiyRecognizer
 
 from .skills.bus import Bus
 from .skills.github import GithubManager
-from .skills.happy import Happy
 from .skills.maxim import Maxim
 from .skills.naver import Naver
+from .skills.question import Attention
+from .skills.question import Happy
 from .skills.rescue_time import RescueTime
 from .skills.summary import Summary
 from .skills.todoist import TodoistManager
@@ -56,13 +57,23 @@ class Functions(object):
         weather = Weather()
         weather.air_quality()
 
+    def attention_question(self, text=None):
+        attention = Attention(text=text)
+        attention.question()
+
+    def attention_report(self, timely="daily"):
+        if timely is None:
+            timely = 'daily'
+        attention = Attention()
+        attention.report(timely=timely)
+
     def github_commit(self, timely="daily"):
         if timely is None:
             timely = 'daily'
         github = GithubManager()
         github.commit(timely=timely)
 
-    def happy(self, text="busy"):
+    def happy_question(self, text=None):
         happy = Happy(text=text)
         happy.question()
 
@@ -103,6 +114,7 @@ class Functions(object):
         self.todoist_feedback()
         self.toggl_report(timely=timely)
         self.rescuetime_efficiency(timely=timely)
+        self.attention_report(timely=timely)
         self.happy_report(timely=timely)
         self.github_commit(timely=timely)
 

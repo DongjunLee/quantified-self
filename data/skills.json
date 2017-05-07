@@ -5,6 +5,24 @@
     "description": "텍스트 메시지 전송",
     "icon": ":speech_balloon: "
   },
+  "air_quality": {
+    "keyword": ["공기질", "미세먼지"],
+    "params": [],
+    "description": "공기질 예보",
+    "icon": ":factory: "
+  },
+  "attention_question": {
+    "keyword": ["집중도 조사", "집중도 질문", "attention question"],
+    "params": [],
+    "description": "집중도 조사",
+    "icon": ":writing_hand: "
+  },
+  "attention_report": {
+    "keyword": ["집중도 리포트", "attention report"],
+    "params": [],
+    "description": "집중도 리포트",
+    "icon": ":writing_hand: "
+  },
   "bus_stop": {
     "keyword": ["버스 도착", "버스도착", "버스 언제", "버스 조회", "버스조회"],
     "params": ["station_id", "real_time"],
@@ -17,19 +35,13 @@
     "description": "날씨예보",
     "icon": ":sun_with_face: "
   },
-  "air_quality": {
-    "keyword": ["공기질", "미세먼지"],
-    "params": [],
-    "description": "공기질 예보",
-    "icon": ":factory: "
-  },
   "github_commit": {
     "keyword": ["깃허브", "github", "커밋", "commit"],
     "params": ["timely"],
     "description": "Github commit 여부를 확인",
     "icon": ":octocat: "
   },
-  "happy": {
+  "happy_question": {
     "keyword": ["행복도 조사", "행복도 질문", "happy question"],
     "params": [],
     "description": "행복도 조사",
@@ -44,7 +56,7 @@
   "total_score": {
     "keyword": ["종합 점수"],
     "params": [],
-    "description": "종합 점수. \n - 생산성(RescueTime, Github Commit, Todoist, Toggl)\n - 평균 행복도 \n - 운동여부, 일기여부",
+    "description": "종합 점수. \n - 생산성(RescueTime, Github Commit, Todoist, Toggl)\n - 평균 행복도, 평균 집중도 \n - 운동여부, 일기여부",
     "icon": ":chart: "
   },
   "total_chart": {
@@ -74,7 +86,7 @@
   "today_summary": {
     "keyword": ["하루 마무리", "하루 요약"],
     "params": [],
-    "description": "하루 요약 \n - Todoist 피드백 \n - Toggl 작업리포트 \n - RescueTime 생산성 차트 \n - 행복도 리포트 \n - 일일 커밋",
+    "description": "하루 요약 \n - Todoist 피드백 \n - Toggl 작업리포트 \n - RescueTime 생산성 차트 \n - 행복도, 집중도 리포트 \n - 일일 커밋",
     "icon": ":night_with_stars: "
   },
   "todoist_auto_update": {
