@@ -23,7 +23,14 @@ class GithubManager(object):
         self.slackbot = SlackerAdapter()
 
     def commit(self, timely="daily"):
-        if timely == "daily":
+        if type(timely) == int:
+            point_start = self.__time_point(timely)
+            point_end = self.__time_point(timely+1)
+
+            commit_count = self.__get_event_count(point_start, point_end)
+            return commit_count
+
+        elif timely == "daily":
             point_start = self.__time_point(0)
             point_end = self.__time_point(1)
 

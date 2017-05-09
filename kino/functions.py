@@ -37,6 +37,7 @@ class Functions(object):
     def check_go_to_bed(self):
         summary = Summary()
         summary.check_go_to_bed()
+        summary.check_commit_count()
 
     def send_message(self, text=None):
         self.slackbot.send_message(text=text)

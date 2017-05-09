@@ -253,6 +253,11 @@ class Summary(object):
             self.data_handler.edit_record_with_category(
                 'activity', ('go_to_bed', str(go_to_bed_time)))
 
+    def check_commit_count(self):
+        github = GithubManager()
+        commit_count = github.commit(timely=-1)
+        self.data_handler.edit_record(('Github', commit_count))
+
     def total_chart(self):
         records = []
         for i in range(-6, 1, 1):
