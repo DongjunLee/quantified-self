@@ -93,7 +93,7 @@ class TogglManager(object):
                     break
 
         q_ratio = random.randint(1, 10)
-        if q_ratio >= 9:
+        if q_ratio > 7:
             attention = Attention()
             attention.question()
 

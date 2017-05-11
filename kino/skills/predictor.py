@@ -31,7 +31,7 @@ class Predictor(object):
         func_name = Skill.classes[predict][1]
         print(predict, confidence, description, func_name)
 
-        if confidence >= 0.75:
+        if confidence >= 0.85:
             runner = FunctionRunner()
             params = runner.filter_f_params(description, func_name)
             runner.load_function(func_name=func_name, params=params)
