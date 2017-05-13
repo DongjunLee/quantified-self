@@ -14,6 +14,8 @@ from ..utils.data_handler import DataHandler
 from ..utils.config import Config
 from ..utils.logger import Logger
 from ..utils.score import Score
+from ..utils.state import State
+
 
 
 class TogglManager(object):
@@ -33,6 +35,16 @@ class TogglManager(object):
         self.entity = TogglProjectEntity().entity
 
     def timer(self, description=None):
+        state = State()
+        state.check()
+
+        advice_rest_time = state.current.get(state.REST, {}).get('time', None)
+        if advice_rest_time is not None:
+            advice_rest_time = arrow.get(advice_rest_time)
+            if advice_rest_time > arrow.now():
+                self.slackbot.send_message(text=MsgResource.TOGGL_ADVICE_REST(advice_rest_time.format('HH:mm')))
+                return
+
         current_timer = self.toggl.currentRunningTimeEntry()['data']
         if current_timer is None:
             if description is None or description == "":
@@ -64,6 +76,8 @@ class TogglManager(object):
 
             todoist = TodoistManager()
             todoist.complete_by_toggl(description, int(diff_min))
+
+            state.advice_rest(diff_min)
 
     def __get_pid(self, name=None):
         project = self.toggl.getWorkspaceProject(name=name)

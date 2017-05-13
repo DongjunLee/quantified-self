@@ -131,6 +131,8 @@ class MsgResource:
 
     TOGGL_NOTI_RELAY = "작업을 너무 오래하고 계십니다! 잠시 멈추고 십분만 휴식하시죠!!"
     TOGGL_REPORT = "Toggl에 저장되어있는 Report 입니다."
+    def TOGGL_ADVICE_REST(time):
+        return f"{time} 까지는 쉬는 시간입니다! :dancer:"
 
     ATTENTION_QUESTION_STEP_0 = "현재 작업에 대해서 얼마나 집중하고 계신가요? (100점 만점)"
 
@@ -224,4 +226,4 @@ class MsgResource:
     FLOW_ATTENTION = ":ear: 집중도 점수 대답을 기다리고 있습니다!"
 
     def PREDICT_RESULT(description):
-        return f"지금은 왠지 {description} 기능을 사용하실 것 같군요!"
+        return f"지금은 왠지 *{description}* 기능을 사용하실 것 같군요!"

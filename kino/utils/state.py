@@ -12,6 +12,7 @@ class State(object):
     MEMORY = "memory"
     ACTION = "action"
     SLEEP = "sleep"
+    REST = "rest"
 
     def __init__(self):
         self.data_handler = DataHandler()
@@ -67,3 +68,18 @@ class State(object):
             "time": str(arrow.now())
         }
         self.save(self.SLEEP, data)
+
+    def advice_rest(self, diff_min):
+        rest_mins = 0
+        if diff_min > 100:
+            rest_mins = 20
+        elif diff_min > 60:
+            rest_mins = 6 + diff_min//10
+
+        now = arrow.now()
+        advice = now.replace(minutes=rest_mins)
+
+        data = {
+            "time": str(advice)
+        }
+        self.save(self.REST, data)
