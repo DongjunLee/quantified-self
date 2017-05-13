@@ -6,6 +6,9 @@ from .maxim import Maxim
 
 from ..functions import FunctionRunner
 
+from ..slack.resource import MsgResource
+from ..slack.slackbot import SlackerAdapter
+
 from ..utils.arrow import ArrowUtil
 from ..utils.data_loader import DataLoader
 from ..utils.data_loader import SkillData
@@ -15,6 +18,7 @@ from ..utils.classes import Skill
 class Predictor(object):
 
     def __init__(self, n_neighbors=8):
+        self.slackbot = SlackerAdapter()
         self.knn = KNeighborsClassifier(n_neighbors=n_neighbors, weights='distance')
 
         skill_data = SkillData()
@@ -34,6 +38,8 @@ class Predictor(object):
         if confidence >= 0.85:
             runner = FunctionRunner()
             params = runner.filter_f_params(description, func_name)
+
+            self.slackbot.send_message(text=MsgResource.PREDICT_RESULT(description))
             runner.load_function(func_name=func_name, params=params)
         else:
             print("Skip. confidence is low.")

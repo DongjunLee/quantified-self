@@ -222,3 +222,6 @@ class MsgResource:
 
     FLOW_HAPPY = ":ear: 행복도 점수 대답을 기다리고 있습니다!"
     FLOW_ATTENTION = ":ear: 집중도 점수 대답을 기다리고 있습니다!"
+
+    def PREDICT_RESULT(description):
+        return f"지금은 왠지 {description} 기능을 사용하실 것 같군요!"

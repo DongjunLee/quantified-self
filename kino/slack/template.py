@@ -145,7 +145,7 @@ class MsgTemplate(object):
     def field(self, title, value, short="false"):
         return {"title": title, "value": value, "short": short}
 
-    def make_air_quality_template(self, data):
+    def make_air_quality_template(self, station_name, data):
         attachments = []
 
         cai = data['cai']
@@ -153,7 +153,7 @@ class MsgTemplate(object):
         a_dict = {}
         a_dict['color'] = MsgResource.AIR_QUALITY_COLOR(cai['grade'])
         a_dict['fallback'] = cai['description'] + " : " + cai['value']
-        a_dict['title'] = "대기질 정보 입니다."
+        a_dict['title'] = station_name + "의 대기질 정보 입니다."
         a_dict['mrkdwn_in'] = ["text", "pretext"]
 
         fields = []
