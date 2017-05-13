@@ -68,8 +68,10 @@ class PreseneManager(object):
     def check_flow(self, presence):
         if presence == "active":
             flow = self.dialog_manager.get_flow(is_raw=True)
-            if flow.get('class', None) == "skills/Happy":
+            if flow.get('class', None) == "HappyQuestion":
                 self.slackbot.send_message(text=MsgResource.FLOW_HAPPY)
+            elif flow.get('class', None) == "AttentionQuestion":
+                self.slackbot.send_message(text=MsgResource.FLOW_ATTENTION)
 
     def check_predictor(self, presence):
         flow = self.dialog_manager.get_flow(is_raw=True)

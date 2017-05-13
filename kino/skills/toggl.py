@@ -6,7 +6,7 @@ from toggl import Toggl
 from ..slack.resource import MsgResource
 from ..slack.slackbot import SlackerAdapter
 
-from ..skills.question import Attention
+from ..skills.question import AttentionQuestion
 from ..skills.todoist import TodoistManager
 
 from ..utils.arrow import ArrowUtil
@@ -94,7 +94,7 @@ class TogglManager(object):
 
         q_ratio = random.randint(1, 10)
         if q_ratio > 7:
-            attention = Attention()
+            attention = AttentionQuestion()
             attention.question()
 
     def report(self, kind="chart", timely="weekly"):

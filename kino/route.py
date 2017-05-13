@@ -22,8 +22,8 @@ from .slack.resource import MsgResource
 from .slack.slackbot import SlackerAdapter
 
 from .skills.ifttt import IFTTT
-from .skills.question import Attention
-from .skills.question import Happy
+from .skills.question import AttentionQuestion
+from .skills.question import HappyQuestion
 
 from .utils.data_loader import DataLoader
 from .utils.data_loader import SkillData

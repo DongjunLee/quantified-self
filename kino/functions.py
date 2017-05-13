@@ -9,8 +9,8 @@ from .skills.bus import Bus
 from .skills.github import GithubManager
 from .skills.maxim import Maxim
 from .skills.naver import Naver
-from .skills.question import Attention
-from .skills.question import Happy
+from .skills.question import AttentionQuestion
+from .skills.question import HappyQuestion
 from .skills.rescue_time import RescueTime
 from .skills.summary import Summary
 from .skills.todoist import TodoistManager
@@ -59,13 +59,13 @@ class Functions(object):
         weather.air_quality()
 
     def attention_question(self, text=None):
-        attention = Attention(text=text)
+        attention = AttentionQuestion()
         attention.question()
 
     def attention_report(self, timely="daily"):
         if timely is None:
             timely = 'daily'
-        attention = Attention()
+        attention = AttentionQuestion()
         attention.report(timely=timely)
 
     def github_commit(self, timely="daily"):
@@ -74,14 +74,14 @@ class Functions(object):
         github = GithubManager()
         github.commit(timely=timely)
 
-    def happy_question(self, text=None):
-        happy = Happy(text=text)
+    def happy_question(self):
+        happy = HappyQuestion()
         happy.question()
 
     def happy_report(self, timely="daily"):
         if timely is None:
             timely = 'daily'
-        happy = Happy()
+        happy = HappyQuestion()
         happy.report(timely=timely)
 
     def total_score(self):
@@ -116,7 +116,6 @@ class Functions(object):
         self.toggl_report(timely=timely)
         self.rescuetime_efficiency(timely=timely)
         self.attention_report(timely=timely)
-        self.happy_report(timely=timely)
         self.github_commit(timely=timely)
 
     def todoist_auto_update(self):

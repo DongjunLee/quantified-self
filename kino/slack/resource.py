@@ -148,7 +148,7 @@ class MsgResource:
             return "하기 싫은 작업을 하시는 중이셨군요..ㅠㅠ :angry: "
     ATTENTION_REPORT = "집중도 Report 입니다."
 
-    HAPPY_QUESTION_STEP_0 = "지금 현재 행복도는 100점 만점에 몇점인가요??"
+    HAPPY_QUESTION_STEP_0 = "오늘 하루는 어떠셨나요? (100점 만점)"
 
     def HAPPY_QUESTION_STEP_1(happy):
         happy = int(happy)
@@ -159,7 +159,7 @@ class MsgResource:
         elif happy >= 80:
             return "슬며시 미소를 짓고 계신 것 같아요ㅎㅎ :smiley: "
         elif happy >= 70:
-            return "기분이 그냥 그러시군요! :simple_smile: "
+            return "그냥 그런 하루 였군요.. :simple_smile: "
         else:
             return "무슨 일 있으신가요? 기분이 안 좋아보입니다ㅠㅠ :angry: "
     HAPPY_REPORT = "행복도 Report 입니다."
