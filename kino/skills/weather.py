@@ -3,8 +3,9 @@
 import arrow
 from dateutil import tz
 import forecastio
-from airkoreaPy import AirKorea
 from geopy.geocoders import GoogleV3
+
+from ..open_api.airkoreaPy import AirKorea
 
 from ..slack.slackbot import SlackerAdapter
 from ..slack.template import MsgTemplate
