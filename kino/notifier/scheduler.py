@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import json
-import schedule
 import random
 import threading
 

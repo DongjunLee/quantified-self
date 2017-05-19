@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import json
-import schedule
 import threading
+
+from ..core import schedule
 
 from ..functions import FunctionRunner
 

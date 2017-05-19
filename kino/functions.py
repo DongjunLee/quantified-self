@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import json
-import schedule
+from .core import schedule
 
 from .nlp.ner import NamedEntitiyRecognizer
 
@@ -19,13 +18,12 @@ from .skills.weather import Weather
 
 from .slack.resource import MsgResource
 from .slack.slackbot import SlackerAdapter
-from .slack.template import MsgTemplate
 
 from .utils.arrow import ArrowUtil
 from .utils.data_handler import DataHandler
-from .utils.data_loader import DataLoader
 from .utils.logger import Logger
-from .utils.data_loader import SkillData
+
+
 
 class Functions(object):
 
