@@ -31,11 +31,13 @@
  물론 머신러닝과 딥러닝도 사용하여 단순한 기능 연동을 넘어서 똑똑한 비서로서 성장시킬 것 입니다. 현재로서는 간단하게 [scikit-learn](http://scikit-learn.org/stable/) 적용해보고 있는 상황입니다.
  
   
- - [Slideshare - Kino - My Personal Assistant (개인용 Slack Bot을 통한 Quantified Self 프로젝트)](https://www.slideshare.net/DongJunLee6/kino-my-personal-assistant-slack-bot-quantified-self)
-
-## Guide
+ - SlideShare : [Slideshare - Kino - My Personal Assistant (개인용 Slack Bot을 통한 Quantified Self 프로젝트)](https://www.slideshare.net/DongJunLee6/kino-my-personal-assistant-slack-bot-quantified-self)
 
 ![intro_and_guide](images/intro_and_guide.png)
+
+## Guide & Install
+
+- [install.md](install.md) 에서 확인할 수 있습니다.
 
 ## Prerequisites
 

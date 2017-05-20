@@ -14,15 +14,16 @@ class Guide(object):
         self.slackbot.send_message(attachments=attachments)
 
     def __guide(self):
-        guide_msg = "Kino는 Slack Bot으로 기본으로 개발된 Personal Assistant A.I 입니다.\n"
+        guide_msg = "Kino는 Slack Bot으로 기본으로 개발된 Personal Assistant 입니다.\n"
         guide_msg += "필요한 기능이 있으면 그때그때 개발하면서 똑똑해지고 있습니다.\n"
-        guide_msg += "다양한 로그를 통해서 자동으로 데이터를 수집할 줄 알고, 입력에 따라서 필요한 대답을 할 수 있습니다.\n\n"
+        guide_msg += "다양한 로그를 통해서 자동으로 데이터를 수집할 줄 알고, 입력에 따라서 필요한 대답을 할 수 있습니다.\n"
+        guide_msg += "현재는 자동으로 데이터를 수집할 수 있고, 일상 생활에서 사용하는 기능들 또한 붙여서 사용할 수 있습니다. \n\n"
+        guide_msg += "키노를 통해서 데이터를 모으고, Quentified Self 즉, 숫자를 통해서 삶의 질을 개선 시킵니다^^ \n\n"
         guide_msg += "아래 사용할 수 있는 기능 예시들 입니다. "
         return guide_msg
 
     def __example(self):
         example = {
-            "Dialog": "굿모닝, 굿나잇, 운동 했어!",
             "Worker": "키노야 일 시작하자, 일이 있어! 2 시간마다 날씨예보, 일거리 추가! 20시에 하루 요약",
             "Notifier": "알람 등록해줘, 알람 보여줘, 알람 삭제",
             "Between": "시간대 추가해줘, 시간대 보자, 시간대 제거해줘",
