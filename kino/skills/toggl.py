@@ -1,7 +1,8 @@
 
 import arrow
 import random
-from toggl import Toggl
+
+from ..open_api.toggl import Toggl
 
 from ..slack.resource import MsgResource
 from ..slack.slackbot import SlackerAdapter
