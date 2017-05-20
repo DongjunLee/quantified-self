@@ -107,8 +107,8 @@ class TogglManager(object):
                         text=MsgResource.TOGGL_TIMER_CHECK(diff_min))
                     break
 
-        q_ratio = random.randint(1, 10)
-        if q_ratio > 7:
+        q_ratio = random.randint(1, 100)
+        if q_ratio > 75:
             attention = AttentionQuestion()
             attention.question()
 

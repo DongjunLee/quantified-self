@@ -36,7 +36,7 @@
     "icon": ":sun_with_face: "
   },
   "github_commit": {
-    "keyword": ["깃허브", "github", "커밋", "commit"],
+    "keyword": ["커밋", "commit"],
     "params": ["timely"],
     "description": "Github commit 여부를 확인",
     "icon": ":octocat: "
