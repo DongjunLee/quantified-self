@@ -150,7 +150,7 @@ class MsgResource:
             return "하기 싫은 작업을 하시는 중이셨군요..ㅠㅠ :angry: "
     ATTENTION_REPORT = "집중도 Report 입니다."
 
-    HAPPY_QUESTION_STEP_0 = "오늘 하루는 어떠셨나요? (100점 만점)"
+    HAPPY_QUESTION_STEP_0 = "오늘 하루는 어떠신가요? (100점 만점)"
 
     def HAPPY_QUESTION_STEP_1(happy):
         happy = int(happy)

@@ -80,6 +80,10 @@ class TogglManager(object):
 
             state.advice_rest(diff_min)
 
+            if diff_min > 40:
+                attention = AttentionQuestion()
+                attention.question()
+
     def __get_pid(self, name=None):
         project = self.toggl.getWorkspaceProject(name=name)
         if project is None:
@@ -107,10 +111,10 @@ class TogglManager(object):
                         text=MsgResource.TOGGL_TIMER_CHECK(diff_min))
                     break
 
-        q_ratio = random.randint(1, 100)
-        if q_ratio > 75:
-            attention = AttentionQuestion()
-            attention.question()
+        # q_ratio = random.randint(1, 100)
+        # if q_ratio > 75:
+            # attention = AttentionQuestion()
+            # attention.question()
 
     def report(self, kind="chart", timely="weekly"):
 
