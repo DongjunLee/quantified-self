@@ -1,6 +1,7 @@
 import arrow
 import json
 
+from .toggl import TogglManager
 from .summary import Summary
 
 from ..dialog.dialog_manager import DialogManager
@@ -35,6 +36,8 @@ class IFTTT(object):
             self.IN_OUT_handle(prev_event, event)
         elif action.startswith("TODO"):
             self.TODO_handle(event)
+        elif action.startswith("KANBAN"):
+            self.KANBAN_handle(event)
         else:
             self.slackbot.send_message(text=event['msg'])
 
@@ -116,3 +119,13 @@ class IFTTT(object):
                     Summary().record_exercise()
 
         self.slackbot.send_message(text=msg)
+
+    def KANBAN_handle(self, event):
+        toggl_manager = TogglManager()
+
+        action = event['action']
+        description = event['msg']
+        if action.endswith("DOING"):
+            toggl_manager.timer(description=description)
+        elif action.endswith("BREAK") or action.endswith("DONE"):
+            toggl_manager.timer()
