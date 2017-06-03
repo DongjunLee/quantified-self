@@ -1,20 +1,21 @@
 import arrow
 import json
 
-from .toggl import TogglManager
-from .summary import Summary
+from .dialog.dialog_manager import DialogManager
 
-from ..dialog.dialog_manager import DialogManager
+from .slack.resource import MsgResource
+from .slack.slackbot import SlackerAdapter
 
-from ..slack.resource import MsgResource
-from ..slack.slackbot import SlackerAdapter
+from .skills.toggl import TogglManager
+from .skills.summary import Summary
 
-from ..utils.arrow import ArrowUtil
-from ..utils.data_handler import DataHandler
-from ..utils.state import State
+from .utils.arrow import ArrowUtil
+from .utils.data_handler import DataHandler
+from .utils.state import State
 
 
-class IFTTT(object):
+
+class Webhook(object):
 
     def __init__(self):
         self.slackbot = SlackerAdapter()

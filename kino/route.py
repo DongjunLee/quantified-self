@@ -1,6 +1,7 @@
 
 from .functions import Functions
 from .functions import FunctionRunner
+from .webhook import Webhook
 
 from .dialog.dialog_manager import DialogManager
 from .dialog.dnd import DoNotDisturbManager
@@ -21,7 +22,7 @@ from .kino.worker import Worker
 from .slack.resource import MsgResource
 from .slack.slackbot import SlackerAdapter
 
-from .skills.ifttt import IFTTT
+# from .skills.ifttt import IFTTT
 from .skills.question import AttentionQuestion
 from .skills.question import HappyQuestion
 
@@ -51,7 +52,7 @@ class MsgRouter(object):
         self.logger.info("clean input: " + self.simple_text)
 
     def route(self, text=None, user=None, channel=None,
-              direct=False, ifttt=False, presence=None, dnd=None, predict=False):
+              direct=False, webhook=False, presence=None, dnd=None, predict=False):
 
         if predict:
             # Check - skills
@@ -74,7 +75,7 @@ class MsgRouter(object):
             self.dnd_manager.call_is_holiday(dnd)
             return
 
-        if ifttt:
+        if webhook:
             self.__on_relay(text)
             return
 
@@ -120,8 +121,8 @@ class MsgRouter(object):
         return
 
     def __on_relay(self, text):
-        ifttt = IFTTT()
-        ifttt.relay(text)
+        webhook = Webhook()
+        webhook.relay(text)
 
     def __on_flow(self):
         route_class, behave, step_num = self.dialog_manager.get_flow(globals=globals())

@@ -28,8 +28,8 @@ class MsgListener(object):
             is_bot = self.__is_bot()
             if not self.__is_self() and not is_bot:
                 self.handle_user_message()
-            elif is_bot and self.__is_ifttt():
-                self.handle_ifttt_message()
+            elif is_bot and self.__is_webhook():
+                self.handle_webhook_message()
         else:
             pass
 
@@ -45,15 +45,15 @@ class MsgListener(object):
             self.logger.exception("user")
             self.slackbot.send_message(text=MsgResource.ERROR)
 
-    def handle_ifttt_message(self):
+    def handle_webhook_message(self):
         try:
             self.router.route(
                 text=self.__make_full_text(),
                 direct=self.__is__direct(),
-                ifttt=True)
+                webhook=True)
         except Exception as e:
-            self.logger.error(f"IFTTT Listener Error: {e}")
-            self.logger.exception("ifttt")
+            self.logger.error(f"Webhook Listener Error: {e}")
+            self.logger.exception("webhook")
             self.slackbot.send_message(text=MsgResource.ERROR)
 
     def __is_message(self):
@@ -83,8 +83,8 @@ class MsgListener(object):
 
         return False
 
-    def __is_ifttt(self):
-        if self.msg.get("username", None) == "IFTTT":
+    def __is_webhook(self):
+        if self.msg.get("username", None) == "IFTTT" or self.msg.get("username", None) == "incoming-webhook":
             return True
         else:
             return False
@@ -103,7 +103,7 @@ class MsgListener(object):
 
     def __make_full_text(self):
         if self.msg.get("text", None):
-            return slef.msg["text"]
+            return self.msg["text"]
         else:
             text = ""
             for attachment in self.msg["attachments"]:
