@@ -174,7 +174,9 @@ class TodoistManager(object):
             self.__complete(task, assigned_time=assigned_time, time=time)
 
     def __get_task_by_name(self, name):
-        name = name.split(" - ")[0]
+        if " - " in name:
+            name = name.split(" - ")[1]
+            name = name.strip()
 
         tasks = self.__get_today_task()
         for t in tasks:
@@ -236,3 +238,12 @@ class TodoistManager(object):
                 new_date_utc=today_format, is_forward=0)
         self.todoist_api.commit()
         self.slackbot.send_message(text=MsgResource.TODOIST_AUTO_UPDATE)
+
+    def __get_label_name_by_id(self, label_id):
+        label = self.todoist_api.labels.get_by_id(label_id)
+        return label.data['name']
+
+    def get_today_tasks_with_label(self):
+        today_label_tasks = list(filter(lambda x: len(x['labels']) > 0, self.__get_today_task()))
+        today_label_tasks = list(map(lambda x: {"content": x["content"], "label": self.__get_label_name_by_id(x["labels"][0])}, today_label_tasks))
+        return today_label_tasks

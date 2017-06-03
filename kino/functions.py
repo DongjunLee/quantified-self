@@ -14,6 +14,7 @@ from .skills.rescue_time import RescueTime
 from .skills.summary import Summary
 from .skills.todoist import TodoistManager
 from .skills.toggl import TogglManager
+from .skills.trello import TrelloManager
 from .skills.weather import Weather
 
 from .slack.resource import MsgResource
@@ -116,9 +117,17 @@ class Functions(object):
         self.attention_report(timely=timely)
         self.github_commit(timely=timely)
 
-    def todoist_auto_update(self):
+    def kanban_init(self):
         todoist = TodoistManager()
         todoist.auto_update_tasks()
+
+        today_label_tasks = todoist.get_today_tasks_with_label()
+        trello = TrelloManager()
+        trello.clean_board()
+
+        task_list = trello.get_list_by_name('Tasks')
+        for task in today_label_tasks:
+            task_list.add_card(task['label'] + " - " + task['content'])
 
     def todoist_feedback(self):
         todoist = TodoistManager()
