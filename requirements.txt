@@ -13,3 +13,4 @@ konlpy
 JPype1-py3
 PyGithub
 sklearn
+py-trello
