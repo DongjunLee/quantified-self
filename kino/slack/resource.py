@@ -134,6 +134,10 @@ class MsgResource:
     def TOGGL_ADVICE_REST(time):
         return f"{time} 까지는 쉬는 시간입니다! :dancer:"
 
+
+    TOGGL_ALREADY_DOING = "이미 진행 중인 작업이 있습니다."
+    TOGGL_ALREADY_BREAK = "헛, 쉬시는 중 아니셨나요? 현재 진행 중인 작업이 없습니다.."
+
     ATTENTION_QUESTION_STEP_0 = "진행하신 작업에 얼마나 집중하셨나요? (100점 만점)"
 
     def ATTENTION_QUESTION_STEP_1(happy):

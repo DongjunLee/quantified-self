@@ -35,7 +35,7 @@ class TogglManager(object):
 
         self.entity = TogglProjectEntity().entity
 
-    def timer(self, description=None, doing=False, done=True):
+    def timer(self, description=None, doing=True, done=True):
         state = State()
         state.check()
 
@@ -47,8 +47,8 @@ class TogglManager(object):
                 return
 
         current_timer = self.toggl.currentRunningTimeEntry()['data']
-        if current_timer is None and (doing, done) == (False, False):
-            # 진행 중인 작업이 없다 (이미 쉬는 중)
+        if current_timer is None and doing == False:
+            self.slackbot.send_message(text=MsgResource.TOGGL_ALREADY_BREAK)
             return
 
         if current_timer is None:
@@ -69,6 +69,10 @@ class TogglManager(object):
             self.toggl.startTimeEntry(description=description, pid=pid)
             self.slackbot.send_message(text=MsgResource.TOGGL_START)
         else:
+            if (doing, done) == (True, False):
+                self.slackbot.send_message(text=MsgResource.TOGGL_ALREADY_DOING)
+                return
+
             stop = self.toggl.stopTimeEntry(current_timer['id'])
             description = stop['data'].get('description', 'no description')
             diff_min = ArrowUtil.get_curr_time_diff(
@@ -79,7 +83,7 @@ class TogglManager(object):
                 text=MsgResource.TOGGL_STOP_SUMMARY(
                     description, diff_min))
 
-            if (doing, done) == (False, True):
+            if done == True:
                 todoist = TodoistManager()
                 todoist.complete_by_toggl(description, int(diff_min))
 
