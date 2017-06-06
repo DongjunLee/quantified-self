@@ -70,6 +70,11 @@ class Question(object):
         if timely == "daily":
             question_data = self.data_handler.read_record().get(self.category, {})
 
+            def convert_time(time):
+                hour, minute = time[0].split(":")
+                total_minute = int(hour) * 60 + int(minute)
+                return total_minute
+
             ordered_question_data = collections.OrderedDict(
                 sorted(question_data.items(), key=convert_time))
 
@@ -91,10 +96,6 @@ class Question(object):
             self.slackbot.file_upload(
                 f_name, title=title, comment=self.msg_report)
 
-        def convert_time(time):
-            hour, minute = time[0].split(":")
-            total_minute = int(hour) * 60 + int(minute)
-            return total_minute
 
 
 class HappyQuestion(Question):
