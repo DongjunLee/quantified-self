@@ -134,7 +134,7 @@ class MsgResource:
     def TOGGL_ADVICE_REST(time):
         return f"{time} 까지는 쉬는 시간입니다! :dancer:"
 
-    ATTENTION_QUESTION_STEP_0 = "현재 작업에 대해서 얼마나 집중하고 계신가요? (100점 만점)"
+    ATTENTION_QUESTION_STEP_0 = "진행하신 작업에 얼마나 집중하셨나요? (100점 만점)"
 
     def ATTENTION_QUESTION_STEP_1(happy):
         happy = int(happy)
@@ -147,7 +147,7 @@ class MsgResource:
         elif happy >= 70:
             return "좀 어렵거나, 재미없으신 일인 것 같군요..! :simple_smile: "
         else:
-            return "하기 싫은 작업을 하시는 중이셨군요..ㅠㅠ :angry: "
+            return "하기 싫은 작업이였군요..ㅠㅠ :angry: "
     ATTENTION_REPORT = "집중도 Report 입니다."
 
     HAPPY_QUESTION_STEP_0 = "오늘 하루는 어떠신가요? (100점 만점)"
@@ -161,7 +161,7 @@ class MsgResource:
         elif happy >= 80:
             return "슬며시 미소를 짓고 계신 것 같아요ㅎㅎ :smiley: "
         elif happy >= 70:
-            return "그냥 그런 하루 였군요.. :simple_smile: "
+            return "그냥 그러시군요.. :simple_smile: "
         else:
             return "무슨 일 있으신가요? 기분이 안 좋아보입니다ㅠㅠ :angry: "
     HAPPY_REPORT = "행복도 Report 입니다."
