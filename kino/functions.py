@@ -128,6 +128,19 @@ class Functions(object):
         task_list = trello.get_list_by_name('Tasks')
         for task in today_label_tasks:
             task_list.add_card(task['label'] + " - " + task['content'])
+        self.slackbot.send_message(text=MsgResource.KANBAN_INIT)
+
+    def kanban_sync(self):
+        todoist = TodoistManager()
+        today_label_tasks = todoist.get_today_tasks_with_label()
+
+        trello = TrelloManager()
+        task_list = trello.get_list_by_name('Tasks')
+        task_list.archive_all_cards()
+
+        for task in today_label_tasks:
+            task_list.add_card(task['label'] + " - " + task['content'])
+        self.slackbot.send_message(text=MsgResource.KANBAN_SYNC)
 
     def todoist_feedback(self):
         todoist = TodoistManager()

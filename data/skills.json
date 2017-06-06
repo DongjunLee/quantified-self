@@ -92,7 +92,13 @@
   "kanban_init": {
     "keyword": ["칸반 초기화", "칸반초기화", "kanban init"],
     "params": [],
-    "description": "Todoist의 기한지난 작업들 오늘로 업데이트 및 Trello sync",
+    "description": "Todoist의 기한지난 작업들 오늘로 업데이트 및 Kanban board init",
+    "icon": ":clipboard: "
+  },
+  "kanban_sync": {
+    "keyword": ["칸반 싱크", "칸반싱크", "kanban sync"],
+    "params": [],
+    "description": "Todoist와 Kanban board Syncing.",
     "icon": ":clipboard: "
   },
   "todoist_feedback": {
