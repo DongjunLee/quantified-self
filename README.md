@@ -46,8 +46,6 @@
 - [asyncio](https://docs.python.org/3/library/asyncio.html)
 - [slacker](https://github.com/os/slacker)
 - [konlpy](http://konlpy.org/en/v0.4.4/)
-- [arrow](https://github.com/crsmithdev/arrow)
-- [schedule](https://github.com/DongjunLee/schedule) forked from [dbader/schedule](https://github.com/dbader/schedule) (run the scheduler in a different thread)
 
 
 ## Components
@@ -113,8 +111,19 @@ ex) Total Score = sleep(20) + happy(30) + productivity(30) + diary(5) + exercise
 
 ![summary](images/summary.png)
 
-### 4. Notifier
+### 4. Kanban (TTT - Todoist / Toggl / Trello)
+
+Agile의 한 방법론인 Kanban을 Todoist, Toggl, Trello를 연동하여 사용할 수 있습니다.
+
+![kanban](images/kanban_board1.png)
+
+- Doing : 작업 시작 (toggl timer 자동 실행)
+- Break : 작업 중지 (toggl timer 자동 멈춤)
+- Done : 작업 중지 (toggl timer 자동 멈춤 & todoist 작업 완료)
+
+### 5. Webhook
 - [IFTTT](https://ifttt.com) 와 연동하는 작업이 필요합니다.
+- Custom Webhook [kino-webhook](https://github.com/DongjunLee/kino-webhook) for RealTime (IFTTT은 실시간이 아닙니다)
 
 IFTTT와 연결하여 알 수 있는 정보들
 
@@ -146,6 +155,8 @@ IFTTT와 연결하여 알 수 있는 정보들
 	- [todoist-python](https://github.com/Doist/todoist-python)
 - **Toggl** : toggl (작업기록), 주간 작업 리포트
 	- [TogglPy](https://github.com/DongjunLee/TogglPy) forked from [matthewdowney/TogglPy](https://github.com/matthewdowney/TogglPy)
+- **Trello** : Kanban
+	- [py-trello](https://github.com/sarumont/py-trello)
 - **RescueTime** : 생산성 차트
 	- [TogglPy](https://github.com/DongjunLee/TogglPy) forked from [matthewdowney/TogglPy](https://github.com/matthewdowney/TogglPy)
 - **공공데이터 버스도착정보** : 버스 도착 시간 조회

@@ -5,3 +5,9 @@ coverage.xml
 *.pyc
 scheduler.json
 data/config.json
+/data
+/log
+attention_daily_report.png
+happy_daily_report.png
+/.ipynb_checkpoints
+
