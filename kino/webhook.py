@@ -127,6 +127,8 @@ class Webhook(object):
         action = event['action']
         description = event['msg']
         if action.endswith("DOING"):
-            toggl_manager.timer(description=description)
-        elif action.endswith("BREAK") or action.endswith("DONE"):
-            toggl_manager.timer()
+            toggl_manager.timer(description=description, doing=True, done=False)
+        elif action.endswith("BREAK"):
+            toggl_manager.timer(doing=False, done=False)
+        elif action.endswith("DONE"):
+            toggl_manager.timer(doing=False, done=True)

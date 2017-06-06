@@ -35,7 +35,7 @@ class TogglManager(object):
 
         self.entity = TogglProjectEntity().entity
 
-    def timer(self, description=None):
+    def timer(self, description=None, doing=False, done=True):
         state = State()
         state.check()
 
@@ -47,6 +47,10 @@ class TogglManager(object):
                 return
 
         current_timer = self.toggl.currentRunningTimeEntry()['data']
+        if current_timer is None and (doing, done) == (False, False):
+            # 진행 중인 작업이 없다 (이미 쉬는 중)
+            return
+
         if current_timer is None:
             if description is None or description == "":
                 pid = None
@@ -75,8 +79,9 @@ class TogglManager(object):
                 text=MsgResource.TOGGL_STOP_SUMMARY(
                     description, diff_min))
 
-            todoist = TodoistManager()
-            todoist.complete_by_toggl(description, int(diff_min))
+            if (doing, done) == (False, True):
+                todoist = TodoistManager()
+                todoist.complete_by_toggl(description, int(diff_min))
 
             state.advice_rest(diff_min)
 
