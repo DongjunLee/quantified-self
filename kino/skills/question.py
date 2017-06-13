@@ -9,6 +9,7 @@ from ..slack.resource import MsgResource
 from ..slack.slackbot import SlackerAdapter
 from ..slack.plot import Plot
 
+from ..utils.config import Config
 from ..utils.data_handler import DataHandler
 from ..utils.score import Score
 from ..utils.state import State
@@ -18,6 +19,7 @@ from ..utils.state import State
 class Question(object):
 
     def __init__(self):
+        self.config = Config()
         self.category = ""
         self.msg_question_step_0 = ""
         self.msg_question_step_1 = ""
@@ -94,7 +96,7 @@ class Question(object):
                 y_label="Time",
                 title=title)
             self.slackbot.file_upload(
-                f_name, title=title, comment=self.msg_report)
+                f_name, title=title, channel=self.config.channel['REPORT'], comment=self.msg_report)
 
 
 

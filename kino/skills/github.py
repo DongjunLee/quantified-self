@@ -20,7 +20,7 @@ class GithubManager(object):
         self.github = Github(self.username, password)
         self.events = None
 
-        self.slackbot = SlackerAdapter()
+        self.slackbot = SlackerAdapter(channel=self.config.channel['REPORT'])
 
     def commit(self, timely="daily"):
         if type(timely) == int:

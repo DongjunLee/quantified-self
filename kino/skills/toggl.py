@@ -23,7 +23,7 @@ class TogglManager(object):
 
     def __init__(self):
         self.config = Config()
-        self.slackbot = SlackerAdapter()
+        self.slackbot = SlackerAdapter(channel=self.config.channel['TASK'])
         self.logger = Logger().get_logger()
 
         self.toggl = Toggl()
@@ -140,11 +140,14 @@ class TogglManager(object):
             'calculate': 'time'
         }
 
+        channel = self.config.channel['REPORT']
+
         if kind == "basic":
             f_name = "basic-report.pdf"
             self.toggl.getWeeklyReportPDF(data, f_name)
             self.slackbot.file_upload(
                 f_name,
+                channel=channel,
                 title=timely + " 기본 리포트",
                 comment=MsgResource.TOGGL_REPORT)
         elif kind == "chart":
@@ -152,6 +155,7 @@ class TogglManager(object):
             self.toggl.getSummaryReportPDF(data, f_name)
             self.slackbot.file_upload(
                 f_name,
+                channel=channel,
                 title=timely + " 차트 리포트",
                 comment=MsgResource.TOGGL_REPORT)
         elif kind == "detail":
@@ -159,6 +163,7 @@ class TogglManager(object):
             self.toggl.getDetailedReportPDF(data, f_name)
             self.slackbot.file_upload(
                 f_name,
+                channel=channel,
                 title=timely + " 상세 리포트",
                 comment=MsgResource.TOGGL_REPORT)
 

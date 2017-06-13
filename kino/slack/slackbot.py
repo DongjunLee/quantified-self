@@ -7,16 +7,20 @@ from ..utils.data_handler import DataHandler
 
 class SlackerAdapter(object):
 
-    def __init__(self):
+    def __init__(self, channel=None):
         self.config = Config()
         self.slacker = Slacker(self.config.slack['TOKEN'])
+        self.channel = channel
         self.data_handler = DataHandler()
 
     def send_message(self, channel=None, text=None, attachments=None):
-        if channel is None:
-            channel = self.config.slack['DEFAULT_CHANNEL']
+        if self.channel is None:
+            self.channel = self.config.channel['DEFAULT']
+        if channel is not None:
+            self.channel = channel
+
         r = self.slacker.chat.post_message(
-            channel=channel,
+            channel=self.channel,
             text=text,
             attachments=attachments,
             as_user=True)
@@ -40,8 +44,11 @@ class SlackerAdapter(object):
                 as_user=True)
 
     def file_upload(self, f_name, channel=None, title=None, comment=None):
-        if channel is None:
-            channel = self.config.slack['DEFAULT_CHANNEL']
+        if self.channel is None:
+            self.channel = self.config.channel['DEFAULT']
+        if channel is not None:
+            self.channel = channel
+
         self.slacker.files.upload(
             f_name,
             channels=channel,

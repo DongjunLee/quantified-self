@@ -21,7 +21,7 @@ class TodoistManager(object):
         self.todoist_api = todoist.TodoistAPI(
             self.config.open_api['todoist']['TOKEN'])
 
-        self.slackbot = SlackerAdapter()
+        self.slackbot = SlackerAdapter(channel=self.config.channel['TASK'])
         self.template = MsgTemplate()
 
     def schedule(self, channel=None):
