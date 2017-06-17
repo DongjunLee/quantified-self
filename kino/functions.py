@@ -24,6 +24,8 @@ from .utils.arrow import ArrowUtil
 from .utils.data_handler import DataHandler
 from .utils.logger import Logger
 
+import re
+
 
 
 class Functions(object):
@@ -114,6 +116,7 @@ class Functions(object):
         self.todoist_feedback()
         self.toggl_report(timely=timely)
         self.rescuetime_efficiency(timely=timely)
+        self.happy_report(timely=timely)
         self.attention_report(timely=timely)
         self.github_commit(timely=timely)
 
@@ -139,7 +142,8 @@ class Functions(object):
         task_list.archive_all_cards()
 
         for task in today_label_tasks:
-            task_list.add_card(task['label'] + " - " + task['content'])
+            card_name = task['label'] + " - " + task['content']
+            task_list.add_card(re.sub(r" \d+분", "", card_name))
         self.slackbot.send_message(text=MsgResource.KANBAN_SYNC)
 
     def todoist_feedback(self):
