@@ -27,7 +27,7 @@ class KinoBot(object):
         config = Config()
         MASTER_NAME = config.bot["MASTER_NAME"]
         BOT_NAME = config.bot["BOT_NAME"]
-        self.slackbot.send_message(text=MsgResource.HELLO(MASTER_NAME, BOT_NAME))
+        self.slackbot.send_message(text=MsgResource.HELLO(master_name=MASTER_NAME, bot_name=BOT_NAME))
 
     def start_session(self, nap=False):
         try:

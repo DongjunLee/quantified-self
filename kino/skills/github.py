@@ -40,7 +40,7 @@ class GithubManager(object):
                     text=MsgResource.GITHUB_COMMIT_EMPTY)
             else:
                 self.slackbot.send_message(
-                    text=MsgResource.GITHUB_COMMIT_EXIST + str(commit_count))
+                    text=MsgResource.GITHUB_COMMIT_EXIST(commit_count=commit_count))
 
         elif timely == "weekly":
             commit_count_list = []

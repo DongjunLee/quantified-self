@@ -39,7 +39,7 @@ class Predictor(object):
             runner = FunctionRunner()
             params = runner.filter_f_params(description, func_name)
 
-            self.slackbot.send_message(text=MsgResource.PREDICT_RESULT(description))
+            self.slackbot.send_message(text=MsgResource.PREDICT_RESULT(description=description))
             runner.load_function(func_name=func_name, params=params)
         else:
             print("Skip. confidence is low.")

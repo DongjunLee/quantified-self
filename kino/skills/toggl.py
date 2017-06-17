@@ -43,7 +43,7 @@ class TogglManager(object):
         if advice_rest_time is not None:
             advice_rest_time = arrow.get(advice_rest_time)
             if advice_rest_time > arrow.now():
-                self.slackbot.send_message(text=MsgResource.TOGGL_ADVICE_REST(advice_rest_time.format('HH:mm')))
+                self.slackbot.send_message(text=MsgResource.TOGGL_ADVICE_REST(time=advice_rest_time.format('HH:mm')))
                 return
 
         current_timer = self.toggl.currentRunningTimeEntry()['data']
@@ -81,7 +81,7 @@ class TogglManager(object):
             self.slackbot.send_message(text=MsgResource.TOGGL_STOP)
             self.slackbot.send_message(
                 text=MsgResource.TOGGL_STOP_SUMMARY(
-                    description, diff_min))
+                    description=description, diff_min=diff_min))
 
             if done == True:
                 todoist = TodoistManager()
@@ -117,7 +117,7 @@ class TogglManager(object):
             for i in range(3, 10, 3):
                 if diff_min_divide_10 == i:
                     self.slackbot.send_message(
-                        text=MsgResource.TOGGL_TIMER_CHECK(diff_min))
+                        text=MsgResource.TOGGL_TIMER_CHECK(diff_min=diff_min))
                     break
 
         # q_ratio = random.randint(1, 100)

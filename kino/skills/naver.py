@@ -29,6 +29,6 @@ class Naver(object):
         if r.status_code == 200:
             result = r.json()['message']['result']['translatedText']
             self.slackbot.send_message(
-                text=MsgResource.TRANSLATED_TEXT(result))
+                text=MsgResource.TRANSLATED_TEXT(result=result))
         else:
             self.slackbot.send_message(text=MsgResource.ERROR)

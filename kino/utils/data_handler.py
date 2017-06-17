@@ -108,3 +108,7 @@ class DataHandler(object):
         cache = self.read_cache()
         cache[data[0]] = data[1]
         self.write_file(fname, cache)
+
+    def read_template(self, lang_code):
+        template_dir = "template/"
+        return self.read_file(template_dir+lang_code + ".json")

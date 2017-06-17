@@ -18,7 +18,7 @@ class RescueTime(object):
 
     def __init__(self):
         self.config = Config()
-        self.slackbot = SlackerAdapter()
+        self.slackbot = SlackerAdapter(channel=self.config.channel['REPORT'])
 
     def efficiency(self, timely="daily"):
         now = arrow.now()
