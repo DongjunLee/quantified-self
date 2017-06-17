@@ -6,6 +6,8 @@ from .dnd import DoNotDisturbManager
 
 from ..nlp.ner import NamedEntitiyRecognizer
 
+from ..functions import Functions
+
 from ..skills.predictor import Predictor
 from ..skills.summary import Summary
 from ..skills.weather import Weather
@@ -64,6 +66,9 @@ class PreseneManager(object):
             weather = Weather()
             weather.forecast(timely="daily")
             weather.air_quality()
+
+            functions = Functions()
+            functions.kanban_init()
 
     def check_flow(self, presence):
         if presence == "active":

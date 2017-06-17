@@ -116,10 +116,12 @@ class Webhook(object):
 
     def TODO_handle(self, event):
         time = ArrowUtil.get_action_time(event['time'])
-        minute = time.format("mm")
-
         msg = event['msg']
-        if minute == "00":
+
+        activity_data = self.data_handler.read_record().get('activity', {})
+        wake_up_time = arrow.get(activity_data.get('wake_up', None))
+
+        if time.format("mm") == wake_up_time.format("mm"):
             msg = "*기한이 지난* " + msg.replace("완료", "오늘로 갱신")
         else:
             if event['action'].endswith("COMPLATE"):
