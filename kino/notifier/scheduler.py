@@ -34,7 +34,7 @@ class Scheduler(object):
         def step_0(params):
             self.slackbot.send_message(text=MsgResource.SCHEDULER_CREATE_START)
             self.data_handler.read_json_then_add_data(self.fname, "alarm", {})
-            state.flow_start("notifier/Scheduler", "create")
+            state.flow_start("Scheduler", "create")
             if Between().read() == "success":
                 self.slackbot.send_message(
                     text=MsgResource.SCHEDULER_CREATE_STEP1)
@@ -230,7 +230,7 @@ class Scheduler(object):
         def step_0(params):
             self.slackbot.send_message(text=MsgResource.SCHEDULER_DELETE_START)
             if self.read() == "success":
-                state.flow_start("notifier/Scheduler", "delete")
+                state.flow_start("Scheduler", "delete")
 
         def step_1(params):
             a_index = params
