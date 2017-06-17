@@ -51,7 +51,7 @@ class SlackerAdapter(object):
 
         self.slacker.files.upload(
             f_name,
-            channels=channel,
+            channels=self.channel,
             title=title,
             initial_comment=comment)
 

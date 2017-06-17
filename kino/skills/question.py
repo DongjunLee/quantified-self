@@ -19,12 +19,15 @@ from ..utils.state import State
 class Question(object):
 
     def __init__(self):
-        self.config = Config()
         self.category = ""
         self.msg_question_step_0 = ""
         self.msg_question_step_1 = ""
         self.msg_flow = ""
         self.msg_report = ""
+
+    @property
+    def config(self):
+        return Config()
 
     @property
     def slackbot(self):
