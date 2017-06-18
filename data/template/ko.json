@@ -227,7 +227,7 @@
     "HOLIDAY" : "오늘은 쉬는 날 이군요! 쉬면서 가세요ㅎㅎ :walking: ",
     "GOOD_MORNING" : "안녕히 주무셨나요? 좋은 아침입니다^^ :sun_with_face:",
 
-    "SLEEP_TIME": "{bed_time} ~ {wakeup_time}, 총 {diff}h 동안 잠을 주무셨습니다.",
+    "SLEEP_TIME": "{bed_time} ~ {wakeup_time}, 총 {diff_h}h 동안 잠을 주무셨습니다.",
 
     "GOOD_NIGHT" : "이제 주무시는 군요. 좋은 꿈 꾸세요 :first_quarter_moon_with_face:",
 
