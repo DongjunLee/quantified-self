@@ -122,7 +122,7 @@ class MsgTemplate(object):
 
         a_dict = {}
         a_dict['title'] = MsgResource.WEATHER
-        a_dict['fallback'] = MsgResource.WEATHER_ICONS[icon] + " " + fallback
+        a_dict['fallback'] = MsgResource.WEATHER_ICONS(icon) + " " + fallback
         a_dict['color'] = "#438C56"
 
         fields = []
@@ -130,7 +130,7 @@ class MsgTemplate(object):
         fields.append(
             self.field(
                 "Sky Icon",
-                MsgResource.WEATHER_ICONS[icon],
+                MsgResource.WEATHER_ICONS(icon),
                 short="true"))
         if temperature:
             fields.append(self.field("Temperature", temperature, short="true"))
