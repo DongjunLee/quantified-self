@@ -24,6 +24,7 @@ class Question(object):
         self.msg_question_step_1 = ""
         self.msg_flow = ""
         self.msg_report = ""
+        self.channel = ""
 
     @property
     def config(self):
@@ -31,7 +32,7 @@ class Question(object):
 
     @property
     def slackbot(self):
-        return SlackerAdapter()
+        return SlackerAdapter(channel=self.config.channel[self.channel])
 
     @property
     def data_handler(self):
@@ -111,6 +112,7 @@ class HappyQuestion(Question):
         self.msg_question_step_1 = MsgResource.HAPPY_QUESTION_STEP_1
         self.msg_flow = MsgResource.FLOW_HAPPY
         self.msg_report = MsgResource.HAPPY_REPORT
+        self.channel = "DEFAULT"
 
 
 class AttentionQuestion(Question):
@@ -121,3 +123,4 @@ class AttentionQuestion(Question):
         self.msg_question_step_1 = MsgResource.ATTENTION_QUESTION_STEP_1
         self.msg_flow = MsgResource.FLOW_ATTENTION
         self.msg_report = MsgResource.ATTENTION_REPORT
+        self.channel = "TASK"

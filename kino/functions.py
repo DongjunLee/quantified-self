@@ -130,7 +130,8 @@ class Functions(object):
 
         task_list = trello.get_list_by_name('Tasks')
         for task in today_label_tasks:
-            task_list.add_card(task['label'] + " - " + task['content'])
+            card_name = task['label'] + " - " + task['content']
+            task_list.add_card(re.sub(r" \d+분", "", card_name))
         self.slackbot.send_message(text=MsgResource.KANBAN_INIT)
 
     def kanban_sync(self):
