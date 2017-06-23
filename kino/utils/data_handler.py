@@ -112,3 +112,7 @@ class DataHandler(object):
     def read_template(self, lang_code):
         template_dir = "template/"
         return self.read_file(template_dir+lang_code + ".json")
+
+    def read_feeds(self):
+        feed_text = self.read_text("feed_list.txt")
+        return feed_text.splitlines()

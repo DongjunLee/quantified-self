@@ -202,6 +202,23 @@ class MsgTemplate(object):
             attachments.append(a_dict)
         return attachments
 
+    def make_feed_template(self, feed):
+        attachments = []
+
+        title, link, description = feed
+        fallback = title + ": "  + description
+
+        a_dict = {}
+        a_dict['title'] = title
+        a_dict['fallback'] = fallback
+        a_dict['color'] = MsgResource.FEED_COLOR
+
+        a_dict['text'] = description + "\n" + link
+        a_dict['mrkdwn_in'] = ["text", "pretext"]
+
+        attachments.append(a_dict)
+        return attachments
+
     def make_bus_stop_template(self, data):
         attachments = []
         a_dict = {}

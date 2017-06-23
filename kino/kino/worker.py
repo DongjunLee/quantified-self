@@ -14,6 +14,7 @@ from ..notifier.scheduler import Scheduler
 from ..slack.resource import MsgResource
 from ..slack.slackbot import SlackerAdapter
 
+from ..utils.config import Config
 from ..utils.data_handler import DataHandler
 from ..utils.logger import Logger
 from ..utils.profile import Profile
@@ -24,6 +25,7 @@ class Worker(object):
 
     def __init__(self, text):
         self.input = text
+        self.config = Config()
         self.slackbot = SlackerAdapter()
         self.data_handler = DataHandler()
         self.logger = Logger().get_logger()
@@ -81,6 +83,9 @@ class Worker(object):
             profile.get_schedule('CHECK_GO_TO_BED'), False,
             'check_go_to_bed', {}, False)
 
+        interval = self.config.profile['feed']['INTERVAL']
+        self.__excute_feed_schedule(interval)
+
     def __excute_profile_schedule(
             self,
             time,
@@ -94,6 +99,16 @@ class Worker(object):
                 "func_name": func_name,
                 "params": params,
                 "not_holiday": not_holiday
+            }
+        )
+
+    def __excute_feed_schedule(self, interval):
+        schedule.every(interval).hours.do(
+            self.__run_threaded, self.function_runner, {
+                "repeat": True,
+                "func_name": "feed_nofify",
+                "params": {},
+                "not_holiday": False
             }
         )
 

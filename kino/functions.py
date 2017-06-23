@@ -6,6 +6,7 @@ from .nlp.ner import NamedEntitiyRecognizer
 
 from .skills.bus import Bus
 from .skills.github import GithubManager
+from .skills.feed import FeedNotifier
 from .skills.maxim import Maxim
 from .skills.naver import Naver
 from .skills.question import AttentionQuestion
@@ -84,6 +85,10 @@ class Functions(object):
             timely = 'daily'
         happy = HappyQuestion()
         happy.report(timely=timely)
+
+    def feed_notify(self):
+        feed_notifier = FeedNotifier()
+        feed_notifier.notify_all()
 
     def total_score(self):
         summary = Summary()
