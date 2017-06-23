@@ -121,7 +121,7 @@ class Webhook(object):
         activity_data = self.data_handler.read_record().get('activity', {})
         wake_up_time = arrow.get(activity_data.get('wake_up', None))
 
-        if time.format("mm") == wake_up_time.format("mm"):
+        if time.format("HH:mm") == wake_up_time.format("HH:mm"):
             msg = "*기한이 지난* " + msg.replace("완료", "오늘로 갱신")
         else:
             if event['action'].endswith("COMPLATE"):
