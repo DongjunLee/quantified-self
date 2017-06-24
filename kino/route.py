@@ -136,7 +136,7 @@ class MsgRouter(object):
             route_class.__class__.__name__ +
             ", " +
             str(behave))
-        getattr(route_class, behave)(step=step_num, params=self.text)
+        getattr(route_class(slackbot=self.slackbot), behave)(step=step_num, params=self.text)
 
     def __on_memory(self):
         route_class, func_name, params = self.dialog_manager.get_memory(globals=globals())

@@ -53,9 +53,8 @@ class SlackerAdapter(object):
         return {k: self.__message2text(v) for k, v in ((k, self.attachment_message2text(v)) for k, v in d.items())}
 
     def __message2text(self, msg_text):
-        if isinstance(msg_text, str) and \
-                (msg_text.startswith("{") and msg_text.endswith("}")):
-                return MsgResource.to_text(msg_text)
+        if isinstance(msg_text, str) and (msg_text.startswith("{") and msg_text.endswith("}")):
+            return MsgResource.to_text(msg_text)
         else:
             return msg_text
 

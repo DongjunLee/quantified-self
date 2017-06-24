@@ -51,7 +51,7 @@ class DialogManager(object):
 
     def __return_state(self, globals, state, kind):
         classname = state["class"]
-        route_class = globals[classname]()
+        route_class = globals[classname]
         behave = state["def"]
         if kind == State.FLOW:
             params = state["step"]

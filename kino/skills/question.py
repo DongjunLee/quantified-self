@@ -61,6 +61,7 @@ class Question(object):
             self.data_handler.edit_record_with_category(
                 self.category, (time, point))
 
+            print("step1: " + self.msg_question_step_1(90))
             self.slackbot.send_message(
                 text=self.msg_question_step_1(point))
             state.flow_complete()

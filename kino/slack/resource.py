@@ -23,7 +23,6 @@ class MsgResourceType(type):
                 self.lang_code = self.config.bot["LANG_CODE"]
 
         def __getattr__(self, name):
-            self.name = name
             self.pool[name] = {}
 
             message = self.template[self.config.bot["LANG_CODE"]].get(name, "empty")
@@ -32,19 +31,19 @@ class MsgResourceType(type):
 
             def wrapper(*args, **kwargs):
                 self.pool[name] = {"args": args, "kwargs": kwargs}
-                return "{" + self.name + "}"
+                return "{" + name + "}"
 
             if isinstance(message, dict) or ("{" in message and "}" in message):
                 return wrapper
             else:
-                return "{" + self.name + "}"
+                return "{" + name + "}"
 
         def to_text(self, msg_name):
             name = msg_name[1:-1]
             m_args = self.pool[name].get("args", None)
             m_kwargs = self.pool[name].get("kwargs", None)
 
-            message = self.template[self.lang_code].get(self.name, "MsgResource not exist.")
+            message = self.template[self.lang_code].get(name, "MsgResource not exist.")
             if isinstance(message, list):
                 message = random.choice(message)
 
