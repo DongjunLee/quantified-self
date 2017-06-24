@@ -5,6 +5,7 @@ from .core import schedule
 from .nlp.ner import NamedEntitiyRecognizer
 
 from .skills.bus import Bus
+from .skills.card import BusinessCard
 from .skills.github import GithubManager
 from .skills.feed import FeedNotifier
 from .skills.maxim import Maxim
@@ -24,6 +25,7 @@ from .slack.slackbot import SlackerAdapter
 from .utils.arrow import ArrowUtil
 from .utils.data_handler import DataHandler
 from .utils.logger import Logger
+from .utils.member import Member
 
 import re
 
@@ -53,6 +55,18 @@ class Functions(object):
             real_time = False
         bus = Bus(slackbot=self.slackbot)
         bus.arrive_info(station_id, real_time=real_time)
+
+    def card_holder(self):
+        card = BusinessCard(slackbot=self.slackbot)
+        card.read_holder()
+
+    def card_history(self):
+        card = BusinessCard(slackbot=self.slackbot)
+        card.read_history()
+
+    def card_forward(self, member=None):
+        card = BusinessCard(slackbot=self.slackbot)
+        card.forward(member=member)
 
     def forecast(self, timely="current"):
         if timely is None:
@@ -238,6 +252,10 @@ class FunctionRunner(object):
 
         func_param_list = ner.skills[func_name]['params']
         params = {k: ner.parse(v, text) for k, v in ner.params.items()}
+
+        member = Member()
+        member_name = member.get_names(text)
+        params["member"] = member_name
 
         f_params = {}
         if params is not None:

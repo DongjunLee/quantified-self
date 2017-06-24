@@ -74,3 +74,6 @@ class SlackerAdapter(object):
                 bot_id = user['id']
                 self.data_handler.edit_cache(('bot_id', bot_id))
                 return bot_id
+
+    def get_users(self):
+        return self.slacker.users.list().body['members']

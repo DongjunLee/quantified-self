@@ -29,6 +29,29 @@
     "description": "버스 도착 정보 조회",
     "icon": ":oncoming_bus: "
   },
+  "card_holder": {
+    "keyword": ["법카 현황", "법카현황", "법카 ㅎㅎ", "법카ㅎㅎ", "법카 누가", "ㅂㅋㅎㅎ", "ㅂㅋ ㅎㅎ",
+                "카드 현황", "카드현황", "카드 ㅎㅎ", "카드ㅎㅎ", "카드 누가", "ㅋㄷㅎㅎ", "ㅋㄷ ㅎㅎ",
+                ["who", "card"]],
+    "params": [],
+    "description": "법인카드를 누가 가지고 있는지 보여줍니다.",
+    "icon": ":credit_card:  "
+  },
+  "card_history": {
+    "keyword": ["법카 전달 기록", "법카전달 기록", "법카 ㅈㄷㄱㄹ", "법카 ㅈㄷ ㄱㄹ",
+                "카드 전달 기록", "카드전달 기록", "카드 ㅈㄷㄱㄹ", "카드 ㅈㄷ ㄱㄹ"],
+    "params": [],
+    "description": "법인카드의 전달 기록을 보여줍니다.",
+    "icon": ":credit_card:  "
+  },
+  "card_forward": {
+    "keyword": ["법카 전달", "법카전달", "법카 ㅈㄷ", "법카ㅈㄷ", "법카 넘기기",
+                "카드 전달", "카드전달", "카드 ㅈㄷ", "카드ㅈㄷ", "카드 넘기기",
+                ["give", "card"], ["deliver", "card"], "سلّم البطاقة"],
+    "params": ["member"],
+    "description": "법인카드를 다른사람에게 양도합니다.",
+    "icon": ":credit_card:  "
+  },
   "forecast": {
     "keyword": ["날씨", "예보"],
     "params": ["timely"],
