@@ -32,10 +32,11 @@ class SlackerAdapter(object):
         if channel is not None:
             self.channel = channel
 
-        if isinstance(text, types.GeneratorType):
-            print(self.lang_code)
-            MsgResource.set_lang_code(self.lang_code)
-            text = next(text)
+        MsgResource.set_lang_code(self.lang_code)
+        text = self.__message2text(text)
+
+        if attachments is not None:
+            attachments = self.attachment_message2text(attachments)
 
         r = self.slacker.chat.post_message(
             channel=self.channel,
@@ -43,6 +44,20 @@ class SlackerAdapter(object):
             attachments=attachments,
             as_user=True)
         self.data_handler.edit_cache(('message', r.body))
+
+    def attachment_message2text(self, d):
+        if not isinstance(d, (dict, list)):
+            return d
+        if isinstance(d, list):
+            return [ self.__message2text(v) for v in (self.attachment_message2text(v) for v in d)]
+        return {k: self.__message2text(v) for k, v in ((k, self.attachment_message2text(v)) for k, v in d.items())}
+
+    def __message2text(self, msg_text):
+        if isinstance(msg_text, str) and \
+                (msg_text.startswith("{") and msg_text.endswith("}")):
+                return MsgResource.to_text(msg_text)
+        else:
+            return msg_text
 
     def update_message(self, channel=None, text=None, attachments=None):
         if text is None:
@@ -66,6 +81,8 @@ class SlackerAdapter(object):
             self.channel = self.config.channel['DEFAULT']
         if channel is not None:
             self.channel = channel
+
+        comment = self.__message2text(comment)
 
         self.slacker.files.upload(
             f_name,

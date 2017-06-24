@@ -14,6 +14,7 @@ class MsgResourceType(type):
             data_handler = DataHandler()
 
             self.template = data_handler.read_template()
+            self.pool = {}
 
         def set_lang_code(self, lang_code):
             if lang_code in self.template.keys():
@@ -22,33 +23,46 @@ class MsgResourceType(type):
                 self.lang_code = self.config.bot["LANG_CODE"]
 
         def __getattr__(self, name):
-            EMPTY_TEMPLATE = f"There is no template. {self.lang_code} : {name}"
-            message = self.template[self.lang_code].get(name, EMPTY_TEMPLATE)
+            self.name = name
+            self.pool[name] = {}
+
+            message = self.template[self.config.bot["LANG_CODE"]].get(name, "empty")
             if isinstance(message, list):
                 message = random.choice(message)
 
             def wrapper(*args, **kwargs):
-
-                def find_nearest_number(num_list, num):
-                    num = int(num)
-                    num_list = list(map(lambda x: int(x), num_list))
-                    return str(min(num_list, key=lambda x:abs(x-num)))
-
-                if len(args) == 1:
-                    arg = args[0]
-                    if arg in message:
-                        return message[arg]
-                    else:
-                        return message[find_nearest_number(message.keys(), arg)]
-                elif kwargs is not None:
-                    return message.format(**kwargs)
-                else:
-                    return message
+                self.pool[name] = {"args": args, "kwargs": kwargs}
+                return "{" + self.name + "}"
 
             if isinstance(message, dict) or ("{" in message and "}" in message):
-                yield wrapper
+                return wrapper
             else:
-                yield message
+                return "{" + self.name + "}"
+
+        def to_text(self, msg_name):
+            name = msg_name[1:-1]
+            m_args = self.pool[name].get("args", None)
+            m_kwargs = self.pool[name].get("kwargs", None)
+
+            message = self.template[self.lang_code].get(self.name, "MsgResource not exist.")
+            if isinstance(message, list):
+                message = random.choice(message)
+
+            def find_nearest_number(num_list, num):
+                num = int(num)
+                num_list = list(map(lambda x: int(x), num_list))
+                return str(min(num_list, key=lambda x:abs(x-num)))
+
+            if m_args is not None and len(m_args) == 1:
+                arg = m_args[0]
+                if arg in message:
+                    return message[arg]
+                else:
+                    return message[find_nearest_number(message.keys(), arg)]
+            elif m_kwargs is not None:
+                return message.format(**m_kwargs)
+            else:
+                return message
 
     instance = None
 
