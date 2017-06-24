@@ -22,7 +22,6 @@ from .kino.worker import Worker
 from .slack.resource import MsgResource
 from .slack.slackbot import SlackerAdapter
 
-# from .skills.ifttt import IFTTT
 from .skills.question import AttentionQuestion
 from .skills.question import HappyQuestion
 
@@ -54,6 +53,9 @@ class MsgRouter(object):
     def route(self, text=None, user=None, channel=None,
               direct=False, webhook=False, presence=None, dnd=None, predict=False):
 
+        self.slackbot = SlackerAdapter(channel=channel, input_text=text, user=user)
+
+        # predict next action
         if predict:
             # Check - skills
             skill_keywords = {k: v['keyword'] for k, v in ner.skills.items()}
@@ -62,7 +64,8 @@ class MsgRouter(object):
                 self.__call_skills(func_name)
                 return
 
-        if presence is not None:
+        # slack - active/away
+        if presence:
             self.presence_manager.check_wake_up(presence)
             self.presence_manager.check_flow(presence)
             self.presence_manager.check_predictor(presence)
@@ -71,10 +74,12 @@ class MsgRouter(object):
             self.logger.info("presence: " + str(presence))
             return
 
-        if dnd is not None:
+        # Do not disturb
+        if dnd:
             self.dnd_manager.call_is_holiday(dnd)
             return
 
+        # incomming-webhook
         if webhook:
             self.__on_relay(text)
             return
@@ -146,7 +151,7 @@ class MsgRouter(object):
         getattr(route_class, func_name)(**params)
 
     def __call_help(self):
-        route_class = Guide()
+        route_class = Guide(self.slackbot)
         behave = "help"
         self.logger.info(
             "route to: " +
@@ -156,7 +161,7 @@ class MsgRouter(object):
         getattr(route_class, behave)()
 
     def __call_CRUD(self, ner, classname):
-        route_class = globals()[classname](text=self.text)
+        route_class = globals()[classname](text=self.text, slackbot=self.slackbot)
         behave_ner = ner.kino[classname]['behave']
         behave = ner.parse(behave_ner, self.simple_text)
 
@@ -181,7 +186,7 @@ class MsgRouter(object):
             func_name +
             ", " +
             str(f_params))
-        getattr(Functions(), func_name)(**f_params)
+        getattr(Functions(slackbot=self.slackbot), func_name)(**f_params)
 
     def __memory_predictor_skills(self):
         data_loader = DataLoader()

@@ -12,12 +12,16 @@ from ..utils.state import State
 
 class Between(object):
 
-    def __init__(self, text=None):
+    def __init__(self, text=None, slackbot=None):
         self.input = text
-        self.slackbot = SlackerAdapter()
         self.data_handler = DataHandler()
         self.fname = "schedule.json"
         self.template = MsgTemplate()
+
+        if slackbot is None:
+            self.slackbot = SlackerAdapter()
+        else:
+            self.slackbot = slackbot
 
     def create(self, step=0, params=None):
         state = State()

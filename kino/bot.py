@@ -51,6 +51,6 @@ class KinoBot(object):
             asyncio.get_event_loop().run_forever()
         except Exception as e:
             self.logger.error("Session Error. restart in 5 minutes..")
-            self.logger.error(repr(e))
+            self.logger.exception("bot")
             time.sleep(5 * 60)
             self.start_session(nap=True)

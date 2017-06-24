@@ -23,14 +23,18 @@ from ..utils.profile import Profile
 
 class Worker(object):
 
-    def __init__(self, text):
+    def __init__(self, text=None, slackbot=None):
         self.input = text
         self.config = Config()
-        self.slackbot = SlackerAdapter()
         self.data_handler = DataHandler()
         self.logger = Logger().get_logger()
         self.ner = NamedEntitiyRecognizer()
         self.function_runner = FunctionRunner().load_function
+
+        if slackbot is None:
+            self.slackbot = SlackerAdapter()
+        else:
+            self.slackbot = slackbot
 
     def create(self):
         ner_dict = {k: self.ner.parse(v, self.input)

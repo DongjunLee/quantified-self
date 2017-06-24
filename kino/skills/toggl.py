@@ -21,9 +21,8 @@ from ..utils.state import State
 
 class TogglManager(object):
 
-    def __init__(self):
+    def __init__(self, slackbot=None):
         self.config = Config()
-        self.slackbot = SlackerAdapter(channel=self.config.channel['TASK'])
         self.logger = Logger().get_logger()
 
         self.toggl = Toggl()
@@ -32,8 +31,12 @@ class TogglManager(object):
         wid = self.toggl.getWorkspace(
             name=self.config.open_api['toggl']['WORKSPACE_NAME'])['id']
         self.toggl.setWorkspaceId(wid)
-
         self.entity = TogglProjectEntity().entity
+
+        if slackbot is None:
+            self.slackbot = SlackerAdapter(channel=self.config.channel['TASK'])
+        else:
+            self.slackbot = slackbot
 
     def timer(self, description=None, doing=True, done=True):
         state = State()

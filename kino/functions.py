@@ -31,10 +31,14 @@ import re
 
 class Functions(object):
 
-    def __init__(self):
+    def __init__(self, slackbot=None):
         self.data_handler = DataHandler()
-        self.slackbot = SlackerAdapter()
         self.registered = RegisteredFuctions().list
+
+        if slackbot is None:
+            self.slackbot = SlackerAdapter()
+        else:
+            self.slackbot = slackbot
 
     def check_go_to_bed(self):
         summary = Summary()
@@ -47,55 +51,55 @@ class Functions(object):
     def bus_stop(self, station_id=None, real_time=None):
         if real_time is None:
             real_time = False
-        bus = Bus()
+        bus = Bus(slackbot=self.slackbot)
         bus.arrive_info(station_id, real_time=real_time)
 
     def forecast(self, timely="current"):
         if timely is None:
             timely = 'current'
-        weather = Weather()
+        weather = Weather(slackbot=self.slackbot)
         weather.forecast(timely=timely)
 
     def air_quality(self):
-        weather = Weather()
+        weather = Weather(slackbot=self.slackbot)
         weather.air_quality()
 
     def attention_question(self, text=None):
-        attention = AttentionQuestion()
+        attention = AttentionQuestion(slackbot=self.slackbot)
         attention.question()
 
     def attention_report(self, timely="daily"):
         if timely is None:
             timely = 'daily'
-        attention = AttentionQuestion()
+        attention = AttentionQuestion(slackbot=self.slackbot)
         attention.report(timely=timely)
 
     def github_commit(self, timely="daily"):
         if timely is None:
             timely = 'daily'
-        github = GithubManager()
+        github = GithubManager(slackbot=self.slackbot)
         github.commit(timely=timely)
 
     def happy_question(self):
-        happy = HappyQuestion()
+        happy = HappyQuestion(slackbot=self.slackbot)
         happy.question()
 
     def happy_report(self, timely="daily"):
         if timely is None:
             timely = 'daily'
-        happy = HappyQuestion()
+        happy = HappyQuestion(slackbot=self.slackbot)
         happy.report(timely=timely)
 
     def feed_notify(self):
-        feed_notifier = FeedNotifier()
+        feed_notifier = FeedNotifier(slackbot=self.slackbot)
         feed_notifier.notify_all()
 
     def total_score(self):
-        summary = Summary()
+        summary = Summary(slackbot=self.slackbot)
         summary.total_score()
 
     def total_chart(self):
-        summary = Summary()
+        summary = Summary(slackbot=self.slackbot)
         summary.total_chart()
 
     def translate(self, english="", source="en", target="ko"):
@@ -103,17 +107,17 @@ class Functions(object):
             source = "en"
         if target is None:
             target = "ko"
-        naver = Naver()
+        naver = Naver(slackbot=self.slackbot)
         naver.translate(english, source=source, target=target)
 
     def rescuetime_efficiency(self, timely="daily"):
         if timely is None:
             timely = 'daily'
-        rescuetime = RescueTime()
+        rescuetime = RescueTime(slackbot=self.slackbot)
         rescuetime.efficiency(timely=timely)
 
     def today_briefing(self):
-        todoist = TodoistManager()
+        todoist = TodoistManager(slackbot=self.slackbot)
         todoist.schedule()
 
     def today_summary(self, timely=None):
@@ -126,7 +130,7 @@ class Functions(object):
         self.github_commit(timely=timely)
 
     def kanban_init(self):
-        todoist = TodoistManager()
+        todoist = TodoistManager(slackbot=self.slackbot)
         todoist.auto_update_tasks()
 
         today_label_tasks = todoist.get_today_tasks_with_label()
@@ -140,7 +144,7 @@ class Functions(object):
         self.slackbot.send_message(text=MsgResource.KANBAN_INIT)
 
     def kanban_sync(self):
-        todoist = TodoistManager()
+        todoist = TodoistManager(slackbot=self.slackbot)
         today_label_tasks = todoist.get_today_tasks_with_label()
 
         trello = TrelloManager()
@@ -153,19 +157,19 @@ class Functions(object):
         self.slackbot.send_message(text=MsgResource.KANBAN_SYNC)
 
     def todoist_feedback(self):
-        todoist = TodoistManager()
+        todoist = TodoistManager(slackbot=self.slackbot)
         todoist.feedback()
 
     def todoist_remain(self):
-        todoist = TodoistManager()
+        todoist = TodoistManager(slackbot=self.slackbot)
         todoist.remain_task()
 
     def toggl_timer(self, description=None):
-        toggl = TogglManager()
+        toggl = TogglManager(slackbot=self.slackbot)
         toggl.timer(description=description)
 
     def toggl_checker(self):
-        toggl = TogglManager()
+        toggl = TogglManager(slackbot=self.slackbot)
         toggl.check_toggl_timer()
 
     def toggl_report(self, kind="chart", timely="daily"):
@@ -173,11 +177,11 @@ class Functions(object):
             kind = 'chart'
         if timely is None:
             timely = 'daily'
-        toggl = TogglManager()
+        toggl = TogglManager(slackbot=self.slackbot)
         toggl.report(kind=kind, timely=timely)
 
     def maxim_nietzsche(self):
-        maxim = Maxim()
+        maxim = Maxim(slackbot=self.slackbot)
         maxim.nietzsche()
 
 

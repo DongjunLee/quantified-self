@@ -15,15 +15,18 @@ from ..utils.logger import Logger
 
 class FeedNotifier:
 
-    def __init__(self):
+    def __init__(self, slackbot=None):
         data_handler = DataHandler()
         self.feed_list = data_handler.read_feeds()
 
         self.config = Config()
         self.thresh_hold = self.config.profile['feed']['INTERVAL'] * 60
-
-        self.slackbot = SlackerAdapter(channel=self.config.channel['FEED'])
         self.template = MsgTemplate()
+
+        if slackbot is None:
+            self.slackbot = SlackerAdapter(channel=self.config.channel['FEED'])
+        else:
+            self.slackbot = slackbot
 
     def notify_all(self):
         noti_list = []

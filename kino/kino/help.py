@@ -4,9 +4,13 @@ from ..slack.template import MsgTemplate
 
 class Guide(object):
 
-    def __init__(self):
-        self.slackbot = SlackerAdapter()
+    def __init__(self, slackbot=None):
         self.template = MsgTemplate()
+
+        if slackbot is None:
+            self.slackbot = SlackerAdapter()
+        else:
+            self.slackbot = slackbot
 
     def help(self):
         attachments = self.template.make_help_template(

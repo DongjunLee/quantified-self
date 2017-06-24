@@ -12,13 +12,17 @@ from ..utils.score import Score
 
 class GithubManager(object):
 
-    def __init__(self):
+    def __init__(self, slackbot=None):
         self.config = Config()
 
         self.username = self.config.open_api['github']['USERNAME']
         password = self.config.open_api['github']['PASSWORD']
         self.github = Github(self.username, password)
-        self.slackbot = SlackerAdapter(channel=self.config.channel['REPORT'])
+
+        if slackbot is None:
+            self.slackbot = SlackerAdapter(channel=self.config.channel['REPORT'])
+        else:
+            self.slackbot = slackbot
 
     def commit(self, timely="daily"):
         events = self.github.get_user(self.username).get_events()

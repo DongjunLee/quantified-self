@@ -16,11 +16,14 @@ from ..utils.profile import Profile
 
 class Weather(object):
 
-    def __init__(self, text=None):
-        self.input = text
+    def __init__(self, slackbot=None):
         self.config = Config()
-        self.slackbot = SlackerAdapter()
         self.template = MsgTemplate()
+
+        if slackbot is None:
+            self.slackbot = SlackerAdapter()
+        else:
+            self.slackbot = slackbot
 
     def forecast(self, timely='current'):
         geolocator = GoogleV3()

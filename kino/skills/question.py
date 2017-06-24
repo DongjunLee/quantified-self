@@ -24,15 +24,11 @@ class Question(object):
         self.msg_question_step_1 = ""
         self.msg_flow = ""
         self.msg_report = ""
-        self.channel = ""
+        self.slackbot = SlackerAdapter()
 
     @property
     def config(self):
         return Config()
-
-    @property
-    def slackbot(self):
-        return SlackerAdapter(channel=self.config.channel[self.channel])
 
     @property
     def data_handler(self):
@@ -106,21 +102,29 @@ class Question(object):
 
 class HappyQuestion(Question):
 
-    def __init__(self):
+    def __init__(self, slackbot=None):
         self.category = "happy"
         self.msg_question_step_0 = MsgResource.HAPPY_QUESTION_STEP_0
         self.msg_question_step_1 = MsgResource.HAPPY_QUESTION_STEP_1
         self.msg_flow = MsgResource.FLOW_HAPPY
         self.msg_report = MsgResource.HAPPY_REPORT
-        self.channel = "DEFAULT"
+
+        if slackbot is None:
+            self.slackbot = SlackerAdapter(channel=self.config.channel["DEFAULT"])
+        else:
+            self.slackbot = slackbot
 
 
 class AttentionQuestion(Question):
 
-    def __init__(self):
+    def __init__(self, slackbot=None):
         self.category = "attention"
         self.msg_question_step_0 = MsgResource.ATTENTION_QUESTION_STEP_0
         self.msg_question_step_1 = MsgResource.ATTENTION_QUESTION_STEP_1
         self.msg_flow = MsgResource.FLOW_ATTENTION
         self.msg_report = MsgResource.ATTENTION_REPORT
-        self.channel = "TASK"
+
+        if slackbot is None:
+            self.slackbot = SlackerAdapter(channel=self.config.channel["TASK"])
+        else:
+            self.slackbot = slackbot

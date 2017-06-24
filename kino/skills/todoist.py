@@ -15,14 +15,16 @@ from ..utils.profile import Profile
 
 class TodoistManager(object):
 
-    def __init__(self, text=None):
-        self.input = text
+    def __init__(self, slackbot=None):
         self.config = Config()
+        self.template = MsgTemplate()
         self.todoist_api = todoist.TodoistAPI(
             self.config.open_api['todoist']['TOKEN'])
 
-        self.slackbot = SlackerAdapter(channel=self.config.channel['TASK'])
-        self.template = MsgTemplate()
+        if slackbot is None:
+            self.slackbot = SlackerAdapter(channel=self.config.channel['TASK'])
+        else:
+            self.slackbot = slackbot
 
     def schedule(self, channel=None):
         self.slackbot.send_message(text=MsgResource.TODOIST_TODAY_SCHEDULE)

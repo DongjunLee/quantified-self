@@ -25,7 +25,6 @@ class MsgResourceType(type):
                 def find_nearest_number(num_list, num):
                     num = int(num)
                     num_list = list(map(lambda x: int(x), num_list))
-                    print(num_list, num)
                     return str(min(num_list, key=lambda x:abs(x-num)))
 
                 if len(args) == 1:

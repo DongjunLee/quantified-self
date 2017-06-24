@@ -21,12 +21,16 @@ from ..utils.state import State
 
 class Summary(object):
 
-    def __init__(self):
+    def __init__(self, slackbot=None):
         self.config = Config()
         self.data_handler = DataHandler()
-        self.slackbot = SlackerAdapter(channel=self.config.channel['REPORT'])
         self.profile = Profile()
         self.column_list = ["Attention", "Productive", "Happy", "Sleep", "Total"]
+
+        if slackbot is None:
+            self.slackbot = SlackerAdapter(channel=self.config.channel['REPORT'])
+        else:
+            self.slackbot = slackbot
 
     def total_score(self):
         template = MsgTemplate()

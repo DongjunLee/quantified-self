@@ -7,11 +7,15 @@ from ..utils.data_handler import DataHandler
 
 class SlackerAdapter(object):
 
-    def __init__(self, channel=None):
+    def __init__(self, channel=None, user=None, input_text=None):
         self.config = Config()
         self.slacker = Slacker(self.config.slack['TOKEN'])
         self.channel = channel
         self.data_handler = DataHandler()
+
+        self.user = user
+        self.channel = channel
+        self.input_text = input_text
 
     def send_message(self, channel=None, text=None, attachments=None):
         if self.channel is None:
