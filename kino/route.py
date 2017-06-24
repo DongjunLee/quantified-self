@@ -25,6 +25,7 @@ from .slack.slackbot import SlackerAdapter
 from .skills.question import AttentionQuestion
 from .skills.question import HappyQuestion
 
+from .utils.config import Config
 from .utils.data_loader import DataLoader
 from .utils.data_loader import SkillData
 from .utils.logger import Logger
@@ -35,7 +36,7 @@ from .utils.state import State
 class MsgRouter(object):
 
     def __init__(self):
-        self.slackbot = SlackerAdapter()
+        self.config = Config()
         self.logger = Logger().get_logger()
 
         self.dialog_manager = DialogManager()
@@ -54,6 +55,11 @@ class MsgRouter(object):
               direct=False, webhook=False, presence=None, dnd=None, predict=False):
 
         self.slackbot = SlackerAdapter(channel=channel, input_text=text, user=user)
+
+        print("direct", direct)
+        if self.config.bot["ONLY_DIRECT"] is True and direct is False:
+            # Skip
+            return
 
         # predict next action
         if predict:
