@@ -1,5 +1,10 @@
 
+import types
+
+import langid
 from slacker import Slacker
+
+from .resource import MsgResource
 
 from ..utils.config import Config
 from ..utils.data_handler import DataHandler
@@ -15,13 +20,22 @@ class SlackerAdapter(object):
 
         self.user = user
         self.channel = channel
-        self.input_text = input_text
+
+        if input_text is None:
+            self.lang_code = config.bot["LANG_CODE"]
+        else:
+            self.lang_code = langid.classify(input_text)[0]
 
     def send_message(self, channel=None, text=None, attachments=None):
         if self.channel is None:
             self.channel = self.config.channel['DEFAULT']
         if channel is not None:
             self.channel = channel
+
+        if isinstance(text, types.GeneratorType):
+            print(self.lang_code)
+            MsgResource.set_lang_code(self.lang_code)
+            text = next(text)
 
         r = self.slacker.chat.post_message(
             channel=self.channel,

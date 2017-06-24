@@ -10,13 +10,19 @@ class MsgResourceType(type):
     class __MsgResource:
 
         def __init__(self):
-            config = Config()
+            self.config = Config()
             data_handler = DataHandler()
 
-            self.resource = data_handler.read_template(config.bot["LANG_CODE"])
+            self.template = data_handler.read_template()
+
+        def set_lang_code(self, lang_code):
+            if lang_code in self.template.keys():
+                self.lang_code = lang_code
+            else:
+                self.lang_code = self.config.bot["LANG_CODE"]
 
         def __getattr__(self, name):
-            message =  self.resource[name]
+            message = self.template[self.lang_code][name]
             if isinstance(message, list):
                 message = random.choice(message)
 
@@ -39,9 +45,9 @@ class MsgResourceType(type):
                     return message
 
             if isinstance(message, dict) or ("{" in message and "}" in message):
-                return wrapper
+                yield wrapper
             else:
-                return message
+                yield message
 
     instance = None
 
