@@ -22,7 +22,8 @@ class MsgResourceType(type):
                 self.lang_code = self.config.bot["LANG_CODE"]
 
         def __getattr__(self, name):
-            message = self.template[self.lang_code][name]
+            EMPTY_TEMPLATE = f"There is no template. {self.lang_code} : {name}"
+            message = self.template[self.lang_code].get(name, EMPTY_TEMPLATE)
             if isinstance(message, list):
                 message = random.choice(message)
 

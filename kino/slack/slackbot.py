@@ -22,7 +22,7 @@ class SlackerAdapter(object):
         self.channel = channel
 
         if input_text is None:
-            self.lang_code = config.bot["LANG_CODE"]
+            self.lang_code = self.config.bot["LANG_CODE"]
         else:
             self.lang_code = langid.classify(input_text)[0]
 
