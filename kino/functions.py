@@ -105,7 +105,7 @@ class Functions(object):
         happy.report(timely=timely)
 
     def feed_notify(self):
-        feed_notifier = FeedNotifier(slackbot=self.slackbot)
+        feed_notifier = FeedNotifier()
         feed_notifier.notify_all()
 
     def total_score(self):

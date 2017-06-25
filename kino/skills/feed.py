@@ -16,6 +16,8 @@ from ..utils.logger import Logger
 class FeedNotifier:
 
     def __init__(self, slackbot=None):
+        self.logger = Logger().get_logger()
+
         data_handler = DataHandler()
         self.feed_list = data_handler.read_feeds()
 
@@ -29,6 +31,7 @@ class FeedNotifier:
             self.slackbot = slackbot
 
     def notify_all(self):
+        self.logger.info("Check feed_list")
         noti_list = []
         for f in self.feed_list:
             noti_list += self.notify(f)
@@ -44,8 +47,11 @@ class FeedNotifier:
         for e in feed.entries:
             e_updated_date = arrow.get(e.updated_parsed)
 
-            if (arrow.now() - e_updated_date).seconds < self.thresh_hold:
-                noti_list.append((e.title, e.link, self.__remove_tag(e.description)))
+            try:
+                if (arrow.now() - e_updated_date).seconds < self.thresh_hold:
+                    noti_list.append((e.title, e.link, self.__remove_tag(e.description)))
+            except:
+                pass
         return noti_list
 
     def __remove_tag(self, text):

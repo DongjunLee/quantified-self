@@ -107,10 +107,10 @@ class Worker(object):
         )
 
     def __excute_feed_schedule(self, interval):
-        schedule.every(interval).hours.do(
+        schedule.every(interval).minutes.do(
             self.__run_threaded, self.function_runner, {
                 "repeat": True,
-                "func_name": "feed_nofify",
+                "func_name": "feed_notify",
                 "params": {},
                 "not_holiday": False
             }

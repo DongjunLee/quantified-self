@@ -37,6 +37,9 @@ class ArrowUtil(object):
 
     @staticmethod
     def is_between(start_time, end_time, now=None):
+        if start_time is None and end_time is None:
+            return True
+
         if now is None:
             now = datetime.datetime.now()
 
