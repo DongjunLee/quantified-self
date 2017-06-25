@@ -17,13 +17,17 @@ from ..utils.classes import Skill
 
 class Predictor(object):
 
-    def __init__(self, n_neighbors=8):
-        self.slackbot = SlackerAdapter()
+    def __init__(self, n_neighbors=8, slackbot=None):
         self.knn = KNeighborsClassifier(n_neighbors=n_neighbors, weights='distance')
 
         skill_data = SkillData()
         data_X, data_y = DataLoader().make_data_set(skill_data.q)
         self.knn.fit(data_X, data_y)
+
+        if slackbot is None:
+            self.slackbot = SlackerAdapter()
+        else:
+            self.slackbot = slackbot
 
     def predict_skill(self):
         data_loader = DataLoader()
@@ -39,7 +43,7 @@ class Predictor(object):
             runner = FunctionRunner()
             params = runner.filter_f_params(description, func_name)
 
-            self.slackbot.send_message(text=MsgResource.PREDICT_RESULT(description))
+            self.slackbot.send_message(text=MsgResource.PREDICT_RESULT(description=description))
             runner.load_function(func_name=func_name, params=params)
         else:
             print("Skip. confidence is low.")

@@ -15,14 +15,16 @@ from ..utils.profile import Profile
 
 class TodoistManager(object):
 
-    def __init__(self, text=None):
-        self.input = text
+    def __init__(self, slackbot=None):
         self.config = Config()
+        self.template = MsgTemplate()
         self.todoist_api = todoist.TodoistAPI(
             self.config.open_api['todoist']['TOKEN'])
 
-        self.slackbot = SlackerAdapter()
-        self.template = MsgTemplate()
+        if slackbot is None:
+            self.slackbot = SlackerAdapter(channel=self.config.channel['TASK'])
+        else:
+            self.slackbot = slackbot
 
     def schedule(self, channel=None):
         self.slackbot.send_message(text=MsgResource.TODOIST_TODAY_SCHEDULE)
@@ -32,7 +34,7 @@ class TodoistManager(object):
         today_task_count = len(today_task)
 
         task_text = MsgResource.TODOIST_OVERDUE(
-            overdue_task_count) + "\n" + MsgResource.TODOIST_TODAY(today_task_count)
+            task_count=overdue_task_count) + "\n" + MsgResource.TODOIST_TODAY(task_count=today_task_count)
         self.slackbot.send_message(text=task_text, channel=channel)
 
         specific_task_list = list(
@@ -41,7 +43,8 @@ class TodoistManager(object):
                 self.__get_task(today_task)))
         attachments = self.template.make_todoist_task_template(
             specific_task_list)
-        self.slackbot.send_message(attachments=attachments, channel=channel)
+        if attachments is not None and len(attachments) != 0:
+            self.slackbot.send_message(attachments=attachments, channel=channel)
 
         karma_trend = self.__get_karma_trend()
         karma_trend_text = MsgResource.TODOIST_KARMA(karma_trend)
@@ -95,7 +98,7 @@ class TodoistManager(object):
         task_list = []
         for t in today_task:
             due_time = "anytime"
-            if ':' in t['date_string'] or '분' in t['date_string']:
+            if 'due_date' in t and (':' in t['date_string'] or '분' in t['date_string']):
                 due_time = parse(
                     t['due_date']).astimezone(
                     timezone('Asia/Seoul'))
@@ -127,7 +130,7 @@ class TodoistManager(object):
 
         added_count, completed_count, updated_count = self.__get_event_counts()
         event_text = MsgResource.TODOIST_FEEDBACK_EVENT(
-            added_count, completed_count, updated_count)
+            a_count=added_count, c_count=completed_count, u_count=updated_count)
         self.slackbot.send_message(text=event_text, channel=channel)
 
     def __get_event_counts(self):

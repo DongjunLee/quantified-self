@@ -16,9 +16,13 @@ from ..utils.score import Score
 
 class RescueTime(object):
 
-    def __init__(self):
+    def __init__(self, slackbot=None):
         self.config = Config()
-        self.slackbot = SlackerAdapter()
+
+        if slackbot is None:
+            self.slackbot = SlackerAdapter(channel=self.config.channel['REPORT'])
+        else:
+            self.slackbot = slackbot
 
     def efficiency(self, timely="daily"):
         now = arrow.now()

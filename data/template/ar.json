@@ -1,0 +1,301 @@
+{
+    "HELLO": [
+      "Hello {master_name}! \n I am the personal assistant {bot_name}. \n Nice to meet you.",
+      "You are {master_name} who my master! \n I am a personal assistant {bot_name}. Nice to meet you :D"
+    ],
+
+    "ERROR" : [
+      "An error has occurred.",
+      "Beep-beep - process failure"
+    ],
+    "NOT_UNDERSTANDING" : [
+      "I do not know what you mean. Make me smart!",
+      "What? I'm still a little stupid ...",
+      "It's something I can not handle yet.",
+      "I do not know yet. pull request to kino-bot!"
+    ],
+    "CREATE" : "Registration is complete!",
+    "EMPTY" : "It is empty. Please register!",
+    "READ" : "Registered list.",
+    "UPDATE" : "Your changes are complete.",
+    "DELETE" : "Delete complete!",
+
+    "NAP" : "Huh ... I'm sorry. I was sleeping for a while. TT",
+
+    "WORKER_START" : [
+      "Yep, I'll work hard.",
+      "It's a start! I'd like to rest a little ... I'm kidding.",
+      "Haha I do not know tired because of the machine. I will do my best."
+    ],
+    "WORKER_STOP" : [
+      "Huh .. It's finally time for a break! \n Please call me whenever you need it.",
+      ":battery: Battery is low. I will be resting for a while."
+    ],
+
+    "WORKER_CREATE_START" : "I will make the task you requested!",
+    "WORKER_FUNCTION_NOT_FOUND" : "I do not know what function you want. TT Please tell me more accurately.",
+
+    "GUIDE" : "A brief introduction and tips on Kino.",
+    "GUIDE_DETAIL": [
+      "Kino is a personal assistant based on Slack Bot.",
+      "It was developed as a personal project to improve my life quality by developing the parts that I need, not the fields that are commonly used.",
+      "",
+      "Various Tracking Tools (cf. RescueTime, Toggl, Todoist) and various third-party (cf. Github) And develops bots that understand more about themselves and react accordingly.",
+      "In addition, we can automate parts that can be automated in everyday life and work.",
+      "",
+      "It also develops the necessary functions for the team as a part of the start-up. One example is receiving salad orders, passing cards, and more.",
+      "You can modify the config.json and skill.json files for personal use or team use.",
+      "",
+      "And of course, I will also use machine learning and deep learning to grow beyond simple function to become a smart assistant.",
+      "Kino is going to be a little smarter! Pull requests are always welcome. :D",
+      "",
+      "Below are some examples of features you can use."
+    ],
+    "GUIDE_KEYWORD": {
+      "Worker": "Kino Let's start work, there is work! Weather forecast every 2 hours work added! Summary of day at 8pm",
+      "Notifier": "Register an alarm, Show an alarm, Delete an alarm",
+      "Between": "Add time interval, Showt ime interval, Delete time interval",
+      "Functions": "What's the function?, What can you do?",
+      "Weather": "weather forecast for now, how is the weather today?, let me know the weekly weather., how about air quality today?",
+      "Today": "Let's today briefing., Summarize today.",
+      "Todoist": "Let's me show a schedule, Give me the schedule feedback!",
+      "Kanban": "KANBAN board init, KANBAN sync",
+      "Github": "Did you commit today?, show weekly commit.",
+      "Toggl": "toggl, let me know task progressed time, check the task time, make a toggle report,",
+      "Bus": "Let me know the arrival time of the bus.",
+      "Summary": "Show me my overall score today! Show me my overall chart!",
+      "Translate": "Translate! Kino is smart bot and automatically save data that quantified self.",
+      "Question": "Show my happiness report., Show my attention report!"
+    },
+
+    "GREETING" : [
+      "You found me! How can I help you?",
+      "Hi! Nice to meet you."
+    ],
+
+    "SCHEDULER_CREATE_START" : "Proceed with alarm registration.",
+    "SCHEDULER_CREATE_STEP1" : "If you want to use a repeat alarm, select the time interval index, and if you want to be notified once, please enter a new time! \n (ex. # 1 or 10:00)",
+    "SCHEDULER_CREATE_STEP1_ONLY_TIME" : "Please enter your time!\n (ex. 10:00)",
+    "SCHEDULER_CREATE_STEP2" : "Please enter the next repeat interval! \n (ex: 30 minutes)",
+    "SCHEDULER_CREATE_STEP3" : "What functions will be used?\n (ex. send_message, {\"text\":\"Test!\"})",
+
+    "SCHEDULER_DELETE_START" : "Proceed with deleting the alarm. \n Please enter the index of the alarm you want to delete!",
+
+    "BETWEEN_CREATE_START" : "Proceed with time interval registration.",
+    "BETWEEN_CREATE_STEP1" : "Please enter a time interval!\n(ex. 12:00~19:00)",
+    "BETWEEN_CREATE_STEP2" : "Could you explain the time interval you entered? \n (ex: working hours)",
+
+    "BETWEEN_DELETE_START" : "Proceed with deleting the time interval. \n Please enter the index of the time interval you want to delete!",
+
+    "GITHUB_COMMIT_EMPTY" : "There are no Commit records in Github. Commit to daily commitments!",
+    "GITHUB_COMMIT_EXIST" : [
+      "Oh, you did Commit! It's cool. Today commit count : {commit_count}",
+      "Commit Commit! Push push !! Today commit count : {commit_count}"
+    ],
+    "GITHUB_COMMIT_WEEKLY" : "Check Github commit for a week!",
+
+    "ROBOT_ICON" : ":robot_face: ",
+    "TIMER_ICON" : ":mantelpiece_clock: ",
+    "CLOCK_ICON" : ":alarm_clock: ",
+    "WHITE_LIST_ICON" : ":white_medium_small_square: ",
+    "WHITE_ELEMENT_ICON" : "   :white_circle: ",
+    "BLACK_LIST_ICON" : ":black_medium_small_square: ",
+    "BLACK_ELEMENT_ICON" : "   :black_circle: ",
+    "BLUE_DIAMOND_ICON" : ":small_blue_diamond: ",
+    "ORANGE_DIAMOND_ICON" : ":small_orange_diamond: ",
+    "SEND_MESSAGE_ICON" : ":speech_balloon: ",
+    "DAILY_COMMIT_ICON" : ":octocat: ",
+
+    "PROFILE_WAKE_UP" : [
+      ":bell: It's time to get up! :bell: ",
+      ":bell: :bell: :bell: wake up! :bell::bell: :bell: "
+    ],
+    "PROFILE_WORK_START" : [
+      "Have a nice day! :) :raised_hands:",
+      "I wish you could have a wonderful day.",
+      "Have a great day !!"
+    ],
+    "PROFILE_WORK_END" : [
+      "Thanks for your work! Take your time, relax and have a good evening. :night_with_stars:"
+    ],
+    "PROFILE_GO_TO_BED" : [
+      ":sleeping_accommodation: It's time to sleep! ",
+      "Sleep 7 hours a day is good for the next day! Sleeping ^^ :sleeping_accommodation:",
+      "Sleep is the best care! How about go to bed?"
+    ],
+
+    "WEATHER" : "Weather information.",
+    "WEATHER_ICON" : ":full_moon_with_face: ",
+    "WEATHER_ICONS" : {
+        "clear-day": ":sunny: ",
+        "clear-night": ":first_quarter_moon_with_face: ",
+        "rain": ":umbrella_with_rain_drops: ",
+        "snow": ":snowman: ",
+        "sleet": ":snow_cloud: ",
+        "wind": ":wind_blowing_face: ",
+        "fog": ":fog: ",
+        "cloudy": ":cloud: ",
+        "partly-cloudy-day": ":partly_sunny: ",
+        "partly-cloudy-night": ":night_with_stars: "
+    },
+
+    "YOUTUBE_DOWNLOADER" : "The YouTube download link you requested.",
+    "YOUTUBE_ICON" : ":video_camera: ",
+
+    "TODOIST_ICON" : ":memo: ",
+    "TODOIST_TODAY_SCHEDULE" : "I will tell you the schedule of today.",
+
+    "TODOIST_OVERDUE" : "You have {task_count} of overdue tasks.",
+
+    "TODOIST_TODAY" : "The number of tasks today is {task_count}.",
+
+    "TODOIST_KARMA": {
+        "up": "Productivity has increased recently. Keep going!",
+        "-": "There is no change in productivity! Take care!",
+        "down": "Productivity is declining recently. Take care of your to-do list!"
+    },
+
+    "TODOIST_PRIORITY_COLOR": {
+        "1": "#CACACA",
+        "2": "#FBC03F",
+        "3": "#F6802E",
+        "4": "#E24439"
+    },
+
+    "TODOIST_TIME" : "Is scheduled for.",
+    "TODOIST_FEEDBACK" : "Todoist job history today.",
+
+    "TODOIST_FEEDBACK_OVERDUE": {
+      "10": "You still have a lot of work to do. TT",
+      "4": "We have a few things to do. Let's try.",
+      "0": "Oh ... you've done everything that was planned! Now take a break. :+1:"
+    },
+
+    "TODOIST_FEEDBACK_EVENT": "Today we added a total of {a_count} tasks, completed {c_count} tasks, and delayed {u_count} tasks.",
+
+    "TODOIST_REMAIN" : "A list of tasks that are still remain.",
+    "TODOIST_AUTO_UPDATE" : "I have updated your overdue tasks to today.",
+
+    "MAXIM_ICON" : ":scales: ",
+
+    "TOGGL_START" : "Start Toggl.",
+    "TOGGL_STOP" : "Stop Toggl.",
+
+    "TOGGL_STOP_SUMMARY": [
+      "Your {description} task has been processed for {diff_min} minutes.",
+      "Your {description} task progressed for {diff_min} minutes. Yeah!"
+    ],
+    "TOGGL_DO_NOTHING" : "He is not doing anything right now.",
+
+    "TOGGL_TIMER_CHECK": [
+      "t's been over {diff_min} minutes since you were working.",
+      "{Diff_min} minutes.",
+      "You've been working on {diff_min} minutes! Good job!"
+    ],
+
+    "TOGGL_NOTI_RELAY" : [
+      "You've been working too long! Stop for a while and rest for a minute!",
+      "It's hard to do it again. How about resting a little and starting again?"
+    ],
+    "TOGGL_REPORT" : "Report by Toggl.",
+    "TOGGL_ADVICE_REST": "It's time to relax until {time}! :dancer:",
+
+    "TOGGL_ALREADY_DOING" : "There is a work already in progress.",
+    "TOGGL_ALREADY_BREAK" : "Hut, were not you take a rest? There is currently no work in progress.",
+
+    "KANBAN_INIT" : "I initialized the KANBAN board and added cards to the Tasks list.",
+    "KANBAN_SYNC" : "Let's meet the sink between Todoist and Kanban board.",
+
+    "ATTENTION_QUESTION_STEP_0" : [
+      "How much did you focus on your work? (Out of 100)",
+      "Did you concentrate on this work? I am curious about it (out of 100 points)",
+      "clap: :clap: Did you focus well? (Out of 100)"
+    ],
+
+    "ATTENTION_QUESTION_STEP_1": {
+      "92": "Your concentration is the best! :laughing: ",
+      "85": "You're having fun! :smile: ",
+      "77": "I think it's a good thing! :smiley: ",
+      "70": "It seems a little difficult or boring ..! :simple_smile: ",
+      "50": "you did not want to do that .. :angry: "
+    },
+
+    "ATTENTION_REPORT" : "Attention Report.",
+
+    "HAPPY_QUESTION_STEP_0" : [
+      "How is your day today? (Out of 100)",
+      "Let's think about what the day is like for a while. (Out of 100)",
+      "Be Happy! Please tell us how you feel now! (Out of 100)"
+    ],
+
+    "HAPPY_QUESTION_STEP_1": {
+      "100": "Feel the best !! :laughing: ",
+      "90": "ou are happy. Looks good! :smile: ",
+      "80": "I think you are smiling. :smiley: ",
+      "70": "You might be so so.. :simple_smile: ",
+      "50": "What happened? You do not feel well. :angry: "
+    },
+
+    "HAPPY_REPORT" : "Happy Report",
+
+    "RESCUETIME_EFFICIENCY" : "RescueTime Report",
+
+    "TODAY_BREIFING" : "Let's start the today's briefing!",
+    "TODAY_SUMMARY" : "Let's start today's summary!",
+
+    "TOTAL_REPORT" : "Total Summary Report",
+
+    "BUS_ICON" : ":bus: ",
+
+    "SCORE_COLOR": {
+      "90": "#438C56",
+      "75": "#38ACEC",
+      "60": "#FF8040",
+      "40": "#C11B17"
+    },
+
+    "APPLAUD" : ":clap::clap::clap: It's cool!",
+    "WEEKDAY" : "Today is a weekday! Run! :running: ",
+    "HOLIDAY" : "Today is a day off! Take a rest. :walking: ",
+    "GOOD_MORNING" : "Good morning :) :sun_with_face:",
+
+    "SLEEP_TIME": "{bed_time} ~ {wakeup_time}, You've been sleeping for {diff_h} h.",
+
+    "GOOD_NIGHT" : "Have a nice dream. :first_quarter_moon_with_face:",
+
+    "AIR_QUALITY_COLOR": {
+      "1": "#1E90FF",
+      "2": "#90EE90",
+      "3": "#FF6347",
+      "4": "#DC143C"
+    },
+
+    "AIR_QUALITY_TEXT": {
+      "1": "Good",
+      "2": "Normal",
+      "3": "Bad",
+      "4": "Very Bad"
+    },
+
+    "IN_OUT_ERROR" : "Your smartphone seems to turn off and then turn on.",
+
+    "TRANSLATED_TEXT": "The translated results are as follows. \n - {result}",
+
+    "FLOW_HAPPY" : ":ear: I'm waiting for a happiness score answer!",
+    "FLOW_ATTENTION" : ":ear: I'm waiting for a attention score answer!",
+
+    "PREDICT_RESULT": [
+      "Now I think you will use the * {description} * feature for some reason!",
+      "Well.........!! I have been watching the future for a while! * {Description} * feature shown.",
+      "As a personal assistant, I have to take care of this. *{description}*"
+    ],
+
+    "FEED_COLOR": "#438C56",
+
+    "CARD_HOLDER": "Those who currently have a card are as follows. \n - {names}",
+    "NOT_CARD_HOLDER": "Oh, {from_name} does not have a card.",
+    "CARD_HISTORY": "Card delivery history is as follows. (Shows the last 5 records)\n - {historys}",
+    "CARD_FORWARD_NONE": "I do not know who to deliver to. Let us know @name !",
+    "CARD_FORWARD_ONLY_ONE": "Cards can only be delivered to one person!",
+    "CARD_FORWARD": "The card was passed from {from_name} to {to_name}."
+}

@@ -93,10 +93,8 @@ class MsgListener(object):
         text = self.msg.get("text", "")
         channel = self.msg.get("channel", "")
         slack_bot_id = self.slackbot.get_bot_id()
-        if text.startswith(
-            "<@" +
-            slack_bot_id +
-                ">") or channel.startswith("D"):
+        if f"<@{slack_bot_id}>" in text or channel.startswith("D") \
+                or (t.startswith(text.lower()) for t in self.config.bot["TRIGGER"]):
             return True
         else:
             return False

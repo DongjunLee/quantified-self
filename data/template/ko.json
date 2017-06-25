@@ -1,0 +1,302 @@
+{
+    "HELLO": [
+      "{master_name}님 안녕하세요! \n저는 개인비서 {bot_name} 라고 합니다.\n반갑습니다.",
+      "제 마스터 {master_name}님이시군요! \n저는 개인비서 {bot_name} 에요. 반가워요^^"
+    ],
+
+    "ERROR" : [
+      "에러가 발생하였습니다.",
+      "삐-- 고장고장"
+    ],
+    "NOT_UNDERSTANDING" : [
+      "무슨 말인지 잘 모르겠어요. 저를 똑똑하게 만들어주세요!!",
+      "제가 아직은 좀 멍청해요..ㅠㅠ",
+      "아직은 제가 처리할 수 없는 내용이군요..",
+      "잘 모르겠어요ㅠㅠ 빨리 개발해주세요!"
+    ],
+    "CREATE" : "등록이 완료되었습니다!",
+    "EMPTY" : "비어있습니다. 새로 등록해주세요!.",
+    "READ" : "등록된 리스트입니다.",
+    "UPDATE" : "변경이 완료되었습니다.",
+    "DELETE" : "삭제 완료!",
+
+    "NAP" : "헛.. 죄송합니다. 제가 잠시 졸고 있었습니다ㅠㅠ",
+
+    "WORKER_START" : [
+      "넵, 일 열심히 하겠습니다ㅎㅎ",
+      "일 시작이군요..! 조..조금만 쉬고 싶지만ㅋㅋㅋㅋ 아닙니다.",
+      "후후 저는 기계라 피로를 모릅니다. 제게 맡겨주세요."
+    ],
+    "WORKER_STOP" : [
+      "휴.. 드디어 휴식시간이군요!\n필요하실 때 언제나 불러주세요ㅎㅎ",
+      ":battery: 배터리 부족입니다. 엇ㅎㅎ 전 잠시 쉬고 있겠습니다."
+    ],
+
+    "WORKER_CREATE_START" : "요청하신 일을 만들도록 하겠습니다!",
+    "WORKER_FUNCTION_NOT_FOUND" : "어떤 기능을 원하시는 것인지 잘 모르겠어요ㅠㅠ 조금 더 정확하게 말씀해주세요.",
+
+    "GUIDE" : "Kino에 대한 간략한 소개 및 도움말 입니다.",
+    "GUIDE_DETAIL": [
+      "Kino는 Slack Bot으로 기본으로 개발된 Personal Assistant 입니다.",
+      "일반적으로 사용되는 분야가 아닌, 저에게 필요한 부분들을 개발하여 저 자신의 삶의 질을 높이기 위한 개인 프로젝트로서 개발되었습니다.",
+      "",
+      "다양한 Tracking Tool들 (cf. RescueTime, Toggl, Todoist 및 다양한 서드 파티(cf. Github 등..과 연동하여 자신에 대해서 더 자세히 파악하고 그에 맞는 반응을 하는 봇을 개발합니다.",
+      "더불어 날씨를 알려주거나, 버스 도착 시간을 알려주는 등.. 일상 생활, 업무에서 자동화할 수 있는 부분들을 자동화하고 있습니다.",
+      "",
+      "또한, 스타트업의 일원으로서 팀에 필요한 기능들을 개발하기도 합니다. 하나의 예로서 샐러디 주문 받기, 법카 전달하기 등의 기능들이 있습니다.",
+      "개인용으로 사용할지, 팀용으로 사용하지는 config, skill 파일들을 수정하면 됩니다.",
+      "",
+      "그리고 물론 머신러닝과 딥러닝도 사용하여 단순한 기능 연동을 넘어서 똑똑한 비서로서 성장시킬 것 입니다.",
+      "키노는 조금씩 똑똑해질 예정입니다! Pull Request는 언제나 환영입니다 ^^",
+      "",
+      "아래는 사용할 수 있는 기능 예시들 입니다."
+    ],
+
+    "GUIDE_KEYWORD": {
+      "Worker": "키노야 일 시작하자, 일이 있어! 2 시간마다 날씨예보, 일거리 추가! 20시에 하루 요약",
+      "Notifier": "알람 등록해줘, 알람 보여줘, 알람 삭제",
+      "Between": "시간대 추가해줘, 시간대 보자, 시간대 제거해줘",
+      "Functions": "기능 뭐 있어?",
+      "Weather": "지금 날씨 예보, 오늘 날씨 어때?, 주간 날씨 알려줘, 오늘 미세먼지 어때?",
+      "Today": "하루 브리핑 해줘!, 오늘 하루 요약해줘.",
+      "Todoist": "할일 스케쥴 알려줘, 할일 피드백 주라!",
+      "Kanban": "칸반보드 초기화, 칸반 싱크",
+      "Github": "오늘 커밋 했나?, 주간 커밋 보여줘",
+      "Toggl": "toggl, 작업시간 알려줘, 시간체크, 토글 리포트 만들어줘, 상세 작업 리포트 보여줘",
+      "Bus": "집앞 버스 조회, XX역 앞 버스 언제와?",
+      "Summary": "오늘 종합 점수 보여줘!, 종합 차트 보여줘!",
+      "Translate": "번역 해줘! Kino is smart bot and automatically save data that quantified self.",
+      "Question": "행복도 리포트 보여줘, 집중도 리포트 보여줘!"
+    },
+
+    "GREETING" : [
+      "저를 찾으셨나요! 무엇을 도와드릴까요?",
+      "안녕하세요! 반갑습니다ㅎㅎㅎ"
+    ],
+
+    "SCHEDULER_CREATE_START" : "알람 등록을 진행합니다.",
+    "SCHEDULER_CREATE_STEP1" : "반복 알람을 사용할 경우는 시간대를 선택 하시고,\n 한 번 알리는 경우 새로운 시간을 입력해주세요!\n (ex. #1 or 10:00)",
+    "SCHEDULER_CREATE_STEP1_ONLY_TIME" : "시간을 입력해주세요!\n (ex. 10:00)",
+    "SCHEDULER_CREATE_STEP2" : "다음으로 주기를 입력해주세요!\n (ex. 30 분)",
+    "SCHEDULER_CREATE_STEP3" : "사용될 함수는 무엇인가요?\n (ex. send_message, {\"text\":\"Test!\"})",
+
+    "SCHEDULER_DELETE_START" : "알람 삭제를 진행합니다.\n지우고자 하시는 알람의 인덱스를 입력해주세요!",
+
+    "BETWEEN_CREATE_START" : "시간대 등록을 진행합니다.",
+    "BETWEEN_CREATE_STEP1" : "시간간격을 입력해주세요!\n(ex. 12:00~19:00)",
+    "BETWEEN_CREATE_STEP2" : "입력하신 시간대를 설명해주시겠어요?\n (ex. 업무 시간)",
+
+    "BETWEEN_DELETE_START" : "시간대 삭제를 진행합니다.\n지우고자 하시는 시간대의 인덱스를 입력해주세요!",
+
+    "GITHUB_COMMIT_EMPTY" : "Github에 Commit한 기록이 없습니다. 일일커밋 실천하셔야죠!",
+    "GITHUB_COMMIT_EXIST" : [
+      "오, Commit을 하셨군요! 멋지십니다.ㅎㅎ 오늘 하루 Commit 수 : {commit_count}",
+      "커밋커밋! 푸쉬푸쉬!! ㅎㅎ 오늘 하루 Commit 수 : {commit_count}"
+    ],
+    "GITHUB_COMMIT_WEEKLY" : "일주일간의 Github commit 을 확인하세요!",
+
+    "ROBOT_ICON" : ":robot_face: ",
+    "TIMER_ICON" : ":mantelpiece_clock: ",
+    "CLOCK_ICON" : ":alarm_clock: ",
+    "WHITE_LIST_ICON" : ":white_medium_small_square: ",
+    "WHITE_ELEMENT_ICON" : "   :white_circle: ",
+    "BLACK_LIST_ICON" : ":black_medium_small_square: ",
+    "BLACK_ELEMENT_ICON" : "   :black_circle: ",
+    "BLUE_DIAMOND_ICON" : ":small_blue_diamond: ",
+    "ORANGE_DIAMOND_ICON" : ":small_orange_diamond: ",
+    "SEND_MESSAGE_ICON" : ":speech_balloon: ",
+    "DAILY_COMMIT_ICON" : ":octocat: ",
+
+    "PROFILE_WAKE_UP" : [
+      ":bell: 이제 일어날 시간 입니다! :bell: ",
+      ":bell: :bell: :bell: 기상! :bell::bell: :bell: "
+    ],
+    "PROFILE_WORK_START" : [
+      "오늘 하루도 화이팅입니다!ㅎㅎ :raised_hands:",
+      "오늘도 힘찬 하루가 되었으면 좋겠습니다^^",
+      "멋진 하루보내세요!!"
+    ],
+    "PROFILE_WORK_END" : [
+      "고생하셨습니다! 푹 쉬시면서, 자기발전도 하시고 알찬 저녁 보내세요. :night_with_stars:"
+    ],
+    "PROFILE_GO_TO_BED" : [
+      ":sleeping_accommodation: 이제 주무실 시간입니다! ",
+      "7시간은 주무셔야 다음날 컨디션도 좋습니다! 주무시죠^^ :sleeping_accommodation:",
+      "잠이 최고의 보약이라고 해요! 그만 잘까요?ㅎㅎ"
+    ],
+
+    "WEATHER" : "날씨 정보를 알려드립니다.",
+    "WEATHER_ICON" : ":full_moon_with_face: ",
+    "WEATHER_ICONS" : {
+        "clear-day": ":sunny: ",
+        "clear-night": ":first_quarter_moon_with_face: ",
+        "rain": ":umbrella_with_rain_drops: ",
+        "snow": ":snowman: ",
+        "sleet": ":snow_cloud: ",
+        "wind": ":wind_blowing_face: ",
+        "fog": ":fog: ",
+        "cloudy": ":cloud: ",
+        "partly-cloudy-day": ":partly_sunny: ",
+        "partly-cloudy-night": ":night_with_stars: "
+    },
+
+    "YOUTUBE_DOWNLOADER" : "요청하신 YouTube 다운로드 링크입니다.",
+    "YOUTUBE_ICON" : ":video_camera: ",
+
+    "TODOIST_ICON" : ":memo: ",
+    "TODOIST_TODAY_SCHEDULE" : "오늘의 스케쥴을 알려드리겠습니다.",
+
+    "TODOIST_OVERDUE" : "기한이 지난 일이 {task_count}개 있습니다.",
+
+    "TODOIST_TODAY" : "오늘 할일의 수는 {task_count}개 입니다.",
+
+    "TODOIST_KARMA": {
+        "up": "최근 생산성이 올랐습니다. 이대로 쭉 갑시다!ㅎㅎ",
+        "-": "생산성에 변화가 없습니다! 분발하시죠!",
+        "down": "최근 생산성이 떨어지고 있습니다. 할일목록을 잘 관리해주세요! ㅠㅠ"
+    },
+
+    "TODOIST_PRIORITY_COLOR": {
+        "1": "#CACACA",
+        "2": "#FBC03F",
+        "3": "#F6802E",
+        "4": "#E24439"
+    },
+
+    "TODOIST_TIME" : "에 예정되어 있습니다.",
+    "TODOIST_FEEDBACK" : "오늘 Todoist 작업내역 입니다.",
+
+    "TODOIST_FEEDBACK_OVERDUE": {
+      "10": "아직 처리해야할 일들이 많이 남았습니다. ㅠㅠ",
+      "4": "처리해야할 일들이 조금 남았습니다. 조금만 힘내시죠ㅎㅎ",
+      "0": "오.. 예정되었던 일들을 전부 처리하셨군요! 이제 푹 쉬세요. :+1: "
+    },
+
+    "TODOIST_FEEDBACK_EVENT": "오늘은 총 {a_count} 개의 할일들을 추가하였고, {c_count} 개의 일들을 완료하였으며, {u_count} 개의 일들을 완료하지 못하고 연기하였습니다.",
+
+    "TODOIST_REMAIN" : "아직 남아있는 작업 리스트입니다. ",
+    "TODOIST_AUTO_UPDATE" : "기한이 지난 작업들을 제가 오늘로 업데이트 하였습니다. ",
+
+    "MAXIM_ICON" : ":scales: ",
+
+    "TOGGL_START" : "Toggl을 시작합니다.",
+    "TOGGL_STOP" : "Toggl을 중지합니다.",
+
+    "TOGGL_STOP_SUMMARY": [
+      "{description} 작업을 {diff_min}분 동안 진행하셨습니다.",
+      "{description} 작업을 {diff_min}분 동안 진행헀습니다. 얏호!"
+    ],
+    "TOGGL_DO_NOTHING" : "지금은 아무런 작업도 하고 있지 않으십니다.",
+
+    "TOGGL_TIMER_CHECK": [
+      "작업을 진행하신지 {diff_min}분 경과하였습니다.",
+      "{diff_min}분 경과.",
+      "{diff_min}분 동안 작업 진행하셨어요! 화이팅!!"
+    ],
+
+    "TOGGL_NOTI_RELAY" : [
+      "작업을 너무 오래하고 계십니다! 잠시 멈추고 십분만 휴식하시죠!!",
+      "힘드시죠ㅠㅠ 조금 쉬었다가 다시 시작하시는 건 어떠신가요?ㅠㅠ"
+    ],
+    "TOGGL_REPORT" : "Toggl에 저장되어있는 Report 입니다.",
+    "TOGGL_ADVICE_REST": "{time} 까지는 쉬는 시간입니다! :dancer:",
+
+    "TOGGL_ALREADY_DOING" : "이미 진행 중인 작업이 있습니다.",
+    "TOGGL_ALREADY_BREAK" : "헛, 쉬시는 중 아니셨나요? 현재 진행 중인 작업이 없습니다..",
+
+    "KANBAN_INIT" : "KANBAN 보드를 초기화하고, Tasks 리스트에 카드들을 추가하였습니다.",
+    "KANBAN_SYNC" : "Todoist와 Kanban board 간의 싱크를 맞추겠습니다.",
+
+    "ATTENTION_QUESTION_STEP_0" : [
+      "진행하신 작업에 얼마나 집중하셨나요? (100점 만점)",
+      "이번 작업은 집중이 잘 되셨나요. 궁금합니다ㅎㅎ (100점 만점)",
+      "작업하느라 고생하셨습니다!ㅎㅎ :clap: :clap: 집중은 잘 되셨나요? (100점 만점)"
+    ],
+
+    "ATTENTION_QUESTION_STEP_1": {
+      "92": "몰입력 최고군요! :laughing: ",
+      "85": "일이 재미있으시군요! ㅎㅎ :smile: ",
+      "77": "할만한 일인 것 같아요! :smiley: ",
+      "70": "좀 어렵거나, 재미없으신 일인 것 같군요..! :simple_smile: ",
+      "50": "하기 싫은 작업이였군요..ㅠㅠ :angry: "
+    },
+
+    "ATTENTION_REPORT" : "집중도 Report 입니다.",
+
+    "HAPPY_QUESTION_STEP_0" : [
+      "오늘 하루는 어떠신가요? (100점 만점)",
+      "ㅎㅎ잠시 오늘 하루는 어떤지 생각해볼까요? (100점 만점)",
+      "Be Happy! 지금 기분이 어떠신지 점수로 알려주세요! (100점 만점)"
+    ],
+
+    "HAPPY_QUESTION_STEP_1": {
+      "100": "기분 최고!! :laughing: ",
+      "90": "행복하시군요ㅎㅎ 보기 좋습니다. :smile: ",
+      "80": "슬며시 미소를 짓고 계신 것 같아요ㅎㅎ :smiley: ",
+      "70": "그냥 그러시군요.. :simple_smile: ",
+      "50": "무슨 일 있으신가요? 기분이 안 좋아보입니다ㅠㅠ :angry: "
+    },
+
+    "HAPPY_REPORT" : "행복도 Report 입니다.",
+
+    "RESCUETIME_EFFICIENCY" : "RescueTime 생산성 차트입니다.",
+
+    "TODAY_BREIFING" : "오늘 하루 브리핑을 시작하겠습니다!",
+    "TODAY_SUMMARY" : "오늘 하루 요약을 시작하겠습니다!",
+
+    "TOTAL_REPORT" : "종합점수 Report 입니다.",
+
+    "BUS_ICON" : ":bus: ",
+
+    "SCORE_COLOR": {
+      "90": "#438C56",
+      "75": "#38ACEC",
+      "60": "#FF8040",
+      "40": "#C11B17"
+    },
+
+    "APPLAUD" : ":clap::clap::clap: 멋지십니다!ㅎㅎ",
+    "WEEKDAY" : "오늘은 평일이군요! 달리시죠ㅎㅎ :running: ",
+    "HOLIDAY" : "오늘은 쉬는 날 이군요! 쉬면서 가세요ㅎㅎ :walking: ",
+    "GOOD_MORNING" : "안녕히 주무셨나요? 좋은 아침입니다^^ :sun_with_face:",
+
+    "SLEEP_TIME": "{bed_time} ~ {wakeup_time}, 총 {diff_h}h 동안 잠을 주무셨습니다.",
+
+    "GOOD_NIGHT" : "이제 주무시는 군요. 좋은 꿈 꾸세요 :first_quarter_moon_with_face:",
+
+    "AIR_QUALITY_COLOR": {
+      "1": "#1E90FF",
+      "2": "#90EE90",
+      "3": "#FF6347",
+      "4": "#DC143C"
+    },
+
+    "AIR_QUALITY_TEXT": {
+      "1": "좋음",
+      "2": "보통",
+      "3": "나쁨",
+      "4": "매우 나쁨"
+    },
+
+    "IN_OUT_ERROR" : "핸드폰이 꺼졌다가 켜진 것 같습니다ㅠㅠ",
+
+    "TRANSLATED_TEXT": "번역된 결과는 다음과 같습니다. \n - {result}",
+
+    "FLOW_HAPPY" : ":ear: 행복도 점수 대답을 기다리고 있습니다!",
+    "FLOW_ATTENTION" : ":ear: 집중도 점수 대답을 기다리고 있습니다!",
+
+    "PREDICT_RESULT": [
+      "지금은 왠지 *{description}* 기능을 사용하실 것 같군요!",
+      "음.........!! 잠시 미래를 보고 왔습니다! *{description}* 기능이 보였습니다 후후",
+      "개인비서로서 이정도는 알아서 해야죠ㅎㅎ *{description}* 처리하겠습니다."
+    ],
+
+    "FEED_COLOR": "#438C56",
+
+    "CARD_HOLDER": "현재 법카를 가지고 있는 분들은 다음과 같습니다. \n - {names}",
+    "NOT_CARD_HOLDER": "앗,이런 {from_name} 님은 카드를 가지고 계시지 않습니다.",
+    "CARD_HISTORY": "카드 전달 기록은 다음과 같습니다. (가장 최근의 기록 5개를 보여줍니다)\n - {historys}",
+    "CARD_FORWARD_NONE": "누구에게 전달한다는 것인지 모르겠어요. @name 으로 알려주세요!",
+    "CARD_FORWARD_ONLY_ONE": "카드는 한명에게만 전달할 수 있습니다:!",
+    "CARD_FORWARD": "법카가 {from_name} 으로부터 {to_name} 에게 전달 되었습니다."
+}

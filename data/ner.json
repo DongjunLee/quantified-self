@@ -1,44 +1,44 @@
 {
   "kino": {
     "Worker": {
-      "keyword": ["일 "],
+      "keyword": ["일 ", "work"],
       "behave": {
-        "create": ["있다", "추가", "일거리"],
-        "run": ["시작"],
-        "stop": ["중지", "멈추다", "그만"]
+        "create": ["있다", "추가", "일거리", "add", "create"],
+        "run": ["시작", "start"],
+        "stop": ["중지", "멈추다", "그만", "stop"]
       }
     },
     "Scheduler": {
-      "keyword": ["알람"],
+      "keyword": ["알람", "alarm"],
       "behave": {
-        "create": ["등록", "추가"],
-        "read": ["보다", "보이다", "보기", "확인"],
-        "delete": ["삭제", "제거", "없애다"]
+        "create": ["등록", "추가", "add", "create"],
+        "read": ["보다", "보이다", "보기", "확인", "show"],
+        "delete": ["삭제", "제거", "없애다", "remove", "delete"]
       }
     },
     "Between": {
-      "keyword": ["시간대"],
+      "keyword": ["시간대", "time interval"],
       "behave": {
-        "create": ["등록", "추가"],
-        "read": ["보다", "보이다", "보기", "확인"],
-        "delete": ["삭제", "제거", "없애다"]
+        "create": ["등록", "추가", "add", "create"],
+        "read": ["보다", "보이다", "보기", "확인", "show"],
+        "delete": ["삭제", "제거", "없애다", "remove", "delete"]
       }
     },
     "SkillList": {
-      "keyword": ["함수", "기능", "뭘"],
+      "keyword": ["함수", "기능", "뭘", "function", "skill", "what can"],
       "behave": {
-        "read": ["보다", "보이다", "보기", "확인", "뭐 있다", "하다"]
+        "read": ["보다", "보이다", "보기", "확인", "뭐 있다", "하다", "function", "do"]
       }
     }
   },
   "schedule": {
     "time_of_day": {
-      "morning": ["아침", "모닝"],
-      "lunch": ["점심", "점심식사"],
-      "afternoon": ["오후"],
-      "dinner": ["저녁식사"],
-      "evening": ["밤", "저녁"],
-      "all-day": ["하루종일", "종일"]
+      "morning": ["아침", "모닝", "morning"],
+      "lunch": ["점심", "점심식사", "lunch"],
+      "afternoon": ["오후", "afternoon"],
+      "dinner": ["저녁식사", "dinner"],
+      "evening": ["밤", "저녁", "evening"],
+      "all-day": ["하루종일", "종일", "all day"]
     },
     "time_unit": {
       "hour": "\\d+시",
@@ -46,8 +46,8 @@
       "second": "\\d+초"
     },
     "period": {
-      "interval": ["마다", "간격"],
-      "real-time": ["즉시", "바로"]
+      "interval": ["마다", "간격", "interval"],
+      "real-time": ["즉시", "바로", "real-time", "real time"]
     }
   },
   "params": {
@@ -62,7 +62,7 @@
       "217000147": ["집 건너편", "차량등록사업소"]
     },
     "real_time": {
-      "true": ["실시간"]
+      "true": ["실시간", "real-time", "real time"]
     },
     "english": {
       "pattern": "[A-Za-z][A-Za-z ]+"

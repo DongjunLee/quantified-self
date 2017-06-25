@@ -6,7 +6,7 @@ slacker
 websockets
 xmljson
 matplotlib
-todoist-python
+todoist-python==7.0.16
 python-forecastio
 geopy
 konlpy
@@ -14,3 +14,5 @@ JPype1-py3
 PyGithub
 sklearn
 py-trello
+feedparser
+langid

@@ -13,8 +13,7 @@ from ..utils.data_handler import DataHandler
 
 class Bus(object):
 
-    def __init__(self):
-        self.slackbot = SlackerAdapter()
+    def __init__(self, slackbot=None):
         self.template = MsgTemplate()
         self.data_handler = DataHandler()
         self.config = Config()
@@ -22,6 +21,11 @@ class Bus(object):
         self.ansan_bus = self.data_handler.read_file("ansan_bus.json")
         self.ansan_station = self.data_handler.read_file("ansan_station.json")
         self.service_key = self.config.open_api['gbis']['TOKEN']
+
+        if slackbot is None:
+            self.slackbot = SlackerAdapter()
+        else:
+            self.slackbot = slackbot
 
     def arrive_info(self, station_id, real_time=False):
         url = "http://openapi.gbis.go.kr/ws/rest/busarrivalservice/station?"

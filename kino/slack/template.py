@@ -98,7 +98,8 @@ class MsgTemplate(object):
         a_dict = {}
         a_dict['pretext'] = ""
         a_dict['title'] = MsgResource.ROBOT_ICON + MsgResource.GUIDE
-        a_dict['fallback'] = "Kino에 대한 가이드입니다. channel에서 확인하세요!"
+        a_dict['title_link'] = "https://github.com/DongjunLee/kino-bot"
+        a_dict['fallback'] = guide
         a_dict['color'] = "#438C56"
 
         text = guide + "\n\n"
@@ -122,7 +123,7 @@ class MsgTemplate(object):
 
         a_dict = {}
         a_dict['title'] = MsgResource.WEATHER
-        a_dict['fallback'] = MsgResource.WEATHER_ICONS[icon] + " " + fallback
+        a_dict['fallback'] = MsgResource.WEATHER_ICONS(icon) + " " + fallback
         a_dict['color'] = "#438C56"
 
         fields = []
@@ -130,7 +131,7 @@ class MsgTemplate(object):
         fields.append(
             self.field(
                 "Sky Icon",
-                MsgResource.WEATHER_ICONS[icon],
+                MsgResource.WEATHER_ICONS(icon),
                 short="true"))
         if temperature:
             fields.append(self.field("Temperature", temperature, short="true"))
@@ -200,6 +201,23 @@ class MsgTemplate(object):
             a_dict['mrkdwn_in'] = ["text", "pretext"]
 
             attachments.append(a_dict)
+        return attachments
+
+    def make_feed_template(self, feed):
+        attachments = []
+
+        title, link, description = feed
+        fallback = title + ": "  + description
+
+        a_dict = {}
+        a_dict['title'] = title
+        a_dict['fallback'] = fallback
+        a_dict['color'] = MsgResource.FEED_COLOR
+
+        a_dict['text'] = description + "\n" + link
+        a_dict['mrkdwn_in'] = ["text", "pretext"]
+
+        attachments.append(a_dict)
         return attachments
 
     def make_bus_stop_template(self, data):

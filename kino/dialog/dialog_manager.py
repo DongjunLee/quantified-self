@@ -2,7 +2,6 @@
 import arrow
 
 from ..slack.resource import MsgResource
-from ..slack.slackbot import SlackerAdapter
 
 from ..utils.arrow import ArrowUtil
 from ..utils.data_handler import DataHandler
@@ -13,7 +12,6 @@ class DialogManager(object):
 
     def __init__(self):
         self.state = State()
-        self.slackbot = SlackerAdapter()
         self.data_handler = DataHandler()
 
     def current_state(self):
@@ -53,7 +51,7 @@ class DialogManager(object):
 
     def __return_state(self, globals, state, kind):
         classname = state["class"]
-        route_class = globals[classname]()
+        route_class = globals[classname]
         behave = state["def"]
         if kind == State.FLOW:
             params = state["step"]

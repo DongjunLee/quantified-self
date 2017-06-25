@@ -8,10 +8,13 @@ from ..utils.data_handler import DataHandler
 
 class Maxim(object):
 
-    def __init__(self, text=None):
-        self.input = text
-        self.slackbot = SlackerAdapter()
+    def __init__(self, slackbot=None):
         self.data_handler = DataHandler()
+
+        if slackbot is None:
+            self.slackbot = SlackerAdapter()
+        else:
+            self.slackbot = slackbot
 
     def nietzsche(self):
         maxim_list = self.data_handler.read_text("Nietzsche.txt").split("\n")

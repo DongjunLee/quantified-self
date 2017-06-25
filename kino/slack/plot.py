@@ -1,6 +1,4 @@
 import matplotlib
-matplotlib.use('TkAgg')
-
 from matplotlib import pyplot as plt
 import matplotlib.dates as dt
 import seaborn

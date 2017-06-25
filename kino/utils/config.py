@@ -11,6 +11,7 @@ class Config(object):
             config = DataHandler().read_file("config.json")
 
             self.bot = config["bot"]
+            self.channel = config["channel"]
             self.slack = config["slack"]
             self.profile = config["profile"]
             self.open_api = config["open_api"]

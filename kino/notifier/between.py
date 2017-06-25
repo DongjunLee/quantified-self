@@ -12,12 +12,16 @@ from ..utils.state import State
 
 class Between(object):
 
-    def __init__(self, text=None):
+    def __init__(self, text=None, slackbot=None):
         self.input = text
-        self.slackbot = SlackerAdapter()
         self.data_handler = DataHandler()
         self.fname = "schedule.json"
         self.template = MsgTemplate()
+
+        if slackbot is None:
+            self.slackbot = SlackerAdapter()
+        else:
+            self.slackbot = slackbot
 
     def create(self, step=0, params=None):
         state = State()
@@ -26,7 +30,7 @@ class Between(object):
             self.slackbot.send_message(text=MsgResource.BETWEEN_CREATE_START)
             self.data_handler.read_json_then_add_data(
                 self.fname, "between", {})
-            state.flow_start("notifier/Between", "create")
+            state.flow_start("Between", "create")
 
             self.slackbot.send_message(text=MsgResource.BETWEEN_CREATE_STEP1)
 
@@ -101,7 +105,7 @@ class Between(object):
         def step_0(params):
             self.slackbot.send_message(text=MsgResource.BETWEEN_DELETE_START)
             if self.read() == "success":
-                state.flow_start("notifier/Between", "delete")
+                state.flow_start("Between", "delete")
 
         def step_1(params):
             b_index = params

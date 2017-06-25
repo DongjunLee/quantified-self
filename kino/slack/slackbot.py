@@ -1,5 +1,11 @@
 
+import re
+import types
+
+import langid
 from slacker import Slacker
+
+from .resource import MsgResource
 
 from ..utils.config import Config
 from ..utils.data_handler import DataHandler
@@ -7,20 +13,53 @@ from ..utils.data_handler import DataHandler
 
 class SlackerAdapter(object):
 
-    def __init__(self):
+    def __init__(self, channel=None, user=None, input_text=None):
         self.config = Config()
         self.slacker = Slacker(self.config.slack['TOKEN'])
+        self.channel = channel
         self.data_handler = DataHandler()
 
+        self.user = user
+        self.channel = channel
+
+        if input_text is None:
+            self.lang_code = self.config.bot["LANG_CODE"]
+        else:
+            self.lang_code = langid.classify(input_text)[0]
+
     def send_message(self, channel=None, text=None, attachments=None):
-        if channel is None:
-            channel = self.config.slack['DEFAULT_CHANNEL']
+        if self.channel is None:
+            self.channel = self.config.channel['DEFAULT']
+        if channel is not None:
+            self.channel = channel
+
+        MsgResource.set_lang_code(self.lang_code)
+        text = self.__message2text(text)
+
+        if attachments is not None:
+            attachments = self.attachment_message2text(attachments)
+
         r = self.slacker.chat.post_message(
-            channel=channel,
+            channel=self.channel,
             text=text,
             attachments=attachments,
             as_user=True)
         self.data_handler.edit_cache(('message', r.body))
+
+    def attachment_message2text(self, d):
+        if not isinstance(d, (dict, list)):
+            return d
+        if isinstance(d, list):
+            return [ self.__message2text(v) for v in (self.attachment_message2text(v) for v in d)]
+        return {k: self.__message2text(v) for k, v in ((k, self.attachment_message2text(v)) for k, v in d.items())}
+
+    def __message2text(self, msg_text):
+        if isinstance(msg_text, str):
+            result = re.findall(r"\{[A-Z][A-Z_0-9]+\}", msg_text)
+            if len(result) > 0:
+                for r in result:
+                    msg_text = msg_text.replace(r, MsgResource.to_text(r))
+        return msg_text
 
     def update_message(self, channel=None, text=None, attachments=None):
         if text is None:
@@ -40,11 +79,16 @@ class SlackerAdapter(object):
                 as_user=True)
 
     def file_upload(self, f_name, channel=None, title=None, comment=None):
-        if channel is None:
-            channel = self.config.slack['DEFAULT_CHANNEL']
+        if self.channel is None:
+            self.channel = self.config.channel['DEFAULT']
+        if channel is not None:
+            self.channel = channel
+
+        comment = self.__message2text(comment)
+
         self.slacker.files.upload(
             f_name,
-            channels=channel,
+            channels=self.channel,
             title=title,
             initial_comment=comment)
 
@@ -63,3 +107,6 @@ class SlackerAdapter(object):
                 bot_id = user['id']
                 self.data_handler.edit_cache(('bot_id', bot_id))
                 return bot_id
+
+    def get_users(self):
+        return self.slacker.users.list().body['members']

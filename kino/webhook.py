@@ -10,6 +10,7 @@ from .skills.toggl import TogglManager
 from .skills.summary import Summary
 
 from .utils.arrow import ArrowUtil
+from .utils.config import Config
 from .utils.data_handler import DataHandler
 from .utils.state import State
 
@@ -18,6 +19,7 @@ from .utils.state import State
 class Webhook(object):
 
     def __init__(self):
+        self.config = Config()
         self.slackbot = SlackerAdapter()
         self.dialog_manager = DialogManager()
         self.data_handler = DataHandler()
@@ -40,7 +42,14 @@ class Webhook(object):
         elif action.startswith("KANBAN"):
             self.KANBAN_handle(event)
         else:
-            self.slackbot.send_message(text=event['msg'])
+            channel = None
+
+            sns = ['tweet', 'twitter', 'facebook', 'instagram']
+            if any([s for s in sns if s in action.lower()]):
+                channel = self.config.channel['SNS']
+            elif "feed" in action.lower():
+                channel = self.config.channel['FEED']
+            self.slackbot.send_message(text=event['msg'], channel=channel)
 
     def IN_OUT_handle(self, prev, event):
         if self.__is_error(prev, event):
@@ -107,10 +116,12 @@ class Webhook(object):
 
     def TODO_handle(self, event):
         time = ArrowUtil.get_action_time(event['time'])
-        minute = time.format("mm")
-
         msg = event['msg']
-        if minute == "00":
+
+        activity_data = self.data_handler.read_record().get('activity', {})
+        wake_up_time = arrow.get(activity_data.get('wake_up', None))
+
+        if time.format("HH:mm") == wake_up_time.format("HH:mm"):
             msg = "*기한이 지난* " + msg.replace("완료", "오늘로 갱신")
         else:
             if event['action'].endswith("COMPLATE"):
@@ -119,7 +130,7 @@ class Webhook(object):
                 if "운동" in msg:
                     Summary().record_exercise()
 
-        self.slackbot.send_message(text=msg)
+        self.slackbot.send_message(text=msg, channel=self.config.channel['TASK'])
 
     def KANBAN_handle(self, event):
         toggl_manager = TogglManager()

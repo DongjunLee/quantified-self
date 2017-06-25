@@ -108,3 +108,17 @@ class DataHandler(object):
         cache = self.read_cache()
         cache[data[0]] = data[1]
         self.write_file(fname, cache)
+
+    def read_template(self):
+        templates = {}
+
+        template_dir = "template/"
+        for f in os.listdir(self.data_path + template_dir):
+            if f.endswith(".json"):
+                lang_code = f.split(".")[0]
+                templates[lang_code] = self.read_file(template_dir + f)
+        return templates
+
+    def read_feeds(self):
+        feed_text = self.read_text("feed_list.txt")
+        return feed_text.splitlines()

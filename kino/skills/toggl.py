@@ -21,9 +21,8 @@ from ..utils.state import State
 
 class TogglManager(object):
 
-    def __init__(self):
+    def __init__(self, slackbot=None):
         self.config = Config()
-        self.slackbot = SlackerAdapter()
         self.logger = Logger().get_logger()
 
         self.toggl = Toggl()
@@ -32,8 +31,12 @@ class TogglManager(object):
         wid = self.toggl.getWorkspace(
             name=self.config.open_api['toggl']['WORKSPACE_NAME'])['id']
         self.toggl.setWorkspaceId(wid)
-
         self.entity = TogglProjectEntity().entity
+
+        if slackbot is None:
+            self.slackbot = SlackerAdapter(channel=self.config.channel['TASK'])
+        else:
+            self.slackbot = slackbot
 
     def timer(self, description=None, doing=True, done=True):
         state = State()
@@ -43,7 +46,7 @@ class TogglManager(object):
         if advice_rest_time is not None:
             advice_rest_time = arrow.get(advice_rest_time)
             if advice_rest_time > arrow.now():
-                self.slackbot.send_message(text=MsgResource.TOGGL_ADVICE_REST(advice_rest_time.format('HH:mm')))
+                self.slackbot.send_message(text=MsgResource.TOGGL_ADVICE_REST(time=advice_rest_time.format('HH:mm')))
                 return
 
         current_timer = self.toggl.currentRunningTimeEntry()['data']
@@ -81,7 +84,7 @@ class TogglManager(object):
             self.slackbot.send_message(text=MsgResource.TOGGL_STOP)
             self.slackbot.send_message(
                 text=MsgResource.TOGGL_STOP_SUMMARY(
-                    description, diff_min))
+                    description=description, diff_min=diff_min))
 
             if done == True:
                 todoist = TodoistManager()
@@ -117,7 +120,7 @@ class TogglManager(object):
             for i in range(3, 10, 3):
                 if diff_min_divide_10 == i:
                     self.slackbot.send_message(
-                        text=MsgResource.TOGGL_TIMER_CHECK(diff_min))
+                        text=MsgResource.TOGGL_TIMER_CHECK(diff_min=diff_min))
                     break
 
         # q_ratio = random.randint(1, 100)
@@ -140,11 +143,14 @@ class TogglManager(object):
             'calculate': 'time'
         }
 
+        channel = self.config.channel['REPORT']
+
         if kind == "basic":
             f_name = "basic-report.pdf"
             self.toggl.getWeeklyReportPDF(data, f_name)
             self.slackbot.file_upload(
                 f_name,
+                channel=channel,
                 title=timely + " 기본 리포트",
                 comment=MsgResource.TOGGL_REPORT)
         elif kind == "chart":
@@ -152,6 +158,7 @@ class TogglManager(object):
             self.toggl.getSummaryReportPDF(data, f_name)
             self.slackbot.file_upload(
                 f_name,
+                channel=channel,
                 title=timely + " 차트 리포트",
                 comment=MsgResource.TOGGL_REPORT)
         elif kind == "detail":
@@ -159,6 +166,7 @@ class TogglManager(object):
             self.toggl.getDetailedReportPDF(data, f_name)
             self.slackbot.file_upload(
                 f_name,
+                channel=channel,
                 title=timely + " 상세 리포트",
                 comment=MsgResource.TOGGL_REPORT)
 

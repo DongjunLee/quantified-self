@@ -6,6 +6,8 @@ from .dnd import DoNotDisturbManager
 
 from ..nlp.ner import NamedEntitiyRecognizer
 
+from ..functions import Functions
+
 from ..skills.predictor import Predictor
 from ..skills.summary import Summary
 from ..skills.weather import Weather
@@ -57,13 +59,16 @@ class PreseneManager(object):
 
             self.slackbot.send_message(
                 text=MsgResource.SLEEP_TIME(
-                    go_to_bed_time.format("HH:mm"),
-                    wake_up_time.format("HH:mm"),
-                    str(sleep_time)))
+                    bed_time=go_to_bed_time.format("HH:mm"),
+                    wakeup_time=wake_up_time.format("HH:mm"),
+                    diff_h=str(sleep_time)))
 
             weather = Weather()
             weather.forecast(timely="daily")
             weather.air_quality()
+
+            functions = Functions()
+            functions.kanban_init()
 
     def check_flow(self, presence):
         if presence == "active":

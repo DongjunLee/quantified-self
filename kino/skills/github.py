@@ -12,35 +12,39 @@ from ..utils.score import Score
 
 class GithubManager(object):
 
-    def __init__(self):
+    def __init__(self, slackbot=None):
         self.config = Config()
 
         self.username = self.config.open_api['github']['USERNAME']
         password = self.config.open_api['github']['PASSWORD']
         self.github = Github(self.username, password)
-        self.events = None
 
-        self.slackbot = SlackerAdapter()
+        if slackbot is None:
+            self.slackbot = SlackerAdapter(channel=self.config.channel['REPORT'])
+        else:
+            self.slackbot = slackbot
 
     def commit(self, timely="daily"):
+        events = self.github.get_user(self.username).get_events()
+
         if type(timely) == int:
             point_start = self.__time_point(timely)
             point_end = self.__time_point(timely+1)
 
-            commit_count = self.__get_event_count(point_start, point_end)
+            commit_count = self.__get_event_count(events, point_start, point_end)
             return commit_count
 
         elif timely == "daily":
             point_start = self.__time_point(0)
             point_end = self.__time_point(1)
 
-            commit_count = self.__get_event_count(point_start, point_end)
+            commit_count = self.__get_event_count(events, point_start, point_end)
             if commit_count == 0:
                 self.slackbot.send_message(
                     text=MsgResource.GITHUB_COMMIT_EMPTY)
             else:
                 self.slackbot.send_message(
-                    text=MsgResource.GITHUB_COMMIT_EXIST + str(commit_count))
+                    text=MsgResource.GITHUB_COMMIT_EXIST(commit_count=commit_count))
 
         elif timely == "weekly":
             commit_count_list = []
@@ -49,7 +53,7 @@ class GithubManager(object):
                 point_end = self.__time_point(i + 1)
                 commit_count_list.append(
                     self.__get_event_count(
-                        point_start, point_end))
+                        events, point_start, point_end))
 
             date = [-6, -5, -4, -3, -2, -1, 0]
             x_ticks = [
@@ -83,7 +87,7 @@ class GithubManager(object):
                 point_end = self.__time_point(i + 1)
                 commit_count_list.append(
                     self.__get_event_count(
-                        point_start, point_end))
+                        events, point_start, point_end))
             return commit_count_list
 
     def __time_point(self, days):
@@ -93,11 +97,9 @@ class GithubManager(object):
             point_date.year, point_date.month, point_date.day)
         return point_date - datetime.timedelta(hours=9)
 
-    def __get_event_count(self, start, end):
-        if self.events is None:
-            self.events = self.github.get_user(self.username).get_events()
+    def __get_event_count(self, events, start, end):
         commit_events = []
-        for event in self.events:
+        for event in events:
             if event.created_at > end:
                 continue
             if start < event.created_at < end:

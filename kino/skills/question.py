@@ -9,6 +9,7 @@ from ..slack.resource import MsgResource
 from ..slack.slackbot import SlackerAdapter
 from ..slack.plot import Plot
 
+from ..utils.config import Config
 from ..utils.data_handler import DataHandler
 from ..utils.score import Score
 from ..utils.state import State
@@ -23,10 +24,11 @@ class Question(object):
         self.msg_question_step_1 = ""
         self.msg_flow = ""
         self.msg_report = ""
+        self.slackbot = SlackerAdapter()
 
     @property
-    def slackbot(self):
-        return SlackerAdapter()
+    def config(self):
+        return Config()
 
     @property
     def data_handler(self):
@@ -59,6 +61,7 @@ class Question(object):
             self.data_handler.edit_record_with_category(
                 self.category, (time, point))
 
+            print("step1: " + self.msg_question_step_1(90))
             self.slackbot.send_message(
                 text=self.msg_question_step_1(point))
             state.flow_complete()
@@ -69,6 +72,11 @@ class Question(object):
 
         if timely == "daily":
             question_data = self.data_handler.read_record().get(self.category, {})
+
+            def convert_time(time):
+                hour, minute = time[0].split(":")
+                total_minute = int(hour) * 60 + int(minute)
+                return total_minute
 
             ordered_question_data = collections.OrderedDict(
                 sorted(question_data.items(), key=convert_time))
@@ -89,29 +97,35 @@ class Question(object):
                 y_label="Time",
                 title=title)
             self.slackbot.file_upload(
-                f_name, title=title, comment=self.msg_report)
+                f_name, title=title, channel=self.config.channel['REPORT'], comment=self.msg_report)
 
-        def convert_time(time):
-            hour, minute = time[0].split(":")
-            total_minute = int(hour) * 60 + int(minute)
-            return total_minute
 
 
 class HappyQuestion(Question):
 
-    def __init__(self):
+    def __init__(self, slackbot=None):
         self.category = "happy"
         self.msg_question_step_0 = MsgResource.HAPPY_QUESTION_STEP_0
         self.msg_question_step_1 = MsgResource.HAPPY_QUESTION_STEP_1
         self.msg_flow = MsgResource.FLOW_HAPPY
         self.msg_report = MsgResource.HAPPY_REPORT
 
+        if slackbot is None:
+            self.slackbot = SlackerAdapter(channel=self.config.channel["DEFAULT"])
+        else:
+            self.slackbot = slackbot
+
 
 class AttentionQuestion(Question):
 
-    def __init__(self):
+    def __init__(self, slackbot=None):
         self.category = "attention"
         self.msg_question_step_0 = MsgResource.ATTENTION_QUESTION_STEP_0
         self.msg_question_step_1 = MsgResource.ATTENTION_QUESTION_STEP_1
         self.msg_flow = MsgResource.FLOW_ATTENTION
         self.msg_report = MsgResource.ATTENTION_REPORT
+
+        if slackbot is None:
+            self.slackbot = SlackerAdapter(channel=self.config.channel["TASK"])
+        else:
+            self.slackbot = slackbot

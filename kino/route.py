@@ -22,10 +22,10 @@ from .kino.worker import Worker
 from .slack.resource import MsgResource
 from .slack.slackbot import SlackerAdapter
 
-# from .skills.ifttt import IFTTT
 from .skills.question import AttentionQuestion
 from .skills.question import HappyQuestion
 
+from .utils.config import Config
 from .utils.data_loader import DataLoader
 from .utils.data_loader import SkillData
 from .utils.logger import Logger
@@ -36,7 +36,7 @@ from .utils.state import State
 class MsgRouter(object):
 
     def __init__(self):
-        self.slackbot = SlackerAdapter()
+        self.config = Config()
         self.logger = Logger().get_logger()
 
         self.dialog_manager = DialogManager()
@@ -54,6 +54,13 @@ class MsgRouter(object):
     def route(self, text=None, user=None, channel=None,
               direct=False, webhook=False, presence=None, dnd=None, predict=False):
 
+        self.slackbot = SlackerAdapter(channel=channel, input_text=text, user=user)
+
+        if self.config.bot["ONLY_DIRECT"] is True and direct is False:
+            # Skip
+            return
+
+        # predict next action
         if predict:
             # Check - skills
             skill_keywords = {k: v['keyword'] for k, v in ner.skills.items()}
@@ -62,7 +69,8 @@ class MsgRouter(object):
                 self.__call_skills(func_name)
                 return
 
-        if presence is not None:
+        # slack - active/away
+        if presence:
             self.presence_manager.check_wake_up(presence)
             self.presence_manager.check_flow(presence)
             self.presence_manager.check_predictor(presence)
@@ -71,10 +79,12 @@ class MsgRouter(object):
             self.logger.info("presence: " + str(presence))
             return
 
-        if dnd is not None:
+        # Do not disturb
+        if dnd:
             self.dnd_manager.call_is_holiday(dnd)
             return
 
+        # incomming-webhook
         if webhook:
             self.__on_relay(text)
             return
@@ -131,7 +141,7 @@ class MsgRouter(object):
             route_class.__class__.__name__ +
             ", " +
             str(behave))
-        getattr(route_class, behave)(step=step_num, params=self.text)
+        getattr(route_class(slackbot=self.slackbot), behave)(step=step_num, params=self.text)
 
     def __on_memory(self):
         route_class, func_name, params = self.dialog_manager.get_memory(globals=globals())
@@ -146,7 +156,7 @@ class MsgRouter(object):
         getattr(route_class, func_name)(**params)
 
     def __call_help(self):
-        route_class = Guide()
+        route_class = Guide(self.slackbot)
         behave = "help"
         self.logger.info(
             "route to: " +
@@ -156,7 +166,7 @@ class MsgRouter(object):
         getattr(route_class, behave)()
 
     def __call_CRUD(self, ner, classname):
-        route_class = globals()[classname](text=self.text)
+        route_class = globals()[classname](text=self.text, slackbot=self.slackbot)
         behave_ner = ner.kino[classname]['behave']
         behave = ner.parse(behave_ner, self.simple_text)
 
@@ -181,7 +191,7 @@ class MsgRouter(object):
             func_name +
             ", " +
             str(f_params))
-        getattr(Functions(), func_name)(**f_params)
+        getattr(Functions(slackbot=self.slackbot), func_name)(**f_params)
 
     def __memory_predictor_skills(self):
         data_loader = DataLoader()
