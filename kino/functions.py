@@ -36,11 +36,7 @@ class Functions(object):
     def __init__(self, slackbot=None):
         self.data_handler = DataHandler()
         self.registered = RegisteredFuctions().list
-
-        if slackbot is None:
-            self.slackbot = SlackerAdapter()
-        else:
-            self.slackbot = slackbot
+        self.slackbot = slackbot
 
     def check_go_to_bed(self):
         summary = Summary()

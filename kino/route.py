@@ -56,7 +56,6 @@ class MsgRouter(object):
 
         self.slackbot = SlackerAdapter(channel=channel, input_text=text, user=user)
 
-        print("direct", direct)
         if self.config.bot["ONLY_DIRECT"] is True and direct is False:
             # Skip
             return

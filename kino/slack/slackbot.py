@@ -55,7 +55,7 @@ class SlackerAdapter(object):
 
     def __message2text(self, msg_text):
         if isinstance(msg_text, str):
-            result = re.findall(r"\{[A-Z][A-Z_]+\}", msg_text)
+            result = re.findall(r"\{[A-Z][A-Z_0-9]+\}", msg_text)
             if len(result) > 0:
                 for r in result:
                     msg_text = msg_text.replace(r, MsgResource.to_text(r))
