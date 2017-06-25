@@ -2,138 +2,139 @@
   "send_message": {
     "keyword": ["메시지 보내기"],
     "params": ["text"],
-    "description": "텍스트 메시지 전송",
+    "description": "Send a text message",
     "icon": ":speech_balloon: "
   },
   "air_quality": {
-    "keyword": ["공기질", "미세먼지"],
+    "keyword": ["공기질", "미세먼지", "air quality"],
     "params": [],
-    "description": "공기질 예보",
+    "description": "Air quality forecast",
     "icon": ":factory: "
   },
   "attention_question": {
-    "keyword": ["집중도 조사", "집중도 질문", "attention question"],
+    "keyword": [["집중도", "조사"], ["집중도", "확인"], ["attention", "question"]],
     "params": [],
-    "description": "집중도 조사",
+    "description": "Attention survey",
     "icon": ":writing_hand: "
   },
   "attention_report": {
-    "keyword": ["집중도 리포트", "attention report"],
+    "keyword": [["집중도", "리포트"], ["attention", "report"]],
     "params": [],
-    "description": "집중도 리포트",
+    "description": "Attention Report",
     "icon": ":writing_hand: "
   },
   "bus_stop": {
-    "keyword": ["버스 도착", "버스도착", "버스 언제", "버스 조회", "버스조회"],
+    "keyword": [ ["버스", "도착"], ["버스", "언제"], ["버스", "조회"]],
     "params": ["station_id", "real_time"],
-    "description": "버스 도착 정보 조회",
+    "description": "Bus arrival information",
     "icon": ":oncoming_bus: "
   },
   "card_holder": {
-    "keyword": ["법카 현황", "법카현황", "법카 ㅎㅎ", "법카ㅎㅎ", "법카 누가", "ㅂㅋㅎㅎ", "ㅂㅋ ㅎㅎ",
-                "카드 현황", "카드현황", "카드 ㅎㅎ", "카드ㅎㅎ", "카드 누가", "ㅋㄷㅎㅎ", "ㅋㄷ ㅎㅎ",
+    "keyword": [["법카", "현황"], ["법카", "ㅎㅎ"], ["ㅂㅋ", "ㅎㅎ"],
+                ["카드", "현황"], ["카드", "ㅎㅎ"], ["ㅋㄷ", "ㅎㅎ"],
                 ["who", "card"]],
     "params": [],
-    "description": "법인카드를 누가 가지고 있는지 보여줍니다.",
+    "description": "Show who has card.",
     "icon": ":credit_card:  "
   },
   "card_history": {
-    "keyword": ["법카 전달 기록", "법카전달 기록", "법카 ㅈㄷㄱㄹ", "법카 ㅈㄷ ㄱㄹ",
-                "카드 전달 기록", "카드전달 기록", "카드 ㅈㄷㄱㄹ", "카드 ㅈㄷ ㄱㄹ"],
+    "keyword": [["법카", "전달", "기록"], ["법카", "ㅈㄷ", "ㄱㄹ"],
+                ["카드", "전달", "기록"], ["카드", "ㅈㄷ", "ㄱㄹ"],
+                ["card", "delivery", "history"]],
     "params": [],
-    "description": "법인카드의 전달 기록을 보여줍니다.",
+    "description": "Shows d delivery of card.",
     "icon": ":credit_card:  "
   },
   "card_forward": {
-    "keyword": ["법카 전달", "법카전달", "법카 ㅈㄷ", "법카ㅈㄷ", "법카 넘기기",
-                "카드 전달", "카드전달", "카드 ㅈㄷ", "카드ㅈㄷ", "카드 넘기기",
+    "keyword": [["법카", "전달"], ["법카", "ㅈㄷ"], ["ㅂㅋ", "ㅈㄷ"],
+                ["카드", "전달"], ["카드", "ㅈㄷ"], ["ㅋㄷ", "ㅈㄷ"],
                 ["give", "card"], ["deliver", "card"], "سلّم البطاقة"],
     "params": ["member"],
-    "description": "법인카드를 다른사람에게 양도합니다.",
+    "description": "ass the card to someone else.",
     "icon": ":credit_card:  "
   },
   "forecast": {
-    "keyword": ["날씨", "예보"],
+    "keyword": ["날씨", "예보", "weater", "forecast"],
     "params": ["timely"],
-    "description": "날씨예보",
+    "description": "Weather forecast",
     "icon": ":sun_with_face: "
   },
   "github_commit": {
     "keyword": ["커밋", "commit"],
     "params": ["timely"],
-    "description": "Github commit 여부를 확인",
+    "description": "Check if Github commit",
     "icon": ":octocat: "
   },
   "happy_question": {
-    "keyword": ["행복도 조사", "행복도 질문", "happy question"],
+    "keyword": [["행복도", "조사"], ["행복도", "확인"], ["happy", "question"]],
     "params": [],
-    "description": "행복도 조사",
+    "description": "Happiness survey",
     "icon": ":smile: "
   },
   "happy_report": {
-    "keyword": ["행복도 리포트", "happy report"],
+    "keyword": [["행복도", "리포트"], ["happy", "report"]],
     "params": [],
-    "description": "행복도 리포트",
+    "description": "Happiness Report",
     "icon": ":smile_cat: "
   },
   "total_score": {
-    "keyword": ["종합 점수"],
+    "keyword": [["종합", "점수"], ["overall", "score"], ["total", "score"]],
     "params": [],
-    "description": "종합 점수. \n - 생산성(RescueTime, Github Commit, Todoist, Toggl)\n - 평균 행복도, 평균 집중도 \n - 운동여부, 일기여부",
+    "description": "Overall score. \n - Productivity (RescueTime, Github Commit, Todoist, Toggl) \n - Mean happiness, mean attention \n - Exercise, Diary",
     "icon": ":chart: "
   },
   "total_chart": {
-    "keyword": ["종합 차트"],
+    "keyword": [["종합", "차트"], ["overall", "chart"], ["total", "chart"]],
     "params": [],
-    "description": "종합 차트. \n - 일주일동안의 생산성, 행복도, 종합점수 차트",
+    "description": "Overall chart. \n - weekly productivity, happiness, overall score chart",
     "icon": ":robot_face: "
   },
   "translate": {
-    "keyword": ["번역"],
+    "keyword": ["번역", "translate"],
     "params": ["english", "source", "target"],
-    "description": "언어 번역",
+    "description": "Language translation",
     "icon": ":crystal_ball: "
   },
   "rescuetime_efficiency": {
-    "keyword": ["레스큐타임 효율성", "작업 효율", "생산성 차트"],
+    "keyword": ["레스큐타임 효율성", "작업 효율", "생산성 차트", ["rescuetime", "chart"]],
     "params": ["timely"],
-    "description": "RescueTime Efficiency 차트",
+    "description": "RescueTime Efficiency Chart",
     "icon": ":chart_with_upwards_trend: "
   },
   "today_briefing": {
-    "keyword": ["하루 브리핑", "오늘하루 브리핑"],
+    "keyword": [["하루", "브리핑"], ["오늘하루", "브리핑"], ["today", "briefing"]],
     "params": [],
-    "description": "하루 브리핑 \n - 오늘의 날씨, 미세먼지 \n - Todoist 스케쥴",
+    "description": "Today Briefing \n - Todoist Schedule",
     "icon": ":city_sunset:  "
   },
   "today_summary": {
-    "keyword": ["하루 마무리", "하루 요약"],
+    "keyword": [["하루", "마무리"], ["하루", "요약"], ["today", "summary"]],
     "params": [],
-    "description": "하루 요약 \n - Todoist 피드백 \n - Toggl 작업리포트 \n - RescueTime 생산성 차트 \n - 행복도, 집중도 리포트 \n - 일일 커밋",
+    "description": "Today summary \n - Todoist feedback \n - Toggl activity report \n - RescueTime productivity chart \n - Happiness, attention report \n - Daily commit",
     "icon": ":night_with_stars: "
   },
   "kanban_init": {
-    "keyword": ["칸반 초기화", "칸반초기화", "kanban init"],
+    "keyword": [["칸반", "초기화"], ["kanban", "init"]],
     "params": [],
-    "description": "Todoist의 기한지난 작업들 오늘로 업데이트 및 Kanban board init",
+    "description": "Todoist's overdue tasks updated to today and Kanban board init",
     "icon": ":clipboard: "
   },
   "kanban_sync": {
-    "keyword": ["칸반 싱크", "칸반싱크", "kanban sync"],
+    "keyword": [["칸반", "싱크"], ["kanban", "sync"]],
     "params": [],
-    "description": "Todoist와 Kanban board Syncing.",
+    "description": "Todoist and Kanban board Syncing.",
     "icon": ":clipboard: "
   },
   "todoist_feedback": {
-    "keyword": ["할일 피드백", "todoist feedback"],
+    "keyword": [["할일", "피드백"], ["todoist", "feedback"]],
     "params": [],
-    "description": "Todoist의 작업내역 피드백",
+    "description": "Feedback from Todoist activity",
     "icon": ":memo: "
   },
   "todoist_remain": {
-    "keyword": ["남은 작업", "remain task"],
+    "keyword": [["남은", "작업"], ["remain", "task"]],
     "params": [],
-    "description": "Todoist의 남은 작업 안내",
+    "description": "Show todoist's remaining work",
     "icon": ":page_with_curl: "
   },
   "toggl_timer": {
@@ -143,21 +144,21 @@
     "icon": ":watch: "
   },
   "toggl_checker": {
-    "keyword": ["작업 시간", "작업시간", "경과 시간", "경과시간", "시간 체크", "시간체크"],
+    "keyword": [["작업", "시간"], ["시간", "체크"], ["task", "time", "check"]],
     "params": [],
-    "description": "Toggl Timer 30분 단위 시간체크",
+    "description": "Task time check with Toggle",
     "icon": ":bell: "
   },
   "toggl_report": {
-    "keyword": ["토글 리포트", "작업 리포트"],
+    "keyword": [["작업", "리포트"], ["task", "report"]],
     "params": ["kind", "timely"],
-    "description": "Toggl Report 작업 리포트",
+    "description": "Toggl Task Report",
     "icon": ":bar_chart: "
   },
   "maxim_nietzsche": {
-    "keyword": ["니체 명언", "니체의 말"],
+    "keyword": [["니체", "명언"], ["nietzsche", "maxim"]],
     "params": [],
-    "description": "니체의 명언",
+    "description": "Nietzsche's Maxim",
     "icon": ":scales: "
   }
 }
