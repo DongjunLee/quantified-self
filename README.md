@@ -24,6 +24,8 @@
 
 ### Publication
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/401e8a56ebe241daa8b2d0453e16a80c)](https://www.codacy.com/app/humanbrain.djlee/kino-bot?utm_source=github.com&utm_medium=referral&utm_content=DongjunLee/kino-bot&utm_campaign=badger)
+
  - SlideShare : [Slideshare - Kino - My Personal Assistant (개인용 Slack Bot을 통한 Quantified Self 프로젝트)](https://www.slideshare.net/DongJunLee6/kino-my-personal-assistant-slack-bot-quantified-self)
 
 ## Introduce
