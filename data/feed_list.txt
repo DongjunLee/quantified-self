@@ -1,0 +1,9 @@
+https://awesome-blogs.petabytes.org/feeds?group=all 
+https://blog.acolyer.org/feed/
+http://www.popit.kr/feed/
+http://feeds2.feedburner.com/rss_outsider_dev
+https://medium.com/feed/@karpathy/
+http://newspeppermint.com/feed/
+http://thegear.co.kr/rss
+https://iamprogrammer.io/feed/
+https://talkpython.fm/feed

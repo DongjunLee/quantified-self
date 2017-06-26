@@ -18,11 +18,10 @@ class FeedNotifier:
     def __init__(self, slackbot=None):
         self.logger = Logger().get_logger()
 
-        data_handler = DataHandler()
-        self.feed_list = data_handler.read_feeds()
+        self.data_handler = DataHandler()
+        self.feed_list = self.data_handler.read_feeds()
 
         self.config = Config()
-        self.thresh_hold = self.config.profile['feed']['INTERVAL'] * 60
         self.template = MsgTemplate()
 
         if slackbot is None:
@@ -41,17 +40,28 @@ class FeedNotifier:
             self.slackbot.send_message(attachments=attachments)
 
     def notify(self, feed_url):
+        cache_data = self.data_handler.read_cache()
+
+        f = feedparser.parse(feed_url)
+        f.entries = sorted(f.entries, key=lambda x: x.get('updated_parsed', 0), reverse=True)
+
         noti_list = []
+        if feed_url in cache_data:
+            previous_update_date = arrow.get(cache_data[feed_url])
+            for e in f.entries:
+                e_updated_date = arrow.get(e.updated_parsed)
+                if e_updated_date > previous_update_date:
+                    noti_list.append((e.get('title', ''), e.get('link', ''), self.__remove_tag(e.get('description', ''))))
+        elif f.entries:
+            e = f.entries[0]
+            noti_list.append((e.get('title', ''), e.get('link', ''), self.__remove_tag(e.get('description', ''))))
+        else:
+            pass
 
-        feed = feedparser.parse(feed_url)
-        for e in feed.entries:
-            e_updated_date = arrow.get(e.updated_parsed)
-
-            try:
-                if (arrow.now() - e_updated_date).seconds < self.thresh_hold:
-                    noti_list.append((e.title, e.link, self.__remove_tag(e.description)))
-            except:
-                pass
+        if f.entries:
+            last_e = f.entries[0]
+            last_updated_date = arrow.get(last_e.get('updated_parsed', None))
+            self.data_handler.edit_cache((feed_url, str(last_updated_date)))
         return noti_list
 
     def __remove_tag(self, text):
