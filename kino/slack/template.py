@@ -112,6 +112,19 @@ class MsgTemplate(object):
         attachments.append(a_dict)
         return attachments
 
+    def make_giphy_template(self, q, url):
+        attachments = []
+
+        a_dict = {}
+        a_dict['title'] = q
+        a_dict['image_url'] = url
+        a_dict['fallback'] = "giphy: " + q
+        a_dict['color'] = "#438C56"
+        a_dict['mrkdwn_in'] = ["text", "pretext"]
+
+        attachments.append(a_dict)
+        return attachments
+
     def make_weather_template(
             self,
             address,

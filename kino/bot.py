@@ -8,6 +8,7 @@ from .listener import MsgListener
 
 from .slack.resource import MsgResource
 from .slack.slackbot import SlackerAdapter
+from .slack.slackbot import GiphyClient
 
 from .utils.config import Config
 from .utils.logger import Logger
@@ -28,6 +29,9 @@ class KinoBot(object):
         MASTER_NAME = config.bot["MASTER_NAME"]
         BOT_NAME = config.bot["BOT_NAME"]
         self.slackbot.send_message(text=MsgResource.HELLO(master_name=MASTER_NAME, bot_name=BOT_NAME))
+
+        giphy = GiphyClient()
+        giphy.search("Hello!")
 
     def start_session(self, nap=False):
         try:
