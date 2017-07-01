@@ -47,14 +47,14 @@
     },
     "period": {
       "interval": ["마다", "간격", "interval"],
-      "real-time": ["즉시", "바로", "real-time", "real time"]
+      "real-time": ["즉시", "바로", "real-time", "real time", "right now"]
     }
   },
   "params": {
     "timely": {
-      "current": ["current", "현재", "지금"],
-      "daily": ["일일", "매일", "daily", "데일리", "하루", "오늘"],
-      "weekly": ["주간", "일주일", "weely", "위클리"]
+      "current": ["current", "현재", "now", "지금"],
+      "daily": ["일일", "매일", "daily", "데일리", "하루", "오늘", "every day"],
+      "weekly": ["주간", "일주일", "weely", "위클리", "every week"]
     },
     "station_id": {
       "217000054": ["초지역"],
