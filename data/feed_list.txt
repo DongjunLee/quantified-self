@@ -7,3 +7,7 @@ http://newspeppermint.com/feed/
 http://thegear.co.kr/rss
 https://iamprogrammer.io/feed/
 https://talkpython.fm/feed
+http://feeds.feedburner.com/TechCrunch/startups
+http://techneedle.com/feed
+http://feeds.feedburner.com/blogspot/gJZg
+http://platum.kr/feed
