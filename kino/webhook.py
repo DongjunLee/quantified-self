@@ -44,10 +44,14 @@ class Webhook(object):
         else:
             channel = None
 
+            action_lower = action.lower()
+
             sns = ['tweet', 'twitter', 'facebook', 'instagram']
-            if any([s for s in sns if s in action.lower()]):
+            feed = ['feed', 'reddit']
+
+            if any([s for s in sns if s in action_lower]):
                 channel = self.config.channel['SNS']
-            elif "feed" in action.lower():
+            elif any([f for f in feed if f in action_lower]):
                 channel = self.config.channel['FEED']
             self.slackbot.send_message(text=event['msg'], channel=channel)
 
