@@ -20,11 +20,12 @@
   <a href="https://codecov.io/gh/DongjunLee/stalker-bot">
     <img src="https://codecov.io/gh/DongjunLee/kino-bot/branch/master/graph/badge.svg" alt="Codecov" />
   </a>
+  <a href="https://www.codacy.com/app/humanbrain.djlee/kino-bot?utm_source=github.com&utm_medium=referral&utm_content=DongjunLee/kino-bot&utm_campaign=badger">
+    <img src="https://api.codacy.com/project/badge/Grade/401e8a56ebe241daa8b2d0453e16a80c" alt="Codacy"
+  </a>
 </p>
 
 ### Publication
-
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/401e8a56ebe241daa8b2d0453e16a80c)](https://www.codacy.com/app/humanbrain.djlee/kino-bot?utm_source=github.com&utm_medium=referral&utm_content=DongjunLee/kino-bot&utm_campaign=badger)
 
  - SlideShare : [Slideshare - Kino - My Personal Assistant (개인용 Slack Bot을 통한 Quantified Self 프로젝트)](https://www.slideshare.net/DongJunLee6/kino-my-personal-assistant-slack-bot-quantified-self)
 
@@ -162,6 +163,8 @@ If you use kino for personal use, you will use the channel for each purpose.
 
 - **Github**
 	- [PyGithub](https://github.com/PyGithub/PyGithub)
+- **GIPHY**
+	- [GIPHY](https://giphy.com/)	
 - **Weather**
 	- [python-forecast.io](https://github.com/ZeevG/python-forecast.io)
 	- [geoopy](https://github.com/geopy/geopy)

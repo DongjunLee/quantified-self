@@ -20,6 +20,9 @@
   <a href="https://codecov.io/gh/DongjunLee/stalker-bot">
     <img src="https://codecov.io/gh/DongjunLee/kino-bot/branch/master/graph/badge.svg" alt="Codecov" />
   </a>
+  <a href="https://www.codacy.com/app/humanbrain.djlee/kino-bot?utm_source=github.com&utm_medium=referral&utm_content=DongjunLee/kino-bot&utm_campaign=badger">
+    <img src="https://api.codacy.com/project/badge/Grade/401e8a56ebe241daa8b2d0453e16a80c" alt="Codacy"
+  </a>
 </p>
 
 ### Publication
@@ -162,6 +165,8 @@ IFTTT와 연결하여 알 수 있는 정보들
 
 - **Github**
 	- [PyGithub](https://github.com/PyGithub/PyGithub)
+- **GIPHY**
+	- [GIPHY](https://giphy.com/)	
 - **Weather**
 	- [python-forecast.io](https://github.com/ZeevG/python-forecast.io)
 	- [geoopy](https://github.com/geopy/geopy)
