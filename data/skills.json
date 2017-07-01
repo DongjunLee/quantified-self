@@ -54,7 +54,7 @@
     "icon": ":credit_card:  "
   },
   "forecast": {
-    "keyword": ["날씨", "예보", "weater", "forecast"],
+    "keyword": ["날씨", "예보", "weather", "forecast"],
     "params": ["timely"],
     "description": "Weather forecast",
     "icon": ":sun_with_face: "

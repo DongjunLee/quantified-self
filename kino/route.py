@@ -46,10 +46,12 @@ class MsgRouter(object):
         self.f_runner = FunctionRunner()
 
     def preprocessing(self, text):
-        disintegrator = Disintegrator()
         self.text = text
-        self.simple_text = disintegrator.convert2simple(sentence=text)
-        self.logger.info("clean input: " + self.simple_text)
+
+        disintegrator = Disintegrator(text)
+        self.parsed_text = disintegrator.convert2simple() + " " + text
+
+        self.logger.info("parsed input: " + self.parsed_text)
 
     def route(self, text=None, user=None, channel=None,
               direct=False, webhook=False, presence=None, dnd=None, predict=False):
@@ -64,7 +66,7 @@ class MsgRouter(object):
         if predict:
             # Check - skills
             skill_keywords = {k: v['keyword'] for k, v in ner.skills.items()}
-            func_name = ner.parse(skill_keywords, self.text)
+            func_name = ner.parse(skill_keywords, self.parsed_text)
             if func_name is not None:
                 self.__call_skills(func_name)
                 return
@@ -104,7 +106,7 @@ class MsgRouter(object):
             return
 
         # Check - help
-        if self.dialog_manager.is_call_help(self.simple_text):
+        if self.dialog_manager.is_call_help(self.parsed_text):
             self.__call_help()
             return
 
@@ -112,7 +114,7 @@ class MsgRouter(object):
 
         # Check - CRUD (Worker, Schedule, Between, FunctionManager)
         kino_keywords = {k: v['keyword'] for k, v in ner.kino.items()}
-        classname = ner.parse(kino_keywords, self.simple_text)
+        classname = ner.parse(kino_keywords, self.parsed_text)
 
         if classname is not None:
             self.__call_CRUD(ner, classname)
@@ -120,7 +122,7 @@ class MsgRouter(object):
 
         # Check - skills
         skill_keywords = {k: v['keyword'] for k, v in ner.skills.items()}
-        func_name = ner.parse(skill_keywords, self.text)
+        func_name = ner.parse(skill_keywords, self.parsed_text)
         if func_name is not None:
             self.__call_skills(func_name)
             self.__memory_predictor_skills()
@@ -150,7 +152,7 @@ class MsgRouter(object):
             route_class.__class__.__name__ +
             ", " +
             str(func_name))
-        f_params = self.f_runner.filter_f_params(self.text, func_name)
+        f_params = self.f_runner.filter_f_params(self.parsed_text, func_name)
         if not f_params == {}:
             params = f_params
         getattr(route_class, func_name)(**params)
@@ -168,7 +170,7 @@ class MsgRouter(object):
     def __call_CRUD(self, ner, classname):
         route_class = globals()[classname](text=self.text, slackbot=self.slackbot)
         behave_ner = ner.kino[classname]['behave']
-        behave = ner.parse(behave_ner, self.simple_text)
+        behave = ner.parse(behave_ner, self.parsed_text)
 
         self.logger.info(
             "route to: " +
@@ -182,7 +184,7 @@ class MsgRouter(object):
             f_params = {
                 "description": self.text[self.text.index("toggl") + 5:]}
         else:
-            f_params = self.f_runner.filter_f_params(self.text, func_name)
+            f_params = self.f_runner.filter_f_params(self.parsed_text, func_name)
 
         state = State()
         state.memory_skill(self.text, func_name, f_params)

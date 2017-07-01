@@ -16,3 +16,4 @@ sklearn
 py-trello
 feedparser
 langid
+nltk

@@ -1,11 +1,15 @@
 
+import random
+import requests
 import re
 import types
+from urllib.parse import urlencode, quote_plus
 
 import langid
 from slacker import Slacker
 
 from .resource import MsgResource
+from .template import MsgTemplate
 
 from ..utils.config import Config
 from ..utils.data_handler import DataHandler
@@ -39,12 +43,20 @@ class SlackerAdapter(object):
         if attachments is not None:
             attachments = self.attachment_message2text(attachments)
 
-        r = self.slacker.chat.post_message(
-            channel=self.channel,
-            text=text,
-            attachments=attachments,
-            as_user=True)
-        self.data_handler.edit_cache(('message', r.body))
+        gihpy_result = None
+        random_num = random.randint(1, 100)
+        if (text is not None and attachments is None) and \
+                random_num > self.config.bot["GIPHY_THRESHOLD"]:
+            gihpy = GiphyClient()
+            gihpy_result = gihpy.search(text)
+
+        if gihpy_result is None:
+            r = self.slacker.chat.post_message(
+                channel=self.channel,
+                text=text,
+                attachments=attachments,
+                as_user=True)
+            self.data_handler.edit_cache(('message', r.body))
 
     def attachment_message2text(self, d):
         if not isinstance(d, (dict, list)):
@@ -110,3 +122,36 @@ class SlackerAdapter(object):
 
     def get_users(self):
         return self.slacker.users.list().body['members']
+
+
+
+class GiphyClient:
+
+    def __init__(self, limit=10):
+        self.config = Config()
+
+        self.base_url = "http://api.giphy.com/v1/gifs/"
+        self.api_key = self.config.open_api["giphy"]["TOKEN"]
+        self.limit = limit
+
+        self.slackbot = SlackerAdapter()
+        self.template = MsgTemplate()
+
+    def search(self, q):
+        payload = {'q': q, 'api_key': self.api_key, 'limit': self.limit, 'lang': langid.classify(q)[0]}
+        query = urlencode(payload, quote_via=quote_plus)
+
+        r = requests.get(f"{self.base_url}search?{query}")
+        if r.status_code == 200:
+            result = r.json()['data']
+            if len(result) == 0:
+                return None
+
+            choiced_gif = random.choice(result)
+            url = choiced_gif['images']['downsized']['url']
+            attachments = self.template.make_giphy_template(q, url)
+
+            self.slackbot.send_message(attachments=attachments)
+            return True
+        else:
+            return None
