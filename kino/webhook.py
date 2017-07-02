@@ -53,7 +53,7 @@ class Webhook(object):
                 channel = self.config.channel['SNS']
             elif any([f for f in feed if f in action_lower]):
                 channel = self.config.channel['FEED']
-            self.slackbot.send_message(text=event['msg'], channel=channel)
+            self.slackbot.send_message(text=event['msg'], channel=channel, giphy=False)
 
     def IN_OUT_handle(self, prev, event):
         if self.__is_error(prev, event):

@@ -31,7 +31,7 @@ class SlackerAdapter(object):
         else:
             self.lang_code = langid.classify(input_text)[0]
 
-    def send_message(self, channel=None, text=None, attachments=None):
+    def send_message(self, channel=None, text=None, attachments=None, giphy=True):
         if self.channel is None:
             self.channel = self.config.channel['DEFAULT']
         if channel is not None:
@@ -45,10 +45,10 @@ class SlackerAdapter(object):
 
         gihpy_result = None
         random_num = random.randint(1, 100)
-        if (text is not None and attachments is None) and \
+        if giphy and (text is not None and attachments is None) and \
                 random_num > self.config.bot["GIPHY_THRESHOLD"]:
-            gihpy = GiphyClient()
-            gihpy_result = gihpy.search(text)
+            gihpy_client = GiphyClient(slackbot=self)
+            gihpy_result = gihpy_client.search(text)
 
         if gihpy_result is None:
             r = self.slacker.chat.post_message(
@@ -127,14 +127,17 @@ class SlackerAdapter(object):
 
 class GiphyClient:
 
-    def __init__(self, limit=10):
+    def __init__(self, slackbot=None, limit=10):
         self.config = Config()
 
         self.base_url = "http://api.giphy.com/v1/gifs/"
         self.api_key = self.config.open_api["giphy"]["TOKEN"]
         self.limit = limit
 
-        self.slackbot = SlackerAdapter()
+        if slackbot is None:
+            self.slackbot = SlackerAdapter()
+        else:
+            self.slackbot = slackbot
         self.template = MsgTemplate()
 
     def search(self, q):
