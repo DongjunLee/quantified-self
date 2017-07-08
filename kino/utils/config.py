@@ -10,11 +10,15 @@ class Config(object):
         def __init__(self):
             config = DataHandler().read_file("config.json")
 
-            self.bot = config["bot"]
-            self.channel = config["channel"]
-            self.slack = config["slack"]
-            self.profile = config["profile"]
-            self.open_api = config["open_api"]
+            bot = {
+                "LANG_CODE": "en"
+            }
+
+            self.bot = config.get("bot", bot)
+            self.channel = config.get("channel", None)
+            self.slack = config.get("slack", None)
+            self.profile = config.get("profile", None)
+            self.open_api = config.get("open_api", None)
 
     instance = None
 
