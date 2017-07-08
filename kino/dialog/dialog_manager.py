@@ -20,7 +20,7 @@ class DialogManager(object):
         else:
             return False
 
-    def get_flow(self, global_namespace, is_raw=False):
+    def get_flow(self, global_namespace=None, is_raw=False):
         flow = self.current_state()[State.FLOW]
         if is_raw:
             return flow
@@ -34,7 +34,7 @@ class DialogManager(object):
         else:
             return False
 
-    def get_memory(self, global_namespace, get_text=False):
+    def get_memory(self, global_namespace=None, get_text=False):
         memory = self.current_state()[State.MEMORY]
         if get_text:
             return memory.get("text", None)

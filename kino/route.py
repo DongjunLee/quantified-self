@@ -144,7 +144,7 @@ class MsgRouter(object):
 
     def __on_flow(self):
         route_class, behave, step_num = self.dialog_manager.get_flow(
-            globals())
+            global_namespace=globals())
         self.logger.info(
             "From Flow - route to: " +
             route_class.__class__.__name__ +
@@ -159,7 +159,7 @@ class MsgRouter(object):
 
     def __on_memory(self):
         route_class, func_name, params = self.dialog_manager.get_memory(
-            globals())
+            global_namespace=globals())
         self.logger.info(
             "From Memory - route to: " +
             route_class.__class__.__name__ +
