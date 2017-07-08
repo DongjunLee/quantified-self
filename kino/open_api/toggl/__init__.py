@@ -215,7 +215,7 @@ class Toggl():
         '''return all the workspaces for a user'''
         return self.request(Endpoints.WORKSPACES)
 
-    def getWorkspace(self, name=None, id=None):
+    def getWorkspace(self, name=None, workspace_id=None):
         '''return the first workspace that matches a given name or id'''
         workspaces = self.getWorkspaces()  # get all workspaces
 
@@ -232,7 +232,7 @@ class Toggl():
             return None  # if we get to here and haven't found it return None
         else:  # otherwise search by id
             for workspace in workspaces:  # search through them for one matching the id provided
-                if workspace['id'] == int(id):
+                if workspace['id'] == int(workspace_id):
                     return workspace  # if we find it return it
             return None  # if we get to here and haven't found it return None
 
@@ -260,7 +260,7 @@ class Toggl():
         '''return all clients that are visable to a user'''
         return self.request(Endpoints.CLIENTS)
 
-    def getClient(self, name=None, id=None):
+    def getClient(self, name=None, client_id=None):
         '''return the first workspace that matches a given name or id'''
         clients = self.getClients()  # get all clients
 
@@ -276,16 +276,16 @@ class Toggl():
             return None  # if we get to here and haven't found it return None
         else:  # otherwise search by id
             for client in clients:  # search through them for one matching the id provided
-                if client['id'] == int(id):
+                if client['id'] == int(client_id):
                     return client  # if we find it return it
             return None  # if we get to here and haven't found it return None
 
-    def getClientProjects(self, id):
+    def getClientProjects(self, client_project_id):
         """
         :param id: Client ID by which to query
         :return: Projects object returned from endpoint
         """
-        return self.request(Endpoints.CLIENTS + '/{0}/projects'.format(id))
+        return self.request(Endpoints.CLIENTS + '/{0}/projects'.format(client_project_id))
 
     def searchClientProject(self, name):
         """

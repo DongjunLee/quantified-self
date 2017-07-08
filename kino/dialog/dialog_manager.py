@@ -20,12 +20,12 @@ class DialogManager(object):
         else:
             return False
 
-    def get_flow(self, globals=None, is_raw=False):
+    def get_flow(self, global_namespace, is_raw=False):
         flow = self.current_state()[State.FLOW]
         if is_raw:
             return flow
         else:
-            return self.__return_state(globals, flow, State.FLOW)
+            return self.__return_state(global_namespace, flow, State.FLOW)
 
     def is_on_memory(self):
         current_state = self.current_state()
@@ -34,19 +34,19 @@ class DialogManager(object):
         else:
             return False
 
-    def get_memory(self, globals=None, get_text=False):
+    def get_memory(self, global_namespace, get_text=False):
         memory = self.current_state()[State.MEMORY]
         if get_text:
             return memory.get("text", None)
         else:
-            return self.__return_state(globals, memory, State.MEMORY)
+            return self.__return_state(global_namespace, memory, State.MEMORY)
 
     def get_action(self):
         return self.current_state().get(State.ACTION, None)
 
-    def __return_state(self, globals, state, kind):
+    def __return_state(self, global_namespace, state, kind):
         classname = state["class"]
-        route_class = globals[classname]
+        route_class = global_namespace[classname]
         behave = state["def"]
         if kind == State.FLOW:
             params = state["step"]
