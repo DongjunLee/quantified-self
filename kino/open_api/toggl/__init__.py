@@ -6,7 +6,6 @@ import base64
 from datetime import datetime
 # for making requests
 import urllib.request, urllib.error, urllib.parse
-import urllib.request, urllib.parse, urllib.error
 
 # parsing json data
 import json

@@ -105,7 +105,8 @@ class RemoveOldDataQueue(Queue):
     def put_nowait(self,*args,**kwargs):
         if self.full():
             try:
-                oldest_data = self.get()
+                #oldest_data
+                self.get()
             except Queue.Empty:
                 pass
         Queue.put_nowait(self,*args,**kwargs)

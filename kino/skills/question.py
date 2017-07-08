@@ -11,7 +11,6 @@ from ..slack.plot import Plot
 
 from ..utils.config import Config
 from ..utils.data_handler import DataHandler
-from ..utils.score import Score
 from ..utils.state import State
 
 

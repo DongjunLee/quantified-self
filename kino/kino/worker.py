@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import json
 import threading
 
 from ..core import schedule
@@ -122,7 +121,7 @@ class Worker(object):
         alarm_data = schedule_data.get('alarm', {})
         between_data = schedule_data.get('between', {})
 
-        for k, v in alarm_data.items():
+        for _, v in alarm_data.items():
             if not isinstance(v, type({})):
                 continue
 

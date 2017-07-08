@@ -2,7 +2,6 @@
 import random
 import requests
 import re
-import types
 from urllib.parse import urlencode, quote_plus
 
 import langid

@@ -13,7 +13,6 @@ class Logger(object):
                 '[%(levelname)s|%(filename)s:%(lineno)s] %(asctime)s > %(message)s')
 
             now = datetime.datetime.now()
-            timestamp = time.mktime(now.timetuple())
 
             dirname = './log'
             if not os.path.isdir(dirname):

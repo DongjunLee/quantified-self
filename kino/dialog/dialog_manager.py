@@ -1,9 +1,4 @@
 
-import arrow
-
-from ..slack.resource import MsgResource
-
-from ..utils.arrow import ArrowUtil
 from ..utils.data_handler import DataHandler
 from ..utils.state import State
 
@@ -63,7 +58,7 @@ class DialogManager(object):
         if "다시" in text:
             return True
         else:
-            False
+            return False
 
     def is_call_help(self, text):
         if ("도움말" in text) or ("help" in text):

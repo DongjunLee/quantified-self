@@ -135,7 +135,6 @@ class Summary(object):
                 "Attention": round(attention * 100) / 100,
                 "Happy": round(happy * 100) / 100,
                 "Productive": round(productive * 100) / 100,
-                "Happy": round(happy * 100) / 100,
                 "Sleep": round(sleep * 100) / 100,
                 "Diary": diary,
                 "Exercise": exercise,

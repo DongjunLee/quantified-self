@@ -156,7 +156,7 @@ class MsgTemplate:
         del data['cai']
         del data['pm25']
 
-        for k, v in data.items():
+        for _, v in data.items():
             if isinstance(v, str):
                 continue
             fields.append(Field(v['description'], v['value'] + v['unit'] + "\n" + MsgResource.AIR_QUALITY_TEXT(v['grade']), short="true"))

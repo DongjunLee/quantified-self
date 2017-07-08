@@ -1,6 +1,5 @@
 
 import arrow
-import random
 
 from ..open_api.toggl import Toggl
 
@@ -122,11 +121,6 @@ class TogglManager(object):
                     self.slackbot.send_message(
                         text=MsgResource.TOGGL_TIMER_CHECK(diff_min=diff_min))
                     break
-
-        # q_ratio = random.randint(1, 100)
-        # if q_ratio > 75:
-            # attention = AttentionQuestion()
-            # attention.question()
 
     def report(self, kind="chart", timely="weekly"):
 

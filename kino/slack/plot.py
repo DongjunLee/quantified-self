@@ -1,4 +1,3 @@
-import matplotlib
 from matplotlib import pyplot as plt
 import matplotlib.dates as dt
 import seaborn

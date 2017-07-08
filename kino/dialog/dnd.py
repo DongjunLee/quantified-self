@@ -1,6 +1,4 @@
 
-import arrow
-
 from ..skills.summary import Summary
 
 from ..slack.resource import MsgResource

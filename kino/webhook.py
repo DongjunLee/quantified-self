@@ -3,7 +3,6 @@ import json
 
 from .dialog.dialog_manager import DialogManager
 
-from .slack.resource import MsgResource
 from .slack.slackbot import SlackerAdapter
 
 from .skills.toggl import TogglManager
@@ -62,7 +61,6 @@ class Webhook(object):
 
         if self.__is_phone_error(prev, event):
             pass
-            #self.slackbot.send_message(text=MsgResource.IN_OUT_ERROR)
         else:
             action = event['action']
             time = ArrowUtil.get_action_time(event['time'])

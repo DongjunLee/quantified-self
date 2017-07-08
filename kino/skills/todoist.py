@@ -167,7 +167,6 @@ class TodoistManager(object):
 
     def complete_by_toggl(self, description, time):
         description = description.strip()
-        is_contain_item = False
 
         task, assigned_time = self.__get_task_by_name(description)
         if task is None:

@@ -1,5 +1,4 @@
-import arrow
-import numpy as np
+
 from sklearn.neighbors import KNeighborsClassifier
 
 from .maxim import Maxim
@@ -9,7 +8,6 @@ from ..functions import FunctionRunner
 from ..slack.resource import MsgResource
 from ..slack.slackbot import SlackerAdapter
 
-from ..utils.arrow import ArrowUtil
 from ..utils.data_loader import DataLoader
 from ..utils.data_loader import SkillData
 from ..utils.classes import Skill

@@ -2,7 +2,6 @@
 
 import json
 import random
-import threading
 
 from .skill_list import SkillList
 

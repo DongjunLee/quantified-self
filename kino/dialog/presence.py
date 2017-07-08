@@ -9,7 +9,6 @@ from ..nlp.ner import NamedEntitiyRecognizer
 from ..functions import Functions
 
 from ..skills.predictor import Predictor
-from ..skills.summary import Summary
 from ..skills.weather import Weather
 
 from ..slack.resource import MsgResource

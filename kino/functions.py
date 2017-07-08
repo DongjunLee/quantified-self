@@ -20,7 +20,6 @@ from .skills.trello import TrelloManager
 from .skills.weather import Weather
 
 from .slack.resource import MsgResource
-from .slack.slackbot import SlackerAdapter
 
 from .utils.arrow import ArrowUtil
 from .utils.data_handler import DataHandler

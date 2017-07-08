@@ -7,8 +7,6 @@ from .dialog.dialog_manager import DialogManager
 from .dialog.dnd import DoNotDisturbManager
 from .dialog.presence import PreseneManager
 
-from .kino.worker import Worker
-
 from .nlp.disintegrator import Disintegrator
 from .nlp.ner import NamedEntitiyRecognizer
 
