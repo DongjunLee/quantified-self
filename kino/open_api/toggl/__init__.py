@@ -225,7 +225,7 @@ class Toggl():
                 "Error in getWorkspace(), please enter either a name or an id as a filter")
             return None
 
-        if id is None:  # then we search by name
+        if workspace_id is None:  # then we search by name
             for workspace in workspaces:  # search through them for one matching the name provided
                 if workspace['name'] == name:
                     return workspace  # if we find it return it
