@@ -65,19 +65,15 @@ class MsgTemplate:
 
         fields = []
         for f_name, f_detail in data.items():
-            field = Field()
-
-            field.title = f_detail["icon"] + f_name
-
+            title = f_detail["icon"] + f_name
             text = MsgResource.ORANGE_DIAMOND_ICON + \
                 f_detail['description'] + "\n"
             if len(f_detail['params']) != 0:
                 text += MsgResource.ORANGE_DIAMOND_ICON + "params" + "\n"
                 text += MsgResource.WHITE_ELEMENT_ICON + \
                     ", ".join(f_detail['params'])
-            field.value = text
-            field.short = "true"
-            fields.append(field)
+
+            fields.append(Field(title, text, short="true"))
         attachment.fields = fields
 
         attachments.append(attachment)

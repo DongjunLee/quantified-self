@@ -6,19 +6,24 @@ from kino.slack.template import MsgTemplate
 class MsgTemplateTest(unittest.TestCase):
 
     def test_schedule(self):
-        MsgTemplate.make_schedule_template("pretext", {})
+        attachments = MsgTemplate.make_schedule_template("pretext", {})
+        self.assertEqual(isinstance(attachments, list), True)
 
     def test_skill(self):
-        MsgTemplate.make_skill_template("pretext", {})
+        attachments = MsgTemplate.make_skill_template("pretext", {})
+        self.assertEqual(isinstance(attachments, list), True)
 
     def test_help(self):
-        MsgTemplate.make_help_template("guide", {})
+        attachments = MsgTemplate.make_help_template("guide", {})
+        self.assertEqual(isinstance(attachments, list), True)
 
     def test_giphy(self):
-        MsgTemplate.make_giphy_template("query", "url")
+        attachments = MsgTemplate.make_giphy_template("query", "url")
+        self.assertEqual(isinstance(attachments, list), True)
 
     def test_weather(self):
-        MsgTemplate.make_weather_template("address", "icon", "summary", "temperature")
+        attachments = MsgTemplate.make_weather_template("address", "icon", "summary", "temperature")
+        self.assertEqual(isinstance(attachments, list), True)
 
     def test_air_quality(self):
         data = {
@@ -29,20 +34,25 @@ class MsgTemplateTest(unittest.TestCase):
                 },
             "pm25": {}
         }
-        MsgTemplate.make_air_quality_template("station_name", data)
+        attachments = MsgTemplate.make_air_quality_template("station_name", data)
+        self.assertEqual(isinstance(attachments, list), True)
 
     def test_todoist(self):
-        MsgTemplate.make_todoist_task_template([])
+        attachments = MsgTemplate.make_todoist_task_template([])
+        self.assertEqual(isinstance(attachments, list), True)
 
     def test_feed(self):
-        MsgTemplate.make_feed_template(("title", "link", "description"))
+        attachments = MsgTemplate.make_feed_template(("title", "link", "description"))
+        self.assertEqual(isinstance(attachments, list), True)
 
     def test_bus(self):
-        MsgTemplate.make_bus_stop_template({})
+        attachments = MsgTemplate.make_bus_stop_template({})
+        self.assertEqual(isinstance(attachments, list), True)
 
     def test_summary(self):
         data = {
                 "Color": "RED",
                 "Total": "90"
                 }
-        MsgTemplate.make_summary_template(data)
+        attachments = MsgTemplate.make_summary_template(data)
+        self.assertEqual(isinstance(attachments, list), True)
