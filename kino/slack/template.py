@@ -3,24 +3,23 @@
 from .resource import MsgResource
 
 
-class MsgTemplate(object):
+class MsgTemplate:
 
-    def __init__(self):
-        pass
-
-    def make_schedule_template(self, pretext, data):
+    @staticmethod
+    def make_schedule_template(pretext, data):
+        print(data)
         sorted(data.items())
         attachments = []
         for k, v in data.items():
             if k == "index":
                 continue
 
-            a_dict = {}
+            attachment = Attachement()
 
             if pretext == "":
                 pass
             else:
-                a_dict['pretext'] = pretext
+                attachment.pretext = pretext
 
             if 'icon' in v:
                 icon = v['icon']
@@ -28,55 +27,47 @@ class MsgTemplate(object):
             else:
                 icon = MsgResource.TIMER_ICON
 
-            a_dict['title'] = icon + k + " " + \
+            attachment.title = icon + k + " " + \
                 v['description'] + " : " + v['time_interval']
             del v['description']
             del v['time_interval']
 
-            a_dict['fallback'] = "알람 관련한 정보입니다. channel에서 확인하세요!"
+            attachment.fallback = "알람 관련한 정보입니다. channel에서 확인하세요!"
 
             if 'color' in v:
-                a_dict['color'] = v['color']
+                attachment.color = v['color']
                 v.pop('color', None)
-            else:
-                a_dict['color'] = "#438C56"
 
             fields = []
             if 'registered_alarm' in v:
                 for d_k, d_v in v['registered_alarm'].items():
-                    field = {
-                        "title": " - " + d_k,
-                        "value": d_v,
-                        "short": "true"
-                    }
-                    fields.append(field)
+                    fields.append(Field(" - " + d_k, d_v, short="true"))
 
-            a_dict['fields'] = fields
-            a_dict['text'] = ""
-            a_dict['mrkdwn_in'] = ["text", "pretext"]
+            attachment.fields = fields
+            attachment.text = ""
 
-            attachments.append(a_dict)
+            attachments.append(attachment)
         return attachments
 
-    def make_skill_template(self, pretext, data):
+    @staticmethod
+    def make_skill_template(pretext, data):
         sorted(data.items())
         attachments = []
-        a_dict = {}
+
+        attachment = Attachement()
         if pretext == "":
             pass
         else:
-            a_dict['pretext'] = pretext
+            attachment.pretext = pretext
 
-        a_dict['fallback'] = "Function 관련 정보입니다. channel에서 확인하세요!"
-        a_dict['text'] = ""
-        a_dict['mrkdwn_in'] = ["text", "pretext"]
-        a_dict['color'] = "#438C56"
+        attachment.fallback = "Function 관련 정보입니다. channel에서 확인하세요!"
+        attachment.text = ""
 
         fields = []
         for f_name, f_detail in data.items():
-            field = {}
+            field = Field()
 
-            field['title'] = f_detail["icon"] + f_name
+            field.title = f_detail["icon"] + f_name
 
             text = MsgResource.ORANGE_DIAMOND_ICON + \
                 f_detail['description'] + "\n"
@@ -84,49 +75,47 @@ class MsgTemplate(object):
                 text += MsgResource.ORANGE_DIAMOND_ICON + "params" + "\n"
                 text += MsgResource.WHITE_ELEMENT_ICON + \
                     ", ".join(f_detail['params'])
-            field['value'] = text
-            field['short'] = "true"
+            field.value = text
+            field.short = "true"
             fields.append(field)
-        a_dict['fields'] = fields
+        attachment.fields = fields
 
-        attachments.append(a_dict)
+        attachments.append(attachment)
         return attachments
 
-    def make_help_template(self, guide, example):
+    @staticmethod
+    def make_help_template(guide, example):
         attachments = []
 
-        a_dict = {}
-        a_dict['pretext'] = ""
-        a_dict['title'] = MsgResource.ROBOT_ICON + MsgResource.GUIDE
-        a_dict['title_link'] = "https://github.com/DongjunLee/kino-bot"
-        a_dict['fallback'] = guide
-        a_dict['color'] = "#438C56"
+        attachement = Attachement()
+        attachement.pretext = ""
+        attachement.title = MsgResource.ROBOT_ICON + MsgResource.GUIDE
+        attachement.title_link = "https://github.com/DongjunLee/kino-bot"
+        attachement.fallback = guide
 
         text = guide + "\n\n"
         for k, v in example.items():
             text += MsgResource.ORANGE_DIAMOND_ICON + k + ": " + v + "\n"
-        a_dict['text'] = text
+        attachement.text = text
 
-        a_dict['mrkdwn_in'] = ["text", "pretext"]
-
-        attachments.append(a_dict)
+        attachments.append(attachement)
         return attachments
 
-    def make_giphy_template(self, q, url):
+    @staticmethod
+    def make_giphy_template(q, url):
         attachments = []
 
-        a_dict = {}
-        a_dict['title'] = q
-        a_dict['image_url'] = url
-        a_dict['fallback'] = "giphy: " + q
-        a_dict['color'] = "#438C56"
-        a_dict['mrkdwn_in'] = ["text", "pretext"]
+        attachement = Attachement()
+        attachement.title = q
+        attachement.image_url = url
+        attachement.fallback = "giphy: " + q
+        attachement.mrkdwn_in = ["text", "pretext"]
 
-        attachments.append(a_dict)
+        attachments.append(attachement)
         return attachments
 
+    @staticmethod
     def make_weather_template(
-            self,
             address,
             icon,
             summary,
@@ -134,69 +123,55 @@ class MsgTemplate(object):
             fallback="weather fallback"):
         attachments = []
 
-        a_dict = {}
-        a_dict['title'] = MsgResource.WEATHER
-        a_dict['fallback'] = MsgResource.WEATHER_ICONS(icon) + " " + fallback
-        a_dict['color'] = "#438C56"
+        attachement = Attachement()
+        attachement.title = MsgResource.WEATHER
+        attachement.fallback = MsgResource.WEATHER_ICONS(icon) + " " + fallback
 
         fields = []
-        fields.append(self.field("Address", address))
+        fields.append(Field("Address", address))
         fields.append(
-            self.field(
+            Field(
                 "Sky Icon",
                 MsgResource.WEATHER_ICONS(icon),
                 short="true"))
         if temperature:
-            fields.append(self.field("Temperature", temperature, short="true"))
-        fields.append(self.field("Summary", summary))
+            fields.append(Field("Temperature", temperature, short="true"))
+        fields.append(Field("Summary", summary))
 
-        a_dict['fields'] = fields
-        a_dict['mrkdwn_in'] = ["text", "pretext"]
+        attachement.fields = fields
 
-        attachments.append(a_dict)
+        attachments.append(attachement)
         return attachments
 
-    def field(self, title, value, short="false"):
-        return {"title": title, "value": value, "short": short}
-
-    def make_air_quality_template(self, station_name, data):
+    @staticmethod
+    def make_air_quality_template(station_name, data):
         attachments = []
 
         cai = data['cai']
 
-        a_dict = {}
-        a_dict['color'] = MsgResource.AIR_QUALITY_COLOR(cai['grade'])
-        a_dict['fallback'] = cai['description'] + " : " + cai['value']
-        a_dict['title'] = station_name + "의 대기질 정보 입니다."
-        a_dict['mrkdwn_in'] = ["text", "pretext"]
+        attachement = Attachement()
+        attachement.color = MsgResource.AIR_QUALITY_COLOR(cai['grade'])
+        attachement.fallback = cai['description'] + " : " + cai['value']
+        attachement.title = station_name + "의 대기질 정보 입니다."
+        attachement.mrkdwn_in = ["text", "pretext"]
 
         fields = []
-        field = {
-            "title": cai['description'],
-            "value": cai['value'] + "점"
-        }
-        fields.append(field)
+        fields.append(Field(cai['description'], cai['value'] + "점"))
         del data['cai']
         del data['pm25']
 
         for k, v in data.items():
             if isinstance(v, str):
                 continue
-            field = {}
+            fields.append(Field(v['description'], v['value'] + v['unit'] + "\n" + MsgResource.AIR_QUALITY_TEXT(v['grade']), short="true"))
 
-            field['title'] = v['description']
-            field['value'] = v['value'] + v['unit'] + "\n" + \
-                MsgResource.AIR_QUALITY_TEXT(v['grade'])
-            field['short'] = "true"
-            fields.append(field)
-        fields.append(field)
+        attachement.fields = fields
 
-        a_dict['fields'] = fields
-
-        attachments.append(a_dict)
+        attachments.append(attachement)
         return attachments
 
-    def make_todoist_task_template(self, tasks):
+    @staticmethod
+    def make_todoist_task_template(tasks):
         attachments = []
 
         fallback = "\n" + \
@@ -204,86 +179,118 @@ class MsgTemplate(object):
         for t in tasks:
             project_name, title, time, priority = t
 
-            a_dict = {}
-            a_dict['title'] = "[" + project_name + "]: " + title
-            a_dict['fallback'] = fallback
-            a_dict['color'] = MsgResource.TODOIST_PRIORITY_COLOR(priority)
+            attachement = Attachement()
+            attachement.title = "[" + project_name + "]: " + title
+            attachement.fallback = fallback
+            attachement.color = MsgResource.TODOIST_PRIORITY_COLOR(priority)
 
             text = MsgResource.CLOCK_ICON + " " + time
-            a_dict['text'] = text
-            a_dict['mrkdwn_in'] = ["text", "pretext"]
+            attachement.text = text
 
-            attachments.append(a_dict)
+            attachments.append(attachement)
         return attachments
 
-    def make_feed_template(self, feed):
+    @staticmethod
+    def make_feed_template(feed):
         attachments = []
 
         title, link, description = feed
         fallback = title + ": "  + description
 
-        a_dict = {}
-        a_dict['title'] = title
-        a_dict['fallback'] = fallback
-        a_dict['color'] = MsgResource.FEED_COLOR
+        attachement = Attachement()
+        attachement.title = title
+        attachement.fallback = fallback
+        attachement.color = MsgResource.FEED_COLOR
+        attachement.text = description + "\n" + link
 
-        a_dict['text'] = description + "\n" + link
-        a_dict['mrkdwn_in'] = ["text", "pretext"]
-
-        attachments.append(a_dict)
+        attachments.append(attachement)
         return attachments
 
-    def make_bus_stop_template(self, data):
+    @staticmethod
+    def make_bus_stop_template(data):
         attachments = []
-        a_dict = {}
-        a_dict['fallback'] = "Bus 도착정보. "
-        a_dict['text'] = "Bus 도착정보 입니다."
-        a_dict['mrkdwn_in'] = ["text", "pretext"]
-        a_dict['color'] = "#438C56"
+        attachement = Attachement()
+        attachement.fallback = "Bus 도착정보. "
+        attachement.text = "Bus 도착정보 입니다."
 
         fields = []
         for k, v in data.items():
-            field = {}
+            field = Field()
 
-            field['title'] = MsgResource.BUS_ICON + str(k) + "번 버스"
-            field['value'] = MsgResource.ORANGE_DIAMOND_ICON + \
+            field.title = MsgResource.BUS_ICON + str(k) + "번 버스"
+            field.value = MsgResource.ORANGE_DIAMOND_ICON + \
                 v['bus1'] + "\n" + MsgResource.ORANGE_DIAMOND_ICON + v['bus2']
-            field['short'] = "true"
+            field.short = "true"
             fields.append(field)
-        a_dict['fields'] = fields
+        attachement.fields = fields
 
-        attachments.append(a_dict)
+        attachments.append(attachement)
         return attachments
 
-    def make_summary_template(self, data):
+    @staticmethod
+    def make_summary_template(data):
         attachments = []
-        a_dict = {}
+        attachement = Attachement()
 
-        a_dict['color'] = data['Color']
+        attachement.color = data['Color']
         total_score = data['Total']
         del data['Color']
         del data['Total']
 
-        a_dict['fallback'] = "종합점수:  " + str(total_score)
-        a_dict['text'] = "종합점수 입니다."
-        a_dict['mrkdwn_in'] = ["text", "pretext"]
+        attachement.fallback = "종합점수:  " + str(total_score)
+        attachement.text = "종합점수 입니다."
 
         fields = []
         for k, v in data.items():
-            field = {}
+            fields.append(Field(k, str(v), short="true"))
+        fields.append(Field("Total Score", str(total_score) + " 점"))
 
-            field['title'] = k
-            field['value'] = str(v)
-            field['short'] = "true"
-            fields.append(field)
+        attachement.fields = fields
 
-        field = {
-            "title": "Total Score",
-            "value": str(total_score) + " 점"
-        }
-        fields.append(field)
-
-        a_dict['fields'] = fields
-
-        attachments.append(a_dict)
+        attachments.append(attachement)
         return attachments
+
+
+class Attachement(dict):
+
+    def __init__(self):
+        self["color"] = "#438C56"
+        self["mrkdwn_in"] = ["text", "pretext"]
+
+    def __getattr__(self, name):
+        if name in self:
+            return self[name]
+        else:
+            raise AttributeError("No such attribute: " + name)
+
+    def __setattr__(self, name, value):
+        self[name] = value
+
+    def __delattr__(self, name):
+        if name in self:
+            del self[name]
+        else:
+            raise AttributeError("No such attribute: " + name)
+
+
+class Field(dict):
+
+    def __init__(self, title, value, short="false"):
+        self["title"] = title
+        self["value"] = value
+        self["short"] = short
+
+    def __getattr__(self, name):
+        if name in self:
+            return self[name]
+        else:
+            raise AttributeError("No such attribute: " + name)
+
+    def __setattr__(self, name, value):
+        self[name] = value
+
+    def __delattr__(self, name):
+        if name in self:
+            del self[name]
+        else:
+            raise AttributeError("No such attribute: " + name)

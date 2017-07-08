@@ -17,7 +17,6 @@ class TodoistManager(object):
 
     def __init__(self, slackbot=None):
         self.config = Config()
-        self.template = MsgTemplate()
         self.todoist_api = todoist.TodoistAPI(
             self.config.open_api['todoist']['TOKEN'])
 
@@ -41,7 +40,7 @@ class TodoistManager(object):
             filter(
                 lambda x: x[2] != "anytime",
                 self.__get_task(today_task)))
-        attachments = self.template.make_todoist_task_template(
+        attachments = MsgTemplate.make_todoist_task_template(
             specific_task_list)
         if attachments is not None and len(attachments) != 0:
             self.slackbot.send_message(attachments=attachments, channel=channel)
@@ -90,7 +89,7 @@ class TodoistManager(object):
         self.slackbot.send_message(
             text=MsgResource.TODOIST_FEEDBACK_OVERDUE(remain_task_count))
 
-        attachments = self.template.make_todoist_task_template(
+        attachments = MsgTemplate.make_todoist_task_template(
             remain_task_list)
         self.slackbot.send_message(attachments=attachments)
 

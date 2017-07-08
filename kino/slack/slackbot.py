@@ -138,7 +138,6 @@ class GiphyClient:
             self.slackbot = SlackerAdapter()
         else:
             self.slackbot = slackbot
-        self.template = MsgTemplate()
 
     def search(self, q):
         payload = {'q': q, 'api_key': self.api_key, 'limit': self.limit, 'lang': langid.classify(q)[0]}
@@ -152,7 +151,7 @@ class GiphyClient:
 
             choiced_gif = random.choice(result)
             url = choiced_gif['images']['downsized']['url']
-            attachments = self.template.make_giphy_template(q, url)
+            attachments = MsgTemplate.make_giphy_template(q, url)
 
             self.slackbot.send_message(attachments=attachments)
             return True

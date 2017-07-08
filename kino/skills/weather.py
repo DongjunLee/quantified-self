@@ -18,7 +18,6 @@ class Weather(object):
 
     def __init__(self, slackbot=None):
         self.config = Config()
-        self.template = MsgTemplate()
 
         if slackbot is None:
             self.slackbot = SlackerAdapter()
@@ -55,7 +54,7 @@ class Weather(object):
             temperature = self.__hourly_temperature(forecast)
             fallback = summary + " " + temperature
 
-        attachments = self.template.make_weather_template(
+        attachments = MsgTemplate.make_weather_template(
             address, icon, summary, temperature=temperature, fallback=fallback)
         self.slackbot.send_message(attachments=attachments)
 
@@ -77,5 +76,5 @@ class Weather(object):
 
         station_name = Profile().get_location(station=True)
         response = airkorea.forecast(station_name)
-        attachments = self.template.make_air_quality_template(station_name, response)
+        attachments = MsgTemplate.make_air_quality_template(station_name, response)
         self.slackbot.send_message(attachments=attachments)

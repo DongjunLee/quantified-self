@@ -33,8 +33,6 @@ class Summary(object):
             self.slackbot = slackbot
 
     def total_score(self):
-        template = MsgTemplate()
-
         today_data = self.__get_total_score()
         self.data_handler.edit_record(today_data)
 
@@ -91,7 +89,7 @@ class Summary(object):
             today_data['Working Hour'] = in_company_time.format(
                 "HH:mm") + " ~ " + out_company_time.format("HH:mm") + " : " + str(working_hour) + "h"
 
-        attachments = template.make_summary_template(today_data)
+        attachments = MsgTemplate.make_summary_template(today_data)
         self.slackbot.send_message(attachments=attachments)
 
     def __get_total_score(self, days="today"):

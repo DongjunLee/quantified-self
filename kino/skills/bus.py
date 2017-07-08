@@ -14,7 +14,6 @@ from ..utils.data_handler import DataHandler
 class Bus(object):
 
     def __init__(self, slackbot=None):
-        self.template = MsgTemplate()
         self.data_handler = DataHandler()
         self.config = Config()
 
@@ -63,7 +62,7 @@ class Bus(object):
         except BaseException:
             self.slackbot.send_message(text=MsgResource.ERROR)
 
-        attachments = self.template.make_bus_stop_template(result)
+        attachments = MsgTemplate.make_bus_stop_template(result)
         if real_time:
             self.slackbot.update_message(attachments=attachments)
         else:

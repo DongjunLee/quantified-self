@@ -22,7 +22,6 @@ class FeedNotifier:
         self.feed_list = self.data_handler.read_feeds()
 
         self.config = Config()
-        self.template = MsgTemplate()
 
         if slackbot is None:
             self.slackbot = SlackerAdapter(channel=self.config.channel['FEED'])
@@ -36,7 +35,7 @@ class FeedNotifier:
             noti_list += self.notify(f)
 
         for feed in noti_list:
-            attachments = self.template.make_feed_template(feed)
+            attachments = MsgTemplate.make_feed_template(feed)
             self.slackbot.send_message(attachments=attachments)
 
     def notify(self, feed_url):

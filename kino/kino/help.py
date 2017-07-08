@@ -9,7 +9,6 @@ from ..utils.data_handler import DataHandler
 class Guide(object):
 
     def __init__(self, slackbot=None):
-        self.template = MsgTemplate()
         self.config = Config()
         self.data_handler = DataHandler()
 
@@ -19,7 +18,7 @@ class Guide(object):
             self.slackbot = slackbot
 
     def help(self):
-        attachments = self.template.make_help_template(
+        attachments = MsgTemplate.make_help_template(
             self.__guide(), self.__example())
         self.slackbot.send_message(attachments=attachments)
 

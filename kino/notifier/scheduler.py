@@ -24,7 +24,6 @@ class Scheduler(object):
         self.input = text
         self.data_handler = DataHandler()
         self.fname = "schedule.json"
-        self.template = MsgTemplate()
 
         if slackbot is None:
             self.slackbot = SlackerAdapter()
@@ -182,7 +181,7 @@ class Scheduler(object):
                 between_data["specific time"] = self.__alarm_in_between(
                     specific, k, v)
 
-        attachments = self.template.make_schedule_template("", between_data)
+        attachments = MsgTemplate.make_schedule_template("", between_data)
         self.slackbot.send_message(
             text=MsgResource.READ,
             attachments=attachments)
@@ -219,7 +218,7 @@ class Scheduler(object):
             self.fname, "alarm", a_index, input_alarm)
 
         if result == "sucess":
-            attachments = self.template.make_schedule_template(
+            attachments = MsgTemplate.make_schedule_template(
                 MsgResource.UPDATE,
                 {a_index: input_alarm}
             )
