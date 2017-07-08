@@ -74,7 +74,7 @@ class State(object):
         if diff_min > 100:
             rest_mins = 20
         elif diff_min > 60:
-            rest_mins = 6 + diff_min//10
+            rest_mins = 6 + diff_min // 10
 
         now = arrow.now()
         advice = now.replace(minutes=rest_mins)

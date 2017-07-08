@@ -29,7 +29,6 @@ from .utils.member import Member
 import re
 
 
-
 class Functions(object):
 
     def __init__(self, slackbot=None):

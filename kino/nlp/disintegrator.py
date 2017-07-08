@@ -12,7 +12,6 @@ from nltk.corpus import wordnet
 from nltk.stem.wordnet import WordNetLemmatizer
 
 
-
 class Disintegrator:
 
     def __init__(self, text):
@@ -32,7 +31,7 @@ class Disintegrator:
 
         try:
             return self.instance.convert2simple(sentence=self.text)
-        except:
+        except BaseException:
             return ""
 
 
@@ -81,7 +80,10 @@ class EngDisintegrator:
     def __lemmatize(self, tokenized):
         lemmatized_tokens = []
         for tag in nltk.pos_tag(tokenized):
-            lemmatized_tokens.append(self.lemmatizer.lemmatize(tag[0], self.__get_wordnet_pos(tag[1])))
+            lemmatized_tokens.append(
+                self.lemmatizer.lemmatize(
+                    tag[0], self.__get_wordnet_pos(
+                        tag[1])))
         return lemmatized_tokens
 
     def __get_wordnet_pos(self, treebank_tag):

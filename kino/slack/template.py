@@ -159,7 +159,15 @@ class MsgTemplate:
         for _, v in data.items():
             if isinstance(v, str):
                 continue
-            fields.append(Field(v['description'], v['value'] + v['unit'] + "\n" + MsgResource.AIR_QUALITY_TEXT(v['grade']), short="true"))
+            fields.append(
+                Field(
+                    v['description'],
+                    v['value'] +
+                    v['unit'] +
+                    "\n" +
+                    MsgResource.AIR_QUALITY_TEXT(
+                        v['grade']),
+                    short="true"))
 
         attachement.fields = fields
 
@@ -171,7 +179,8 @@ class MsgTemplate:
         attachments = []
 
         fallback = "\n" + \
-            "\n".join(list(map(lambda x: x[2] + ": " + x[1] + "(" + x[0] + ")", tasks)))
+            "\n".join(
+                list(map(lambda x: x[2] + ": " + x[1] + "(" + x[0] + ")", tasks)))
         for t in tasks:
             project_name, title, time, priority = t
 
@@ -191,7 +200,7 @@ class MsgTemplate:
         attachments = []
 
         title, link, description = feed
-        fallback = title + ": "  + description
+        fallback = title + ": " + description
 
         attachement = Attachement()
         attachement.title = title

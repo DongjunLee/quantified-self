@@ -25,7 +25,7 @@ class DataLoader(object):
 
         data_x = []
         data_y = []
-        for x,y in data:
+        for x, y in data:
             data_x.append(x)
             data_y.append(y)
         return np.array(data_x), np.array(data_y)
@@ -42,7 +42,7 @@ class DataLoader(object):
             if "raw input:" not in line:
                 continue
 
-            prev_func = len(Skill.classes) # default value
+            prev_func = len(Skill.classes)  # default value
             for idx, keyword_list in enumerate(skill_list):
                 if all(k in prev_line for k in keyword_list):
                     prev_func = idx
@@ -74,7 +74,8 @@ class DataLoader(object):
         else:
             is_holiday = 0
 
-        return np.array([day_of_week, hour, minute, prev_func, is_holiday], dtype=np.int32)
+        return np.array([day_of_week, hour, minute, prev_func,
+                         is_holiday], dtype=np.int32)
 
     def make_X(self):
         day_of_week, hour, minute, is_holiday = ArrowUtil.convert_now2data()
@@ -90,7 +91,8 @@ class DataLoader(object):
                 if all(k in memory_text for k in keyword_list):
                     prev_func = idx
 
-        return np.array([[day_of_week, hour, minute, prev_func, is_holiday]], dtype=np.int32)
+        return np.array(
+            [[day_of_week, hour, minute, prev_func, is_holiday]], dtype=np.int32)
 
     def make_y(self, text):
         skill_list = list(map(lambda x: x[0], Skill.classes))
@@ -102,14 +104,14 @@ class DataLoader(object):
 
 class RemoveOldDataQueue(Queue):
 
-    def put_nowait(self,*args,**kwargs):
+    def put_nowait(self, *args, **kwargs):
         if self.full():
             try:
-                #oldest_data
+                # oldest_data
                 self.get()
             except Queue.Empty:
                 pass
-        Queue.put_nowait(self,*args,**kwargs)
+        Queue.put_nowait(self, *args, **kwargs)
 
 
 class SkillData(object):

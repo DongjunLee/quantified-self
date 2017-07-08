@@ -17,7 +17,6 @@ from ..utils.score import Score
 from ..utils.state import State
 
 
-
 class TogglManager(object):
 
     def __init__(self, slackbot=None):
@@ -45,7 +44,9 @@ class TogglManager(object):
         if advice_rest_time is not None:
             advice_rest_time = arrow.get(advice_rest_time)
             if advice_rest_time > arrow.now():
-                self.slackbot.send_message(text=MsgResource.TOGGL_ADVICE_REST(time=advice_rest_time.format('HH:mm')))
+                self.slackbot.send_message(
+                    text=MsgResource.TOGGL_ADVICE_REST(
+                        time=advice_rest_time.format('HH:mm')))
                 return
 
         current_timer = self.toggl.currentRunningTimeEntry()['data']
@@ -72,7 +73,8 @@ class TogglManager(object):
             self.slackbot.send_message(text=MsgResource.TOGGL_START)
         else:
             if (doing, done) == (True, False):
-                self.slackbot.send_message(text=MsgResource.TOGGL_ALREADY_DOING)
+                self.slackbot.send_message(
+                    text=MsgResource.TOGGL_ALREADY_DOING)
                 return
 
             stop = self.toggl.stopTimeEntry(current_timer['id'])
@@ -85,7 +87,7 @@ class TogglManager(object):
                 text=MsgResource.TOGGL_STOP_SUMMARY(
                     description=description, diff_min=diff_min))
 
-            if done == True:
+            if done:
                 todoist = TodoistManager()
                 todoist.complete_by_toggl(description, int(diff_min))
 

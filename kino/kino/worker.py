@@ -19,7 +19,6 @@ from ..utils.logger import Logger
 from ..utils.profile import Profile
 
 
-
 class Worker(object):
 
     def __init__(self, text=None, slackbot=None):
@@ -135,8 +134,8 @@ class Worker(object):
                 }
 
                 try:
-                    schedule.every().day.at(time).do(self.__run_threaded,
-                                                     self.function_runner, param)
+                    schedule.every().day.at(time).do(
+                        self.__run_threaded, self.function_runner, param)
                 except Exception as e:
                     print("Function Schedule Error: ", e)
                     self.slackbot.send_message(text=MsgResource.ERROR)

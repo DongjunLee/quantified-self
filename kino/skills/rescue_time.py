@@ -20,7 +20,8 @@ class RescueTime(object):
         self.config = Config()
 
         if slackbot is None:
-            self.slackbot = SlackerAdapter(channel=self.config.channel['REPORT'])
+            self.slackbot = SlackerAdapter(
+                channel=self.config.channel['REPORT'])
         else:
             self.slackbot = slackbot
 

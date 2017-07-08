@@ -20,31 +20,35 @@ class GithubManager(object):
         self.github = Github(self.username, password)
 
         if slackbot is None:
-            self.slackbot = SlackerAdapter(channel=self.config.channel['REPORT'])
+            self.slackbot = SlackerAdapter(
+                channel=self.config.channel['REPORT'])
         else:
             self.slackbot = slackbot
 
     def commit(self, timely="daily"):
         events = self.github.get_user(self.username).get_events()
 
-        if type(timely) == int:
+        if isinstance(timely, int):
             point_start = self.__time_point(timely)
-            point_end = self.__time_point(timely+1)
+            point_end = self.__time_point(timely + 1)
 
-            commit_count = self.__get_event_count(events, point_start, point_end)
+            commit_count = self.__get_event_count(
+                events, point_start, point_end)
             return commit_count
 
         elif timely == "daily":
             point_start = self.__time_point(0)
             point_end = self.__time_point(1)
 
-            commit_count = self.__get_event_count(events, point_start, point_end)
+            commit_count = self.__get_event_count(
+                events, point_start, point_end)
             if commit_count == 0:
                 self.slackbot.send_message(
                     text=MsgResource.GITHUB_COMMIT_EMPTY)
             else:
                 self.slackbot.send_message(
-                    text=MsgResource.GITHUB_COMMIT_EXIST(commit_count=commit_count))
+                    text=MsgResource.GITHUB_COMMIT_EXIST(
+                        commit_count=commit_count))
 
         elif timely == "weekly":
             commit_count_list = []

@@ -4,8 +4,6 @@ from ..utils.config import Config
 from ..utils.data_handler import DataHandler
 
 
-
-
 class MsgResourceType(type):
     class __MsgResource:
 
@@ -25,7 +23,8 @@ class MsgResourceType(type):
         def __getattr__(self, name):
             self.pool[name] = {}
 
-            message = self.template[self.config.bot["LANG_CODE"]].get(name, "empty")
+            message = self.template[self.config.bot["LANG_CODE"]].get(
+                name, "empty")
             if isinstance(message, list):
                 message = random.choice(message)
 
@@ -33,7 +32,9 @@ class MsgResourceType(type):
                 self.pool[name] = {"args": args, "kwargs": kwargs}
                 return "{" + name + "}"
 
-            if isinstance(message, dict) or ("{" in message and "}" in message):
+            if isinstance(
+                    message, dict) or (
+                    "{" in message and "}" in message):
                 return wrapper
             else:
                 return "{" + name + "}"
@@ -43,14 +44,15 @@ class MsgResourceType(type):
             m_args = self.pool[name].get("args", None)
             m_kwargs = self.pool[name].get("kwargs", None)
 
-            message = self.template[self.lang_code].get(name, "MsgResource not exist.")
+            message = self.template[self.lang_code].get(
+                name, "MsgResource not exist.")
             if isinstance(message, list):
                 message = random.choice(message)
 
             def find_nearest_number(num_list, num):
                 num = int(num)
                 num_list = list(map(lambda x: int(x), num_list))
-                return str(min(num_list, key=lambda x:abs(x-num)))
+                return str(min(num_list, key=lambda x: abs(x - num)))
 
             if m_args is not None and len(m_args) == 1:
                 arg = m_args[0]
@@ -65,7 +67,7 @@ class MsgResourceType(type):
 
     instance = None
 
-    def __new__(cls, *args, **kwargs): # __new__ always a classmethod
+    def __new__(cls, *args, **kwargs):  # __new__ always a classmethod
         if not cls.instance:
             cls.instance = cls.__MsgResource()
         return cls.instance

@@ -30,7 +30,12 @@ class SlackerAdapter(object):
         else:
             self.lang_code = langid.classify(input_text)[0]
 
-    def send_message(self, channel=None, text=None, attachments=None, giphy=True):
+    def send_message(
+            self,
+            channel=None,
+            text=None,
+            attachments=None,
+            giphy=True):
         if self.channel is None:
             self.channel = self.config.channel['DEFAULT']
         if channel is not None:
@@ -61,8 +66,10 @@ class SlackerAdapter(object):
         if not isinstance(d, (dict, list)):
             return d
         if isinstance(d, list):
-            return [ self.__message2text(v) for v in (self.attachment_message2text(v) for v in d)]
-        return {k: self.__message2text(v) for k, v in ((k, self.attachment_message2text(v)) for k, v in d.items())}
+            return [self.__message2text(v) for v in (
+                self.attachment_message2text(v) for v in d)]
+        return {k: self.__message2text(v) for k, v in (
+            (k, self.attachment_message2text(v)) for k, v in d.items())}
 
     def __message2text(self, msg_text):
         if isinstance(msg_text, str):
@@ -123,7 +130,6 @@ class SlackerAdapter(object):
         return self.slacker.users.list().body['members']
 
 
-
 class GiphyClient:
 
     def __init__(self, slackbot=None, limit=10):
@@ -139,7 +145,11 @@ class GiphyClient:
             self.slackbot = slackbot
 
     def search(self, q):
-        payload = {'q': q, 'api_key': self.api_key, 'limit': self.limit, 'lang': langid.classify(q)[0]}
+        payload = {
+            'q': q,
+            'api_key': self.api_key,
+            'limit': self.limit,
+            'lang': langid.classify(q)[0]}
         query = urlencode(payload, quote_via=quote_plus)
 
         r = requests.get(f"{self.base_url}search?{query}")

@@ -6,7 +6,6 @@ from ..slack.slackbot import SlackerAdapter
 from ..slack.template import MsgTemplate
 
 
-
 class SkillList(object):
 
     def __init__(self, text=None, slackbot=None):
@@ -16,5 +15,6 @@ class SkillList(object):
             self.slackbot = slackbot
 
     def read(self):
-        attachments = MsgTemplate.make_skill_template("", RegisteredFuctions().list)
+        attachments = MsgTemplate.make_skill_template(
+            "", RegisteredFuctions().list)
         self.slackbot.send_message(attachments=attachments)

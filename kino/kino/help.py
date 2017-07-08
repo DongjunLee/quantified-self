@@ -23,7 +23,9 @@ class Guide(object):
         self.slackbot.send_message(attachments=attachments)
 
     def __guide(self):
-        return "\n".join(MsgResource.template[self.config.bot["LANG_CODE"]]["GUIDE_DETAIL"])
+        return "\n".join(
+            MsgResource.template[self.config.bot["LANG_CODE"]]["GUIDE_DETAIL"])
 
     def __example(self):
-        return MsgResource.template[self.config.bot["LANG_CODE"]]["GUIDE_KEYWORD"]
+        return MsgResource.template[self.config.bot["LANG_CODE"]
+                                    ]["GUIDE_KEYWORD"]

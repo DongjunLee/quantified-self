@@ -5,7 +5,9 @@
 import base64
 from datetime import datetime
 # for making requests
-import urllib.request, urllib.error, urllib.parse
+import urllib.request
+import urllib.error
+import urllib.parse
 
 # parsing json data
 import json
@@ -13,6 +15,8 @@ import json
 #---------------------------------------------
 # Class containing the endpoint URLs for Toggl
 #---------------------------------------------
+
+
 class Endpoints():
     WORKSPACES = "https://www.toggl.com/api/v8/workspaces"
     CLIENTS = "https://www.toggl.com/api/v8/clients"
@@ -22,14 +26,18 @@ class Endpoints():
     REPORT_SUMMARY = "https://toggl.com/reports/api/v2/summary"
     START_TIME = "https://www.toggl.com/api/v8/time_entries/start"
     TIME_ENTRIES = "https://www.toggl.com/api/v8/time_entries"
+
     @staticmethod
     def STOP_TIME(pid):
-        return "https://www.toggl.com/api/v8/time_entries/" + str(pid) + "/stop"
+        return "https://www.toggl.com/api/v8/time_entries/" + \
+            str(pid) + "/stop"
     CURRENT_RUNNING_TIME = "https://www.toggl.com/api/v8/time_entries/current"
 
 #-------------------------------------------------------
 # Class containing the necessities for Toggl interaction
 #-------------------------------------------------------
+
+
 class Toggl():
     # template of headers for our request
     headers = {
@@ -87,13 +95,20 @@ class Toggl():
 
     def requestRaw(self, endpoint, parameters=None):
         '''make a request to the toggle api at a certain endpoint and return the RAW page data (usually JSON)'''
-        if parameters == None:
-            return urllib.request.urlopen(urllib.request.Request(endpoint, headers=self.headers)).read()
+        if parameters is None:
+            return urllib.request.urlopen(
+                urllib.request.Request(
+                    endpoint, headers=self.headers)).read()
         else:
             if 'user_agent' not in parameters:
-                parameters.update( {'user_agent' : self.user_agent,} ) # add our class-level user agent in there
-            endpoint = endpoint + "?" + urllib.parse.urlencode(parameters) # encode all of our data for a get request & modify the URL
-            return urllib.request.urlopen(urllib.request.Request(endpoint, headers=self.headers)).read() # make request and read the response
+                # add our class-level user agent in there
+                parameters.update({'user_agent': self.user_agent, })
+            # encode all of our data for a get request & modify the URL
+            endpoint = endpoint + "?" + urllib.parse.urlencode(parameters)
+            return urllib.request.urlopen(
+                urllib.request.Request(
+                    endpoint,
+                    headers=self.headers)).read()  # make request and read the response
 
     def request(self, endpoint, parameters=None):
         '''make a request to the toggle api at a certain endpoint and return the page data as a parsed JSON dict'''
@@ -101,12 +116,18 @@ class Toggl():
 
     def postRequest(self, endpoint, parameters=None):
         '''make a POST request to the toggle api at a certain endpoint and return the RAW page data (usually JSON)'''
-        if parameters == None:
-            return urllib.request.urlopen(urllib.request.Request(endpoint, headers=self.headers)).read()
+        if parameters is None:
+            return urllib.request.urlopen(
+                urllib.request.Request(
+                    endpoint, headers=self.headers)).read()
         else:
             data = json.JSONEncoder().encode(parameters)
             data = data.encode('ascii')
-            return urllib.request.urlopen(urllib.request.Request(endpoint, data=data, headers=self.headers)).read() # make request and read the response
+            return urllib.request.urlopen(
+                urllib.request.Request(
+                    endpoint,
+                    data=data,
+                    headers=self.headers)).read()  # make request and read the response
 
     #----------------------------------
     # Methods for managing Time Entries
@@ -116,9 +137,9 @@ class Toggl():
         '''starts a new Time Entry'''
         data = {
             "time_entry": {
-            "description": description,
-            "pid": pid,
-            "created_with": self.user_agent
+                "description": description,
+                "pid": pid,
+                "created_with": self.user_agent
             }
         }
         response = self.postRequest(Endpoints.START_TIME, parameters=data)
@@ -134,8 +155,16 @@ class Toggl():
         response = self.postRequest(Endpoints.STOP_TIME(entryid))
         return self.decodeJSON(response)
 
-    def createTimeEntry(self, hourduration, projectid=None, projectname=None,
-                        clientname=None, year=None, month=None, day=None, hour=None):
+    def createTimeEntry(
+            self,
+            hourduration,
+            projectid=None,
+            projectname=None,
+            clientname=None,
+            year=None,
+            month=None,
+            day=None,
+            hour=None):
         """
         Creating a custom time entry, minimum must is hour duration and project param
         :param hourduration:
@@ -154,9 +183,13 @@ class Toggl():
 
         if not projectid:
             if projectname and clientname:
-                projectid = (self.getClientProject(clientname, projectname))['data']['id']
+                projectid = (
+                    self.getClientProject(
+                        clientname,
+                        projectname))['data']['id']
             elif projectname:
-                projectid = (self.searchClientProject(projectname))['data']['id']
+                projectid = (self.searchClientProject(projectname))[
+                    'data']['id']
             else:
                 print('Too many missing parameters for query')
                 exit(1)
@@ -166,9 +199,9 @@ class Toggl():
         day = datetime.now().day if not day else day
         hour = datetime.now().hour if not hour else hour
 
-        timestruct = datetime(year, month, day, hour-2).isoformat() + '.000Z'
+        timestruct = datetime(year, month, day, hour - 2).isoformat() + '.000Z'
         data['time_entry']['start'] = timestruct
-        data['time_entry']['duration'] = hourduration*3600
+        data['time_entry']['duration'] = hourduration * 3600
         data['time_entry']['pid'] = projectid
         data['time_entry']['created_with'] = 'NAME'
 
@@ -184,27 +217,29 @@ class Toggl():
 
     def getWorkspace(self, name=None, id=None):
         '''return the first workspace that matches a given name or id'''
-        workspaces = self.getWorkspaces() # get all workspaces
+        workspaces = self.getWorkspaces()  # get all workspaces
 
         # if they give us nothing let them know we're not returning anything
-        if name == None and id == None:
-            print("Error in getWorkspace(), please enter either a name or an id as a filter")
+        if name is None and id is None:
+            print(
+                "Error in getWorkspace(), please enter either a name or an id as a filter")
             return None
 
-        if id == None: # then we search by name
-            for workspace in workspaces: # search through them for one matching the name provided
+        if id is None:  # then we search by name
+            for workspace in workspaces:  # search through them for one matching the name provided
                 if workspace['name'] == name:
-                    return workspace # if we find it return it
-            return None # if we get to here and haven't found it return None
-        else: # otherwise search by id
-            for workspace in workspaces: # search through them for one matching the id provided
+                    return workspace  # if we find it return it
+            return None  # if we get to here and haven't found it return None
+        else:  # otherwise search by id
+            for workspace in workspaces:  # search through them for one matching the id provided
                 if workspace['id'] == int(id):
-                    return workspace # if we find it return it
-            return None # if we get to here and haven't found it return None
+                    return workspace  # if we find it return it
+            return None  # if we get to here and haven't found it return None
 
     def getWorkspaceProjects(self):
         '''return all projects in the workspace'''
-        return self.request(Endpoints.WORKSPACES + "/" + str(self.wid) + "/projects")
+        return self.request(Endpoints.WORKSPACES + "/" +
+                            str(self.wid) + "/projects")
 
     def getWorkspaceProject(self, name):
         """
@@ -227,23 +262,23 @@ class Toggl():
 
     def getClient(self, name=None, id=None):
         '''return the first workspace that matches a given name or id'''
-        clients = self.getClients() # get all clients
+        clients = self.getClients()  # get all clients
 
         # if they give us nothing let them know we're not returning anything
-        if name == None and id == None:
+        if name is None and id is None:
             print("Error in getClient(), please enter either a name or an id as a filter")
             return None
 
-        if id == None: # then we search by name
-            for client in clients: # search through them for one matching the name provided
+        if id is None:  # then we search by name
+            for client in clients:  # search through them for one matching the name provided
                 if client['name'] == name:
-                    return client # if we find it return it
-            return None # if we get to here and haven't found it return None
-        else: # otherwise search by id
-            for client in clients: # search through them for one matching the id provided
+                    return client  # if we find it return it
+            return None  # if we get to here and haven't found it return None
+        else:  # otherwise search by id
+            for client in clients:  # search through them for one matching the id provided
                 if client['id'] == int(id):
-                    return client # if we find it return it
-            return None # if we get to here and haven't found it return None
+                    return client  # if we find it return it
+            return None  # if we get to here and haven't found it return None
 
     def getClientProjects(self, id):
         """
@@ -265,7 +300,7 @@ class Toggl():
                 for project in self.getClientProjects(client['id']):
                     if project['name'] == name:
                         return project
-            except:
+            except BaseException:
                 continue
 
         print('Could not find client by the name')
@@ -321,7 +356,9 @@ class Toggl():
             data['workspace_id'] = self.wid
 
         # get the raw pdf file data
-        filedata = self.requestRaw(Endpoints.REPORT_WEEKLY + ".pdf", parameters=data)
+        filedata = self.requestRaw(
+            Endpoints.REPORT_WEEKLY + ".pdf",
+            parameters=data)
 
         # write the data to a file
         with open(filename, "wb") as pdf:
@@ -342,7 +379,9 @@ class Toggl():
             data['workspace_id'] = self.wid
 
         # get the raw pdf file data
-        filedata = self.requestRaw(Endpoints.REPORT_DETAILED + ".pdf", parameters=data)
+        filedata = self.requestRaw(
+            Endpoints.REPORT_DETAILED + ".pdf",
+            parameters=data)
 
         # write the data to a file
         with open(filename, "wb") as pdf:
@@ -363,7 +402,9 @@ class Toggl():
             data['workspace_id'] = self.wid
 
         # get the raw pdf file data
-        filedata = self.requestRaw(Endpoints.REPORT_SUMMARY + ".pdf", parameters=data)
+        filedata = self.requestRaw(
+            Endpoints.REPORT_SUMMARY + ".pdf",
+            parameters=data)
 
         # write the data to a file
         with open(filename, "wb") as pdf:

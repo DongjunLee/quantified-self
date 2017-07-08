@@ -76,5 +76,6 @@ class Weather(object):
 
         station_name = Profile().get_location(station=True)
         response = airkorea.forecast(station_name)
-        attachments = MsgTemplate.make_air_quality_template(station_name, response)
+        attachments = MsgTemplate.make_air_quality_template(
+            station_name, response)
         self.slackbot.send_message(attachments=attachments)

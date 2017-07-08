@@ -14,7 +14,6 @@ from ..utils.data_handler import DataHandler
 from ..utils.state import State
 
 
-
 class Question(object):
 
     def __init__(self):
@@ -96,8 +95,10 @@ class Question(object):
                 y_label="Time",
                 title=title)
             self.slackbot.file_upload(
-                f_name, title=title, channel=self.config.channel['REPORT'], comment=self.msg_report)
-
+                f_name,
+                title=title,
+                channel=self.config.channel['REPORT'],
+                comment=self.msg_report)
 
 
 class HappyQuestion(Question):
@@ -110,7 +111,8 @@ class HappyQuestion(Question):
         self.msg_report = MsgResource.HAPPY_REPORT
 
         if slackbot is None:
-            self.slackbot = SlackerAdapter(channel=self.config.channel["DEFAULT"])
+            self.slackbot = SlackerAdapter(
+                channel=self.config.channel["DEFAULT"])
         else:
             self.slackbot = slackbot
 

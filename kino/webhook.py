@@ -14,7 +14,6 @@ from .utils.data_handler import DataHandler
 from .utils.state import State
 
 
-
 class Webhook(object):
 
     def __init__(self):
@@ -52,7 +51,8 @@ class Webhook(object):
                 channel = self.config.channel['SNS']
             elif any([f for f in feed if f in action_lower]):
                 channel = self.config.channel['FEED']
-            self.slackbot.send_message(text=event['msg'], channel=channel, giphy=False)
+            self.slackbot.send_message(
+                text=event['msg'], channel=channel, giphy=False)
 
     def IN_OUT_handle(self, prev, event):
         if self.__is_error(prev, event):
@@ -132,7 +132,8 @@ class Webhook(object):
                 if "운동" in msg:
                     Summary().record_exercise()
 
-        self.slackbot.send_message(text=msg, channel=self.config.channel['TASK'])
+        self.slackbot.send_message(
+            text=msg, channel=self.config.channel['TASK'])
 
     def KANBAN_handle(self, event):
         toggl_manager = TogglManager()
@@ -140,7 +141,10 @@ class Webhook(object):
         action = event['action']
         description = event['msg']
         if action.endswith("DOING"):
-            toggl_manager.timer(description=description, doing=True, done=False)
+            toggl_manager.timer(
+                description=description,
+                doing=True,
+                done=False)
         elif action.endswith("BREAK"):
             toggl_manager.timer(doing=False, done=False)
         elif action.endswith("DONE"):

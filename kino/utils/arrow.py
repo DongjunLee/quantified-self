@@ -79,4 +79,3 @@ class ArrowUtil(object):
         is_holiday = ArrowUtil.is_weekday()
 
         return (day_of_week, hour, minute, is_holiday)
-

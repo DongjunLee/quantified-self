@@ -25,10 +25,16 @@ class Summary(object):
         self.config = Config()
         self.data_handler = DataHandler()
         self.profile = Profile()
-        self.column_list = ["Attention", "Productive", "Happy", "Sleep", "Total"]
+        self.column_list = [
+            "Attention",
+            "Productive",
+            "Happy",
+            "Sleep",
+            "Total"]
 
         if slackbot is None:
-            self.slackbot = SlackerAdapter(channel=self.config.channel['REPORT'])
+            self.slackbot = SlackerAdapter(
+                channel=self.config.channel['REPORT'])
         else:
             self.slackbot = slackbot
 
@@ -193,8 +199,8 @@ class Summary(object):
     def __attention_score(self):
         attention_data = self.data_handler.read_record().get('attention', {})
         if len(attention_data) > 0:
-            return sum(
-                list(map(lambda x: int(x), attention_data.values()))) / len(attention_data)
+            return sum(list(map(lambda x: int(x),
+                                attention_data.values()))) / len(attention_data)
         else:
             return 0
 

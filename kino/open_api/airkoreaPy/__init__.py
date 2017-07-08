@@ -1,6 +1,7 @@
 import json
 import requests
 
+
 class AirKorea(object):
 
     def __init__(self, token):
@@ -9,7 +10,8 @@ class AirKorea(object):
 
     def forecast(self, stationName):
         resource_path = "/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?"
-        params = "stationName=" + stationName + "&dataTerm=daily&pageNo=1&numOfRows=1&ServiceKey=" + self.token + "&ver=1.3&_returnType=json"
+        params = "stationName=" + stationName + "&dataTerm=daily&pageNo=1&numOfRows=1&ServiceKey=" + \
+            self.token + "&ver=1.3&_returnType=json"
         r = requests.get(self.base_url + resource_path + params)
 
         if r.status_code == 200:
@@ -69,4 +71,3 @@ class AirKorea(object):
                 "unit": "ug/m3"
             }
         }
-

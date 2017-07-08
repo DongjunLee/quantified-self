@@ -84,7 +84,11 @@ class MsgListener(object):
         return False
 
     def __is_webhook(self):
-        if self.msg.get("username", None) == "IFTTT" or self.msg.get("username", None) == "incoming-webhook":
+        if self.msg.get(
+                "username",
+                None) == "IFTTT" or self.msg.get(
+                "username",
+                None) == "incoming-webhook":
             return True
         else:
             return False
@@ -93,8 +97,8 @@ class MsgListener(object):
         text = self.msg.get("text", "")
         channel = self.msg.get("channel", "")
         slack_bot_id = self.slackbot.get_bot_id()
-        if f"<@{slack_bot_id}>" in text or channel.startswith("D") \
-                or (t.startswith(text.lower()) for t in self.config.bot["TRIGGER"]):
+        if f"<@{slack_bot_id}>" in text or channel.startswith("D") or (
+                t.startswith(text.lower()) for t in self.config.bot["TRIGGER"]):
             return True
         else:
             return False

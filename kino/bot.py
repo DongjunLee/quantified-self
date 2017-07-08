@@ -21,14 +21,18 @@ class KinoBot(object):
         self.slackbot = SlackerAdapter()
         self.logger = Logger().get_logger()
 
-        # load skill data
-        SkillData()
-
         # Send a message to channel (init)
         config = Config()
         MASTER_NAME = config.bot["MASTER_NAME"]
         BOT_NAME = config.bot["BOT_NAME"]
-        self.slackbot.send_message(text=MsgResource.HELLO(master_name=MASTER_NAME, bot_name=BOT_NAME))
+        self.slackbot.send_message(
+            text=MsgResource.HELLO(
+                master_name=MASTER_NAME,
+                bot_name=BOT_NAME))
+
+        # load skill data
+        if config.bot.get("SKILL_PREDICT", False):
+            SkillData()
 
         giphy = GiphyClient()
         giphy.search("Hello!")
@@ -53,7 +57,7 @@ class KinoBot(object):
             asyncio.set_event_loop(loop)
             asyncio.get_event_loop().run_until_complete(execute_bot())
             asyncio.get_event_loop().run_forever()
-        except Exception as e:
+        except BaseException:
             self.logger.error("Session Error. restart in 5 minutes..")
             self.logger.exception("bot")
             time.sleep(5 * 60)

@@ -5,7 +5,6 @@ from ..slack.resource import MsgResource
 from ..slack.slackbot import SlackerAdapter
 
 
-
 class DoNotDisturbManager(object):
 
     def __init__(self):

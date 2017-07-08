@@ -33,7 +33,8 @@ class TodoistManager(object):
         today_task_count = len(today_task)
 
         task_text = MsgResource.TODOIST_OVERDUE(
-            task_count=overdue_task_count) + "\n" + MsgResource.TODOIST_TODAY(task_count=today_task_count)
+            task_count=overdue_task_count) + "\n" + MsgResource.TODOIST_TODAY(
+            task_count=today_task_count)
         self.slackbot.send_message(text=task_text, channel=channel)
 
         specific_task_list = list(
@@ -43,7 +44,8 @@ class TodoistManager(object):
         attachments = MsgTemplate.make_todoist_task_template(
             specific_task_list)
         if attachments is not None and len(attachments) != 0:
-            self.slackbot.send_message(attachments=attachments, channel=channel)
+            self.slackbot.send_message(
+                attachments=attachments, channel=channel)
 
         karma_trend = self.__get_karma_trend()
         karma_trend_text = MsgResource.TODOIST_KARMA(karma_trend)
@@ -97,7 +99,8 @@ class TodoistManager(object):
         task_list = []
         for t in today_task:
             due_time = "anytime"
-            if 'due_date' in t and (':' in t['date_string'] or '분' in t['date_string']):
+            if 'due_date' in t and (
+                    ':' in t['date_string'] or '분' in t['date_string']):
                 due_time = parse(
                     t['due_date']).astimezone(
                     timezone('Asia/Seoul'))
@@ -245,6 +248,16 @@ class TodoistManager(object):
         return label.data['name']
 
     def get_today_tasks_with_label(self):
-        today_label_tasks = list(filter(lambda x: len(x['labels']) > 0, self.__get_today_task()))
-        today_label_tasks = list(map(lambda x: {"content": x["content"], "label": self.__get_label_name_by_id(x["labels"][0])}, today_label_tasks))
+        today_label_tasks = list(
+            filter(
+                lambda x: len(
+                    x['labels']) > 0,
+                self.__get_today_task()))
+        today_label_tasks = list(
+            map(
+                lambda x: {
+                    "content": x["content"],
+                    "label": self.__get_label_name_by_id(
+                        x["labels"][0])},
+                today_label_tasks))
         return today_label_tasks

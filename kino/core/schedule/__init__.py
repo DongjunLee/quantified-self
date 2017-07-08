@@ -45,17 +45,20 @@ import threading
 
 logger = logging.getLogger('schedule')
 
+
 class CancelJob(object):
     """
     Can be returned from a job to unschedule itself.
     """
     pass
 
+
 class Scheduler(object):
     """
     Objects instantiated by the `Scheduler` are factories to create
     jobs, keep record of scheduled jobs and handle their execution.
     """
+
     def __init__(self):
         self.jobs = []
 
@@ -187,6 +190,7 @@ class Job(object):
     A job is usually created and returned by :meth:`Scheduler.every`
     method, which also defines its `interval`
     """
+
     def __init__(self, interval):
         self.interval = interval  # pause interval * unit between runs
         self.job_func = None  # the job job_func to run
@@ -473,6 +477,7 @@ def every(interval=1):
     """
     return default_scheduler.every(interval)
 
+
 def run_continuously(interval=1):
     """Continuously run, while executing pending jobs at each elapsed
     time interval.
@@ -487,6 +492,7 @@ def run_continuously(interval=1):
     only once.
     """
     return default_scheduler.run_continuously(interval)
+
 
 def run_pending():
     """

@@ -11,8 +11,6 @@ from ..utils.config import Config
 from ..utils.logger import Logger
 
 
-
-
 class FeedNotifier:
 
     def __init__(self, slackbot=None):
@@ -42,7 +40,9 @@ class FeedNotifier:
         cache_data = self.data_handler.read_cache()
 
         f = feedparser.parse(feed_url)
-        f.entries = sorted(f.entries, key=lambda x: x.get('updated_parsed', 0), reverse=True)
+        f.entries = sorted(
+            f.entries, key=lambda x: x.get(
+                'updated_parsed', 0), reverse=True)
 
         noti_list = []
         if feed_url in cache_data:
@@ -50,10 +50,20 @@ class FeedNotifier:
             for e in f.entries:
                 e_updated_date = arrow.get(e.updated_parsed)
                 if e_updated_date > previous_update_date:
-                    noti_list.append((e.get('title', ''), e.get('link', ''), self.__remove_tag(e.get('description', ''))))
+                    noti_list.append(
+                        (e.get(
+                            'title', ''), e.get(
+                            'link', ''), self.__remove_tag(
+                            e.get(
+                                'description', ''))))
         elif f.entries:
             e = f.entries[0]
-            noti_list.append((e.get('title', ''), e.get('link', ''), self.__remove_tag(e.get('description', ''))))
+            noti_list.append(
+                (e.get(
+                    'title', ''), e.get(
+                    'link', ''), self.__remove_tag(
+                    e.get(
+                        'description', ''))))
         else:
             pass
 
@@ -64,6 +74,6 @@ class FeedNotifier:
         return noti_list
 
     def __remove_tag(self, text):
-        text = re.sub('<.+?>', '', text, 0, re.I|re.S)
+        text = re.sub('<.+?>', '', text, 0, re.I | re.S)
         text = re.sub('&nbsp;|\t|\r|', '', text)
         return text

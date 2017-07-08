@@ -30,7 +30,6 @@ from .utils.logger import Logger
 from .utils.state import State
 
 
-
 class MsgRouter(object):
 
     def __init__(self):
@@ -51,10 +50,19 @@ class MsgRouter(object):
 
         self.logger.info("parsed input: " + self.parsed_text)
 
-    def route(self, text=None, user=None, channel=None,
-              direct=False, webhook=False, presence=None, dnd=None, predict=False):
+    def route(
+            self,
+            text=None,
+            user=None,
+            channel=None,
+            direct=False,
+            webhook=False,
+            presence=None,
+            dnd=None,
+            predict=False):
 
-        self.slackbot = SlackerAdapter(channel=channel, input_text=text, user=user)
+        self.slackbot = SlackerAdapter(
+            channel=channel, input_text=text, user=user)
 
         if self.config.bot["ONLY_DIRECT"] is True and direct is False:
             # Skip
@@ -135,16 +143,23 @@ class MsgRouter(object):
         webhook.relay(text)
 
     def __on_flow(self):
-        route_class, behave, step_num = self.dialog_manager.get_flow(globals=globals())
+        route_class, behave, step_num = self.dialog_manager.get_flow(
+            globals=globals())
         self.logger.info(
             "From Flow - route to: " +
             route_class.__class__.__name__ +
             ", " +
             str(behave))
-        getattr(route_class(slackbot=self.slackbot), behave)(step=step_num, params=self.text)
+        getattr(
+            route_class(
+                slackbot=self.slackbot),
+            behave)(
+            step=step_num,
+            params=self.text)
 
     def __on_memory(self):
-        route_class, func_name, params = self.dialog_manager.get_memory(globals=globals())
+        route_class, func_name, params = self.dialog_manager.get_memory(
+            globals=globals())
         self.logger.info(
             "From Memory - route to: " +
             route_class.__class__.__name__ +
@@ -166,7 +181,8 @@ class MsgRouter(object):
         getattr(route_class, behave)()
 
     def __call_CRUD(self, ner, classname):
-        route_class = globals()[classname](text=self.text, slackbot=self.slackbot)
+        route_class = globals()[classname](
+            text=self.text, slackbot=self.slackbot)
         behave_ner = ner.kino[classname]['behave']
         behave = ner.parse(behave_ner, self.parsed_text)
 
@@ -182,7 +198,8 @@ class MsgRouter(object):
             f_params = {
                 "description": self.text[self.text.index("toggl") + 5:]}
         else:
-            f_params = self.f_runner.filter_f_params(self.parsed_text, func_name)
+            f_params = self.f_runner.filter_f_params(
+                self.parsed_text, func_name)
 
         state = State()
         state.memory_skill(self.text, func_name, f_params)
