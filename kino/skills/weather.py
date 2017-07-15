@@ -18,15 +18,17 @@ class Weather(object):
 
     def __init__(self, slackbot=None):
         self.config = Config()
+        self.profile = Profile()
 
         if slackbot is None:
             self.slackbot = SlackerAdapter()
         else:
             self.slackbot = slackbot
 
+
     def forecast(self, timely='current'):
         geolocator = GoogleV3()
-        location = geolocator.geocode(Profile().get_location())
+        location = geolocator.geocode(self.profile.get_location())
 
         api_key = self.config.open_api['dark_sky']['TOKEN']
         lat = location.latitude
@@ -64,7 +66,7 @@ class Weather(object):
         for i in range(0, 24, 3):
             time = arrow.get(
                 h[i].d['time'],
-                tzinfo=tz.tzlocal()).format('D일 H시')
+                tzinfo=self.profile.get_timezone()).format('D일 H시')
             temperature = h[i].d['temperature']
             hourly_temp.append("- " + time + ": " + str(temperature) + "도")
         hourly_temp = "\n".join(hourly_temp)
@@ -74,7 +76,7 @@ class Weather(object):
         api_key = self.config.open_api['airkorea']['TOKEN']
         airkorea = AirKorea(api_key)
 
-        station_name = Profile().get_location(station=True)
+        station_name = self.profile.get_location(station=True)
         response = airkorea.forecast(station_name)
         attachments = MsgTemplate.make_air_quality_template(
             station_name, response)
