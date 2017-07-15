@@ -16,7 +16,6 @@ from ..slack.slackbot import SlackerAdapter
 from ..utils.config import Config
 from ..utils.data_handler import DataHandler
 from ..utils.logger import Logger
-from ..utils.profile import Profile
 
 
 class Worker(object):
@@ -33,6 +32,12 @@ class Worker(object):
             self.slackbot = SlackerAdapter()
         else:
             self.slackbot = slackbot
+
+        if self.config.profile["personal"]:
+            from ..utils.profile import Profile
+            self.profile = Profile()
+        else:
+            self.profile = None
 
     def create(self):
         ner_dict = {k: self.ner.parse(v, self.input)
@@ -59,30 +64,31 @@ class Worker(object):
         self.slackbot.send_message(text=MsgResource.WORKER_START)
 
     def set_schedules(self):
-        self.__set_profile_schedule()
+        if self.profile:
+            print("in profile")
+            self.__set_profile_schedule()
         self.__set_custom_schedule()
 
     def __set_profile_schedule(self):
-        profile = Profile()
 
         self.__excute_profile_schedule(
-            profile.get_schedule('WAKE_UP'), False,
+            self.profile.get_schedule('WAKE_UP'), False,
             'send_message', {"text": MsgResource.PROFILE_WAKE_UP}, True)
 
         self.__excute_profile_schedule(
-            profile.get_schedule('WORK_START'), False,
+            self.profile.get_schedule('WORK_START'), False,
             'send_message', {"text": MsgResource.PROFILE_WORK_START}, True)
 
         self.__excute_profile_schedule(
-            profile.get_schedule('WORK_END'), False, 'send_message', {
+            self.profile.get_schedule('WORK_END'), False, 'send_message', {
                 "text": MsgResource.PROFILE_WORK_END}, True)
 
         self.__excute_profile_schedule(
-            profile.get_schedule('GO_TO_BED'), False,
+            self.profile.get_schedule('GO_TO_BED'), False,
             'send_message', {"text": MsgResource.PROFILE_GO_TO_BED}, False)
 
         self.__excute_profile_schedule(
-            profile.get_schedule('CHECK_GO_TO_BED'), False,
+            self.profile.get_schedule('CHECK_GO_TO_BED'), False,
             'check_go_to_bed', {}, False)
 
         interval = self.config.profile['feed']['INTERVAL']
