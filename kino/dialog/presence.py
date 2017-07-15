@@ -66,7 +66,7 @@ class PreseneManager(object):
             weather.forecast(timely="daily")
             weather.air_quality()
 
-            functions = Functions()
+            functions = Functions(slackbot=self.slackbot)
             functions.kanban_init()
 
     def check_flow(self, presence):

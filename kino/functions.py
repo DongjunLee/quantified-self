@@ -19,6 +19,7 @@ from .skills.toggl import TogglManager
 from .skills.trello import TrelloManager
 from .skills.weather import Weather
 
+from .slack.slackbot import SlackerAdapter
 from .slack.resource import MsgResource
 
 from .utils.arrow import ArrowUtil
@@ -34,7 +35,11 @@ class Functions(object):
     def __init__(self, slackbot=None):
         self.data_handler = DataHandler()
         self.registered = RegisteredFuctions().list
-        self.slackbot = slackbot
+
+        if slackbot is None:
+            self.slackbot = SlackerAdapter()
+        else:
+            self.slackbot = slackbot
 
     def check_go_to_bed(self):
         summary = Summary()

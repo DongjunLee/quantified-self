@@ -220,13 +220,11 @@ class MsgTemplate:
 
         fields = []
         for k, v in data.items():
-            field = Field()
-
-            field.title = MsgResource.BUS_ICON + str(k) + "번 버스"
-            field.value = MsgResource.ORANGE_DIAMOND_ICON + \
+            title = MsgResource.BUS_ICON + str(k) + "번 버스"
+            value = MsgResource.ORANGE_DIAMOND_ICON + \
                 v['bus1'] + "\n" + MsgResource.ORANGE_DIAMOND_ICON + v['bus2']
-            field.short = "true"
-            fields.append(field)
+
+            fields.append(Field(title, value, short="true"))
         attachement.fields = fields
 
         attachments.append(attachement)
