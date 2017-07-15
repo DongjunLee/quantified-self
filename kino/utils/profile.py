@@ -1,4 +1,6 @@
 
+from dateutil import tz
+
 from .arrow import ArrowUtil
 from .config import Config
 from .data_handler import DataHandler
@@ -8,10 +10,11 @@ class Profile(object):
 
     def __init__(self):
         profile = Config().profile
-        self.schedule = profile['schedule']
-        self.location = profile['location']
-        self.task = profile['task']
-        self.score = profile['score']
+        self.personal = profile.get('personal', None)
+        self.schedule = profile.get('schedule', None)
+        self.location = profile.get('location', None)
+        self.task = profile.get('task', None)
+        self.score = profile.get('score', None)
 
     def get_schedule(self, keyword, parsed=False):
         if parsed:
@@ -28,6 +31,9 @@ class Profile(object):
         return (int(hour), int(minute))
 
     def get_location(self, station=False):
+        if self.location is None:
+            return "UNKNOWN"
+
         data_handler = DataHandler()
         record = data_handler.read_record()
         activity = record.get('activity', {})
@@ -37,20 +43,25 @@ class Profile(object):
         in_home = activity.get('in_home', None)
 
         is_work = False
-        if in_company is not None:
-            if out_company is None:
-                is_work = True
-            elif in_home is not None:
-                is_work = False
-            else:
-                diff = ArrowUtil.get_curr_time_diff(
-                    start=out_company, base_hour=True)
-                if diff > 1:
+        if self.personal:
+
+            if in_company is not None:
+                if out_company is None:
+                    is_work = True
+                elif in_home is not None:
                     is_work = False
                 else:
-                    is_work = True
+                    diff = ArrowUtil.get_curr_time_diff(
+                        start=out_company, base_hour=True)
+                    if diff > 1:
+                        is_work = False
+                    else:
+                        is_work = True
+            else:
+                is_work = False
+
         else:
-            is_work = False
+            is_work = True
 
         if is_work:
             if station:
@@ -62,6 +73,14 @@ class Profile(object):
                 return self.location['HOME_STATION_NAME']
             else:
                 return self.location['HOME']
+
+    def get_timezone(self):
+        if self.location is None:
+            return None
+        if "TIMEZONE" not in self.location:
+            return tz.tzlocal()
+
+        return tz.gettz(self.location["TIMEZONE"])
 
     def get_task(self, keyword):
         return self.task[keyword]

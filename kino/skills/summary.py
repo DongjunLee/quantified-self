@@ -24,13 +24,17 @@ class Summary(object):
     def __init__(self, slackbot=None):
         self.config = Config()
         self.data_handler = DataHandler()
-        self.profile = Profile()
         self.column_list = [
             "Attention",
             "Productive",
             "Happy",
             "Sleep",
             "Total"]
+
+
+        if self.config.profile["personal"]:
+            from ..utils.profile import Profile
+            self.profile = Profile()
 
         if slackbot is None:
             self.slackbot = SlackerAdapter(
