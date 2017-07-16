@@ -38,6 +38,7 @@
       "afternoon": ["오후", "afternoon"],
       "dinner": ["저녁식사", "dinner"],
       "evening": ["밤", "저녁", "evening"],
+      "working_hour": ["일하는 시간", "근무시간"],
       "all-day": ["하루종일", "종일", "all day"]
     },
     "time_unit": {

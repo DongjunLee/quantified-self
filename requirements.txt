@@ -10,7 +10,7 @@ todoist-python==7.0.16
 python-forecastio
 geopy
 konlpy
-JPype1-py3
+JPype1
 PyGithub
 sklearn
 py-trello
