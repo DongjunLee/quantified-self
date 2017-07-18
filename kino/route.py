@@ -65,7 +65,9 @@ class MsgRouter(object):
             dnd=None,
             predict=False):
 
-        self.msg_logger.info(json.dumps({"channel": channel, "user": user, "text": text}))
+        if text is not None:
+            self.msg_logger.info(json.dumps({"channel": channel, "user": user, "text": text}))
+            self.preprocessing(text)
 
         if self.config.bot["ONLY_DIRECT"] is True and direct is False:
             # Skip
@@ -74,7 +76,6 @@ class MsgRouter(object):
         self.slackbot = SlackerAdapter(
             channel=channel, input_text=text, user=user)
 
-        self.preprocessing(text)
         ner = NamedEntitiyRecognizer()
 
         # predict next action
