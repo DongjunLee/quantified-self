@@ -1,4 +1,6 @@
 
+import json
+
 from .functions import Functions
 from .functions import FunctionRunner
 from .webhook import Webhook
@@ -27,6 +29,7 @@ from .utils.config import Config
 from .utils.data_loader import DataLoader
 from .utils.data_loader import SkillData
 from .utils.logger import Logger
+from .utils.logger import MessageLogger
 from .utils.state import State
 
 
@@ -35,6 +38,7 @@ class MsgRouter(object):
     def __init__(self):
         self.config = Config()
         self.logger = Logger().get_logger()
+        self.msg_logger = MessageLogger().get_logger()
 
         self.dialog_manager = DialogManager()
         self.presence_manager = PreseneManager()
@@ -61,12 +65,17 @@ class MsgRouter(object):
             dnd=None,
             predict=False):
 
-        self.slackbot = SlackerAdapter(
-            channel=channel, input_text=text, user=user)
+        self.msg_logger.info(json.dumps({"channel": channel, "user": user, "text": text}))
 
         if self.config.bot["ONLY_DIRECT"] is True and direct is False:
             # Skip
             return
+
+        self.slackbot = SlackerAdapter(
+            channel=channel, input_text=text, user=user)
+
+        self.preprocessing(text)
+        ner = NamedEntitiyRecognizer()
 
         # predict next action
         if predict:
@@ -97,9 +106,6 @@ class MsgRouter(object):
             self.__on_relay(text)
             return
 
-        self.logger.info("raw input: " + text)
-        self.preprocessing(text)
-
         # Check Flow
         if self.dialog_manager.is_on_flow():
             self.__on_flow()
@@ -115,8 +121,6 @@ class MsgRouter(object):
         if self.dialog_manager.is_call_help(self.parsed_text):
             self.__call_help()
             return
-
-        ner = NamedEntitiyRecognizer()
 
         # Check - CRUD (Worker, Schedule, Between, FunctionManager)
         kino_keywords = {k: v['keyword'] for k, v in ner.kino.items()}

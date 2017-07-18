@@ -14,11 +14,12 @@ class Logger(object):
 
             now = datetime.datetime.now()
 
-            dirname = './log'
+            dirname = './log/activity/' + now.strftime("%Y-%m-%d")
             if not os.path.isdir(dirname):
-                os.mkdir(dirname)
+                os.makedirs(dirname)
+
             fileHandler = logging.FileHandler(
-                dirname + "/Kino_" + now.strftime("%Y-%m-%d %H:%M:%S") + ".log")
+                dirname + "/Kino_" + now.strftime("%Y-%m-%d %H:%M") + ".log")
             streamHandler = logging.StreamHandler()
 
             fileHandler.setFormatter(formatter)
@@ -32,6 +33,39 @@ class Logger(object):
     def __init__(self):
         if not Logger.instance:
             Logger.instance = Logger.__Logger()
+
+    def get_logger(self):
+        return self.instance._logger
+
+
+class MessageLogger(object):
+    class __Logger:
+        def __init__(self):
+            self._logger = logging.getLogger("message")
+            self._logger.setLevel(logging.INFO)
+            formatter = logging.Formatter(
+                '%(asctime)s > %(message)s')
+
+            now = datetime.datetime.now()
+
+            dirname = './log/message'
+            if not os.path.isdir(dirname):
+                os.mkdir(dirname)
+            fileHandler = logging.FileHandler(
+                dirname + "/" + now.strftime("%Y-%m-%d") + ".log")
+            #streamHandler = logging.StreamHandler()
+
+            fileHandler.setFormatter(formatter)
+            #streamHandler.setFormatter(formatter)
+
+            self._logger.addHandler(fileHandler)
+            #self._logger.addHandler(streamHandler)
+
+    instance = None
+
+    def __init__(self):
+        if not MessageLogger.instance:
+            MessageLogger.instance = MessageLogger.__Logger()
 
     def get_logger(self):
         return self.instance._logger
