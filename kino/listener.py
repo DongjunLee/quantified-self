@@ -94,11 +94,11 @@ class MsgListener(object):
             return False
 
     def __is__direct(self):
-        text = self.msg.get("text", "")
+        text = self.msg.get("text", "$#")
         channel = self.msg.get("channel", "")
         slack_bot_id = self.slackbot.get_bot_id()
-        if f"<@{slack_bot_id}>" in text or channel.startswith("D") or (
-                t.startswith(text.lower()) for t in self.config.bot["TRIGGER"]):
+        if f"<@{slack_bot_id}>" in text or channel.startswith("D") or any(
+                [ text.lower().startswith(t.lower()) for t in self.config.bot.get("TRIGGER", []) ]):
             return True
         else:
             return False
