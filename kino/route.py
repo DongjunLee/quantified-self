@@ -55,11 +55,6 @@ class MsgRouter(object):
         State().presence_log(user, presence)
         self.logger.info(f"user: {user} presence: {presence}")
 
-        # Check Flow
-        if self.dialog_manager.is_on_flow():
-            self.__on_flow()
-            return
-
     def __on_flow(self):
         route_class, behave, step_num = self.dialog_manager.get_flow(
             global_namespace=globals())
@@ -107,6 +102,11 @@ class MsgRouter(object):
         # incomming-webhook
         if webhook:
             self.__on_relay(text)
+            return
+
+        # Check Flow
+        if self.dialog_manager.is_on_flow():
+            self.__on_flow()
             return
 
         # Check Memory

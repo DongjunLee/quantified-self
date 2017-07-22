@@ -18,7 +18,7 @@ class SlackerAdapter(object):
 
     def __init__(self, channel=None, user=None, input_text=None):
         self.config = Config()
-        self.slacker = Slacker(self.config.slack['TOKEN'])
+        self.slacker = Slacker(self.config.slack.get('TOKEN', "<TOKEN>"))
         self.channel = channel
         self.data_handler = DataHandler()
 
@@ -26,7 +26,7 @@ class SlackerAdapter(object):
         self.channel = channel
 
         if input_text is None:
-            self.lang_code = self.config.bot["LANG_CODE"]
+            self.lang_code = self.config.bot.get("LANG_CODE", "en")
         else:
             self.lang_code = langid.classify(input_text)[0]
 

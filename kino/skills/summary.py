@@ -31,7 +31,6 @@ class Summary(object):
             "Sleep",
             "Total"]
 
-
         if self.config.profile["personal"]:
             from ..utils.profile import Profile
             self.profile = Profile()

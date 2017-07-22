@@ -13,10 +13,10 @@ class Config(object):
             }
 
             self.bot = config.get("bot", bot)
-            self.channel = config.get("channel", None)
-            self.slack = config.get("slack", None)
-            self.profile = config.get("profile", None)
-            self.open_api = config.get("open_api", None)
+            self.channel = config.get("channel", {})
+            self.slack = config.get("slack", {})
+            self.profile = config.get("profile", {})
+            self.open_api = config.get("open_api", {})
 
     instance = None
 
