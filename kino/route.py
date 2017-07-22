@@ -46,24 +46,50 @@ class MsgRouter(object):
 
         self.f_runner = FunctionRunner()
 
-    def preprocessing(self, text):
-        self.text = text
+    def presence_route(self, user=None, presence=None):
+        ''' Check Presence (Slack Users active/away)'''
+        self.presence_manager.check_wake_up(presence)
+        self.presence_manager.check_flow(presence)
+        self.presence_manager.check_predictor(presence)
 
-        disintegrator = Disintegrator(text)
-        self.parsed_text = disintegrator.convert2simple() + " " + text
+        State().presence_log(user, presence)
+        self.logger.info(f"user: {user} presence: {presence}")
 
-        self.logger.info("parsed input: " + self.parsed_text)
+        # Check Flow
+        if self.dialog_manager.is_on_flow():
+            self.__on_flow()
+            return
 
-    def route(
+    def __on_flow(self):
+        route_class, behave, step_num = self.dialog_manager.get_flow(
+            global_namespace=globals())
+        self.logger.info(
+            "From Flow - route to: " +
+            route_class.__class__.__name__ +
+            ", " +
+            str(behave))
+        getattr(
+            route_class(
+                slackbot=self.slackbot),
+            behave)(
+            step=step_num,
+            params=self.text)
+
+    def dnd_route(self, user=None, dnd=None):
+        ''' Check DND (Slack Do not disturb)'''
+
+        # Do not disturb
+        self.dnd_manager.call_is_holiday(dnd)
+
+        self.logger.info(f"user: {user} dnd: {dnd}")
+
+    def message_route(
             self,
             text=None,
             user=None,
             channel=None,
             direct=False,
-            webhook=False,
-            presence=None,
-            dnd=None,
-            predict=False):
+            webhook=False):
 
         if text is not None:
             self.msg_logger.info(json.dumps({"channel": channel, "user": user, "text": text}))
@@ -78,38 +104,9 @@ class MsgRouter(object):
 
         ner = NamedEntitiyRecognizer()
 
-        # predict next action
-        if predict:
-            # Check - skills
-            skill_keywords = {k: v['keyword'] for k, v in ner.skills.items()}
-            func_name = ner.parse(skill_keywords, self.parsed_text)
-            if func_name is not None:
-                self.__call_skills(func_name)
-                return
-
-        # slack - active/away
-        if presence:
-            self.presence_manager.check_wake_up(presence)
-            self.presence_manager.check_flow(presence)
-            self.presence_manager.check_predictor(presence)
-
-            State().presence_log(presence)
-            self.logger.info("presence: " + str(presence))
-            return
-
-        # Do not disturb
-        if dnd:
-            self.dnd_manager.call_is_holiday(dnd)
-            return
-
         # incomming-webhook
         if webhook:
             self.__on_relay(text)
-            return
-
-        # Check Flow
-        if self.dialog_manager.is_on_flow():
-            self.__on_flow()
             return
 
         # Check Memory
@@ -143,24 +140,17 @@ class MsgRouter(object):
         self.slackbot.send_message(text=MsgResource.NOT_UNDERSTANDING)
         return
 
+    def preprocessing(self, text):
+        self.text = text
+
+        disintegrator = Disintegrator(text)
+        self.parsed_text = disintegrator.convert2simple() + " " + text
+
+        self.logger.info("parsed input: " + self.parsed_text)
+
     def __on_relay(self, text):
         webhook = Webhook()
         webhook.relay(text)
-
-    def __on_flow(self):
-        route_class, behave, step_num = self.dialog_manager.get_flow(
-            global_namespace=globals())
-        self.logger.info(
-            "From Flow - route to: " +
-            route_class.__class__.__name__ +
-            ", " +
-            str(behave))
-        getattr(
-            route_class(
-                slackbot=self.slackbot),
-            behave)(
-            step=step_num,
-            params=self.text)
 
     def __on_memory(self):
         route_class, func_name, params = self.dialog_manager.get_memory(

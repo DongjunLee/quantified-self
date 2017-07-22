@@ -62,8 +62,9 @@ class State(object):
         }
         self.save(self.ACTION, data)
 
-    def presence_log(self, presence):
+    def presence_log(self, user, presence):
         data = {
+            "user": user,
             "presence": presence,
             "time": str(arrow.now())
         }

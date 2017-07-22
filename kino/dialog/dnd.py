@@ -11,7 +11,11 @@ class DoNotDisturbManager(object):
         self.slackbot = SlackerAdapter()
 
     def call_is_holiday(self, dnd):
-        Summary().record_holiday(dnd)
+        dnd_enabled = dnd['dnd_enabled']
+
+        # TODO: {'dnd_enabled': True, 'next_dnd_start_ts': 1500711803, 'next_dnd_end_ts': 1500715403}
+        # -> dirrenct action with diff_min
+        Summary().record_holiday(dnd_enabled)
         if dnd:
             self.slackbot.send_message(text=MsgResource.HOLIDAY)
         else:

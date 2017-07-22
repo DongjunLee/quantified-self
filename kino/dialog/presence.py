@@ -35,7 +35,7 @@ class PreseneManager(object):
         state = State()
         state.check()
         presence_log = state.current[state.SLEEP]
-        if (ArrowUtil.is_between((6, 0), (11, 0)) and
+        if (ArrowUtil.is_between((6, 0), (13, 0)) and
                 presence_log['presence'] == 'away' and presence == 'active'):
             self.slackbot.send_message(text=MsgResource.GOOD_MORNING)
 
