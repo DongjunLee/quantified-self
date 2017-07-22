@@ -3,11 +3,12 @@
 from .resource import MsgResource
 
 
+
+
 class MsgTemplate:
 
     @staticmethod
-    def make_schedule_template(pretext, data):
-        print(data)
+    def make_schedule_template(pretext: str, data: dict) -> list:
         sorted(data.items())
         attachments = []
         for k, v in data.items():
@@ -50,7 +51,7 @@ class MsgTemplate:
         return attachments
 
     @staticmethod
-    def make_skill_template(pretext, data):
+    def make_skill_template(pretext: str, data: dict) -> list:
         sorted(data.items())
         attachments = []
 
@@ -80,7 +81,7 @@ class MsgTemplate:
         return attachments
 
     @staticmethod
-    def make_help_template(guide, example):
+    def make_help_template(guide: str, example: dict) -> list:
         attachments = []
 
         attachement = Attachement()
@@ -98,7 +99,7 @@ class MsgTemplate:
         return attachments
 
     @staticmethod
-    def make_giphy_template(q, url):
+    def make_giphy_template(q: str, url: str) -> list:
         attachments = []
 
         attachement = Attachement()
@@ -112,11 +113,11 @@ class MsgTemplate:
 
     @staticmethod
     def make_weather_template(
-            address,
-            icon,
-            summary,
+            address: str,
+            icon: str,
+            summary: str,
             temperature=None,
-            fallback="weather fallback"):
+            fallback="weather fallback") -> list:
         attachments = []
 
         attachement = Attachement()
@@ -140,7 +141,7 @@ class MsgTemplate:
         return attachments
 
     @staticmethod
-    def make_air_quality_template(station_name, data):
+    def make_air_quality_template(station_name: str, data: dict) -> list:
         attachments = []
 
         cai = data['cai']
@@ -175,7 +176,7 @@ class MsgTemplate:
         return attachments
 
     @staticmethod
-    def make_todoist_task_template(tasks):
+    def make_todoist_task_template(tasks: tuple) -> list:
         attachments = []
 
         fallback = "\n" + \
@@ -196,7 +197,7 @@ class MsgTemplate:
         return attachments
 
     @staticmethod
-    def make_feed_template(feed):
+    def make_feed_template(feed: tuple) -> list:
         attachments = []
 
         title, link, description = feed
@@ -212,7 +213,7 @@ class MsgTemplate:
         return attachments
 
     @staticmethod
-    def make_bus_stop_template(data):
+    def make_bus_stop_template(data: dict) -> list:
         attachments = []
         attachement = Attachement()
         attachement.fallback = "Bus 도착정보. "
@@ -231,7 +232,7 @@ class MsgTemplate:
         return attachments
 
     @staticmethod
-    def make_summary_template(data):
+    def make_summary_template(data: dict) -> list:
         attachments = []
         attachement = Attachement()
 
@@ -297,3 +298,5 @@ class Field(dict):
             del self[name]
         else:
             raise AttributeError("No such attribute: " + name)
+
+
