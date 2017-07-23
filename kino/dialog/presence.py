@@ -42,7 +42,7 @@ class PreseneManager(object):
             dnd_manager = DoNotDisturbManager()
 
             is_holiday = ArrowUtil.is_weekday() == False
-            dnd_manager.call_is_holiday(is_holiday)
+            dnd_manager.call_is_holiday(holiday=is_holiday)
 
             activity = record.get('activity', {})
             go_to_bed_time = arrow.get(activity.get('go_to_bed', None))

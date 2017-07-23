@@ -74,7 +74,7 @@ class MsgRouter(object):
         ''' Check DND (Slack Do not disturb)'''
 
         # Do not disturb
-        self.dnd_manager.call_is_holiday(dnd)
+        self.dnd_manager.call_is_holiday(dnd=dnd)
 
         self.logger.info(f"user: {user} dnd: {dnd}")
 
