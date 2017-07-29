@@ -10,4 +10,13 @@ data/config.json
 attention_daily_report.png
 happy_daily_report.png
 /.ipynb_checkpoints
-
+*/.ipynb_checkpoints
+*.ipynb
+data/cache.json
+data/card.json
+data/ansan_bus.json
+data/ansan_station.json
+data/state.json
+data/toggl.json
+data/record/*
+notebook/
