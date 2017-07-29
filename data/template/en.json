@@ -51,7 +51,8 @@
       "",
       "Below are some examples of features you can use."
     ],
-    "GUIDE_KEYWORD": {
+    "GUIDE_KEYWORD": "I want to handle what you said ... but I don't know what is it. \n Let me show you what I can do instead!",
+    "GUIDE_KEYWORD_LIST": {
       "Worker": "Kino Let's start work, there is work! Weather forecast every 2 hours work added! Summary of day at 8pm",
       "Notifier": "Register an alarm, Show an alarm, Delete an alarm",
       "Between": "Add time interval, Showt ime interval, Delete time interval",

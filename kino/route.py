@@ -1,5 +1,6 @@
 
 import json
+import random
 
 from .functions import Functions
 from .functions import FunctionRunner
@@ -147,8 +148,13 @@ class MsgRouter:
             return
 
         self.logger.info("not understanding")
-        self.slackbot.send_message(text=MsgResource.NOT_UNDERSTANDING)
-        return
+
+        random_num = random.randint(1, 100)
+        if random_num > 60:
+            guide = Guide(self.slackbot)
+            guide.help_keyword()
+        else:
+            self.slackbot.send_message(text=MsgResource.NOT_UNDERSTANDING)
 
     def preprocessing(self, text: str):
         self.text = text

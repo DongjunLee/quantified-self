@@ -19,13 +19,17 @@ class Guide(object):
 
     def help(self):
         attachments = MsgTemplate.make_help_template(
-            self.__guide(), self.__example())
+            self.__guide(), self.__keyword_list())
+        self.slackbot.send_message(attachments=attachments)
+
+    def help_keyword(self):
+        attachments = MsgTemplate.make_help_template(
+            MsgResource.GUIDE_KEYWORD, self.__keyword_list())
         self.slackbot.send_message(attachments=attachments)
 
     def __guide(self):
         return "\n".join(
-            MsgResource.template[self.config.bot["LANG_CODE"]]["GUIDE_DETAIL"])
+            MsgResource.template[self.slackbot.lang_code]["GUIDE_DETAIL"])
 
-    def __example(self):
-        return MsgResource.template[self.config.bot["LANG_CODE"]
-                                    ]["GUIDE_KEYWORD"]
+    def __keyword_list(self):
+        return MsgResource.template[self.slackbot.lang_code]["GUIDE_KEYWORD_LIST"]
