@@ -57,7 +57,7 @@ class MsgRouter:
         self.logger.info(f"user: {user} presence: {presence}")
 
     def __on_flow(self):
-        flow_classes = slef.__make_flow_classes()
+        flow_classes = self.__make_flow_classes()
         route_class, behave, step_num = self.dialog_manager.get_flow(
             classes=flow_classes)
 
