@@ -123,7 +123,7 @@ class MsgRouter:
             return
 
         # Check Memory
-        if self.check_memory():
+        if self.check_memory_skill():
             return
 
         # Check - help
@@ -168,7 +168,7 @@ class MsgRouter:
         webhook = Webhook()
         webhook.relay(text)
 
-    def check_memory(self):
+    def check_memory_skill(self):
         classes = self.__make_memory_classes()
         route_class, func_name, params = self.dialog_manager.get_memory(
             classes=classes)

@@ -48,7 +48,7 @@ class State(object):
     def memory_skill(self, text, func_name, params):
         data = {
             "text": text,
-            "class": "skills/Functions",
+            "class": "Functions",
             "def": func_name,
             "params": params
         }
