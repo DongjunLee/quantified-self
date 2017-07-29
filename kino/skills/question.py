@@ -53,12 +53,12 @@ class Question(object):
                 self.slackbot.send_message(text=self.msg_flow)
                 return
 
-            if numbers > 100:
-                numbers = 100
+            point = int(numbers[0])
+            if point > 100:
+                point = 100
 
             now = arrow.now()
             time = now.format('HH:mm')
-            point = numbers[0]
             self.data_handler.edit_record_with_category(
                 self.category, (time, point))
 
