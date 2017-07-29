@@ -116,7 +116,7 @@ class Summary(object):
 
             total = (
                 Score.percent(
-                    happy,
+                    attention,
                     self.profile.get_score('ATTENTION'),
                     100) +
                 Score.percent(
@@ -205,7 +205,7 @@ class Summary(object):
             return sum(list(map(lambda x: int(x),
                                 attention_data.values()))) / len(attention_data)
         else:
-            return 0
+            return 80
 
     def __happy_score(self):
         happy_data = self.data_handler.read_record().get('happy', {})
@@ -213,7 +213,7 @@ class Summary(object):
             return sum(
                 list(map(lambda x: int(x), happy_data.values()))) / len(happy_data)
         else:
-            return 0
+            return 80
 
     def __sleep_score(self):
         activity_data = self.data_handler.read_record().get('activity', {})
