@@ -259,6 +259,6 @@ class FunctionRunner(object):
         f_params = {}
         if params is not None:
             for k, v in params.items():
-                if k in func_param_list:
+                if k in func_param_list and v is not None:
                     f_params[k] = v
         return f_params
