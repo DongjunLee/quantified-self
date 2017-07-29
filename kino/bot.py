@@ -15,9 +15,9 @@ from .utils.logger import Logger
 from .utils.data_loader import SkillData
 
 
-class KinoBot(object):
+class KinoBot:
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.slackbot = SlackerAdapter()
         self.logger = Logger().get_logger()
 
@@ -37,15 +37,12 @@ class KinoBot(object):
         giphy = GiphyClient()
         giphy.search("Hello!")
 
-    def start_session(self, nap=False):
+    def start_session(self, nap: bool=False):
         try:
             # Start RTM
             endpoint = self.slackbot.start_real_time_messaging_session()
             listener = MsgListener()
             self.logger.info('start real time messaging session!')
-
-            if nap:
-                self.slackbot.send_message(text=MsgResource.NAP)
 
             async def execute_bot():
                 ws = await websockets.connect(endpoint)
@@ -57,6 +54,10 @@ class KinoBot(object):
             asyncio.set_event_loop(loop)
             asyncio.get_event_loop().run_until_complete(execute_bot())
             asyncio.get_event_loop().run_forever()
+
+            if nap:
+                self.slackbot.send_message(text=MsgResource.NAP)
+
         except BaseException:
             self.logger.error("Session Error. restart in 5 minutes..")
             self.logger.exception("bot")

@@ -293,10 +293,16 @@
 
     "FEED_COLOR": "#438C56",
 
-    "CARD_HOLDER": "현재 법카를 가지고 있는 분들은 다음과 같습니다. \n - {names}",
-    "NOT_CARD_HOLDER": "앗,이런 {from_name} 님은 카드를 가지고 계시지 않습니다.",
+    "CARD_HOLDER": [
+      "현재 법카를 가지고 있는 분들은 다음과 같습니다. \n - {names}",
+      "다음은 카드를 가지고 계신 분들 입니다. \n - {names}"
+    ],
+    "NOT_CARD_HOLDER": "앗,이런 {from_name} 은 카드를 가지고 계시지 않습니다.",
     "CARD_HISTORY": "카드 전달 기록은 다음과 같습니다. (가장 최근의 기록 5개를 보여줍니다)\n - {historys}",
-    "CARD_FORWARD_NONE": "누구에게 전달한다는 것인지 모르겠어요. @name 으로 알려주세요!",
-    "CARD_FORWARD_ONLY_ONE": "카드는 한명에게만 전달할 수 있습니다:!",
-    "CARD_FORWARD": "법카가 {from_name} 으로부터 {to_name} 에게 전달 되었습니다."
+    "CARD_FORWARD_NONE": "카드를 누구에게 전달하려고 하시는지 모르겠어요ㅠㅠ @name 으로 알려주세요!",
+    "CARD_FORWARD_ONLY_ONE": "카드는 한명에게만 전달 할 수 있습니다!",
+    "CARD_FORWARD": [
+      "{from_name} 이 가지고 있던 카드를 {to_name} 에게 전달 할께요.",
+      "넵 {from_name} 이 가지고 있던 카드를 {to_name} 에게 줄게요!"
+    ]
 }
