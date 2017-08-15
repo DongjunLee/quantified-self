@@ -42,6 +42,13 @@ class Worker(object):
     def create(self):
         ner_dict = {k: self.ner.parse(v, self.input)
                     for k, v in self.ner.schedule.items()}
+
+        day_of_week = self.ner.parse(
+            self.ner.schedule['day_of_week'],
+            self.input,
+            get_all=True)
+        ner_dict['day_of_week'] = day_of_week
+
         time_unit = self.ner.parse(
             self.ner.schedule['time_unit'],
             self.input,
@@ -65,7 +72,6 @@ class Worker(object):
 
     def set_schedules(self):
         if self.profile:
-            print("in profile")
             self.__set_profile_schedule()
         self.__set_custom_schedule()
 
@@ -106,6 +112,7 @@ class Worker(object):
                 "repeat": repeat,
                 "func_name": func_name,
                 "params": params,
+                "day_of_week": [0],
                 "not_holiday": not_holiday
             }
         )
@@ -116,6 +123,7 @@ class Worker(object):
                 "repeat": True,
                 "func_name": "feed_notify",
                 "params": {},
+                "day_of_week": [0],
                 "not_holiday": False
             }
         )
@@ -130,12 +138,15 @@ class Worker(object):
             if not isinstance(v, type({})):
                 continue
 
+            day_of_week = v.get("day_of_week", [0])
+
             if 'time' in v:
                 time = v['time']
                 param = {
                     # Do only once
                     "repeat": False,
                     "func_name": v['f_name'],
+                    "day_of_week": day_of_week,
                     "params": v.get('f_params', {})
                 }
 
@@ -159,6 +170,7 @@ class Worker(object):
                     "start_time": start_time,
                     "end_time": end_time,
                     "repeat": True,
+                    "day_of_week": day_of_week,
                     "func_name": v['f_name'],
                     "params": v.get('f_params', {})
                 }

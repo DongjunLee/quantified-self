@@ -27,7 +27,7 @@ from .utils.data_handler import DataHandler
 from .utils.logger import Logger
 from .utils.member import Member
 
-import re
+
 
 
 class Functions(object):
@@ -227,9 +227,13 @@ class FunctionRunner(object):
             func_name=None,
             params=None,
             repeat=False,
+            day_of_week=None,
             not_holiday=False):
 
         if not_holiday and Summary().is_holiday():
+            return
+
+        if not ArrowUtil.is_today_day_of_week(day_of_week):
             return
 
         if not repeat:

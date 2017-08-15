@@ -98,7 +98,7 @@ class Scheduler(object):
 
         locals()["step_" + str(step)](params)
 
-    def create_with_ner(self, time_of_day=None, time_unit=None,
+    def create_with_ner(self, time_of_day=None, day_of_week=None, time_unit=None,
                         period=None, skills=None, params=None):
 
         if skills is None:
@@ -116,6 +116,9 @@ class Scheduler(object):
             period = "interval"
         else:
             period = str(random.randint(25, 35)) + " minutes"
+
+        if day_of_week is None:
+            day_of_week = [0]
 
         if time_unit is None:
             time = None
@@ -148,6 +151,7 @@ class Scheduler(object):
             "between_id": time_of_day,
             "period": period,
             "time": time,
+            "day_of_week": day_of_week,
             "f_name": skills,
             "f_params": f_params
         }

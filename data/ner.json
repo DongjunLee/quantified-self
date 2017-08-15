@@ -32,6 +32,17 @@
     }
   },
   "schedule": {
+    "day_of_week": {
+      "1": ["월요일", "monday", " mon "],
+      "2": ["화요일", "tuesday", " tue "],
+      "3": ["수요일", "wednesday", " wed "],
+      "4": ["목요일", "thursday", " thu "],
+      "5": ["금요일", "friday", " fri "],
+      "6": ["토요일", "saturday", " sat "],
+      "7": ["일요일", "sunday", " sun "],
+      "8": ["주중", "weekday", "week day"],
+      "9": ["주말", "휴일", "weekend", "holiday"]
+    },
     "time_of_day": {
       "morning": ["아침", "모닝", "morning"],
       "lunch": ["점심", "점심식사", "lunch"],

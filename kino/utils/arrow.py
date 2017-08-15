@@ -76,6 +76,27 @@ class ArrowUtil(object):
         day_of_week = now.isoweekday()
         hour = int(now.format('HH'))
         minute = int(now.format('mm'))
-        is_holiday = ArrowUtil.is_weekday()
+        is_holiday = not ArrowUtil.is_weekday()
 
         return (day_of_week, hour, minute, is_holiday)
+
+    @staticmethod
+    def is_today_day_of_week(day_of_week):
+        if day_of_week == [0]:
+            return True
+
+        now = arrow.now()
+        today_day_of_week = now.weekday() + 1
+
+        day_of_week = list(map(lambda x: int(x), day_of_week))
+        if today_day_of_week in day_of_week:
+            return True
+        elif len(day_of_week) == 1:
+            value = day_of_week[0]
+            if value == 8 and ArrowUtil.is_weekday():
+                return True
+            elif value == 9 and not ArrowUtil.is_weekday():
+                return True
+        else:
+            return False
+
