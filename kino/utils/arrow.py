@@ -9,7 +9,7 @@ class ArrowUtil(object):
         pass
 
     @staticmethod
-    def get_action_time(time):
+    def get_action_time(time: str) -> arrow.Arrow:
         time_str = time.strip().replace('at', '')
         if time_str == "now":
             return arrow.get(arrow.now(), tzinfo=tz.tzlocal())
@@ -20,7 +20,7 @@ class ArrowUtil(object):
                 tzinfo=tz.tzlocal())
 
     @staticmethod
-    def get_curr_time_diff(start=None, stop=None, base_hour=False):
+    def get_curr_time_diff(start=None, stop=None, base_hour=False) -> int:
         if isinstance(start, str):
             start = arrow.get(start)
         if isinstance(stop, str):
@@ -36,7 +36,7 @@ class ArrowUtil(object):
             return int(diff)
 
     @staticmethod
-    def is_between(start_time, end_time, now=None):
+    def is_between(start_time: tuple, end_time: tuple, now=None) -> bool:
         if start_time is None and end_time is None:
             return True
 
@@ -56,13 +56,13 @@ class ArrowUtil(object):
             second=0,
             microsecond=0)
         end = now.replace(hour=end_h, minute=end_m, second=0, microsecond=0)
-        if (start < now < end):
+        if (start <= now <= end):
             return True
         else:
             return False
 
     @staticmethod
-    def is_weekday():
+    def is_weekday() -> bool:
         t = arrow.now()
         day_of_week = t.weekday()
         if day_of_week < 5:
@@ -71,7 +71,7 @@ class ArrowUtil(object):
             return False
 
     @staticmethod
-    def convert_now2data():
+    def convert_now2data() -> tuple:
         now = arrow.now()
         day_of_week = now.isoweekday()
         hour = int(now.format('HH'))
@@ -81,7 +81,7 @@ class ArrowUtil(object):
         return (day_of_week, hour, minute, is_holiday)
 
     @staticmethod
-    def is_today_day_of_week(day_of_week):
+    def is_today_day_of_week(day_of_week: list) -> bool:
         if day_of_week == [0]:
             return True
 
@@ -97,6 +97,7 @@ class ArrowUtil(object):
                 return True
             elif value == 9 and not ArrowUtil.is_weekday():
                 return True
+            else:
+                return False
         else:
             return False
-
