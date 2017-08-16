@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from .core import schedule
+import re
+
+from .background import schedule
 
 from .nlp.ner import NamedEntitiyRecognizer
 
@@ -26,7 +28,6 @@ from .utils.arrow import ArrowUtil
 from .utils.data_handler import DataHandler
 from .utils.logger import Logger
 from .utils.member import Member
-
 
 
 
@@ -157,6 +158,8 @@ class Functions(object):
         self.slackbot.send_message(text=MsgResource.KANBAN_INIT)
 
     def kanban_sync(self):
+        self.slackbot.send_message(text=MsgResource.KANBAN_SYNC)
+
         todoist = TodoistManager(slackbot=self.slackbot)
         today_label_tasks = todoist.get_today_tasks_with_label()
 
@@ -167,7 +170,6 @@ class Functions(object):
         for task in today_label_tasks:
             card_name = task['label'] + " - " + task['content']
             task_list.add_card(re.sub(r" \d+분", "", card_name))
-        self.slackbot.send_message(text=MsgResource.KANBAN_SYNC)
 
     def todoist_feedback(self):
         todoist = TodoistManager(slackbot=self.slackbot)
