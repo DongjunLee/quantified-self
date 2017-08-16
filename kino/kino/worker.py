@@ -2,7 +2,7 @@
 
 import threading
 
-from ..core import schedule
+from ..background import schedule
 
 from ..functions import FunctionRunner
 
