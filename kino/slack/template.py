@@ -4,7 +4,6 @@ from .resource import MsgResource
 
 
 
-
 class MsgTemplate:
 
     @staticmethod

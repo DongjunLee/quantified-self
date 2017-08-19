@@ -40,6 +40,8 @@ class FeedNotifier:
         cache_data = self.data_handler.read_cache()
 
         f = feedparser.parse(feed_url)
+
+        feed_title = f.feed.title
         f.entries = sorted(
             f.entries, key=lambda x: x.get(
                 'updated_parsed', 0), reverse=True)
@@ -50,20 +52,11 @@ class FeedNotifier:
             for e in f.entries:
                 e_updated_date = arrow.get(e.updated_parsed)
                 if e_updated_date > previous_update_date:
-                    noti_list.append(
-                        (e.get(
-                            'title', ''), e.get(
-                            'link', ''), self.__remove_tag(
-                            e.get(
-                                'description', ''))))
+                    noti_list.append(self.__make_entry_tuple(e, feed_title))
+
         elif f.entries:
             e = f.entries[0]
-            noti_list.append(
-                (e.get(
-                    'title', ''), e.get(
-                    'link', ''), self.__remove_tag(
-                    e.get(
-                        'description', ''))))
+            noti_list.append(self.__make_entry_tuple(e, feed_title))
         else:
             pass
 
@@ -72,6 +65,12 @@ class FeedNotifier:
             last_updated_date = arrow.get(last_e.get('updated_parsed', None))
             self.data_handler.edit_cache((feed_url, str(last_updated_date)))
         return noti_list
+
+    def __make_entry_tuple(self, entry, feed_title):
+        entry_title = f"[{feed_title}] " + entry.get('title', '')
+        entry_link = entry.get('link', '')
+        entry_description = f"Link : {entry_link} \n" + self.__remove_tag(entry.get('description', ''))
+        return (entry_title, entry_link, entry_description)
 
     def __remove_tag(self, text):
         text = re.sub('<.+?>', '', text, 0, re.I | re.S)
