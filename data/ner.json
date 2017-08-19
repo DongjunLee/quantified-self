@@ -78,6 +78,9 @@
     },
     "english": {
       "pattern": "[A-Za-z][A-Za-z ]+"
+    },
+    "hashtag": {
+      "pattern": "#(.+)"
     }
   }
 }

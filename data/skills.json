@@ -113,6 +113,18 @@
     "description": "Today summary \n - Todoist feedback \n - Toggl activity report \n - RescueTime productivity chart \n - Happiness, attention report \n - Daily commit",
     "icon": ":night_with_stars: "
   },
+  "keep_idea": {
+    "keyword": [["keep", "idea"], ["킵", "아이디어"], ["아이디어", "저장"], ["아이디어", "기억"]],
+    "params": ["hashtag"],
+    "description": "Keep your idea in Trello Inbox",
+    "icon": ":thinking_face:  "
+  },
+  "remind_idea": {
+    "keyword": [["remind", "idea"], ["리마인드", "아이디어"]],
+    "params": [],
+    "description": "Remind Trello's inbox card randomly pick",
+    "icon": ":thinking_face: "
+  },
   "kanban_init": {
     "keyword": [["칸반", "초기화"], ["kanban", "init"]],
     "params": [],

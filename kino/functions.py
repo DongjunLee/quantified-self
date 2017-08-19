@@ -33,6 +33,12 @@ from .utils.member import Member
 
 class Functions(object):
 
+    IDEA_LIST = "Inbox"
+    KANBAN_TASKS = "Tasks"
+    KANBAN_DOING = "Doing"
+    KANBAN_DONE = "Done"
+    KANBAN_BREAK = "Break"
+
     def __init__(self, slackbot=None):
         self.data_handler = DataHandler()
         self.registered = RegisteredFuctions().list
@@ -143,15 +149,33 @@ class Functions(object):
         self.attention_report(timely=timely)
         self.github_commit(timely=timely)
 
+    def keep_idea(self, hashtag):
+        if hashtag is None:
+            self.slackbot.send_message(text=MsgResource.HASHTAG_NOT_FOUND)
+            return
+
+        trello = TrelloManager()
+        trello.add_card(self.IDEA_LIST, hashtag)
+
+        self.slackbot.send_message(text=MsgResource.ADD_IDEA)
+
+    def remind_idea(self):
+        trello = TrelloManager()
+        idea = trello.get_random_card_name()
+        if idea is None:
+            self.slackbot.send_message(text=MsgResource.EMPTY_IDEA)
+        else:
+            self.slackbot.send_message(text=MsgResource.REMIND_IDEA(idea=idea))
+
     def kanban_init(self):
         todoist = TodoistManager(slackbot=self.slackbot)
         todoist.auto_update_tasks()
 
         today_label_tasks = todoist.get_today_tasks_with_label()
         trello = TrelloManager()
-        trello.clean_board()
+        trello.clean_board(except_list_name=self.IDEA_LIST)
 
-        task_list = trello.get_list_by_name('Tasks')
+        task_list = trello.get_list_by_name(self.KANBAN_TASKS)
         for task in today_label_tasks:
             card_name = task['label'] + " - " + task['content']
             task_list.add_card(re.sub(r" \d+분", "", card_name))
@@ -164,7 +188,7 @@ class Functions(object):
         today_label_tasks = todoist.get_today_tasks_with_label()
 
         trello = TrelloManager()
-        task_list = trello.get_list_by_name('Tasks')
+        task_list = trello.get_list_by_name(self.KANBAN_TASKS)
         task_list.archive_all_cards()
 
         for task in today_label_tasks:

@@ -298,5 +298,10 @@
     "CARD_HISTORY": "Card delivery history is as follows. (Shows the last 5 records)\n - {historys}",
     "CARD_FORWARD_NONE": "I do not know who to deliver to. Let us know @name !",
     "CARD_FORWARD_ONLY_ONE": "Cards can only be delivered to one person!",
-    "CARD_FORWARD": "The card was passed from {from_name} to {to_name}."
+    "CARD_FORWARD": "The card was passed from {from_name} to {to_name}.",
+
+    "HASHTAG_NOT_FOUND": "I don't recognize #hashtag. Could you using #hashtag?",
+    "ADD_IDEA": "Add your idea in Inbox!",
+    "REMIND_IDEA": "Remind your idea in Inbox! \n {idea}",
+    "EMPTY_IDEA": "Your idea inbox is empty! what id your idea?"
 }

@@ -1,4 +1,5 @@
 from trello import TrelloClient
+import random
 
 from ..utils.config import Config
 
@@ -22,7 +23,13 @@ class TrelloManager(object):
                 return l
         return None
 
-    def add_card(self, list_name, card_name):
+    def get_random_card_name(self, list_name: str="Inbox"):
+        l = self.get_list_by_name(list_name)
+        if l is None or len(l.list_cards()) == 0:
+            return None
+        return random.choice(l.list_cards()).name
+
+    def add_card(self, list_name: str, card_name):
         l = self.get_list_by_name(list_name)
         l.add_card(card_name)
 
@@ -30,7 +37,10 @@ class TrelloManager(object):
         l = self.get_list_by_name(list_name)
         l.archive_all_cards()
 
-    def clean_board(self):
+    def clean_board(self, except_list_name=None):
         l_list = self.board.all_lists()
         for l in l_list:
-            l.archive_all_cards()
+            if except_list_name is not None and l.name == except_list_name:
+                pass
+            else:
+                l.archive_all_cards()
