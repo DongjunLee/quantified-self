@@ -133,7 +133,7 @@ class DataHandler(object):
                 feeds[category] = []
                 curr_category = category
             elif line.startswith("- "):
-                feed_name = re.findall("\[.+\]", line)[0]
+                feed_name = re.findall("\[.+\]", line)[0][1:-1]
                 line = line.replace(" ", "")
                 feed_link = line[line.index("):") + len("):"):]
 

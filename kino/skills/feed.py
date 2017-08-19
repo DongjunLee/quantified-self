@@ -21,15 +21,16 @@ class FeedNotifier:
         self.config = Config()
 
         if slackbot is None:
-            self.slackbot = SlackerAdapter(channel=self.config.channel['FEED'])
+            self.slackbot = SlackerAdapter(channel=self.config.channel.get('FEED', "#general"))
         else:
             self.slackbot = slackbot
 
     def notify_all(self) -> None:
         self.logger.info("Check feed_list")
         noti_list = []
-        for category, feed in self.feeds:
-            noti_list += self.get_notify_list(category, feed)
+        for category, feed_list in self.feeds.items():
+            for feed in feed_list:
+                noti_list += self.get_notify_list(category, feed)
 
         for feed in noti_list:
             attachments = MsgTemplate.make_feed_template(feed)
@@ -66,7 +67,7 @@ class FeedNotifier:
         return noti_list
 
     def __make_entry_tuple(self, category: str, entry: dict, feed_name: str) -> tuple:
-        entry_title = f"[{category}] - {feed_name} " + entry.get('title', '')
+        entry_title = f"[{category}] - {feed_name} \n" + entry.get('title', '')
         entry_link = entry.get('link', '')
         entry_description = f"Link : {entry_link} \n" + self.__remove_tag(entry.get('description', ''))
         return (entry_title, entry_link, entry_description)
