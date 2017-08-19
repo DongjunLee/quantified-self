@@ -82,13 +82,14 @@ class ArrowUtil(object):
 
     @staticmethod
     def is_today_day_of_week(day_of_week: list) -> bool:
+        day_of_week = list(map(lambda x: int(x), day_of_week))
+
         if day_of_week == [0]:
             return True
 
         now = arrow.now()
         today_day_of_week = now.weekday() + 1
 
-        day_of_week = list(map(lambda x: int(x), day_of_week))
         if today_day_of_week in day_of_week:
             return True
         elif len(day_of_week) == 1:

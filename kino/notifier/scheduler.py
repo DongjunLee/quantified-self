@@ -120,7 +120,7 @@ class Scheduler(object):
             period = str(random.randint(25, 35)) + " minutes"
 
         if day_of_week is None:
-            day_of_week = [0]
+            day_of_week = ['0']
 
         if time_unit is None:
             time = None

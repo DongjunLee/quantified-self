@@ -303,5 +303,5 @@
     "HASHTAG_NOT_FOUND": "I don't recognize #hashtag. Could you using #hashtag?",
     "ADD_IDEA": "Add your idea in Inbox!",
     "REMIND_IDEA": "Remind your idea in Inbox! \n {idea}",
-    "EMPTY_IDEA": "Your idea inbox is empty! what id your idea?"
+    "EMPTY_IDEA": "Your idea inbox is empty! what is your idea?"
 }
