@@ -159,8 +159,9 @@ class MsgRouter:
     def preprocessing(self, text: str):
         self.text = text
 
+        split_pattern = NamedEntitiyRecognizer().SPLIT_PATTERN
         disintegrator = Disintegrator(text)
-        self.parsed_text = disintegrator.convert2simple() + " " + text
+        self.parsed_text = disintegrator.convert2simple() + split_pattern + text
 
         self.logger.info("parsed input: " + self.parsed_text)
 

@@ -3,6 +3,7 @@ from sklearn.neighbors import KNeighborsClassifier
 
 from .maxim import Maxim
 
+from ..functions import Functions
 from ..functions import FunctionRunner
 
 from ..slack.resource import MsgResource
@@ -36,7 +37,6 @@ class Predictor(object):
         confidence = max(self.knn.predict_proba(test_x)[0])
         description = " ".join(Skill.classes[predict][0])
         func_name = Skill.classes[predict][1]
-        print(predict, confidence, description, func_name)
 
         if confidence >= 0.85:
             runner = FunctionRunner()
@@ -47,6 +47,5 @@ class Predictor(object):
                     description=description))
             runner.load_function(func_name=func_name, params=params)
         else:
-            print("Skip. confidence is low.")
-            maxim = Maxim()
-            maxim.nietzsche()
+            functions = Functions(self.slackbot)
+            functions.remind_idea()

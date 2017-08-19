@@ -7,6 +7,9 @@ from ..utils.data_handler import DataHandler
 
 class NamedEntitiyRecognizer(object):
     class __NER:
+
+        SPLIT_PATTERN = " |&| "
+
         def __init__(self):
             self.data_handler = DataHandler()
 
@@ -46,6 +49,9 @@ class NamedEntitiyRecognizer(object):
 
                 # STR => str -> regex
                 elif isinstance("", item_pattern_type):
+                    if self.SPLIT_PATTERN in text:
+                        text = text[text.index(self.SPLIT_PATTERN) + len(self.SPLIT_PATTERN):]
+
                     result = re.findall(item_pattern, text)
                     if len(result) != 0:
                         if get_all:
