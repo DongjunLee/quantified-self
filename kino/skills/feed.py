@@ -16,7 +16,7 @@ class FeedNotifier:
         self.logger = Logger().get_logger()
 
         self.data_handler = DataHandler()
-        self.feed_list = self.data_handler.read_feeds()
+        self.feeds = self.data_handler.read_feeds()
 
         self.config = Config()
 
@@ -28,19 +28,19 @@ class FeedNotifier:
     def notify_all(self) -> None:
         self.logger.info("Check feed_list")
         noti_list = []
-        for f_url in self.feed_list:
-            noti_list += self.get_notify_list(f_url)
+        for category, feed in self.feeds:
+            noti_list += self.get_notify_list(category, feed)
 
         for feed in noti_list:
             attachments = MsgTemplate.make_feed_template(feed)
             self.slackbot.send_message(attachments=attachments)
 
-    def get_notify_list(self, feed_url: str) -> list:
+    def get_notify_list(self, category: str, feed: tuple) -> list:
         cache_data = self.data_handler.read_cache()
 
+        feed_name, feed_url = feed
         f = feedparser.parse(feed_url)
 
-        feed_title = f.feed.title
         f.entries = sorted(
             f.entries, key=lambda x: x.get(
                 'updated_parsed', 0), reverse=True)
@@ -51,11 +51,11 @@ class FeedNotifier:
             for e in f.entries:
                 e_updated_date = arrow.get(e.updated_parsed)
                 if e_updated_date > previous_update_date:
-                    noti_list.append(self.__make_entry_tuple(e, feed_title))
+                    noti_list.append(self.__make_entry_tuple(category, e, feed_name))
 
         elif f.entries:
             e = f.entries[0]
-            noti_list.append(self.__make_entry_tuple(e, feed_title))
+            noti_list.append(self.__make_entry_tuple(category, e, feed_name))
         else:
             pass
 
@@ -65,8 +65,8 @@ class FeedNotifier:
             self.data_handler.edit_cache((feed_url, str(last_updated_date)))
         return noti_list
 
-    def __make_entry_tuple(self, entry: dict, feed_title: str) -> tuple:
-        entry_title = f"[{feed_title}] " + entry.get('title', '')
+    def __make_entry_tuple(self, category: str, entry: dict, feed_name: str) -> tuple:
+        entry_title = f"[{category}] - {feed_name} " + entry.get('title', '')
         entry_link = entry.get('link', '')
         entry_description = f"Link : {entry_link} \n" + self.__remove_tag(entry.get('description', ''))
         return (entry_title, entry_link, entry_description)

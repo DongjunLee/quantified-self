@@ -3,6 +3,8 @@
 import arrow
 import json
 import os
+import re
+import requests
 
 
 class DataHandler(object):
@@ -120,5 +122,20 @@ class DataHandler(object):
         return templates
 
     def read_feeds(self):
-        feed_text = self.read_text("feed_list.txt")
-        return feed_text.splitlines()
+        awesome_feeds_url = 'https://raw.githubusercontent.com/DongjunLee/awesome-feeds/master/README.md'
+        raw_awesome_feeds = requests.get(awesome_feeds_url).text
+
+        feeds = {}
+        curr_category = None
+        for line in raw_awesome_feeds.splitlines():
+            if line.startswith("##"):
+                category = line.replace("## ", "")
+                feeds[category] = []
+                curr_category = category
+            elif line.startswith("- "):
+                feed_name = re.findall("\[.+\]", line)[0]
+                line = line.replace(" ", "")
+                feed_link = line[line.index("):") + len("):"):]
+
+                feeds[curr_category].append((feed_name, feed_link))
+        return feeds
