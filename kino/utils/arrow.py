@@ -119,3 +119,13 @@ class ArrowUtil(object):
         }
 
         return ", ".join(map(lambda x: formats[x], day_of_week))
+
+    @staticmethod
+    def format_weekly_date():
+        format_date_list = []
+
+        now = arrow.now()
+        for i in range(-6, 1, 1):
+            date = now.replace(days=i)
+            format_date_list.append(date.format("MM-DD"))
+        return format_date_list

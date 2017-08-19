@@ -29,6 +29,7 @@ class Summary(object):
             "Productive",
             "Happy",
             "Sleep",
+            "REPEAT_TASK",
             "Total"]
 
         if self.config.profile["personal"]:
@@ -131,7 +132,10 @@ class Summary(object):
                     sleep,
                     self.profile.get_score('SLEEP'),
                     100) +
-                repeat)
+                Score.percent(
+                    repeat,
+                    self.profile.get_score('REPEAT_TASK'),
+                    100))
 
             if diary:
                 total += self.profile.get_score('DIARY')
@@ -140,13 +144,18 @@ class Summary(object):
             if bat:
                 total += self.profile.get_score('BAT')
 
+            if total > 100:
+                total = 100
+
             data = {
                 "Attention": round(attention * 100) / 100,
                 "Happy": round(happy * 100) / 100,
                 "Productive": round(productive * 100) / 100,
                 "Sleep": round(sleep * 100) / 100,
+                "REPEAT_TASK": round(repeat * 100) / 100,
                 "Diary": diary,
                 "Exercise": exercise,
+                "BAT": bat,
                 "Total": round(total * 100) / 100
             }
             return data
@@ -234,16 +243,19 @@ class Summary(object):
 
     def __repeat_task_score(self):
         todoist = TodoistManager()
-        minus_point = 2.5
+        minus_point = 15
         if self.is_holiday():
             minus_point /= 2
-        return 10 - (minus_point * todoist.get_repeat_task_count())
+        return 100 - (minus_point * todoist.get_repeat_task_count())
 
     def record_write_diary(self):
         self.data_handler.edit_record(('Diary', True))
 
     def record_exercise(self):
         self.data_handler.edit_record(('Exercise', True))
+
+    def record_bat(self):
+        self.data_handler.edit_record(('BAT', True))
 
     def record_holiday(self, dnd):
         self.data_handler.edit_record(('Holiday', dnd))
@@ -276,14 +288,8 @@ class Summary(object):
             records.append(self.__get_total_score(i))
 
         date = [-6, -5, -4, -3, -2, -1, 0]
-        x_ticks = [
-            '6 day before',
-            '5 day before',
-            '4 day before',
-            '3 day before',
-            '2 day before',
-            'yesterday',
-            'today']
+        x_ticks = ArrowUtil.format_weekly_date()
+
         legend = self.column_list
         data = []
         for l in legend:

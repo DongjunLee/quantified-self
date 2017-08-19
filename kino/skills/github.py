@@ -6,7 +6,9 @@ from ..slack.resource import MsgResource
 from ..slack.slackbot import SlackerAdapter
 from ..slack.plot import Plot
 
+from ..utils.arrow import ArrowUtil
 from ..utils.config import Config
+from ..utils.data_handler import DataHandler
 from ..utils.score import Score
 
 
@@ -14,6 +16,7 @@ class GithubManager(object):
 
     def __init__(self, slackbot=None):
         self.config = Config()
+        self.data_handler = DataHandler()
 
         self.username = self.config.open_api['github']['USERNAME']
         password = self.config.open_api['github']['PASSWORD']
@@ -53,21 +56,11 @@ class GithubManager(object):
         elif timely == "weekly":
             commit_count_list = []
             for i in range(-6, 1, 1):
-                point_start = self.__time_point(i)
-                point_end = self.__time_point(i + 1)
-                commit_count_list.append(
-                    self.__get_event_count(
-                        events, point_start, point_end))
+                record = self.data_handler.read_record(days=i)
+                commit_count_list.append(record.get('Github', 0))
 
             date = [-6, -5, -4, -3, -2, -1, 0]
-            x_ticks = [
-                '6 day before',
-                '5 day before',
-                '4 day before',
-                '3 day before',
-                '2 day before',
-                'yesterday',
-                'today']
+            x_ticks = ArrowUtil.format_weekly_date()
             y_ticks = [i for i in range(max(commit_count_list) + 1)]
 
             f_name = "github_weekly_commit.png"

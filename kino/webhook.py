@@ -131,6 +131,8 @@ class Webhook(object):
                     Summary().record_write_diary()
                 if "운동" in msg:
                     Summary().record_exercise()
+                if "BAT" in msg:
+                    Summary().record_bat()
 
         self.slackbot.send_message(
             text=msg, channel=self.config.channel['TASK'])
