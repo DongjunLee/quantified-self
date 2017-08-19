@@ -2,7 +2,6 @@ import arrow
 import re
 import feedparser
 
-from ..slack.resource import MsgResource
 from ..slack.slackbot import SlackerAdapter
 from ..slack.template import MsgTemplate
 
@@ -13,7 +12,7 @@ from ..utils.logger import Logger
 
 class FeedNotifier:
 
-    def __init__(self, slackbot=None):
+    def __init__(self, slackbot: SlackerAdapter=None) -> None:
         self.logger = Logger().get_logger()
 
         self.data_handler = DataHandler()
@@ -26,17 +25,17 @@ class FeedNotifier:
         else:
             self.slackbot = slackbot
 
-    def notify_all(self):
+    def notify_all(self) -> None:
         self.logger.info("Check feed_list")
         noti_list = []
-        for f in self.feed_list:
-            noti_list += self.notify(f)
+        for f_url in self.feed_list:
+            noti_list += self.get_notify_list(f_url)
 
         for feed in noti_list:
             attachments = MsgTemplate.make_feed_template(feed)
             self.slackbot.send_message(attachments=attachments)
 
-    def notify(self, feed_url):
+    def get_notify_list(self, feed_url: str) -> list:
         cache_data = self.data_handler.read_cache()
 
         f = feedparser.parse(feed_url)
@@ -66,13 +65,13 @@ class FeedNotifier:
             self.data_handler.edit_cache((feed_url, str(last_updated_date)))
         return noti_list
 
-    def __make_entry_tuple(self, entry, feed_title):
+    def __make_entry_tuple(self, entry: dict, feed_title: str) -> tuple:
         entry_title = f"[{feed_title}] " + entry.get('title', '')
         entry_link = entry.get('link', '')
         entry_description = f"Link : {entry_link} \n" + self.__remove_tag(entry.get('description', ''))
         return (entry_title, entry_link, entry_description)
 
-    def __remove_tag(self, text):
+    def __remove_tag(self, text: str) -> str:
         text = re.sub('<.+?>', '', text, 0, re.I | re.S)
         text = re.sub('&nbsp;|\t|\r|', '', text)
         return text
