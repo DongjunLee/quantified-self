@@ -13,8 +13,10 @@ from ..slack.resource import MsgResource
 from ..slack.slackbot import SlackerAdapter
 from ..slack.template import MsgTemplate
 
+from ..utils.arrow import ArrowUtil
 from ..utils.data_handler import DataHandler
 from ..utils.state import State
+
 
 
 class Scheduler(object):
@@ -201,7 +203,7 @@ class Scheduler(object):
             key = "Alarm " + a_index + " (time: " + alarm_data['time'] + ")"
 
         value = f_detail['icon'] + f_name + ", " + \
-            str(alarm_data.get('f_params', ''))
+            str(alarm_data.get('f_params', '')) + " | " + ArrowUtil.format_day_of_week(alarm_data['day_of_week'])
         registered_alarm = "registered_alarm"
         if registered_alarm in between:
             between[registered_alarm][key] = value

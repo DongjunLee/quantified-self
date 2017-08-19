@@ -101,3 +101,20 @@ class ArrowUtil(object):
                 return False
         else:
             return False
+
+    @staticmethod
+    def format_day_of_week(day_of_week):
+        formats = {
+            "0": "All Day",
+            "1": "Mon",
+            "2": "Tue",
+            "3": "Wen",
+            "4": "Thu",
+            "5": "Fri",
+            "6": "Sat",
+            "7": "Sun",
+            "8": "Weekday",
+            "9": "Weekend"
+        }
+
+        return ", ".join(map(lambda x: formats[x], day_of_week))
