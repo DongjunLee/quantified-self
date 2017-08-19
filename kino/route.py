@@ -122,10 +122,6 @@ class MsgRouter:
             self.__on_flow()
             return
 
-        # Check Memory
-        if self.check_memory_skill():
-            return
-
         # Check - help
         if self.dialog_manager.is_call_help(self.parsed_text):
             self.__call_help()
@@ -145,6 +141,10 @@ class MsgRouter:
         if func_name is not None:
             self.__call_skills(func_name)
             self.__memory_predictor_skills()
+            return
+
+        # Check Memory
+        if self.check_memory_skill():
             return
 
         self.logger.info("not understanding")
