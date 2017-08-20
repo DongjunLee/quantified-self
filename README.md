@@ -9,7 +9,6 @@
   </strong></sup>
 </p>
 
-
 <p align="center">
   <a href="https://github.com/DongjunLee/kino-bot">
     <img src="https://img.shields.io/badge/Quantified%20Self-Slack%20Bot-brightgreen.svg" alt="Project Introduction">
