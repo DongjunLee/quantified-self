@@ -17,3 +17,4 @@ py-trello
 feedparser
 langid
 nltk
+python-twitter
