@@ -45,7 +45,7 @@ class Predictor(object):
             self.slackbot.send_message(
                 text=MsgResource.PREDICT_RESULT(
                     description=description))
-            runner.load_function(func_name=func_name, params=params)
+            runner.load_function(func_name=func_name, params=params, day_of_week=[0])
         else:
             functions = Functions(self.slackbot)
             functions.remind_idea()
