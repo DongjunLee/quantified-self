@@ -6,6 +6,7 @@ from .dialog.dialog_manager import DialogManager
 from .slack.slackbot import SlackerAdapter
 
 from .skills.toggl import TogglManager
+from .skills.twitter import TwitterManager
 from .skills.summary import Summary
 
 from .utils.arrow import ArrowUtil
@@ -46,13 +47,18 @@ class Webhook(object):
 
             sns = ['tweet', 'twitter', 'facebook', 'instagram']
             feed = ['feed', 'reddit']
+            relay_message = event['msg']
 
             if any([s for s in sns if s in action_lower]):
                 channel = self.config.channel['SNS']
             elif any([f for f in feed if f in action_lower]):
                 channel = self.config.channel['FEED']
+
+                twitter = TwitterManager()
+                twitter.reddit_tweet(relay_message)
+
             self.slackbot.send_message(
-                text=event['msg'], channel=channel, giphy=False)
+                text=relay_message, channel=channel, giphy=False)
 
     def IN_OUT_handle(self, prev, event):
         if self.__is_error(prev, event):

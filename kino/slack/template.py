@@ -206,7 +206,7 @@ class MsgTemplate:
         attachement.title = title
         attachement.fallback = fallback
         attachement.color = MsgResource.FEED_COLOR
-        attachement.text = description + "\n" + link
+        attachement.text = description
 
         attachments.append(attachement)
         return attachments
