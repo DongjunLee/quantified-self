@@ -59,6 +59,12 @@
     "description": "Weather forecast",
     "icon": ":sun_with_face: "
   },
+  "feed_notify": {
+    "keyword": ["feed"],
+    "params": [],
+    "description": "Latest Feed notify",
+    "icon": ":mega: "
+  },
   "github_commit": {
     "keyword": ["커밋", "commit"],
     "params": ["timely"],
