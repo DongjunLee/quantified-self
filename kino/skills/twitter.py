@@ -9,8 +9,8 @@ from ..utils.config import Config
 
 class TwitterManager:
 
-    MAX_TEXT_LENGTH = 138
-    MAX_LINK_LENGTH = 90
+    MAX_TEXT_LENGTH = 135
+    MAX_LINK_LENGTH = 80
 
     def __init__(self, slackbot=None):
         config = Config()
@@ -45,6 +45,7 @@ class TwitterManager:
 
     def reddit_tweet(self, reddit: str) -> None:
         tweet_title = "#kino_bot, #reddit"
+        reddit = reddit.split("\n\n")[0]
 
         self.tweet(f"{tweet_title}\n{reddit}")
 
