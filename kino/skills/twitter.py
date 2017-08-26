@@ -1,6 +1,8 @@
 
 import twitter
 
+from ..slack.slackbot import SlackerAdapter
+
 from ..utils.config import Config
 
 
