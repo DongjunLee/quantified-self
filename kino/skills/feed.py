@@ -35,7 +35,6 @@ class FeedNotifier:
                 noti_list += self.get_notify_list(category, feed)
 
 
-        self.logger.info(noti_list)
         twitter = TwitterManager(self.slackbot)
 
         for feed in noti_list:

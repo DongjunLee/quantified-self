@@ -36,11 +36,13 @@ class TwitterManager:
         tweet_title = "#kino_bot, #feed"
         title, link, _ = feed
 
+        self.logger("tweet latest feed. title: " + title + " link: " + link)
+
         if len(link) > self.MAX_LINK_LENGTH:
             self.logger.info("Skip to tweet. Link length is too long. length: " +str(len(link)))
             return
 
-        remain_text_length = MAX_TEXT_LENGTH - len(tweet_title) - len(link)
+        remain_text_length = self.MAX_TEXT_LENGTH - len(tweet_title) - len(link)
 
         if len(title) > remain_text_length:
             title = title[:remain_text_length - 3] + "..."
