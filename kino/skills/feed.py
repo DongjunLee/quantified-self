@@ -34,14 +34,16 @@ class FeedNotifier:
             for feed in feed_list:
                 noti_list += self.get_notify_list(category, feed)
 
-
         twitter = TwitterManager(self.slackbot)
 
         for feed in noti_list:
+            self.logger.info("Feed title : " + feed[0])
+
+            twitter.feed_tweet(feed)
+
             attachments = MsgTemplate.make_feed_template(feed)
             self.slackbot.send_message(attachments=attachments)
 
-            twitter.feed_tweet(feed)
 
     def get_notify_list(self, category: str, feed: tuple) -> list:
         cache_data = self.data_handler.read_cache()
