@@ -4,6 +4,7 @@ import twitter
 from ..slack.slackbot import SlackerAdapter
 
 from ..utils.config import Config
+from ..utils.logger import Logger
 
 
 
@@ -13,6 +14,8 @@ class TwitterManager:
     MAX_LINK_LENGTH = 80
 
     def __init__(self, slackbot=None):
+        self.logger = Logger().get_logger()
+
         config = Config()
         self.api = twitter.Api(consumer_key=config.open_api["twitter"]["CONSUMER_KEY"],
                   consumer_secret=config.open_api["twitter"]["CONSUMER_SECRET"],
@@ -34,6 +37,7 @@ class TwitterManager:
         title, link, _ = feed
 
         if len(link) > self.MAX_LINK_LENGTH:
+            self.logger.info("Skip to tweet. Link length is too long. length: " +str(len(link)))
             return
 
         remain_text_length = MAX_TEXT_LENGTH - len(tweet_title) - len(link)
@@ -45,7 +49,10 @@ class TwitterManager:
 
     def reddit_tweet(self, reddit: str) -> None:
         tweet_title = "#kino_bot, #reddit"
+
         reddit = reddit.split("\n\n")[0]
+        reddit = reddit.replace("<", "")
+        reddit = reddit.replace(">", "")
 
         self.tweet(f"{tweet_title}\n{reddit}")
 
