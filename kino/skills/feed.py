@@ -37,8 +37,6 @@ class FeedNotifier:
         twitter = TwitterManager(self.slackbot)
 
         for feed in noti_list:
-            self.logger.info("Feed title : " + feed[0])
-
             twitter.feed_tweet(feed)
 
             attachments = MsgTemplate.make_feed_template(feed)

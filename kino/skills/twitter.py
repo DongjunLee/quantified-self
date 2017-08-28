@@ -36,7 +36,7 @@ class TwitterManager:
         tweet_title = "#kino_bot, #feed"
         title, link, _ = feed
 
-        self.logger("tweet latest feed. title: " + title + " link: " + link)
+        self.logger.info("tweet latest feed. title: " + title + " link: " + link)
 
         if len(link) > self.MAX_LINK_LENGTH:
             self.logger.info("Skip to tweet. Link length is too long. length: " +str(len(link)))
@@ -50,11 +50,27 @@ class TwitterManager:
         self.tweet(f"{tweet_title}\n{title}\n{link}")
 
     def reddit_tweet(self, reddit: str) -> None:
-        tweet_title = "#kino_bot, #reddit"
 
         reddit = reddit.split("\n\n")[0]
-        reddit = reddit.replace("<", "")
-        reddit = reddit.replace(">", "")
+        subreddit, title, link = reddit_title.split("\n")
 
-        self.tweet(f"{tweet_title}\n{reddit}")
+        tweet_title = "#kino_bot, #reddit"
+        if "python" in subreddit.lower():
+            tweet_title += "_python"
+        elif "machinelearning" in subreddit.lower():
+            tweet_title += "_ml"
+
+        link = link.replace("Link : <", "")
+        link = link.replace(">", "")
+
+        if len(link) > self.MAX_LINK_LENGTH:
+            self.logger.info("Skip to tweet. Link length is too long. length: " +str(len(link)))
+            return
+
+        remain_text_length = self.MAX_TEXT_LENGTH - len(tweet_title) - len(link)
+
+        if len(title) > remain_text_length:
+            title = title[:remain_text_length - 3] + "..."
+
+        self.tweet(f"{tweet_title}\n{title}\n{link}")
 
