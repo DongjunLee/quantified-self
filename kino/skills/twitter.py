@@ -30,7 +30,10 @@ class TwitterManager:
     def tweet(self, text: str) -> None:
         if len(text) > self.MAX_TEXT_LENGTH:
             text = text[:self.MAX_TEXT_LENGTH - 3] + "..."
-        self.api.PostUpdate(text)
+        try:
+            self.api.PostUpdate(text)
+        except BaseException as e:
+            self.logger.error("tweet error: " + text)
 
     def feed_tweet(self, feed: tuple) -> None:
         tweet_title = "#kino_bot, #feed"
@@ -52,7 +55,7 @@ class TwitterManager:
     def reddit_tweet(self, reddit: str) -> None:
 
         reddit = reddit.split("\n\n")[0]
-        subreddit, title, link = reddit_title.split("\n")
+        subreddit, title, link = reddit.split("\n")
 
         tweet_title = "#kino_bot, #reddit"
         if "python" in subreddit.lower():
@@ -73,4 +76,3 @@ class TwitterManager:
             title = title[:remain_text_length - 3] + "..."
 
         self.tweet(f"{tweet_title}\n{title}\n{link}")
-
