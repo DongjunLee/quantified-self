@@ -29,8 +29,8 @@
   <a href="https://travis-ci.org/badges/shields">
     <img src="https://travis-ci.org/DongjunLee/kino-bot.svg?branch=master" alt="build status">
   </a>
-  <a href="https://requires.io/github/DongjunLee/kino-bot/requirements/?branch=develop">
-    <img src="https://requires.io/github/DongjunLee/kino-bot/requirements.svg?branch=develop" alt="Requirements Status" />
+  <a href="https://requires.io/github/DongjunLee/kino-bot/requirements/?branch=master">
+    <img src="https://requires.io/github/DongjunLee/kino-bot/requirements.svg?branch=master" alt="Requirements Status" />
   </a>
   <a href='https://dependencyci.com/github/DongjunLee/kino-bot'>
     <img src='https://dependencyci.com/github/DongjunLee/kino-bot/badge' alt='Dependency Status' />
