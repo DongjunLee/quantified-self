@@ -93,8 +93,7 @@ class SlackerAdapter(object):
         else:
             self.send_message(
                 text="마지막 메시지에 대한 정보가 없습니다.",
-                channel=channel,
-                as_user=True)
+                channel=channel)
 
     def file_upload(self, f_name, channel=None, title=None, comment=None):
         if self.channel is None:

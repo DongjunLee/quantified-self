@@ -4,8 +4,6 @@ import arrow
 from .dialog_manager import DialogManager
 from .dnd import DoNotDisturbManager
 
-from ..nlp.ner import NamedEntitiyRecognizer
-
 from ..functions import Functions
 
 from ..skills.predictor import Predictor

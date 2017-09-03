@@ -1,8 +1,6 @@
 
 from sklearn.neighbors import KNeighborsClassifier
 
-from .maxim import Maxim
-
 from ..functions import Functions
 from ..functions import FunctionRunner
 

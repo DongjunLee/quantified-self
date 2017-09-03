@@ -1,5 +1,4 @@
 
-import json
 import unittest
 
 from kino.listener import MsgListener
