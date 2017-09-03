@@ -6,7 +6,7 @@ slacker
 websockets
 xmljson
 matplotlib
-todoist-python==7.0.16
+todoist-python
 python-forecastio
 geopy
 konlpy

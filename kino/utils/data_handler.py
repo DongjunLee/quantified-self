@@ -14,7 +14,11 @@ class DataHandler(object):
         self.record_path = "record/"
 
     def read_file(self, fname):
-        return json.loads(self.read_text(fname))
+        text = self.read_text(fname)
+        if text == "":
+            return {}
+        else:
+            return json.loads(text)
 
     def read_text(self, fname):
         path = os.path.join(self.data_path + fname)
