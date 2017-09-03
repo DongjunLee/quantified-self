@@ -67,7 +67,7 @@ class Webhook(object):
                 twitter = TwitterManager()
                 twitter.reddit_tweet((subreddit, title, link))
 
-                title = f"{subreddit} Hot Post"
+                title = f"{subreddit} Hot Post\n{title}"
                 content = f"Link: {link}\n{content}"
 
                 attachments = MsgTemplate.make_feed_template((title, link, content))
