@@ -11,18 +11,40 @@
 
 
 <p align="center">
+
   <a href="https://github.com/DongjunLee/kino-bot">
-    <img src="https://img.shields.io/badge/Quantified%20Self-Slack%20Bot-brightgreen.svg" alt="Project Introduction">
+    <img src="https://img.shields.io/badge/Quantified%20Self-Job%20Automation-brightgreen.svg" alt="Project Introduction">
   </a>
+  
+  <a href="https://github.com/DongjunLee/kino-bot">
+    <img src="https://img.shields.io/badge/Bot-Slack-brightgreen.svg" alt="Project Introduction">
+  </a>
+  
+  <a href="https://github.com/DongjunLee/kino-bot">
+    <img src="https://img.shields.io/badge/Personal-Small%20Team-brightgreen.svg" alt="Project Introduction">
+  </a>
+  
+  <br/>
+  
   <a href="https://travis-ci.org/badges/shields">
     <img src="https://travis-ci.org/DongjunLee/kino-bot.svg?branch=master" alt="build status">
   </a>
+  <a href="https://requires.io/github/DongjunLee/kino-bot/requirements/?branch=develop">
+    <img src="https://requires.io/github/DongjunLee/kino-bot/requirements.svg?branch=develop" alt="Requirements Status" />
+  </a>
+  <a href='https://dependencyci.com/github/DongjunLee/kino-bot'>
+    <img src='https://dependencyci.com/github/DongjunLee/kino-bot/badge' alt='Dependency Status' />
+  </a>
+  
+  <br/>
+  
   <a href="https://codecov.io/gh/DongjunLee/stalker-bot">
     <img src="https://codecov.io/gh/DongjunLee/kino-bot/branch/master/graph/badge.svg" alt="Codecov" />
   </a>
   <a href="https://www.codacy.com/app/humanbrain.djlee/kino-bot?utm_source=github.com&utm_medium=referral&utm_content=DongjunLee/kino-bot&utm_campaign=badger">
     <img src="https://api.codacy.com/project/badge/Grade/401e8a56ebe241daa8b2d0453e16a80c" alt="Codacy">
   </a>
+  
 </p>
 
 
