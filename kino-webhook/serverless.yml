@@ -1,0 +1,21 @@
+service: kino-webhook
+
+frameworkVersion: ">=1.2.0 <2.0.0"
+
+provider:
+  name: aws
+  runtime: python3.6
+  stage: dev
+  region: ap-northeast-2
+
+functions:
+  trello_webhook:
+    handler: handler.kanban_webhook
+    events:
+      - http:
+          path: trello
+          method: any
+          cors: true
+
+plugins:
+  - serverless-python-requirements

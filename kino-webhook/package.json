@@ -1,0 +1,10 @@
+{
+  "name": "kino-webhook",
+  "version": "1.0.0",
+  "description": "Serverless Webhook handler for kino-bot",
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "serverless-python-requirements": "^2.3.3"
+  }
+}
