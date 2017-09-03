@@ -199,7 +199,7 @@ class MsgTemplate:
     def make_feed_template(feed: tuple) -> list:
         attachments = []
 
-        title, link, description = feed
+        title, _, description = feed
         fallback = title + ": " + description
 
         attachement = Attachement()

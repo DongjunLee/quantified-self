@@ -61,15 +61,17 @@ class Webhook(object):
                 subreddit = subreddit.strip()
                 title = title.strip()
                 link = link.strip()
+                link = link.replace("<", "")
+                link = link.replace(">", "")
 
                 twitter = TwitterManager()
                 twitter.reddit_tweet((subreddit, title, link))
 
                 title = f"{subreddit} Hot Post"
-                link = f"Link: {link}"
+                content = f"Link: {link}\n{content}"
 
                 attachments = MsgTemplate.make_feed_template((title, link, content))
-                self.slackbot.send_message(attachments=attachments)
+                self.slackbot.send_message(attachments=attachments, channel=channel)
                 return
 
             self.slackbot.send_message(

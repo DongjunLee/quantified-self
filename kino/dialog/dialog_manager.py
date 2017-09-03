@@ -1,6 +1,4 @@
 
-from ..nlp.ner import NamedEntitiyRecognizer
-
 from ..utils.data_handler import DataHandler
 from ..utils.state import State
 
