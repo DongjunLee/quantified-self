@@ -14,22 +14,19 @@ class DataHandler(object):
         self.record_path = "record/"
 
     def read_file(self, fname):
-        try:
-            with open(self.data_path + fname, 'r') as infile:
-                return json.loads(infile.read())
-        except Exception as e:
-            print(e)
-            return {}
+        return json.loads(self.read_text(fname))
 
     def read_text(self, fname):
+        path = os.path.join(self.data_path + fname)
         try:
-            with open(self.data_path + fname, 'r') as infile:
+            with open(path, 'r') as infile:
                 return infile.read()
         except BaseException:
             return ""
 
     def write_file(self, fname, data):
-        with open(self.data_path + fname, 'w') as outfile:
+        path = os.path.join(self.data_path + fname)
+        with open(path, 'w') as outfile:
             json.dump(data, outfile)
 
     def read_json_then_add_data(self, fname, category, input_data):

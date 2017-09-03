@@ -53,6 +53,8 @@ class Functions(object):
         summary.check_go_to_bed()
         summary.check_commit_count()
 
+        self.data_handler.edit_cache(("feed_links", []))
+
     def send_message(self, text=None):
         self.slackbot.send_message(text=text)
 

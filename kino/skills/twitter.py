@@ -4,6 +4,7 @@ import twitter
 from ..slack.slackbot import SlackerAdapter
 
 from ..utils.config import Config
+from ..utils.data_handler import DataHandler
 from ..utils.logger import Logger
 
 
@@ -15,6 +16,8 @@ class TwitterManager:
 
     def __init__(self, slackbot=None):
         self.logger = Logger().get_logger()
+
+        self.data_handler = DataHandler()
 
         config = Config()
         self.api = twitter.Api(consumer_key=config.open_api["twitter"]["CONSUMER_KEY"],
@@ -53,8 +56,13 @@ class TwitterManager:
         self.tweet(f"{tweet_title}\n{title}\n{link}")
 
     def reddit_tweet(self, reddit: tuple) -> None:
+        cache_data = self.data_handler.read_cache()
+        cache_entry_links = set(cache_data.get("entry_links", []))
 
         subreddit, title, link = reddit
+        if link in cache_entry_links:
+            return
+
         subreddit = subreddit.replace("MachineLearning", "ml")
 
         tweet_title = "#kino_bot, #reddit_" + subreddit.lower()
@@ -69,3 +77,6 @@ class TwitterManager:
             title = title[:remain_text_length - 3] + "..."
 
         self.tweet(f"{tweet_title}\n{title}\n{link}")
+
+        cache_entry_links.add(link)
+        self.data_handler.edit_cache(("feed_links", list(cache_entry_links)))
