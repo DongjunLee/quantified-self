@@ -52,19 +52,12 @@ class TwitterManager:
 
         self.tweet(f"{tweet_title}\n{title}\n{link}")
 
-    def reddit_tweet(self, reddit: str) -> None:
+    def reddit_tweet(self, reddit: tuple) -> None:
 
-        reddit = reddit.split("\n\n")[0]
-        subreddit, title, link = reddit.split("\n")
+        subreddit, title, link = reddit
+        subreddit = subreddit.replace("MachineLearning", "ml")
 
-        tweet_title = "#kino_bot, #reddit"
-        if "python" in subreddit.lower():
-            tweet_title += "_python"
-        elif "machinelearning" in subreddit.lower():
-            tweet_title += "_ml"
-
-        link = link.replace("Link : <", "")
-        link = link.replace(">", "")
+        tweet_title = "#kino_bot, #reddit_" + subreddit.lower()
 
         if len(link) > self.MAX_LINK_LENGTH:
             self.logger.info("Skip to tweet. Link length is too long. length: " +str(len(link)))

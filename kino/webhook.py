@@ -4,6 +4,7 @@ import json
 from .dialog.dialog_manager import DialogManager
 
 from .slack.slackbot import SlackerAdapter
+from .slack.template import MsgTemplate
 
 from .skills.toggl import TogglManager
 from .skills.twitter import TwitterManager
@@ -54,8 +55,22 @@ class Webhook(object):
             elif any([f for f in feed if f in action_lower]):
                 channel = self.config.channel['FEED']
 
+                header, content = relay_message.split("\n\n")
+                subreddit, title, link = header.split("\n")
+
+                subreddit = subreddit.strip()
+                title = title.strip()
+                link = link.strip()
+
                 twitter = TwitterManager()
-                twitter.reddit_tweet(relay_message)
+                twitter.reddit_tweet((subreddit, title, link))
+
+                title = f"{subreddit} Hot Post"
+                link = f"Link: {link}"
+
+                attachments = MsgTemplate.make_feed_template((title, link, content))
+                self.slackbot.send_message(attachments=attachments)
+                return
 
             self.slackbot.send_message(
                 text=relay_message, channel=channel, giphy=False)
