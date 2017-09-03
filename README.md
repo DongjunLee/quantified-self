@@ -21,9 +21,10 @@
     <img src="https://codecov.io/gh/DongjunLee/kino-bot/branch/master/graph/badge.svg" alt="Codecov" />
   </a>
   <a href="https://www.codacy.com/app/humanbrain.djlee/kino-bot?utm_source=github.com&utm_medium=referral&utm_content=DongjunLee/kino-bot&utm_campaign=badger">
-    <img src="https://api.codacy.com/project/badge/Grade/401e8a56ebe241daa8b2d0453e16a80c" alt="Codacy"
+    <img src="https://api.codacy.com/project/badge/Grade/401e8a56ebe241daa8b2d0453e16a80c" alt="Codacy">
   </a>
 </p>
+
 
 ### Publication
 
@@ -45,13 +46,15 @@
 
 - **[Slack](https://slack.com/)**
 - **Python 3.6**
-- [Open API TOKENs](#open-api)
+- [API TOKENs](#integrate-open-api-list)
 
-## Components
+## Features
+
+- Support Languages (Korean, English)
 
 <hr/>
 
-### 0. Scheduler
+### 0. Scheduler (background job)
 
 As a basic feature, you can add tasks in the time interval you set.
 The types of jobs available are as follows.
@@ -120,15 +123,15 @@ Here are the criteria that work here:
 - Exercise
 - Repeated tasks (listening to lectures, reading good articles, reading books, etc.)
 
-Give a percentage for each score and give the final score for today's day.
-ex) Total Score = sleep(20) + happy(30) + productivity(30) + diary(5) + exercise(5) + repeat(10)
+Give a percentage for each score and give the final score for today's day.  
+ex) Total Score = sleep(20) + attentions(20) + happy(30) + productivity(30) + diary(5) + exercise(5) + repeat(10)
 
 ![summary](images/summary.png)
 
 <hr/>
 
 ### 4. Webhook
-- Requirements : [IFTTT](https://ifttt.com) or Custom Webhook [kino-webhook](https://github.com/DongjunLee/kino-webhook) for RealTime (IFTTT is not real time.)
+- Requirements : [IFTTT](https://ifttt.com) or Custom Webhook [kino-webhook](/kino-webhook) for RealTime (IFTTT is not real time.)
 
 Information that can be found in connection with IFTTT.
 
@@ -159,7 +162,23 @@ If you use kino for personal use, you will use the channel for each purpose.
 
 <hr/>
 
-## Open API
+### 6. Feed
+
+Kino notify latest feed what you setting. default feed config is [Awesome Feeds](https://github.com/DongjunLee/awesome-feeds).  
+Also can integrate [Twitter](https://twitter.com/) to tweet latest feed. ex) **@hb_djlee**
+
+- **feed**
+
+![images](images/feed_example.png)
+
+- **twitter**
+
+![images](images/twitter_example.png)
+
+
+<hr/>
+
+## Integrate Open API List
 
 - **Github**
 	- [PyGithub](https://github.com/PyGithub/PyGithub)
@@ -174,6 +193,8 @@ If you use kino for personal use, you will use the channel for each purpose.
 	- [TogglPy](https://github.com/DongjunLee/TogglPy) forked from [matthewdowney/TogglPy](https://github.com/matthewdowney/TogglPy)
 - **Trello**
 	- [py-trello](https://github.com/sarumont/py-trello)
+- **Twitter**
+	- [python-twitter](https://github.com/bear/python-twitter)
 - **RescueTime**
 - **공공데이터 버스도착정보**
 - **공공데이터 대기질정보**
