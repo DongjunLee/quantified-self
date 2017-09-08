@@ -2,14 +2,12 @@ from ..slack.slackbot import SlackerAdapter
 from ..slack.resource import MsgResource
 from ..slack.template import MsgTemplate
 
-from ..utils.config import Config
 from ..utils.data_handler import DataHandler
 
 
 class Guide(object):
 
     def __init__(self, slackbot=None):
-        self.config = Config()
         self.data_handler = DataHandler()
 
         if slackbot is None:

@@ -4,23 +4,22 @@ matplotlib.use('TkAgg')
 import arrow
 import itertools
 import requests
+from hbconfig import Config
 
 from ..slack.resource import MsgResource
 from ..slack.slackbot import SlackerAdapter
 from ..slack.plot import Plot
 
-from ..utils.config import Config
 from ..utils.score import Score
 
 
 class RescueTime(object):
 
     def __init__(self, slackbot=None):
-        self.config = Config()
 
         if slackbot is None:
             self.slackbot = SlackerAdapter(
-                channel=self.config.channel['REPORT'])
+                channel=Config.channel.get('REPORT', "#general"))
         else:
             self.slackbot = slackbot
 
@@ -62,7 +61,7 @@ class RescueTime(object):
             "rs": "hour",
             "rb": start,
             "re": end,
-            "rtapi_key": self.config.open_api['rescue_time']['TOKEN']
+            "rtapi_key": Config.open_api.rescue_time.TOKEN
         }
 
         for k, v in params.items():
@@ -87,4 +86,4 @@ class RescueTime(object):
         return requests.get(
             url +
             "key=" +
-            self.config.open_api['rescue_time']['TOKEN'])
+            Config.open_api.rescue_time.TOKEN)

@@ -1,18 +1,18 @@
 import json
 
+from hbconfig import Config
+
 from .route import MsgRouter
 
 from .slack.resource import MsgResource
 from .slack.slackbot import SlackerAdapter
 
-from .utils.config import Config
 from .utils.logger import Logger
 
 
 class MsgListener(object):
 
     def __init__(self) -> None:
-        self.config = Config()
         self.router = MsgRouter()
         self.slackbot = SlackerAdapter()
         self.logger = Logger().get_logger()
@@ -114,7 +114,7 @@ class MsgListener(object):
         slack_bot_id = self.slackbot.get_bot_id()
         if f"<@{slack_bot_id}>" in text or channel.startswith("D") or any(
                 [ text.lower().startswith(t.lower()) \
-                        for t in self.config.bot.get("TRIGGER", ["키노야", "Hey kino"]) ]):
+                        for t in Config.bot.get("TRIGGER", ["키노야", "Hey kino"]) ]):
             return True
         else:
             return False

@@ -1,6 +1,7 @@
 import arrow
 import re
 import feedparser
+from hbconfig import Config
 
 from .twitter import TwitterManager
 
@@ -8,7 +9,6 @@ from ..slack.slackbot import SlackerAdapter
 from ..slack.template import MsgTemplate
 
 from ..utils.data_handler import DataHandler
-from ..utils.config import Config
 from ..utils.logger import Logger
 
 
@@ -20,10 +20,8 @@ class FeedNotifier:
         self.data_handler = DataHandler()
         self.feeds = self.data_handler.read_feeds()
 
-        self.config = Config()
-
         if slackbot is None:
-            self.slackbot = SlackerAdapter(channel=self.config.channel.get('FEED', "#general"))
+            self.slackbot = SlackerAdapter(channel=Config.channel.get('FEED', "#general"))
         else:
             self.slackbot = slackbot
 

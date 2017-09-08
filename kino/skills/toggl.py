@@ -1,5 +1,6 @@
 
 import arrow
+from hbconfig import Config
 
 from ..open_api.toggl import Toggl
 
@@ -11,7 +12,6 @@ from ..skills.todoist import TodoistManager
 
 from ..utils.arrow import ArrowUtil
 from ..utils.data_handler import DataHandler
-from ..utils.config import Config
 from ..utils.logger import Logger
 from ..utils.score import Score
 from ..utils.state import State
@@ -20,19 +20,18 @@ from ..utils.state import State
 class TogglManager(object):
 
     def __init__(self, slackbot=None):
-        self.config = Config()
         self.logger = Logger().get_logger()
 
         self.toggl = Toggl()
-        self.toggl.setAPIKey(self.config.open_api['toggl']['TOKEN'])
+        self.toggl.setAPIKey(Config.open_api.toggl.TOKEN)
 
         wid = self.toggl.getWorkspace(
-            name=self.config.open_api['toggl']['WORKSPACE_NAME'])['id']
+            name=Config.open_api.toggl.WORKSPACE_NAME)['id']
         self.toggl.setWorkspaceId(wid)
         self.entity = TogglProjectEntity().entity
 
         if slackbot is None:
-            self.slackbot = SlackerAdapter(channel=self.config.channel['TASK'])
+            self.slackbot = SlackerAdapter(channel=Config.channel.get('TASK', '#general'))
         else:
             self.slackbot = slackbot
 
@@ -139,7 +138,7 @@ class TogglManager(object):
             'calculate': 'time'
         }
 
-        channel = self.config.channel['REPORT']
+        channel = Config.channel.get('REPORT', '#general')
 
         if kind == "basic":
             f_name = "basic-report.pdf"

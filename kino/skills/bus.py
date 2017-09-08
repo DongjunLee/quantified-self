@@ -3,11 +3,12 @@ import requests
 import xml.etree.ElementTree as ET
 from xmljson import yahoo as yh
 
+from hbconfig import Config
+
 from ..slack.resource import MsgResource
 from ..slack.template import MsgTemplate
 from ..slack.slackbot import SlackerAdapter
 
-from ..utils.config import Config
 from ..utils.data_handler import DataHandler
 
 
@@ -15,11 +16,10 @@ class Bus(object):
 
     def __init__(self, slackbot=None):
         self.data_handler = DataHandler()
-        self.config = Config()
 
         self.ansan_bus = self.data_handler.read_file("ansan_bus.json")
         self.ansan_station = self.data_handler.read_file("ansan_station.json")
-        self.service_key = self.config.open_api['gbis']['TOKEN']
+        self.service_key = Config.open_api.gbis.TOKEN
 
         if slackbot is None:
             self.slackbot = SlackerAdapter()

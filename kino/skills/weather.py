@@ -10,14 +10,12 @@ from ..open_api.airkoreaPy import AirKorea
 from ..slack.slackbot import SlackerAdapter
 from ..slack.template import MsgTemplate
 
-from ..utils.config import Config
 from ..utils.profile import Profile
 
 
 class Weather(object):
 
     def __init__(self, slackbot=None):
-        self.config = Config()
         self.profile = Profile()
 
         if slackbot is None:

@@ -1,13 +1,13 @@
 import arrow
 import datetime
 from github import Github
+from hbconfig import Config
 
 from ..slack.resource import MsgResource
 from ..slack.slackbot import SlackerAdapter
 from ..slack.plot import Plot
 
 from ..utils.arrow import ArrowUtil
-from ..utils.config import Config
 from ..utils.data_handler import DataHandler
 from ..utils.score import Score
 
@@ -15,16 +15,15 @@ from ..utils.score import Score
 class GithubManager(object):
 
     def __init__(self, slackbot=None):
-        self.config = Config()
         self.data_handler = DataHandler()
 
-        self.username = self.config.open_api['github']['USERNAME']
-        password = self.config.open_api['github']['PASSWORD']
+        self.username = Config.open_api.github.USERNAME
+        password = Config.open_api.github.PASSWORD
         self.github = Github(self.username, password)
 
         if slackbot is None:
             self.slackbot = SlackerAdapter(
-                channel=self.config.channel['REPORT'])
+                channel=Config.channel.get('REPORT', '#general'))
         else:
             self.slackbot = slackbot
 

@@ -1,21 +1,19 @@
 from trello import TrelloClient
 import random
-
-from ..utils.config import Config
+from hbconfig import Config
 
 
 class TrelloManager(object):
 
     def __init__(self):
-        config = Config()
-        trello_config = config.open_api['trello']
+        trello_config = Config.open_api.trello
 
         self.client = TrelloClient(
-            api_key=trello_config['API_KEY'],
-            api_secret=trello_config['API_SECRET'],
-            token=trello_config['TOKEN']
+            api_key=trello_config.API_KEY,
+            api_secret=trello_config.API_SECRET,
+            token=trello_config.TOKEN
         )
-        self.board = self.client.get_board(trello_config['BOARD'])
+        self.board = self.client.get_board(trello_config.BOARD)
 
     def get_list_by_name(self, name):
         for l in self.board.all_lists():

@@ -4,24 +4,23 @@ from dateutil.parser import parse
 import re
 from pytz import timezone
 import todoist
+from hbconfig import Config
 
 from ..slack.resource import MsgResource
 from ..slack.slackbot import SlackerAdapter
 from ..slack.template import MsgTemplate
 
-from ..utils.config import Config
 from ..utils.profile import Profile
 
 
 class TodoistManager(object):
 
     def __init__(self, slackbot=None):
-        self.config = Config()
         self.todoist_api = todoist.TodoistAPI(
-            self.config.open_api['todoist']['TOKEN'])
+            Config.open_api.todoist.TOKEN)
 
         if slackbot is None:
-            self.slackbot = SlackerAdapter(channel=self.config.channel['TASK'])
+            self.slackbot = SlackerAdapter(channel=Config.channel.get('TASK', "#general"))
         else:
             self.slackbot = slackbot
 
@@ -115,8 +114,8 @@ class TodoistManager(object):
 
     def __get_karma_trend(self):
         user = self.todoist_api.user.login(
-            self.config.open_api['todoist']['ID'],
-            self.config.open_api['todoist']['PASSWORD'])
+            Config.open_api.todoist.ID,
+            Config.open_api.todoist.PASSWORD)
         return user['karma_trend']
 
     def feedback(self, channel=None):

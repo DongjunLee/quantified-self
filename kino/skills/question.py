@@ -2,6 +2,7 @@
 import arrow
 import collections
 import re
+from hbconfig import Config
 
 from ..dialog.dialog_manager import DialogManager
 
@@ -9,7 +10,6 @@ from ..slack.resource import MsgResource
 from ..slack.slackbot import SlackerAdapter
 from ..slack.plot import Plot
 
-from ..utils.config import Config
 from ..utils.data_handler import DataHandler
 from ..utils.state import State
 
@@ -23,10 +23,6 @@ class Question(object):
         self.msg_flow = ""
         self.msg_report = ""
         self.slackbot = SlackerAdapter()
-
-    @property
-    def config(self):
-        return Config()
 
     @property
     def data_handler(self):
@@ -99,7 +95,7 @@ class Question(object):
             self.slackbot.file_upload(
                 f_name,
                 title=title,
-                channel=self.config.channel['REPORT'],
+                channel=Config.channel.get('REPORT', '#general'),
                 comment=self.msg_report)
 
 
@@ -114,7 +110,7 @@ class HappyQuestion(Question):
 
         if slackbot is None:
             self.slackbot = SlackerAdapter(
-                channel=self.config.channel["DEFAULT"])
+                channel=Config.channel.get("DEFAULT", "#general"))
         else:
             self.slackbot = slackbot
 
@@ -129,6 +125,6 @@ class AttentionQuestion(Question):
         self.msg_report = MsgResource.ATTENTION_REPORT
 
         if slackbot is None:
-            self.slackbot = SlackerAdapter(channel=self.config.channel["TASK"])
+            self.slackbot = SlackerAdapter(channel=Config.channel.get("TASK", "#general"))
         else:
             self.slackbot = slackbot

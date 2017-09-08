@@ -11,7 +11,6 @@ from .skills.twitter import TwitterManager
 from .skills.summary import Summary
 
 from .utils.arrow import ArrowUtil
-from .utils.config import Config
 from .utils.data_handler import DataHandler
 from .utils.state import State
 
@@ -19,7 +18,6 @@ from .utils.state import State
 class Webhook(object):
 
     def __init__(self):
-        self.config = Config()
         self.slackbot = SlackerAdapter()
         self.dialog_manager = DialogManager()
         self.data_handler = DataHandler()

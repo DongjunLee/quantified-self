@@ -4,13 +4,14 @@ import asyncio
 import time
 import websockets
 
+from hbconfig import Config
+
 from .listener import MsgListener
 
 from .slack.resource import MsgResource
 from .slack.slackbot import SlackerAdapter
 from .slack.slackbot import GiphyClient
 
-from .utils.config import Config
 from .utils.logger import Logger
 from .utils.data_loader import SkillData
 
@@ -22,16 +23,15 @@ class KinoBot:
         self.logger = Logger().get_logger()
 
         # Send a message to channel (init)
-        config = Config()
-        MASTER_NAME = config.bot["MASTER_NAME"]
-        BOT_NAME = config.bot["BOT_NAME"]
+        MASTER_NAME = Config.bot.MASTER_NAME
+        BOT_NAME = Config.bot.BOT_NAME
         self.slackbot.send_message(
             text=MsgResource.HELLO(
                 master_name=MASTER_NAME,
                 bot_name=BOT_NAME))
 
         # load skill data
-        if config.bot.get("SKILL_PREDICT", False):
+        if Config.bot.get("SKILL_PREDICT", False):
             SkillData()
 
         giphy = GiphyClient()
