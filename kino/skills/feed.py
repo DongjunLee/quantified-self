@@ -10,6 +10,7 @@ from ..slack.template import MsgTemplate
 
 from ..utils.data_handler import DataHandler
 from ..utils.logger import Logger
+from ..utils.logger import DataLogger
 
 
 class FeedNotifier:
@@ -33,9 +34,13 @@ class FeedNotifier:
                 noti_list += self.get_notify_list(category, feed)
 
         twitter = TwitterManager(self.slackbot)
+        data_logger = DataLogger("feed").get_logger()
 
         for feed in noti_list:
             twitter.feed_tweet(feed)
+
+            feed_header = feed[0].split("\n")
+            data_logger.info({"category": feed_header[0], "title": feed_header[1]})
 
             attachments = MsgTemplate.make_feed_template(feed)
             self.slackbot.send_message(attachments=attachments)
