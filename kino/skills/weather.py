@@ -4,6 +4,7 @@ import arrow
 from dateutil import tz
 import forecastio
 from geopy.geocoders import GoogleV3
+from hbconfig import Config
 
 from ..open_api.airkoreaPy import AirKorea
 
@@ -28,7 +29,7 @@ class Weather(object):
         geolocator = GoogleV3()
         location = geolocator.geocode(self.profile.get_location())
 
-        api_key = self.config.open_api['dark_sky']['TOKEN']
+        api_key = Config.open_api.dark_sky.TOKEN
         lat = location.latitude
         lon = location.longitude
         dark_sky = forecastio.load_forecast(api_key, lat, lon)
@@ -71,7 +72,7 @@ class Weather(object):
         return hourly_temp
 
     def air_quality(self):
-        api_key = self.config.open_api['airkorea']['TOKEN']
+        api_key = Config.open_api.airkorea.TOKEN
         airkorea = AirKorea(api_key)
 
         station_name = self.profile.get_location(station=True)
