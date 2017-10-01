@@ -4,21 +4,20 @@ import requests
 import re
 from urllib.parse import urlencode, quote_plus
 
+from hbconfig import Config
 import langid
 from slacker import Slacker
 
 from .resource import MsgResource
 from .template import MsgTemplate
 
-from ..utils.config import Config
 from ..utils.data_handler import DataHandler
 
 
 class SlackerAdapter(object):
 
     def __init__(self, channel=None, user=None, input_text=None):
-        self.config = Config()
-        self.slacker = Slacker(self.config.slack.get('TOKEN', "<TOKEN>"))
+        self.slacker = Slacker(Config.slack.get('TOKEN', "<TOKEN>"))
         self.channel = channel
         self.data_handler = DataHandler()
 
@@ -26,7 +25,7 @@ class SlackerAdapter(object):
         self.channel = channel
 
         if input_text is None:
-            self.lang_code = self.config.bot.get("LANG_CODE", "en")
+            self.lang_code = Config.bot.get("LANG_CODE", "en")
         else:
             self.lang_code = langid.classify(input_text)[0]
 
@@ -37,7 +36,7 @@ class SlackerAdapter(object):
             attachments=None,
             giphy=True):
         if self.channel is None:
-            self.channel = self.config.channel['DEFAULT']
+            self.channel = Config.channel.get('DEFAULT', "#general")
         if channel is not None:
             self.channel = channel
 
@@ -50,7 +49,7 @@ class SlackerAdapter(object):
         gihpy_result = None
         random_num = random.randint(1, 100)
         if giphy and (text is not None and attachments is None) and \
-                random_num > self.config.bot["GIPHY_THRESHOLD"]:
+                random_num > Config.bot.GIPHY_THRESHOLD:
             gihpy_client = GiphyClient(slackbot=self)
             gihpy_result = gihpy_client.search(text)
 
@@ -97,7 +96,7 @@ class SlackerAdapter(object):
 
     def file_upload(self, f_name, channel=None, title=None, comment=None):
         if self.channel is None:
-            self.channel = self.config.channel['DEFAULT']
+            self.channel = Config.channel.get('DEFAULT', "#general")
         if channel is not None:
             self.channel = channel
 
@@ -120,7 +119,7 @@ class SlackerAdapter(object):
 
         users = self.slacker.users.list().body['members']
         for user in users:
-            if user['name'] == self.config.bot["BOT_NAME"].lower():
+            if user['name'] == Config.bot.BOT_NAME.lower():
                 bot_id = user['id']
                 self.data_handler.edit_cache(('bot_id', bot_id))
                 return bot_id
@@ -132,10 +131,8 @@ class SlackerAdapter(object):
 class GiphyClient:
 
     def __init__(self, slackbot=None, limit=10):
-        self.config = Config()
-
         self.base_url = "http://api.giphy.com/v1/gifs/"
-        self.api_key = self.config.open_api["giphy"]["TOKEN"]
+        self.api_key = Config.open_api.giphy.TOKEN
         self.limit = limit
 
         if slackbot is None:

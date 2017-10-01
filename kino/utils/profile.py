@@ -1,15 +1,15 @@
 
 from dateutil import tz
+from hbconfig import Config
 
 from .arrow import ArrowUtil
-from .config import Config
 from .data_handler import DataHandler
 
 
 class Profile(object):
 
     def __init__(self):
-        profile = Config().profile
+        profile = Config.profile
         self.personal = profile.get('personal', None)
         self.schedule = profile.get('schedule', None)
         self.location = profile.get('location', None)

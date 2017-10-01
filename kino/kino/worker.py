@@ -2,6 +2,8 @@
 
 import threading
 
+from hbconfig import Config
+
 from ..background import schedule
 
 from ..functions import FunctionRunner
@@ -13,7 +15,6 @@ from ..notifier.scheduler import Scheduler
 from ..slack.resource import MsgResource
 from ..slack.slackbot import SlackerAdapter
 
-from ..utils.config import Config
 from ..utils.data_handler import DataHandler
 from ..utils.logger import Logger
 
@@ -22,7 +23,6 @@ class Worker(object):
 
     def __init__(self, text=None, slackbot=None):
         self.input = text
-        self.config = Config()
         self.data_handler = DataHandler()
         self.logger = Logger().get_logger()
         self.ner = NamedEntitiyRecognizer()
@@ -33,7 +33,7 @@ class Worker(object):
         else:
             self.slackbot = slackbot
 
-        if self.config.profile["personal"]:
+        if Config.profile.personal:
             from ..utils.profile import Profile
             self.profile = Profile()
         else:
@@ -97,7 +97,7 @@ class Worker(object):
             self.profile.get_schedule('CHECK_GO_TO_BED'), False,
             'check_go_to_bed', {}, False)
 
-        interval = self.config.profile['feed']['INTERVAL']
+        interval = Config.profile.feed.INTERVAL
         self.__excute_feed_schedule(interval)
 
     def __excute_profile_schedule(

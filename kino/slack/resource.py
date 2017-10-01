@@ -1,6 +1,7 @@
 import random
 
-from ..utils.config import Config
+from hbconfig import Config
+
 from ..utils.data_handler import DataHandler
 
 
@@ -8,7 +9,6 @@ class MsgResourceType(type):
     class __MsgResource:
 
         def __init__(self):
-            self.config = Config()
             data_handler = DataHandler()
 
             self.template = data_handler.read_template()
@@ -18,12 +18,12 @@ class MsgResourceType(type):
             if lang_code in self.template.keys():
                 self.lang_code = lang_code
             else:
-                self.lang_code = self.config.bot["LANG_CODE"]
+                self.lang_code = Config.bot.LANG_CODE
 
         def __getattr__(self, name):
             self.pool[name] = {}
 
-            message = self.template[self.config.bot["LANG_CODE"]].get(
+            message = self.template[Config.bot.LANG_CODE].get(
                 name, "empty")
             if isinstance(message, list):
                 message = random.choice(message)

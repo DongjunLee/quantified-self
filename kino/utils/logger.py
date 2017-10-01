@@ -52,13 +52,9 @@ class MessageLogger(object):
                 os.mkdir(dirname)
             fileHandler = logging.FileHandler(
                 dirname + "/" + now.strftime("%Y-%m-%d") + ".log")
-            #streamHandler = logging.StreamHandler()
 
             fileHandler.setFormatter(formatter)
-            #streamHandler.setFormatter(formatter)
-
             self._logger.addHandler(fileHandler)
-            #self._logger.addHandler(streamHandler)
 
     instance = None
 
@@ -68,3 +64,27 @@ class MessageLogger(object):
 
     def get_logger(self):
         return self.instance._logger
+
+
+
+class DataLogger(object):
+
+    def __init__(self, data_name):
+        print("data logger " + data_name)
+        self.logger = logging.getLogger(data_name)
+        self.logger.setLevel(logging.INFO)
+
+        dirname = './log/data'
+        if not os.path.isdir(dirname):
+            os.makedirs(dirname)
+
+        fileHandler = logging.FileHandler(
+                dirname + f"/{data_name}.log")
+
+        formatter = logging.Formatter('%(asctime)s > %(message)s')
+        fileHandler.setFormatter(formatter)
+
+        self.logger.addHandler(fileHandler)
+
+    def get_logger(self):
+        return self.logger

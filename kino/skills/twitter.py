@@ -1,9 +1,9 @@
 
 import twitter
+from hbconfig import Config
 
 from ..slack.slackbot import SlackerAdapter
 
-from ..utils.config import Config
 from ..utils.data_handler import DataHandler
 from ..utils.logger import Logger
 
@@ -19,14 +19,13 @@ class TwitterManager:
 
         self.data_handler = DataHandler()
 
-        config = Config()
-        self.api = twitter.Api(consumer_key=config.open_api["twitter"]["CONSUMER_KEY"],
-                  consumer_secret=config.open_api["twitter"]["CONSUMER_SECRET"],
-                  access_token_key=config.open_api["twitter"]["ACCESS_TOKEN_KEY"],
-                  access_token_secret=config.open_api["twitter"]["ACCESS_TOKEN_SECRET"])
+        self.api = twitter.Api(consumer_key=Config.open_api.twitter.CONSUMER_KEY,
+                  consumer_secret=Config.open_api.twitter.CONSUMER_SECRET,
+                  access_token_key=Config.open_api.twitter.ACCESS_TOKEN_KEY,
+                  access_token_secret=Config.open_api.twitter.ACCESS_TOKEN_SECRET)
 
         if slackbot is None:
-            self.slackbot = SlackerAdapter(channel=config.channel.get('FEED', '#general'))
+            self.slackbot = SlackerAdapter(channel=Config.channel.get('FEED', '#general'))
         else:
             self.slackbot = slackbot
 

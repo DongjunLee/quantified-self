@@ -1,5 +1,6 @@
 
 import arrow
+from hbconfig import Config
 
 from .rescue_time import RescueTime
 from .toggl import TogglManager
@@ -12,7 +13,6 @@ from ..slack.template import MsgTemplate
 from ..slack.plot import Plot
 
 from ..utils.arrow import ArrowUtil
-from ..utils.config import Config
 from ..utils.data_handler import DataHandler
 from ..utils.profile import Profile
 from ..utils.score import Score
@@ -22,7 +22,6 @@ from ..utils.state import State
 class Summary(object):
 
     def __init__(self, slackbot=None):
-        self.config = Config()
         self.data_handler = DataHandler()
         self.column_list = [
             "Attention",
@@ -32,13 +31,13 @@ class Summary(object):
             "REPEAT_TASK",
             "Total"]
 
-        if self.config.profile["personal"]:
+        if Config.profile.personal:
             from ..utils.profile import Profile
             self.profile = Profile()
 
         if slackbot is None:
             self.slackbot = SlackerAdapter(
-                channel=self.config.channel['REPORT'])
+                channel=Config.channel.get('REPORT', '#general'))
         else:
             self.slackbot = slackbot
 

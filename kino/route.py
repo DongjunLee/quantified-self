@@ -2,6 +2,8 @@
 import json
 import random
 
+from hbconfig import Config
+
 from .functions import Functions
 from .functions import FunctionRunner
 from .webhook import Webhook
@@ -26,7 +28,6 @@ from .slack.slackbot import SlackerAdapter
 from .skills.question import AttentionQuestion
 from .skills.question import HappyQuestion
 
-from .utils.config import Config
 from .utils.data_loader import DataLoader
 from .utils.data_loader import SkillData
 from .utils.logger import Logger
@@ -37,7 +38,6 @@ from .utils.state import State
 class MsgRouter:
 
     def __init__(self) -> None:
-        self.config = Config()
         self.logger = Logger().get_logger()
         self.msg_logger = MessageLogger().get_logger()
 
@@ -103,7 +103,7 @@ class MsgRouter:
             self.msg_logger.info(json.dumps({"channel": channel, "user": user, "text": text}))
             self.preprocessing(text)
 
-        if self.config.bot["ONLY_DIRECT"] is True and direct is False:
+        if Config.bot.ONLY_DIRECT is True and direct is False:
             # Skip
             return
 

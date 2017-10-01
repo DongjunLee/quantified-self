@@ -1,18 +1,17 @@
 import requests
+from hbconfig import Config
 
 from ..slack.resource import MsgResource
 from ..slack.slackbot import SlackerAdapter
 
-from ..utils.config import Config
 
 
 class Naver(object):
 
     def __init__(self, slackbot=None):
-        self.config = Config()
         self.headers = {
-            "X-Naver-Client-Id": self.config.open_api['naver']['CLIENT_ID'],
-            "X-Naver-Client-Secret": self.config.open_api['naver']['CLIENT_SECRET']}
+            "X-Naver-Client-Id": Config.open_api.naver.CLIENT_ID,
+            "X-Naver-Client-Secret": Config.open_api.naver.CLIENT_SECRET}
 
         if slackbot is None:
             self.slackbot = SlackerAdapter()

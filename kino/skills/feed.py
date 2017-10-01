@@ -1,6 +1,7 @@
 import arrow
 import re
 import feedparser
+from hbconfig import Config
 
 from .twitter import TwitterManager
 
@@ -8,22 +9,21 @@ from ..slack.slackbot import SlackerAdapter
 from ..slack.template import MsgTemplate
 
 from ..utils.data_handler import DataHandler
-from ..utils.config import Config
 from ..utils.logger import Logger
+from ..utils.logger import DataLogger
 
 
 class FeedNotifier:
 
     def __init__(self, slackbot: SlackerAdapter=None) -> None:
         self.logger = Logger().get_logger()
+        self.feed_logger = DataLogger("feed").get_logger()
 
         self.data_handler = DataHandler()
         self.feeds = self.data_handler.read_feeds()
 
-        self.config = Config()
-
         if slackbot is None:
-            self.slackbot = SlackerAdapter(channel=self.config.channel.get('FEED', "#general"))
+            self.slackbot = SlackerAdapter(channel=Config.channel.get('FEED', "#general"))
         else:
             self.slackbot = slackbot
 
@@ -38,6 +38,9 @@ class FeedNotifier:
 
         for feed in noti_list:
             twitter.feed_tweet(feed)
+
+            feed_header = feed[0].split("\n")
+            self.feed_logger.info({"category": feed_header[0], "title": feed_header[1]})
 
             attachments = MsgTemplate.make_feed_template(feed)
             self.slackbot.send_message(attachments=attachments)
@@ -74,7 +77,7 @@ class FeedNotifier:
             self.data_handler.edit_cache((feed_url, str(last_updated_date)))
 
         # filter feeded entry link
-        cache_entry_links = set(cache_data.get("entry_links", []))
+        cache_entry_links = set(cache_data.get("feed_links", []))
         noti_list = list(filter(lambda e: e[1] not in cache_entry_links, noti_list))
 
         # Cache entry link

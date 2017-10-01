@@ -1,4 +1,5 @@
 import arrow
+from hbconfig import Config
 import json
 
 from .dialog.dialog_manager import DialogManager
@@ -11,18 +12,20 @@ from .skills.twitter import TwitterManager
 from .skills.summary import Summary
 
 from .utils.arrow import ArrowUtil
-from .utils.config import Config
 from .utils.data_handler import DataHandler
+from .utils.logger import DataLogger
 from .utils.state import State
 
 
 class Webhook(object):
 
     def __init__(self):
-        self.config = Config()
         self.slackbot = SlackerAdapter()
         self.dialog_manager = DialogManager()
         self.data_handler = DataHandler()
+
+        self.feed_logger = DataLogger("feed").get_logger()
+        self.pocket_logger = DataLogger("pocket").get_logger()
 
     def relay(self, text):
         event = json.loads(text)
@@ -41,6 +44,8 @@ class Webhook(object):
             self.TODO_handle(event)
         elif action.startswith("KANBAN"):
             self.KANBAN_handle(event)
+        elif action.startswith("POCKET"):
+            self.POCKET_handle(event)
         else:
             channel = None
 
@@ -51,9 +56,9 @@ class Webhook(object):
             relay_message = event['msg']
 
             if any([s for s in sns if s in action_lower]):
-                channel = self.config.channel['SNS']
+                channel = Config.channel.get('SNS', "#general")
             elif any([f for f in feed if f in action_lower]):
-                channel = self.config.channel['FEED']
+                channel = Config.channel.get('FEED', "#general")
 
                 header, content = relay_message.split("\n\n")
                 subreddit, title, link = header.split("\n")
@@ -67,7 +72,10 @@ class Webhook(object):
                 twitter = TwitterManager()
                 twitter.reddit_tweet((subreddit, title, link))
 
-                title = f"{subreddit} Hot Post"
+                # save feed train data
+                self.feed_logger.info({"category": subreddit, "title": title})
+
+                title = f"{subreddit} Hot Post\n{title}"
                 content = f"Link: {link}\n{content}"
 
                 attachments = MsgTemplate.make_feed_template((title, link, content))
@@ -158,7 +166,7 @@ class Webhook(object):
                     Summary().record_bat()
 
         self.slackbot.send_message(
-            text=msg, channel=self.config.channel['TASK'])
+            text=msg, channel=Config.channel.get('TASK', "#general"))
 
     def KANBAN_handle(self, event):
         toggl_manager = TogglManager()
@@ -174,3 +182,6 @@ class Webhook(object):
             toggl_manager.timer(doing=False, done=False)
         elif action.endswith("DONE"):
             toggl_manager.timer(doing=False, done=True)
+
+    def POCKET_handle(self, event):
+        self.pocket_logger.info({"title": event["msg"]})
