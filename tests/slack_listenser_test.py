@@ -1,10 +1,15 @@
 
 import unittest
 
+from hbconfig import Config
 from kino.listener import MsgListener
 
 
 class MsgListenerTest(unittest.TestCase):
+
+    def setUp(self):
+        Config("config_example")
+        print(Config)
 
     test_presence_msg = {
         "type": "presence_change",

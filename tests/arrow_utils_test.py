@@ -2,10 +2,15 @@
 import arrow
 import unittest
 
+from hbconfig import Config
 from kino.utils.arrow import ArrowUtil
 
 
 class ArrowUtilTest(unittest.TestCase):
+
+    def setUp(self):
+        Config("config_example")
+        print(Config)
 
     def test_is_weekday(self):
 
