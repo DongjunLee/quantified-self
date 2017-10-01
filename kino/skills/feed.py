@@ -17,6 +17,7 @@ class FeedNotifier:
 
     def __init__(self, slackbot: SlackerAdapter=None) -> None:
         self.logger = Logger().get_logger()
+        self.feed_logger = DataLogger("feed").get_logger()
 
         self.data_handler = DataHandler()
         self.feeds = self.data_handler.read_feeds()
@@ -34,13 +35,12 @@ class FeedNotifier:
                 noti_list += self.get_notify_list(category, feed)
 
         twitter = TwitterManager(self.slackbot)
-        data_logger = DataLogger("feed").get_logger()
 
         for feed in noti_list:
             twitter.feed_tweet(feed)
 
             feed_header = feed[0].split("\n")
-            data_logger.info({"category": feed_header[0], "title": feed_header[1]})
+            self.feed_logger.info({"category": feed_header[0], "title": feed_header[1]})
 
             attachments = MsgTemplate.make_feed_template(feed)
             self.slackbot.send_message(attachments=attachments)
@@ -77,7 +77,7 @@ class FeedNotifier:
             self.data_handler.edit_cache((feed_url, str(last_updated_date)))
 
         # filter feeded entry link
-        cache_entry_links = set(cache_data.get("entry_links", []))
+        cache_entry_links = set(cache_data.get("feed_links", []))
         noti_list = list(filter(lambda e: e[1] not in cache_entry_links, noti_list))
 
         # Cache entry link
