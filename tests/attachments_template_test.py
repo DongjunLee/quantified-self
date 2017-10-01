@@ -1,9 +1,14 @@
 import unittest
 
+from hbconfig import Config
 from kino.slack.template import MsgTemplate
 
 
 class MsgTemplateTest(unittest.TestCase):
+
+    def setUp(self):
+        Config("config_example")
+        print(Config)
 
     def test_schedule(self):
         attachments = MsgTemplate.make_schedule_template("pretext", {})

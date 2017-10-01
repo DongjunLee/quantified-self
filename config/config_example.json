@@ -9,7 +9,7 @@
         "SKILL_PREDICT": false
     },
     "slack": {
-      "TOKEN": "<token>",
+      "TOKEN": "<token>"
     },
     "channel": {
       "DEFAULT": "#general",
