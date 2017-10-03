@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
+import random
 import re
+import time
 
 from .background import schedule
 
@@ -8,8 +10,9 @@ from .nlp.ner import NamedEntitiyRecognizer
 
 from .skills.bus import Bus
 from .skills.card import BusinessCard
-from .skills.github import GithubManager
 from .skills.feed import FeedNotifier
+from .skills.github import GithubManager
+from .skills.humor import Humor
 from .skills.maxim import Maxim
 from .skills.naver import Naver
 from .skills.question import AttentionQuestion
@@ -58,6 +61,20 @@ class Functions(object):
     def send_message(self, text=None):
         self.slackbot.send_message(text=text)
 
+    def air_quality(self):
+        weather = Weather(slackbot=self.slackbot)
+        weather.air_quality()
+
+    def attention_question(self, text=None):
+        attention = AttentionQuestion(slackbot=self.slackbot)
+        attention.question()
+
+    def attention_report(self, timely="daily"):
+        if timely is None:
+            timely = 'daily'
+        attention = AttentionQuestion(slackbot=self.slackbot)
+        attention.report(timely=timely)
+
     def bus_stop(self, station_id=None, real_time=None):
         if real_time is None:
             real_time = False
@@ -82,20 +99,6 @@ class Functions(object):
         weather = Weather(slackbot=self.slackbot)
         weather.forecast(timely=timely)
 
-    def air_quality(self):
-        weather = Weather(slackbot=self.slackbot)
-        weather.air_quality()
-
-    def attention_question(self, text=None):
-        attention = AttentionQuestion(slackbot=self.slackbot)
-        attention.question()
-
-    def attention_report(self, timely="daily"):
-        if timely is None:
-            timely = 'daily'
-        attention = AttentionQuestion(slackbot=self.slackbot)
-        attention.report(timely=timely)
-
     def github_commit(self, timely="daily"):
         if timely is None:
             timely = 'daily'
@@ -111,6 +114,23 @@ class Functions(object):
             timely = 'daily'
         happy = HappyQuestion(slackbot=self.slackbot)
         happy.report(timely=timely)
+
+    def humor(self):
+        humor = Humor()
+        question, answer = humor.honeyjam()
+        print(MsgResource.HUMOR_QUESTION)
+        self.slackbot.send_message(text=MsgResource.HUMOR_QUESTION(question=question))
+
+        time.sleep(2)
+        self.slackbot.send_message(text=MsgResource.HUMOR_ANSWER(answer=answer))
+
+        haha_num = random.randint(1, 5)
+        self.slackbot.send_message(text=MsgResource.HUMOR_END(haha_num))
+
+        sorry_index = random.randint(1, 100)
+        if sorry_index < 25:
+            time.sleep(1)
+            self.slackbot.send_message(text=MsgResource.HUMOR_SORRY)
 
     def feed_notify(self):
         feed_notifier = FeedNotifier()

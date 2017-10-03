@@ -59,12 +59,6 @@
     "description": "Weather forecast",
     "icon": ":sun_with_face: "
   },
-  "feed_notify": {
-    "keyword": ["feed"],
-    "params": [],
-    "description": "Latest Feed notify",
-    "icon": ":mega: "
-  },
   "github_commit": {
     "keyword": ["커밋", "commit"],
     "params": ["timely"],
@@ -81,6 +75,12 @@
     "keyword": [["행복도", "리포트"], ["happy", "report"]],
     "params": [],
     "description": "Happiness Report",
+    "icon": ":smiley: "
+  },
+  "humor": {
+    "keyword": [["재밌는", "이야기"], ["개그"]],
+    "params": [],
+    "description": "Azae Humor",
     "icon": ":smile_cat: "
   },
   "total_score": {
