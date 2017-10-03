@@ -40,6 +40,7 @@ class TodoistManager(object):
             filter(
                 lambda x: x[2] != "anytime",
                 self.__get_task(today_task)))
+
         attachments = MsgTemplate.make_todoist_task_template(
             specific_task_list)
         if attachments is not None and len(attachments) != 0:
@@ -98,10 +99,10 @@ class TodoistManager(object):
         task_list = []
         for t in today_task:
             due_time = "anytime"
-            if 'due_date' in t and (
+            if 'due_date_utc' in t and (
                     ':' in t['date_string'] or '분' in t['date_string']):
                 due_time = parse(
-                    t['due_date']).astimezone(
+                    t['due_date_utc']).astimezone(
                     timezone('Asia/Seoul'))
                 due_time = due_time.strftime("%H:%M")
 
