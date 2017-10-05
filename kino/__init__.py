@@ -10,5 +10,6 @@
 
 
 from .bot import KinoBot
+from .management import write_skills
 
-__all__ = ['KinoBot']
+__all__ = ['KinoBot', 'write_skills']
