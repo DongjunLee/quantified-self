@@ -324,7 +324,7 @@ class Functions(object):
 
         # todoist.auto_update_tasks()
         todoist = TodoistManager(slackbot=self.slackbot)
-        today_label_tasks = todoist.get_today_tasks_with_label()
+        today_label_tasks = todoist.get_tasks_with_overdue_and_label()
 
         trello = TrelloManager()
         trello.clean_board(except_list_name=self.IDEA_LIST)

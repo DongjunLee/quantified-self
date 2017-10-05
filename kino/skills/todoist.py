@@ -51,6 +51,10 @@ class TodoistManager(object):
         karma_trend_text = MsgResource.TODOIST_KARMA(karma_trend)
         self.slackbot.send_message(text=karma_trend_text, channel=channel)
 
+    def get_tasks_with_overdue(self):
+        tasks = self.__get_overdue_task(kind="all") + self.__get_today_task()
+        return tasks
+
     def __get_overdue_task(self, kind="count"):
         task_list = []
         # 7 day ~ 1 day before
@@ -182,7 +186,7 @@ class TodoistManager(object):
             name = name.split(" - ")[1]
             name = name.strip()
 
-        tasks = self.__get_today_task()
+        tasks = self.get_tasks_with_overdue()
         for t in tasks:
             content = t['content']
             if name in content:
@@ -247,17 +251,34 @@ class TodoistManager(object):
         label = self.todoist_api.labels.get_by_id(label_id)
         return label.data['name']
 
-    def get_today_tasks_with_label(self):
-        today_label_tasks = list(
+    def get_tasks_with_overdue_and_label(self):
+        tasks = self.get_tasks_with_overdue()
+
+        label_tasks = list(
             filter(
-                lambda x: len(
-                    x['labels']) > 0,
-                self.__get_today_task()))
-        today_label_tasks = list(
+                lambda x: len(x['labels']) > 0,
+                tasks))
+
+        return list(
             map(
                 lambda x: {
                     "content": x["content"],
                     "label": self.__get_label_name_by_id(
                         x["labels"][0])},
-                today_label_tasks))
-        return today_label_tasks
+                label_tasks))
+
+    def get_today_tasks_with_and_label(self):
+        tasks = self.__get_today_task()
+
+        label_tasks = list(
+            filter(
+                lambda x: len(x['labels']) > 0,
+                tasks))
+
+        return list(
+            map(
+                lambda x: {
+                    "content": x["content"],
+                    "label": self.__get_label_name_by_id(
+                        x["labels"][0])},
+                label_tasks))
