@@ -64,9 +64,9 @@ class Functions(object):
 
     def send_message(self, text: str=None):
         """
-        keyword": ["메시지 보내기"],
-        description": "Send a text message"
-        icon": ":speech_balloon: "
+        keyword: ["메시지 보내기"]
+        description: "Send a text message"
+        icon: ":speech_balloon: "
         """
 
         self.slackbot.send_message(text=text)
@@ -93,8 +93,8 @@ class Functions(object):
 
     def attention_report(self, timely: str="daily"):
         """
-        keyword: [["집중도", "조사"], ["집중도", "확인"], ["attention", "question"]]
-        description: "Attention survey"
+        keyword: [["집중도", "리포트"], ["attention", "report"]]
+        description: "Attention Report"
         icon: ":writing_hand: "
         """
 
@@ -105,9 +105,9 @@ class Functions(object):
 
     def bus_stop(self, station_id: str=None, real_time: str=None):
         """
-        keyword: [["집중도", "리포트"], ["attention", "report"]]
-        description: "Attention Report"
-        icon: ":writing_hand: "
+        keyword: [["버스", "도착"], ["버스", "언제"], ["버스", "조회"]]
+        description: "Bus arrival information"
+        icon: ":oncoming_bus: "
         """
 
         if real_time is None:
@@ -217,7 +217,7 @@ class Functions(object):
     def total_score(self):
         """
         keyword: [["종합", "점수"], ["overall", "score"], ["total", "score"]]
-        description: "Overall score. \n - Productivity (RescueTime, Github Commit, Todoist, Toggl) \n - Mean happiness, mean attention \n - Exercise, Diary"
+        description: "Overall score  - Productivity (RescueTime, Github Commit, Todoist, Toggl), Mean happiness, mean attention, Exercise, Diary"
         icon: ":chart: "
         """
 
@@ -227,7 +227,7 @@ class Functions(object):
     def total_chart(self):
         """
         keyword: [["종합", "차트"], ["overall", "chart"], ["total", "chart"]]
-        description: "Overall chart. \n - weekly productivity, happiness, overall score chart"
+        description: "Overall chart - weekly productivity, happiness, overall score chart"
         icon: ":chart: "
         """
 
@@ -262,8 +262,8 @@ class Functions(object):
 
     def today_briefing(self):
         """
-        keyword: [["집중도", "조사"], ["집중도", "확인"], ["attention", "question"]]
-        description: "Today Briefing \n - Todoist Schedule"
+        keyword: [["하루", "브리핑"], ["오늘하루", "브리핑"], ["today", "briefing"]]
+        description: "Today Briefing - Todoist Schedule"
         icon: ":city_sunset: "
         """
 
@@ -273,7 +273,7 @@ class Functions(object):
     def today_summary(self, timely: str=None):
         """
         keyword: [["하루", "마무리"], ["하루", "요약"], ["today", "summary"]]
-        description: "Today summary \n - Todoist feedback \n - Toggl activity report \n - RescueTime productivity chart \n - Happiness, attention report \n - Daily commit"
+        description: "Today summary - Todoist feedback, Toggl activity report, RescueTime productivity chart, Happiness, attention report, Daily commit"
         icon: ":night_with_stars: "
         """
 
