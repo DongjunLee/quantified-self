@@ -23,7 +23,7 @@ class GithubManager(object):
 
         if slackbot is None:
             self.slackbot = SlackerAdapter(
-                channel=Config.channel.get('REPORT', '#general'))
+                channel=Config.slack.channel.get('REPORT', '#general'))
         else:
             self.slackbot = slackbot
 

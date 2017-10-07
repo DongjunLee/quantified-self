@@ -25,7 +25,7 @@ class TwitterManager:
                   access_token_secret=Config.open_api.twitter.ACCESS_TOKEN_SECRET)
 
         if slackbot is None:
-            self.slackbot = SlackerAdapter(channel=Config.channel.get('FEED', '#general'))
+            self.slackbot = SlackerAdapter(channel=Config.slack.channel.get('FEED', '#general'))
         else:
             self.slackbot = slackbot
 

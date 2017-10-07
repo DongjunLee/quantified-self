@@ -20,7 +20,7 @@ class TodoistManager(object):
             Config.open_api.todoist.TOKEN)
 
         if slackbot is None:
-            self.slackbot = SlackerAdapter(channel=Config.channel.get('TASK', "#general"))
+            self.slackbot = SlackerAdapter(channel=Config.slack.channel.get('TASK', "#general"))
         else:
             self.slackbot = slackbot
 

@@ -31,7 +31,7 @@ class TogglManager(object):
         self.entity = TogglProjectEntity().entity
 
         if slackbot is None:
-            self.slackbot = SlackerAdapter(channel=Config.channel.get('TASK', '#general'))
+            self.slackbot = SlackerAdapter(channel=Config.slack.channel.get('TASK', '#general'))
         else:
             self.slackbot = slackbot
 
@@ -138,7 +138,7 @@ class TogglManager(object):
             'calculate': 'time'
         }
 
-        channel = Config.channel.get('REPORT', '#general')
+        channel = Config.slack.channel.get('REPORT', '#general')
 
         if kind == "basic":
             f_name = "basic-report.pdf"

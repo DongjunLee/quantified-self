@@ -56,9 +56,9 @@ class Webhook(object):
             relay_message = event['msg']
 
             if any([s for s in sns if s in action_lower]):
-                channel = Config.channel.get('SNS', "#general")
+                channel = Config.slack.channel.get('SNS', "#general")
             elif any([f for f in feed if f in action_lower]):
-                channel = Config.channel.get('FEED', "#general")
+                channel = Config.slack.channel.get('FEED', "#general")
 
                 header, content = relay_message.split("\n\n")
                 subreddit, title, link = header.split("\n")
@@ -166,7 +166,7 @@ class Webhook(object):
                     Summary().record_bat()
 
         self.slackbot.send_message(
-            text=msg, channel=Config.channel.get('TASK', "#general"))
+            text=msg, channel=Config.slack.channel.get('TASK', "#general"))
 
     def KANBAN_handle(self, event):
         toggl_manager = TogglManager()
