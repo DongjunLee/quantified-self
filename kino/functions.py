@@ -161,7 +161,7 @@ class Functions(object):
 
         humor = Humor()
         question, answer = humor.honeyjam()
-        print(MsgResource.HUMOR_QUESTION)
+
         self.slackbot.send_message(text=MsgResource.HUMOR_QUESTION(question=question))
 
         time.sleep(2)
