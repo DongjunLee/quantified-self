@@ -37,7 +37,7 @@ class Summary(object):
 
         if slackbot is None:
             self.slackbot = SlackerAdapter(
-                channel=Config.channel.get('REPORT', '#general'))
+                channel=Config.slack.channel.get('REPORT', '#general'))
         else:
             self.slackbot = slackbot
 
@@ -117,31 +117,31 @@ class Summary(object):
             total = (
                 Score.percent(
                     attention,
-                    self.profile.get_score('ATTENTION'),
+                    Config.score.get('ATTENTION', 20),
                     100) +
                 Score.percent(
                     happy,
-                    self.profile.get_score('HAPPY'),
+                    Config.score.get('HAPPY', 10),
                     100) +
                 Score.percent(
                     productive,
-                    self.profile.get_score('PRODUCTIVE'),
+                    Config.score.get('PRODUCTIVE', 30),
                     100) +
                 Score.percent(
                     sleep,
-                    self.profile.get_score('SLEEP'),
+                    Config.score.get('SLEEP', 20),
                     100) +
                 Score.percent(
                     repeat,
-                    self.profile.get_score('REPEAT_TASK'),
+                    Config.score.get('REPEAT_TASK', 10),
                     100))
 
             if diary:
-                total += self.profile.get_score('DIARY')
+                total += Config.score.get('DIARY', 5)
             if exercise:
-                total += self.profile.get_score('EXERCISE')
+                total += Config.score.get('EXERCISE', 5)
             if bat:
-                total += self.profile.get_score('BAT')
+                total += Config.score.get('BAT', 5)
 
             if total > 100:
                 total = 100
@@ -180,15 +180,14 @@ class Summary(object):
         self.data_handler.edit_record(('productive', data))
 
         base_point = 0
-        rescue_time_ratio = self.profile.get_score('productives')[
-            'RESCUE_TIME']
-        github_ratio = self.profile.get_score('productives')['GITHUB']
-        todoist_ratio = self.profile.get_score('productives')['TODOIST']
-        toggl_ratio = self.profile.get_score('productives')['TOGGL']
+        rescue_time_ratio = Config.score.productives.get('RESCUE_TIME', 10)
+        github_ratio = Config.score.productives.get('GITHUB', 10)
+        todoist_ratio = Config.score.productives.get('TODOIST', 50)
+        toggl_ratio = Config.score.productives.get('TOGGL', 30)
 
         if self.is_holiday():
-            base_point = self.profile.get_score('HOLIDAY_BASE')
-            holiday_ratio = self.profile.get_score('HOLIDAY_RATIO')
+            base_point = Config.score.get('HOLIDAY_BASE', 50)
+            holiday_ratio = Config.score.get('HOLIDAY_RATIO', 0.5)
 
             rescue_time_ratio *= holiday_ratio
             github_ratio *= holiday_ratio

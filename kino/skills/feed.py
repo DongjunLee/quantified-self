@@ -23,7 +23,7 @@ class FeedNotifier:
         self.feeds = self.data_handler.read_feeds()
 
         if slackbot is None:
-            self.slackbot = SlackerAdapter(channel=Config.channel.get('FEED', "#general"))
+            self.slackbot = SlackerAdapter(channel=Config.slack.channel.get('FEED', "#general"))
         else:
             self.slackbot = slackbot
 

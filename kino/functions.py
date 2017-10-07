@@ -62,19 +62,10 @@ class Functions(object):
         feed_notifier = FeedNotifier()
         feed_notifier.notify_all()
 
-    def send_message(self, text: str=None):
-        """
-        keyword: ["메시지 보내기"]
-        description: "Send a text message"
-        icon: ":speech_balloon: "
-        """
-
-        self.slackbot.send_message(text=text)
-
     def air_quality(self):
         """
         keyword: ["공기질", "미세먼지", "air quality"]
-        description: "Air quality forecast"
+        description: "Air quality forecast. (can use only Korea [airkoreaPy](https://github.com/DongjunLee/airkoreaPy))"
         icon: ":factory: "
         """
 
@@ -84,7 +75,7 @@ class Functions(object):
     def attention_question(self, text: str=None):
         """
         keyword: [["집중도", "조사"], ["집중도", "확인"], ["attention", "question"]]
-        description: "Attention survey"
+        description: "Attention survey after do task."
         icon: ":writing_hand: "
         """
 
@@ -94,7 +85,7 @@ class Functions(object):
     def attention_report(self, timely: str="daily"):
         """
         keyword: [["집중도", "리포트"], ["attention", "report"]]
-        description: "Attention Report"
+        description: "Attention Report."
         icon: ":writing_hand: "
         """
 
@@ -106,7 +97,7 @@ class Functions(object):
     def bus_stop(self, station_id: str=None, real_time: str=None):
         """
         keyword: [["버스", "도착"], ["버스", "언제"], ["버스", "조회"]]
-        description: "Bus arrival information"
+        description: "Bus arrival information. (can use only Korea (gbus api))"
         icon: ":oncoming_bus: "
         """
 
@@ -115,40 +106,10 @@ class Functions(object):
         bus = Bus(slackbot=self.slackbot)
         bus.arrive_info(station_id, real_time=real_time)
 
-    def card_holder(self):
-        """
-        keyword: [["법카", "현황"], ["법카", "ㅎㅎ"], ["ㅂㅋ", "ㅎㅎ"], ["카드", "현황"], ["카드", "ㅎㅎ"], ["ㅋㄷ", "ㅎㅎ"], ["who", "card"]]
-        description: "Show who has card."
-        icon: ":credit_card: "
-        """
-
-        card = BusinessCard(slackbot=self.slackbot)
-        card.read_holder()
-
-    def card_history(self):
-        """
-        keyword: [["법카", "전달", "기록"], ["법카", "ㅈㄷ", "ㄱㄹ"], ["카드", "전달", "기록"], ["카드", "ㅈㄷ", "ㄱㄹ"], ["card", "delivery", "history"]]
-        description: "Show histories delivery of card."
-        icon: ":credit_card: "
-        """
-
-        card = BusinessCard(slackbot=self.slackbot)
-        card.read_history()
-
-    def card_forward(self, member: str=None):
-        """
-        keyword: [["법카", "전달"], ["법카", "ㅈㄷ"], ["ㅂㅋ", "ㅈㄷ"], ["카드", "전달"], ["카드", "ㅈㄷ"], ["ㅋㄷ", "ㅈㄷ"], ["give", "card"], ["deliver", "card"], "سلّم البطاقة"]
-        description: "Pass the card to someone else."
-        icon: ":credit_card: "
-        """
-
-        card = BusinessCard(slackbot=self.slackbot)
-        card.forward(member=member)
-
     def forecast(self, timely: str="current"):
         """
         keyword: ["날씨", "예보", "weather", "forecast"]
-        description: "Weather forecast"
+        description: "Weather forecast. (using [darksky](https://darksky.net/))"
         icon: ":sun_with_face: "
         """
 
@@ -160,7 +121,7 @@ class Functions(object):
     def github_commit(self, timely: str="daily"):
         """
         keyword: ["커밋", "commit", "깃헙", "github"]
-        description: "Check Github push count"
+        description: "Check [Github](https://github.com) push count."
         icon: ":octocat: "
         """
 
@@ -172,7 +133,7 @@ class Functions(object):
     def happy_question(self):
         """
         keyword: [["행복도", "조사"], ["행복도", "확인"], ["happy", "question"]]
-        description: "Happiness survey"
+        description: "Happiness survey."
         icon: ":smile: "
         """
 
@@ -182,7 +143,7 @@ class Functions(object):
     def happy_report(self, timely: str="daily"):
         """
         keyword: [["행복도", "리포트"], ["happy", "report"]]
-        description: "Happiness Report"
+        description: "Happiness Report."
         icon: ":smile: "
         """
 
@@ -194,13 +155,13 @@ class Functions(object):
     def humor(self):
         """
         keyword: [["재밌는", "이야기"], ["개그"]]
-        description: "Azae Humor"
+        description: "Korea Azae Humor (using [honeyjam](https://github.com/DongjunLee/honeyjam))."
         icon: ":smile_cat: "
         """
 
         humor = Humor()
         question, answer = humor.honeyjam()
-        print(MsgResource.HUMOR_QUESTION)
+
         self.slackbot.send_message(text=MsgResource.HUMOR_QUESTION(question=question))
 
         time.sleep(2)
@@ -214,131 +175,10 @@ class Functions(object):
             time.sleep(1)
             self.slackbot.send_message(text=MsgResource.HUMOR_SORRY)
 
-    def total_score(self):
-        """
-        keyword: [["종합", "점수"], ["overall", "score"], ["total", "score"]]
-        description: "Overall score  - Productivity (RescueTime, Github Commit, Todoist, Toggl), Mean happiness, mean attention, Exercise, Diary"
-        icon: ":chart: "
-        """
-
-        summary = Summary(slackbot=self.slackbot)
-        summary.total_score()
-
-    def total_chart(self):
-        """
-        keyword: [["종합", "차트"], ["overall", "chart"], ["total", "chart"]]
-        description: "Overall chart - weekly productivity, happiness, overall score chart"
-        icon: ":chart: "
-        """
-
-        summary = Summary(slackbot=self.slackbot)
-        summary.total_chart()
-
-    def translate(self, english: str="", source: str="en", target: str="ko"):
-        """
-        keyword: ["번역", "translate"]
-        description: "Language translation"
-        icon: ":crystal_ball: "
-        """
-
-        if source is None:
-            source = "en"
-        if target is None:
-            target = "ko"
-        naver = Naver(slackbot=self.slackbot)
-        naver.translate(english, source=source, target=target)
-
-    def rescuetime_efficiency(self, timely: str="daily"):
-        """
-        keyword: ["레스큐타임 효율성", "작업 효율", "생산성 차트", ["rescuetime", "chart"]]
-        description: "RescueTime Efficiency Chart"
-        icon: ":chart_with_upwards_trend: "
-        """
-
-        if timely is None:
-            timely = 'daily'
-        rescuetime = RescueTime(slackbot=self.slackbot)
-        rescuetime.efficiency(timely=timely)
-
-    def today_briefing(self):
-        """
-        keyword: [["하루", "브리핑"], ["오늘하루", "브리핑"], ["today", "briefing"]]
-        description: "Today Briefing - Todoist Schedule"
-        icon: ":city_sunset: "
-        """
-
-        todoist = TodoistManager(slackbot=self.slackbot)
-        todoist.schedule()
-
-    def today_summary(self, timely: str=None):
-        """
-        keyword: [["하루", "마무리"], ["하루", "요약"], ["today", "summary"]]
-        description: "Today summary - Todoist feedback, Toggl activity report, RescueTime productivity chart, Happiness, attention report, Daily commit"
-        icon: ":night_with_stars: "
-        """
-
-        self.slackbot.send_message(text=MsgResource.TODAY_SUMMARY)
-        self.todoist_feedback()
-        self.toggl_report(timely=timely)
-        self.rescuetime_efficiency(timely=timely)
-        self.happy_report(timely=timely)
-        self.attention_report(timely=timely)
-        self.github_commit(timely=timely)
-
-    def keep_idea(self, hashtag: str=None):
-        """
-        keyword: [["keep", "idea"], ["킵", "아이디어"], ["아이디어", "저장"], ["아이디어", "기억"]]
-        description: "Attention survey"
-        icon: ":thinking_face: "
-        """
-
-        if hashtag is None:
-            self.slackbot.send_message(text=MsgResource.HASHTAG_NOT_FOUND)
-            return
-
-        trello = TrelloManager()
-        trello.add_card(self.IDEA_LIST, hashtag)
-
-        self.slackbot.send_message(text=MsgResource.ADD_IDEA)
-
-    def remind_idea(self):
-        """
-        keyword: [["remind", "idea"], ["리마인드", "아이디어"]]
-        description: "Remind Trello's inbox card randomly pick"
-        icon: ":thinking_face: "
-        """
-
-        trello = TrelloManager()
-        idea = trello.get_random_card_name()
-        if idea is None:
-            self.slackbot.send_message(text=MsgResource.EMPTY_IDEA)
-        else:
-            self.slackbot.send_message(text=MsgResource.REMIND_IDEA(idea=idea))
-
-    def kanban_init(self):
-        """
-        keyword: [["칸반", "초기화"], ["kanban", "init"]]
-        description: "Todoist's overdue tasks updated to today and Kanban board init"
-        icon: ":clipboard: "
-        """
-
-        # todoist.auto_update_tasks()
-        todoist = TodoistManager(slackbot=self.slackbot)
-        today_label_tasks = todoist.get_tasks_with_overdue_and_label()
-
-        trello = TrelloManager()
-        trello.clean_board(except_list_name=self.IDEA_LIST)
-
-        task_list = trello.get_list_by_name(self.KANBAN_TASKS)
-        for task in today_label_tasks:
-            card_name = task['label'] + " - " + task['content']
-            task_list.add_card(re.sub(r" \d+분", "", card_name))
-        self.slackbot.send_message(text=MsgResource.KANBAN_INIT)
-
     def kanban_sync(self):
         """
         keyword: [["칸반", "싱크"], ["kanban", "sync"]]
-        description: "Todoist and Kanban board Syncing."
+        description: "Todoist's tasks and Kanban board's card Syncing."
         icon: ":clipboard: "
         """
 
@@ -355,10 +195,96 @@ class Functions(object):
             card_name = task['label'] + " - " + task['content']
             task_list.add_card(re.sub(r" \d+분", "", card_name))
 
+    def keep_idea(self, hashtag: str=None):
+        """
+        keyword: [["keep", "idea"], ["킵", "아이디어"], ["아이디어", "저장"], ["아이디어", "기억"]]
+        description: "Keep idea in Trello board's inbox list."
+        icon: ":thinking_face: "
+        """
+
+        if hashtag is None:
+            self.slackbot.send_message(text=MsgResource.HASHTAG_NOT_FOUND)
+            return
+
+        trello = TrelloManager()
+        trello.add_card(self.IDEA_LIST, hashtag)
+
+        self.slackbot.send_message(text=MsgResource.ADD_IDEA)
+
+    def maxim_nietzsche(self):
+        """
+        keyword: [["니체", "명언"], ["nietzsche", "maxim"]]
+        description: "Nietzsche's Maxim."
+        icon: ":scales: "
+        """
+
+        maxim = Maxim(slackbot=self.slackbot)
+        maxim.nietzsche()
+
+    def remind_idea(self):
+        """
+        keyword: [["remind", "idea"], ["리마인드", "아이디어"]]
+        description: "Remind Trello's inbox card randomly pick."
+        icon: ":thinking_face: "
+        """
+
+        trello = TrelloManager()
+        idea = trello.get_random_card_name()
+        if idea is None:
+            self.slackbot.send_message(text=MsgResource.EMPTY_IDEA)
+        else:
+            self.slackbot.send_message(text=MsgResource.REMIND_IDEA(idea=idea))
+
+    def rescuetime_efficiency(self, timely: str="daily"):
+        """
+        keyword: ["레스큐타임 효율성", "작업 효율", "생산성 차트", ["rescuetime", "chart"]]
+        description: "RescueTime Efficiency Chart"
+        icon: ":chart_with_upwards_trend: "
+        """
+
+        if timely is None:
+            timely = 'daily'
+        rescuetime = RescueTime(slackbot=self.slackbot)
+        rescuetime.efficiency(timely=timely)
+
+    def send_message(self, text: str=None):
+        """
+        keyword: []
+        description: "Send a text message."
+        icon: ":speech_balloon: "
+        """
+
+        self.slackbot.send_message(text=text)
+
+    def today_briefing(self):
+        """
+        keyword: [["하루", "브리핑"], ["오늘하루", "브리핑"], ["today", "briefing"]]
+        description: "Today Briefing - brief Todoist tasks"
+        icon: ":city_sunset: "
+        """
+
+        todoist = TodoistManager(slackbot=self.slackbot)
+        todoist.schedule()
+
+    def today_summary(self, timely: str=None):
+        """
+        keyword: [["하루", "마무리"], ["하루", "요약"], ["today", "summary"]]
+        description: "Today summary - **todoist_feedback**, **toggl_report**, **rescuetime_efficiency**, **happy_report**, **attention_report**, **github_commit**"
+        icon: ":night_with_stars: "
+        """
+
+        self.slackbot.send_message(text=MsgResource.TODAY_SUMMARY)
+        self.todoist_feedback()
+        self.toggl_report(timely=timely)
+        self.rescuetime_efficiency(timely=timely)
+        self.happy_report(timely=timely)
+        self.attention_report(timely=timely)
+        self.github_commit(timely=timely)
+
     def todoist_feedback(self):
         """
         keyword: [["할일", "피드백"], ["todoist", "feedback"]]
-        description: "Feedback from Todoist activity"
+        description: "Feedback from Todoist activity."
         icon: ":memo: "
         """
 
@@ -368,27 +294,17 @@ class Functions(object):
     def todoist_remain(self):
         """
         keyword: [["남은", "작업"], ["remain", "task"]]
-        description: "Show todoist's remaining work"
+        description: "Show todoist's remaining tasks."
         icon: ":page_with_curl: "
         """
 
         todoist = TodoistManager(slackbot=self.slackbot)
         todoist.remain_task()
 
-    def toggl_timer(self, description: str=None):
-        """
-        keyword: ["toggl"]
-        description: "Toggl Timer"
-        icon: ":watch: "
-        """
-
-        toggl = TogglManager(slackbot=self.slackbot)
-        toggl.timer(description=description)
-
     def toggl_checker(self):
         """
         keyword: [["작업", "시간"], ["시간", "체크"], ["task", "time", "check"]]
-        description: "Task time check with Toggle"
+        description: "Toggl time checker Every 30 minutes."
         icon: ":bell: "
         """
 
@@ -398,7 +314,7 @@ class Functions(object):
     def toggl_report(self, kind: str="chart", timely: str="daily"):
         """
         keyword: [["작업", "리포트"], ["task", "report"]]
-        description: "Toggl Task Report"
+        description: "Toggl task Report."
         icon: ":bar_chart: "
         """
 
@@ -409,15 +325,50 @@ class Functions(object):
         toggl = TogglManager(slackbot=self.slackbot)
         toggl.report(kind=kind, timely=timely)
 
-    def maxim_nietzsche(self):
+    def toggl_timer(self, description: str=None):
         """
-        keyword: [["니체", "명언"], ["nietzsche", "maxim"]]
-        description: "Nietzsche's Maxim"
-        icon: ":scales: "
+        keyword: ["toggl"]
+        description: "Toggl Timer."
+        icon: ":watch: "
         """
 
-        maxim = Maxim(slackbot=self.slackbot)
-        maxim.nietzsche()
+        toggl = TogglManager(slackbot=self.slackbot)
+        toggl.timer(description=description)
+
+    def total_chart(self):
+        """
+        keyword: [["종합", "차트"], ["overall", "chart"], ["total", "chart"]]
+        description: "Overall chart - weekly productivity, happiness, overall score chart."
+        icon: ":chart: "
+        """
+
+        summary = Summary(slackbot=self.slackbot)
+        summary.total_chart()
+
+    def total_score(self):
+        """
+        keyword: [["종합", "점수"], ["overall", "score"], ["total", "score"]]
+        description: "Overall score  - Productivity (RescueTime, Github Commit, Todoist, Toggl), Mean happiness, mean attention, Exercise, Diary."
+        icon: ":chart: "
+        """
+
+        summary = Summary(slackbot=self.slackbot)
+        summary.total_score()
+
+    def translate(self, english: str="", source: str="en", target: str="ko"):
+        """
+        keyword: ["번역", "translate"]
+        description: "Language translation using [Naver Papago api](https://developers.naver.com/docs/nmt/reference/)."
+        icon: ":crystal_ball: "
+        """
+
+        if source is None:
+            source = "en"
+        if target is None:
+            target = "ko"
+        naver = Naver(slackbot=self.slackbot)
+        naver.translate(english, source=source, target=target)
+
 
 
 class RegisteredFuctions(object):

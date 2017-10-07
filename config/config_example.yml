@@ -1,0 +1,108 @@
+bot:
+  MASTER_NAME: <name>
+  BOT_NAME: Kino
+  LANG_CODE: en
+  TRIGGER:
+    - hey kino
+  ONLY_DIRECT: false
+  GIPHY_THRESHOLD: 85
+  SKILL_PREDICT: false
+
+slack:
+  TOKEN: <token>
+  channel:
+    DEFAULT: "#general"
+    FEED: "#feed"
+    TASK: "#task"
+    SNS: "#sns"
+    REPORT: "#report"
+
+profile:
+  personal: true
+  feed:
+    INTERVAL: 30
+
+  schedule:
+    WAKE_UP: "07:00"
+    GO_TO_BED: "00:00"
+    WORK_START: "10:00"
+    WORK_END: "19:00"
+    CHECK_GO_TO_BED: "04:00"
+
+  location:
+    HOME: <location>
+    HOME_STATION_NAME: <station_name>
+    WORK_PLACE: <location>
+    WORK_PLACE_STATION_NAME: <station_name>
+    TIMEZONE: Asia/Seoul
+
+  task:
+    EVERY_DAY_DURATION: 40
+    EVERY_WEEKDAY_DURATION: 45
+    SOME_WEEKDAY_DURATION: 60
+
+score:
+  ATTENTION: 20
+  HAPPY: 10
+  PRODUCTIVE: 30
+  SLEEP: 20
+  REPEAT_TASK: 10
+  REPEAT_TASK_POINT: 2.5
+  EXERCISE: 5
+  DIARY: 5
+  BAT: 5
+  HOLIDAY_BASE: 50
+  HOLIDAY_RATIO: 0.5
+
+  productives:
+    GITHUB: 10
+    TOGGL: 30
+    TODOIST: 50
+    RESCUE_TIME: 10
+
+open_api:
+
+  giphy:
+    TOKEN: <token>
+
+  github:
+    USERNAME: <username>
+    PASSWORD: <password>
+
+  dark_sky:
+    TOKEN: <token>
+
+  todoist:
+    TOKEN: <token>
+    ID: <id>
+    PASSWORD: <password>
+    TIMEZONE: Asia/Seoul
+
+  toggl:
+    TOKEN: <token>
+    WORKSPACE_NAME: <workspace_name>
+
+  trello:
+    API_KEY: <api_key>
+    API_SECRET: <api_secret>
+    TOKEN: <token>
+    BOARD: <board>
+
+  twitter:
+    CONSUMER_KEY: <consumer_key>
+    CONSUMER_SECRET: <consumer_secret>
+    ACCESS_TOKEN_KEY: <access_token_key>
+    ACCESS_TOKEN_SECRET: <access_token_secret>
+
+  rescue_time:
+    TOKEN: <token>
+
+  gbis:
+    TOKEN: <token>
+
+  airkorea:
+    TOKEN: <token>
+
+  naver:
+    CLIENT_ID: <client_id>
+    CLIENT_SECRET: <client_secret>

@@ -36,7 +36,7 @@ class SlackerAdapter(object):
             attachments=None,
             giphy=True):
         if self.channel is None:
-            self.channel = Config.channel.get('DEFAULT', "#general")
+            self.channel = Config.slack.channel.get('DEFAULT', "#general")
         if channel is not None:
             self.channel = channel
 
@@ -96,7 +96,7 @@ class SlackerAdapter(object):
 
     def file_upload(self, f_name, channel=None, title=None, comment=None):
         if self.channel is None:
-            self.channel = Config.channel.get('DEFAULT', "#general")
+            self.channel = Config.slack.channel.get('DEFAULT', "#general")
         if channel is not None:
             self.channel = channel
 

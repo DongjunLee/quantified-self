@@ -95,7 +95,7 @@ class Question(object):
             self.slackbot.file_upload(
                 f_name,
                 title=title,
-                channel=Config.channel.get('REPORT', '#general'),
+                channel=Config.slack.channel.get('REPORT', '#general'),
                 comment=self.msg_report)
 
 
@@ -110,7 +110,7 @@ class HappyQuestion(Question):
 
         if slackbot is None:
             self.slackbot = SlackerAdapter(
-                channel=Config.channel.get("DEFAULT", "#general"))
+                channel=Config.slack.channel.get("DEFAULT", "#general"))
         else:
             self.slackbot = slackbot
 
@@ -125,6 +125,6 @@ class AttentionQuestion(Question):
         self.msg_report = MsgResource.ATTENTION_REPORT
 
         if slackbot is None:
-            self.slackbot = SlackerAdapter(channel=Config.channel.get("TASK", "#general"))
+            self.slackbot = SlackerAdapter(channel=Config.slack.channel.get("TASK", "#general"))
         else:
             self.slackbot = slackbot
