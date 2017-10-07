@@ -2,12 +2,12 @@
   <img src="images/kino-title.png" style="inline" width=250>
 </p>
 
-<p align="center">
+<h3 align="center">
   <sup><strong>
     Personal Assistant Based on Slack Bot for Developer <br/>
     Suitable for personal or small teams
   </strong></sup>
-</p>
+</h3>
 
 
 <p align="center">
@@ -48,177 +48,104 @@
 </p>
 
 
-### Publication
 
- - SlideShare : [Slideshare - Kino - My Personal Assistant (개인용 Slack Bot을 통한 Quantified Self 프로젝트)](https://www.slideshare.net/DongJunLee6/kino-my-personal-assistant-slack-bot-quantified-self)
+## kino-bot
 
-## Introduce
- 
-![intro_and_guide](images/en/intro_and_guide.jpeg)
+**Kino** is a **personal assistant** based on **Slack Bot**. It was developed as a personal project to **improve my life quality** by automatically **quantified self**. Various Tracking Tools (cf. RescueTime, Toggl, Todoist) and various third-party (cf. Github, DarkSky, Gbus and etc..) are customized as kino's skill. In addition, kino can automate the parts in everyday life and work. I will also use machine learning and deep learning to grow beyond simple bot to become a smart assistant.  
+Kino is getting smarter! Pull requests are always welcome. :D
 
-## Simple Architecture
+## Feature
 
-![architecture](images/kino-architecture.png)
-
-## Guide & Install
-
-- Can be found at [install.md](install.md).
+- Support **mutiple languages** (Korean and English)
+- **Skill** : make your own skill and simply register skill writing function's doc.
+- **Scheduler** : jobs running in background
+- Automatic **Tracking**
+	- Sleep Time
+	- Working Hour
+	- Tasks
+	- Happy & Attention Score
+- Notify latest **[Feed](https://github.com/DongjunLee/awesome-feeds)**
+- Integrate with **[Giphy](https://giphy.com/)**
+- **Customize Webhook** for [IFTTT](https://ifttt.com/) or [Zapier](https://zapier.com)
 
 ## Prerequisites
 
-- **[Slack](https://slack.com/)**
+- **[Personal Slack](https://slack.com/)**
 - **Python 3.6**
-- [API TOKENs](#integrate-open-api-list)
 
-## Features
+## Quick Start
 
-- Support Languages (Korean, English)
+First, install requirements
 
-<hr/>
+```pip install -r requirements.txt```
 
-### 0. Scheduler (background job)
+Second, fill the config.yml
 
-As a basic feature, you can add tasks in the time interval you set.
-The types of jobs available are as follows.
+```
+Minimal config
 
-- **Specific time** ex) Kino there is work! Give me a today briefing at 8am.
-- **Repetition cycle** ex) Kino there is work! question happiness every 67 minutes!
+bot:
+  MASTER_NAME: <name>
+  BOT_NAME: Kino
+  LANG_CODE: en
+  TRIGGER:
+    - hey kino
+    - 키노야
+  ONLY_DIRECT: false   // text startswith Trigger or @kino, or Direct Message
+  GIPHY_THRESHOLD: 85  // all responses are random pick number (1~100) to use giphy
 
-n addition, **time interval** can be added and deleted, **alarm** also can be added and deleted.
-Add **skill** to the alarm at the end to see what will happen to the schedule.
+slack:
+  TOKEN: <token>
+  channel:
+    DEFAULT: "#general"
 
-<hr/>
+```
 
-### 1. Skills
+Finally, just run
 
-Various skills can be implemented and used. The skills that have been implemented and used so far are as follows.
-
-![functions](images/en/kino-functions.jpeg)
-
-<hr/>
-
-### 2. Tracking
-
-#### 2-1 Sleep Time
-
-Slack receive a log showing user's status. (active / away)  
-Through this log, sleep time is estimated using the last time away and the morning active time.
-For developers, it is assumed that the beginning and end of the day will be with the computer!
-
-![sleep_tracking](images/sleep_tracking.png)
-
-#### 2-2 Working Hour
-- Requirements : [IFTTT](https://ifttt.com)
-
-You can give the IFTTT a Trigger on your Android Device. It is also possible to connect to or disconnect from a specific Wifi. The principle is simple. Start working if you connect to the company's network. At the end of the night, the most disconnected time is the time you leave.
-
-#### 2-3 Task (Kanban)
-
-Kanban, a method of agile, can be used in conjunction with Todoist, Toggl, and Trello.
-
-![kanban](images/kanban_board1.png)
-
-- Doing : Start task (toggl timer automatic start)
-- Break : Stop task (toggl timer automatic stop)
-- Done : Stop task (toggl timer automatic stop & todoist task complete)
-
-When the work is done, the attention is checked.
-
-#### 2-4 Happy & Attention Score
-
-I set it up to repeat happiness at regular intervals.
-You can enter your score with a total score of 100, and you can calculate your happiness report and your overall score based on it.
-
-![happy_score](images/happy_score.png)
-
-<hr/>
-
-### 3. Total Score
-
-Kino's primary mission is to collect data about yourself and to improve your quality of life through the data.  
-Here are the criteria that work here:  
-
-- Sleep time 7 hours ~ 9 hours
-- Happiness score
-- Productivity score (Todoist, Toggl, Github (commit), RescueTime
-- Diary
-- Exercise
-- Repeated tasks (listening to lectures, reading good articles, reading books, etc.)
-
-Give a percentage for each score and give the final score for today's day.  
-ex) Total Score = sleep(20) + attentions(20) + happy(30) + productivity(30) + diary(5) + exercise(5) + repeat(10)
-
-![summary](images/summary.png)
-
-<hr/>
-
-### 4. Webhook
-- Requirements : [IFTTT](https://ifttt.com) or Custom Webhook [kino-webhook](/kino-webhook) for RealTime (IFTTT is not real time.)
-
-Information that can be found in connection with IFTTT.
-
-- When departing / arriving at a specific place (house, company)
-- When new Tweet comes up
-- When Google Event is added
-- Google Event started 15 minutes ago
-- When Task is added to Todoist
-- When Todoist completed Task
-- When you bookmark an article you want to read correctly on Pocket
-- When you get a day summary from RescueTime
-
-You can connect these various cases to Kino to receive notifications.
-
-![summary](images/webhook.png)
-
-<hr/>
-
-### 5. Channel
-
-If you use kino for personal use, you will use the channel for each purpose.
-
-- \#feed : You will be notified when a new post is posted about the registered feed. cf) [awesome-feeds](https://github.com/DongjunLee/awesome-feeds)
-- \#general : default channel
-- \#report : Channel for reports on data collected by Kino
-- \#sns : Twitter, Facebook, Instagram and etc.. SNS service channel
-- \#task : A channel that receives notifications about content related to the task. (Todoist, Toggl, Trello and etc..)
-
-<hr/>
-
-### 6. Feed
-
-Kino notify latest feed what you setting. default feed config is [Awesome Feeds](https://github.com/DongjunLee/awesome-feeds).  
-Also can integrate [Twitter](https://twitter.com/) to tweet latest feed. ex) **@hb_djlee**
-
-- **feed**
-
-![images](images/feed_example.png)
-
-- **twitter**
-
-![images](images/twitter_example.png)
+```python main.py```
 
 
-<hr/>
+## Current Skills
 
-## Integrate Open API List
+kino-bot has **25** skills.
 
-- **Github**
-	- [PyGithub](https://github.com/PyGithub/PyGithub)
-- **GIPHY**
-	- [GIPHY](https://giphy.com/)	
-- **Weather**
-	- [python-forecast.io](https://github.com/ZeevG/python-forecast.io)
-	- [geoopy](https://github.com/geopy/geopy)
-- **Todoist**
-	- [todoist-python](https://github.com/Doist/todoist-python)
-- **Toggl**
-	- [TogglPy](https://github.com/DongjunLee/TogglPy) forked from [matthewdowney/TogglPy](https://github.com/matthewdowney/TogglPy)
-- **Trello**
-	- [py-trello](https://github.com/sarumont/py-trello)
-- **Twitter**
-	- [python-twitter](https://github.com/bear/python-twitter)
-- **RescueTime**
-- **공공데이터 버스도착정보**
-- **공공데이터 대기질정보**
-	- [airkoreaPy](https://github.com/DongjunLee/airkoreaPy)
-- **Naver 기계번역**
+ - :factory: **air_quality** : Air quality forecast. (can use only Korea [airkoreaPy](https://github.com/DongjunLee/airkoreaPy))
+ - :writing_hand: **attention_question** : Attention survey after do task.
+ - :writing_hand: **attention_report** : Attention Report.
+ - :oncoming_bus: **bus_stop** : Bus arrival information. (can use only Korea (gbus api))
+ - :sun_with_face: **forecast** : Weather forecast. (using [darksky](https://darksky.net/))
+ - :octocat: **github_commit** : Check [Github](https://github.com) push count.
+ - :smile: **happy_question** : Happiness survey.
+ - :smile: **happy_report** : Happiness Report.
+ - :smile_cat: **humor** : Korea Azae Humor (using [honeyjam](https://github.com/DongjunLee/honeyjam)).
+ - :clipboard: **kanban_sync** : Todoist's tasks and Kanban board's card Syncing.
+ - :thinking_face: **keep_idea** : Keep idea in Trello board's inbox list.
+ - :scales: **maxim_nietzsche** : Nietzsche's Maxim.
+ - :thinking_face: **remind_idea** : Remind Trello's inbox card randomly pick.
+ - :chart_with_upwards_trend: **rescuetime_efficiency** : RescueTime Efficiency Chart
+ - :speech_balloon: **send_message** : Send a text message.
+ - :city_sunset: **today_briefing** : Today Briefing - brief Todoist tasks
+ - :night_with_stars: **today_summary** : Today summary - **todoist_feedback**, **toggl_report**, **rescuetime_efficiency**, **happy_report**, **attention_report**, **github_commit**
+ - :memo: **todoist_feedback** : Feedback from Todoist activity.
+ - :page_with_curl: **todoist_remain** : Show todoist's remaining tasks.
+ - :bell: **toggl_checker** : Toggl time checker Every 30 minutes.
+ - :bar_chart: **toggl_report** : Toggl task Report.
+ - :watch: **toggl_timer** : Toggl Timer.
+ - :chart: **total_chart** : Overall chart - weekly productivity, happiness, overall score chart.
+ - :chart: **total_score** : Overall score  - Productivity (RescueTime, Github Commit, Todoist, Toggl), Mean happiness, mean attention, Exercise, Diary.
+ - :crystal_ball: **translate** : Language translation using [Naver Papago api](https://developers.naver.com/docs/nmt/reference/).
+
+## for Developer
+
+if you want develop your own bot, clone **base** branch and implements skills.
+
+## Blog
+
+| Article - Title| English | Korea |
+| ------- | ------- | ------- |
+| Personal Assistant Kino Part 1 — Overview. | [medium](https://medium.com/@humanbrain.djlee/personal-assistant-kino-part-1-overview-496b97de4afd) | [github blog](https://dongjunlee.github.io/Personal_Assistant_Kino_Part_1_Overview/) |
+
+## License
+
+See the [LICENSE](LICENSE.md) file for license rights and limitations (MIT).
