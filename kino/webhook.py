@@ -7,10 +7,6 @@ from .dialog.dialog_manager import DialogManager
 from .slack.slackbot import SlackerAdapter
 from .slack.template import MsgTemplate
 
-from .skills.toggl import TogglManager
-from .skills.twitter import TwitterManager
-from .skills.summary import Summary
-
 from .utils.arrow import ArrowUtil
 from .utils.data_handler import DataHandler
 from .utils.logger import DataLogger
@@ -24,66 +20,12 @@ class Webhook(object):
         self.dialog_manager = DialogManager()
         self.data_handler = DataHandler()
 
-        self.feed_logger = DataLogger("feed").get_logger()
-        self.pocket_logger = DataLogger("pocket").get_logger()
-
     def relay(self, text):
         event = json.loads(text)
 
-        prev_event = self.dialog_manager.get_action()
-        State().do_action(event)
-
-        if prev_event is None:
-            self.slackbot.send_message(text=event['msg'])
-            return
-
-        action = event.get('action', '')
-        if action.startswith("IN") or action.startswith("OUT"):
-            self.IN_OUT_handle(prev_event, event)
-        elif action.startswith("TODO"):
-            self.TODO_handle(event)
-        elif action.startswith("KANBAN"):
-            self.KANBAN_handle(event)
-        elif action.startswith("POCKET"):
-            self.POCKET_handle(event)
-        else:
-            channel = None
-
-            action_lower = action.lower()
-
-            sns = ['tweet', 'twitter', 'facebook', 'instagram']
-            feed = ['feed', 'reddit']
-            relay_message = event['msg']
-
-            if any([s for s in sns if s in action_lower]):
-                channel = Config.slack.channel.get('SNS', "#general")
-            elif any([f for f in feed if f in action_lower]):
-                channel = Config.slack.channel.get('FEED', "#general")
-
-                header, content = relay_message.split("\n\n")
-                subreddit, title, link = header.split("\n")
-
-                subreddit = subreddit.strip()
-                title = title.strip()
-                link = link.strip()
-                link = link.replace("<", "")
-                link = link.replace(">", "")
-
-                twitter = TwitterManager()
-                twitter.reddit_tweet((subreddit, title, link))
-
-                # save feed train data
-                self.feed_logger.info({"category": subreddit, "title": title})
-
-                title = f"{subreddit} Hot Post\n{title}"
-                content = f"Link: {link}\n{content}"
-
-                attachments = MsgTemplate.make_feed_template((title, link, content))
-                self.slackbot.send_message(attachments=attachments, channel=channel)
-                return
-
-            self.slackbot.send_message(
-                text=relay_message, channel=channel, giphy=False)
+        """
+        TODO : Customize your Webhook
+        """
 
     def IN_OUT_handle(self, prev, event):
         if self.__is_error(prev, event):
@@ -146,42 +88,3 @@ class Webhook(object):
             return True
         else:
             return False
-
-    def TODO_handle(self, event):
-        time = ArrowUtil.get_action_time(event['time'])
-        msg = event['msg']
-
-        activity_data = self.data_handler.read_record().get('activity', {})
-        wake_up_time = arrow.get(activity_data.get('wake_up', None))
-
-        if time.format("HH:mm") == wake_up_time.format("HH:mm"):
-            msg = "*기한이 지난* " + msg.replace("완료", "오늘로 갱신")
-        else:
-            if event['action'].endswith("COMPLATE"):
-                if "일기" in msg:
-                    Summary().record_write_diary()
-                if "운동" in msg:
-                    Summary().record_exercise()
-                if "BAT" in msg:
-                    Summary().record_bat()
-
-        self.slackbot.send_message(
-            text=msg, channel=Config.slack.channel.get('TASK', "#general"))
-
-    def KANBAN_handle(self, event):
-        toggl_manager = TogglManager()
-
-        action = event['action']
-        description = event['msg']
-        if action.endswith("DOING"):
-            toggl_manager.timer(
-                description=description,
-                doing=True,
-                done=False)
-        elif action.endswith("BREAK"):
-            toggl_manager.timer(doing=False, done=False)
-        elif action.endswith("DONE"):
-            toggl_manager.timer(doing=False, done=True)
-
-    def POCKET_handle(self, event):
-        self.pocket_logger.info({"title": event["msg"]})

@@ -3,8 +3,6 @@ import re
 import feedparser
 from hbconfig import Config
 
-from .twitter import TwitterManager
-
 from ..slack.slackbot import SlackerAdapter
 from ..slack.template import MsgTemplate
 
@@ -34,11 +32,7 @@ class FeedNotifier:
             for feed in feed_list:
                 noti_list += self.get_notify_list(category, feed)
 
-        twitter = TwitterManager(self.slackbot)
-
         for feed in noti_list:
-            twitter.feed_tweet(feed)
-
             feed_header = feed[0].split("\n")
             self.feed_logger.info({"category": feed_header[0], "title": feed_header[1]})
 

@@ -4,10 +4,7 @@ import arrow
 from .dialog_manager import DialogManager
 from .dnd import DoNotDisturbManager
 
-from ..functions import Functions
-
 from ..skills.predictor import Predictor
-from ..skills.weather import Weather
 
 from ..slack.resource import MsgResource
 from ..slack.slackbot import SlackerAdapter
@@ -59,13 +56,6 @@ class PreseneManager(object):
                     bed_time=go_to_bed_time.format("HH:mm"),
                     wakeup_time=wake_up_time.format("HH:mm"),
                     diff_h=str(sleep_time)))
-
-            weather = Weather()
-            weather.forecast(timely="daily")
-            weather.air_quality()
-
-            functions = Functions(slackbot=self.slackbot)
-            functions.kanban_init()
 
     def check_flow(self, presence):
         if presence == "active":

@@ -25,9 +25,6 @@ from .kino.worker import Worker
 from .slack.resource import MsgResource
 from .slack.slackbot import SlackerAdapter
 
-from .skills.question import AttentionQuestion
-from .skills.question import HappyQuestion
-
 from .utils.data_loader import DataLoader
 from .utils.data_loader import SkillData
 from .utils.logger import Logger

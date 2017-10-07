@@ -45,5 +45,5 @@ class Predictor(object):
                     description=description))
             runner.load_function(func_name=func_name, params=params, day_of_week=[0])
         else:
-            functions = Functions(self.slackbot)
-            functions.remind_idea()
+            pass
+            # TODO : if confidence is low, do anything
