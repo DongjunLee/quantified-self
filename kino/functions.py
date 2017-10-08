@@ -152,11 +152,11 @@ class Functions(object):
         happy = HappyQuestion(slackbot=self.slackbot)
         happy.report(timely=timely)
 
-    def humor(self):
+    def honeyjam(self):
         """
         keyword: [["재밌는", "이야기"], ["개그"]]
-        description: "Korea Azae Humor (using [honeyjam](https://github.com/DongjunLee/honeyjam))."
-        icon: ":smile_cat: "
+        description: "**Easter Egg** - Korea Azae Humor (using [honeyjam](https://github.com/DongjunLee/honeyjam))."
+        icon: ":honey_pot: "
         """
 
         humor = Humor()
