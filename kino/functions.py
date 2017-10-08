@@ -185,9 +185,10 @@ class Functions(object):
         self.slackbot.send_message(text=MsgResource.KANBAN_SYNC)
 
         todoist = TodoistManager(slackbot=self.slackbot)
-        today_label_tasks = todoist.get_today_tasks_with_label()
+        today_label_tasks = todoist.get_tasks_with_overdue_and_label()
 
         trello = TrelloManager()
+
         task_list = trello.get_list_by_name(self.KANBAN_TASKS)
         task_list.archive_all_cards()
 

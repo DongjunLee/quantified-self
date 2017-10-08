@@ -7,6 +7,7 @@ from .dnd import DoNotDisturbManager
 from ..functions import Functions
 
 from ..skills.predictor import Predictor
+from ..skills.trello import TrelloManager
 from ..skills.weather import Weather
 
 from ..slack.resource import MsgResource
@@ -65,7 +66,11 @@ class PreseneManager(object):
             weather.air_quality()
 
             functions = Functions(slackbot=self.slackbot)
-            functions.kanban_init()
+
+            trello = TrelloManager()
+            trello.clean_board(except_list_name=functions.IDEA_LIST)
+
+            functions.kanban_sync()
 
     def check_flow(self, presence):
         if presence == "active":
