@@ -152,11 +152,11 @@ class Functions(object):
         happy = HappyQuestion(slackbot=self.slackbot)
         happy.report(timely=timely)
 
-    def humor(self):
+    def honeyjam(self):
         """
         keyword: [["재밌는", "이야기"], ["개그"]]
-        description: "Korea Azae Humor (using [honeyjam](https://github.com/DongjunLee/honeyjam))."
-        icon: ":smile_cat: "
+        description: "**Easter Egg** - Korea Azae Humor (using [honeyjam](https://github.com/DongjunLee/honeyjam))."
+        icon: ":honey_pot: "
         """
 
         humor = Humor()
@@ -185,9 +185,10 @@ class Functions(object):
         self.slackbot.send_message(text=MsgResource.KANBAN_SYNC)
 
         todoist = TodoistManager(slackbot=self.slackbot)
-        today_label_tasks = todoist.get_today_tasks_with_label()
+        today_label_tasks = todoist.get_tasks_with_overdue_and_label()
 
         trello = TrelloManager()
+
         task_list = trello.get_list_by_name(self.KANBAN_TASKS)
         task_list.archive_all_cards()
 

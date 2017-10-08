@@ -52,13 +52,23 @@
 ## kino-bot
 
 **Kino** is a **personal assistant** based on **Slack Bot**. It was developed as a personal project to **improve my life quality** by automatically **quantified self**. Various Tracking Tools (cf. RescueTime, Toggl, Todoist) and various third-party (cf. Github, DarkSky, Gbus and etc..) are customized as kino's skill. In addition, kino can automate the parts in everyday life and work. I will also use machine learning and deep learning to grow beyond simple bot to become a smart assistant.  
-Kino is getting smarter! Pull requests are always welcome. :D
+
+Kino is getting smarter! **Pull requests** are always welcome. :D
+
+
+## Blog
+
+| Article - Title| English | Korean |
+| ------- | ------- | ------- |
+| Personal Assistant Kino Part 1 — Overview. | [Medium](https://medium.com/@humanbrain.djlee/personal-assistant-kino-part-1-overview-496b97de4afd) | [Github page](https://dongjunlee.github.io/Personal_Assistant_Kino_Part_1_Overview/) |
+| Personal Assistant Kino Part 2 - Skill & Scheduler. | Medium | [Github page](https://dongjunlee.github.io/Personal_Assistant_Kino_Part_2_Skill_and_Scheduler/) |
+
 
 ## Feature
 
 - Support **mutiple languages** (Korean and English)
 - **Skill** : make your own skill and simply register skill writing function's doc.
-- **Scheduler** : jobs running in background
+- **Scheduler** : jobs(skill) running in background
 - Automatic **Tracking**
 	- Sleep Time
 	- Working Hour
@@ -68,10 +78,12 @@ Kino is getting smarter! Pull requests are always welcome. :D
 - Integrate with **[Giphy](https://giphy.com/)**
 - **Customize Webhook** for [IFTTT](https://ifttt.com/) or [Zapier](https://zapier.com)
 
+
 ## Prerequisites
 
-- **[Personal Slack](https://slack.com/)**
+- **[Slack](https://slack.com/)**
 - **Python 3.6**
+
 
 ## Quick Start
 
@@ -79,11 +91,9 @@ First, install requirements
 
 ```pip install -r requirements.txt```
 
-Second, fill the config.yml
+Second, fill the config.yml (Minimal config)
 
-```
-Minimal config
-
+```yml
 bot:
   MASTER_NAME: <name>
   BOT_NAME: Kino
@@ -101,14 +111,12 @@ slack:
 
 ```
 
-Finally, just run
-
-```python main.py```
+Finally, just run ```python main.py```.
 
 
 ## Current Skills
 
-kino-bot has **25** skills.
+kino-bot has **26** skills.
 
  - :factory: **air_quality** : Air quality forecast. (can use only Korea [airkoreaPy](https://github.com/DongjunLee/airkoreaPy))
  - :writing_hand: **attention_question** : Attention survey after do task.
@@ -118,12 +126,13 @@ kino-bot has **25** skills.
  - :octocat: **github_commit** : Check [Github](https://github.com) push count.
  - :smile: **happy_question** : Happiness survey.
  - :smile: **happy_report** : Happiness Report.
- - :smile_cat: **humor** : Korea Azae Humor (using [honeyjam](https://github.com/DongjunLee/honeyjam)).
+ - :honey_pot: **honeyjam** : **Easter Egg** - Korean Azae Humor (using [honeyjam](https://github.com/DongjunLee/honeyjam)).
  - :clipboard: **kanban_sync** : Todoist's tasks and Kanban board's card Syncing.
  - :thinking_face: **keep_idea** : Keep idea in Trello board's inbox list.
  - :scales: **maxim_nietzsche** : Nietzsche's Maxim.
  - :thinking_face: **remind_idea** : Remind Trello's inbox card randomly pick.
  - :chart_with_upwards_trend: **rescuetime_efficiency** : RescueTime Efficiency Chart
+ - :smile_cat: **samhangsi** : **Easter Egg** - Korean SamHangsi (using [char-rnn](https://github.com/DongjunLee/char-rnn-tensorflow)).
  - :speech_balloon: **send_message** : Send a text message.
  - :city_sunset: **today_briefing** : Today Briefing - brief Todoist tasks
  - :night_with_stars: **today_summary** : Today summary - **todoist_feedback**, **toggl_report**, **rescuetime_efficiency**, **happy_report**, **attention_report**, **github_commit**
@@ -136,15 +145,11 @@ kino-bot has **25** skills.
  - :chart: **total_score** : Overall score  - Productivity (RescueTime, Github Commit, Todoist, Toggl), Mean happiness, mean attention, Exercise, Diary.
  - :crystal_ball: **translate** : Language translation using [Naver Papago api](https://developers.naver.com/docs/nmt/reference/).
 
+
 ## for Developer
 
 if you want develop your own bot, clone **base** branch and implements skills.
 
-## Blog
-
-| Article - Title| English | Korea |
-| ------- | ------- | ------- |
-| Personal Assistant Kino Part 1 — Overview. | [medium](https://medium.com/@humanbrain.djlee/personal-assistant-kino-part-1-overview-496b97de4afd) | [github blog](https://dongjunlee.github.io/Personal_Assistant_Kino_Part_1_Overview/) |
 
 ## License
 
