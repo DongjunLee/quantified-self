@@ -8,6 +8,7 @@ from hbconfig import Config
 
 from ..open_api.airkoreaPy import AirKorea
 
+from ..slack.resource import MsgResource
 from ..slack.slackbot import SlackerAdapter
 from ..slack.template import MsgTemplate
 
@@ -76,7 +77,13 @@ class Weather(object):
         airkorea = AirKorea(api_key)
 
         station_name = self.profile.get_location(station=True)
-        response = airkorea.forecast(station_name)
-        attachments = MsgTemplate.make_air_quality_template(
-            station_name, response)
-        self.slackbot.send_message(attachments=attachments)
+
+        try:
+            response = airkorea.forecast(station_name)
+            attachments = MsgTemplate.make_air_quality_template(
+                station_name, response)
+            self.slackbot.send_message(attachments=attachments)
+        except BaseException as e:
+            self.slackbot.send_message(text=MsgResource.ERROR)
+
+
