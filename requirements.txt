@@ -19,3 +19,5 @@ langid
 nltk
 python-twitter
 hb-config
+python-jenkins
+tensorflow

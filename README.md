@@ -38,7 +38,7 @@
   
   <br/>
   
-  <a href="https://codecov.io/gh/DongjunLee/stalker-bot">
+  <a href="https://codecov.io/gh/DongjunLee/kino-bot">
     <img src="https://codecov.io/gh/DongjunLee/kino-bot/branch/master/graph/badge.svg" alt="Codecov" />
   </a>
   <a href="https://www.codacy.com/app/humanbrain.djlee/kino-bot?utm_source=github.com&utm_medium=referral&utm_content=DongjunLee/kino-bot&utm_campaign=badger">
@@ -116,7 +116,7 @@ Finally, just run ```python main.py```.
 
 ## Current Skills
 
-kino-bot has **26** skills.
+kino-bot has **27** skills.
 
  - :factory: **air_quality** : Air quality forecast. (can use only Korea [airkoreaPy](https://github.com/DongjunLee/airkoreaPy))
  - :writing_hand: **attention_question** : Attention survey after do task.
@@ -126,13 +126,14 @@ kino-bot has **26** skills.
  - :octocat: **github_commit** : Check [Github](https://github.com) push count.
  - :smile: **happy_question** : Happiness survey.
  - :smile: **happy_report** : Happiness Report.
- - :honey_pot: **honeyjam** : **Easter Egg** - Korean Azae Humor (using [honeyjam](https://github.com/DongjunLee/honeyjam)).
+ - :honey_pot: **honeyjam** : **Easter Egg** - Korea Azae Humor (using [honeyjam](https://github.com/DongjunLee/honeyjam)).
+ - :building_construction: **jenkins_build** : Build a registered project for Jenkins.
  - :clipboard: **kanban_sync** : Todoist's tasks and Kanban board's card Syncing.
  - :thinking_face: **keep_idea** : Keep idea in Trello board's inbox list.
  - :scales: **maxim_nietzsche** : Nietzsche's Maxim.
  - :thinking_face: **remind_idea** : Remind Trello's inbox card randomly pick.
  - :chart_with_upwards_trend: **rescuetime_efficiency** : RescueTime Efficiency Chart
- - :smile_cat: **samhangsi** : **Easter Egg** - Korean SamHangsi (using [char-rnn](https://github.com/DongjunLee/char-rnn-tensorflow)).
+ - :musical_score: **samhangsi** : I am thinking about the Samhangsi with the kor ballad! (using [char-rnn-tensorflow](https://github.com/DongjunLee/char-rnn-tensorflow))
  - :speech_balloon: **send_message** : Send a text message.
  - :city_sunset: **today_briefing** : Today Briefing - brief Todoist tasks
  - :night_with_stars: **today_summary** : Today summary - **todoist_feedback**, **toggl_report**, **rescuetime_efficiency**, **happy_report**, **attention_report**, **github_commit**
@@ -144,6 +145,14 @@ kino-bot has **26** skills.
  - :chart: **total_chart** : Overall chart - weekly productivity, happiness, overall score chart.
  - :chart: **total_score** : Overall score  - Productivity (RescueTime, Github Commit, Todoist, Toggl), Mean happiness, mean attention, Exercise, Diary.
  - :crystal_ball: **translate** : Language translation using [Naver Papago api](https://developers.naver.com/docs/nmt/reference/).
+
+## Work in progress
+
+- [conversation-tensorflow](https://github.com/DongjunLee/conversation-tensorflow) : A neural chatbot using sequence to sequence model with attentional decode
+- text-classification-tensorflow : filtering module that using **feed**'s title
+	- Kino tells me that all of the feeds that interest me are saved in the pocket. Data is automatically accumulating.
+	- feed : all training data
+	- pocket : label 1 (true) data
 
 
 ## for Developer
