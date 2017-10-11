@@ -312,6 +312,9 @@
     "REMIND_IDEA": "Inbox에 저장되어있는 아이디어 중 하나입니다. 구체화를 시켜볼까요? \n {idea}",
     "EMPTY_IDEA": "아이디어 Inbox가 비어있군요. 뭔가 떠오르는 것 없으신가요?",
 
+    "JENKINS_BUILD_START": "넵! 빌드를 시작하겠습니다",
+    "JENKINS_JOB_NOT_UNDERSTAND": "어떤 프로젝트를 배포해야하는지 모르겠습니다ㅠㅠ 프로젝트명과 브랜치를 알려주세요.",
+
     "HUMOR_QUESTION": "제가 재밌는 이야기 해드릴게요! :smiley: \n {question}",
     "HUMOR_ANSWER": "정답은! *{answer}* ",
     "HUMOR_END": {

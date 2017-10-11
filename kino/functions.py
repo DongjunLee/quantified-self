@@ -175,6 +175,16 @@ class Functions(object):
             time.sleep(1)
             self.slackbot.send_message(text=MsgResource.HUMOR_SORRY)
 
+    def jenkins_build(self, job_name: str=None, branch: str=None):
+        """
+        keyword: ["배포", "deploy"]
+        description: "Build a registered project for Jenkins."
+        icon: ":building_construction: "
+        """
+
+        jenkins = JenkinsClient()
+        jenkins.build(job_name, branch)
+
     def kanban_sync(self):
         """
         keyword: [["칸반", "싱크"], ["kanban", "sync"]]
