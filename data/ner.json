@@ -81,6 +81,16 @@
     },
     "hashtag": {
       "pattern": "#(.+)"
+    },
+    "samhangsi_tag": {
+      "pattern": "[#][ㄱ-ㅣ가-힣A-Za-z]+"
+    },
+    "job_name": {
+      "kino-bot": ["kino-bot"]
+    },
+    "branch": {
+      "master": ["마스터", "master"],
+      "dev": ["데브", "dev", "develop"]
     }
   }
 }

@@ -18,6 +18,7 @@ from .skills.naver import Naver
 from .skills.question import AttentionQuestion
 from .skills.question import HappyQuestion
 from .skills.rescue_time import RescueTime
+from .skills.samhangsi.generator import SamhangSiGenerator
 from .skills.summary import Summary
 from .skills.todoist import TodoistManager
 from .skills.toggl import TogglManager
@@ -257,6 +258,27 @@ class Functions(object):
             timely = 'daily'
         rescuetime = RescueTime(slackbot=self.slackbot)
         rescuetime.efficiency(timely=timely)
+
+    def samhangsi(self, samhangsi_tag: str=None):
+        """
+        keyword: ["삼행시"]
+        description: "I am thinking about the Samhangsi with the kor ballad! (using [char-rnn-tensorflow](https://github.com/DongjunLee/char-rnn-tensorflow))"
+        icon: ":musical_score: "
+        """
+
+        word = samhangsi_tag[1:]
+        non_hangul = re.findall('[^ ㄱ-ㅣ가-힣]+', word)
+        if len(non_hangul) > 0:
+            self.slackbot.send_message(text=MsgResource.SAMHANGSI_ONLY_KOR)
+            return
+
+        self.slackbot.send_message(text=MsgResource.SAMHANGSI_PREPARE(word=word))
+
+        generator = SamhangSiGenerator()
+        generator.load_model()
+
+        result = generator.generate(word)
+        self.slackbot.send_message(text=result)
 
     def send_message(self, text: str=None):
         """

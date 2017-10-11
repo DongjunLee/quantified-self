@@ -307,6 +307,9 @@
       "넵 {from_name} 이 가지고 있던 카드를 {to_name} 에게 줄게요!"
     ],
 
+    "SAMHANGSI_ONLY_KOR": "삼행시는 한글만 가능합니다 ㅠㅠ",
+    "SAMHANGSI_PREPARE": "{word}.... 어렵지만 한번 생각해볼께요!",
+
     "HASHTAG_NOT_FOUND": "#해쉬태그를 인식하지 못하겠습니다. ㅠㅠ #해쉬태그 를 사용해서 말씀해주세요!",
     "ADD_IDEA": "Inbox에 아이디어를 추가하겠습니다!",
     "REMIND_IDEA": "Inbox에 저장되어있는 아이디어 중 하나입니다. 구체화를 시켜볼까요? \n {idea}",
