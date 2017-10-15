@@ -73,7 +73,8 @@ class Webhook(object):
                 twitter.reddit_tweet((subreddit, title, link))
 
                 # save feed train data
-                self.feed_logger.info({"category": subreddit, "title": title})
+                self.feed_logger.info(
+                    json.dumps({"category": subreddit, "title": title}))
 
                 title = f"{subreddit} Hot Post\n{title}"
                 content = f"Link: {link}\n{content}"
@@ -184,4 +185,5 @@ class Webhook(object):
             toggl_manager.timer(doing=False, done=True)
 
     def POCKET_handle(self, event):
-        self.pocket_logger.info({"title": event["msg"]})
+        self.pocket_logger.info(
+            json.dumps({"title": event["msg"]}))

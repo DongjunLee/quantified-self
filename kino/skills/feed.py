@@ -1,6 +1,8 @@
 import arrow
 import re
 import feedparser
+import json
+
 from hbconfig import Config
 
 from .twitter import TwitterManager
@@ -40,7 +42,8 @@ class FeedNotifier:
             twitter.feed_tweet(feed)
 
             feed_header = feed[0].split("\n")
-            self.feed_logger.info({"category": feed_header[0], "title": feed_header[1]})
+            self.feed_logger.info(
+                json.dumps({"category": feed_header[0], "title": feed_header[1]}))
 
             attachments = MsgTemplate.make_feed_template(feed)
             self.slackbot.send_message(attachments=attachments)
