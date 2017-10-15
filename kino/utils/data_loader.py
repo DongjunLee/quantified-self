@@ -11,7 +11,7 @@ from .data_handler import DataHandler
 from .classes import Skill
 
 
-class DataLoader(object):
+class SkillDataLoader(object):
 
     def __init__(self):
         pass
@@ -117,7 +117,7 @@ class RemoveOldDataQueue(Queue):
 class SkillData(object):
     class __Singleton:
         def __init__(self):
-            data_loader = DataLoader()
+            data_loader = SkillDataLoader()
             self.q = data_loader.load_skill_queue(max_qsize=400)
 
     instance = None

@@ -3,10 +3,11 @@ import json
 
 from ..functions import Functions
 from ..utils.data_handler import DataHandler
+from ..utils.data_loader import SkillData
 
 
 
-def write_skills():
+def register_skills():
     skills = inspect.getmembers(Functions, predicate=inspect.isfunction)
     del skills[0]  # del __init__
 
@@ -47,3 +48,6 @@ def parse_doc(doc_string):
 
             parsed_doc[key] = value
     return parsed_doc
+
+def prepare_skill_data():
+    SkillData()

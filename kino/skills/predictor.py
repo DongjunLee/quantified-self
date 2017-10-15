@@ -7,7 +7,7 @@ from ..functions import FunctionRunner
 from ..slack.resource import MsgResource
 from ..slack.slackbot import SlackerAdapter
 
-from ..utils.data_loader import DataLoader
+from ..utils.data_loader import SkillDataLoader
 from ..utils.data_loader import SkillData
 from ..utils.classes import Skill
 
@@ -19,7 +19,7 @@ class Predictor(object):
             n_neighbors=n_neighbors, weights='distance')
 
         skill_data = SkillData()
-        data_X, data_y = DataLoader().make_data_set(skill_data.q)
+        data_X, data_y = SkillDataLoader().make_data_set(skill_data.q)
         self.knn.fit(data_X, data_y)
 
         if slackbot is None:
@@ -28,7 +28,7 @@ class Predictor(object):
             self.slackbot = slackbot
 
     def predict_skill(self):
-        data_loader = DataLoader()
+        data_loader = SkillDataLoader()
         test_x = data_loader.make_X()
 
         predict = self.knn.predict(test_x)[0]
