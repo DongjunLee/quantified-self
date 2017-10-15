@@ -62,6 +62,7 @@ Kino is getting smarter! **Pull requests** are always welcome. :D
 | ------- | ------- | ------- |
 | Personal Assistant Kino Part 1 — Overview. | [Medium](https://medium.com/@humanbrain.djlee/personal-assistant-kino-part-1-overview-496b97de4afd) | [Github page](https://dongjunlee.github.io/Personal_Assistant_Kino_Part_1_Overview/) |
 | Personal Assistant Kino Part 2 - Skill & Scheduler. | [Medium](https://medium.com/@humanbrain.djlee/personal-assistant-kino-part-2-skill-scheduler-3cf25070fe8e) | [Github page](https://dongjunlee.github.io/Personal_Assistant_Kino_Part_2_Skill_and_Scheduler/) |
+| Personal Assistant Kino Part 3 - T3. | Medium | [Github page](https://dongjunlee.github.io/Personal_Assistant_Kino_Part_3_T3/) |
 
 
 ## Feature
@@ -75,6 +76,7 @@ Kino is getting smarter! **Pull requests** are always welcome. :D
 	- Tasks
 	- Happy & Attention Score
 - Notify latest **[Feed](https://github.com/DongjunLee/awesome-feeds)**
+	- Automatically save to [Pocket](https://getpocket.com/) based on your activity (Feed Catogory Classifier)
 - Integrate with **[Giphy](https://giphy.com/)**
 - **Customize Webhook** for [IFTTT](https://ifttt.com/) or [Zapier](https://zapier.com)
 

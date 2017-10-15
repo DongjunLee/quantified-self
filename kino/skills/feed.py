@@ -1,14 +1,20 @@
 import arrow
 import re
 import feedparser
+import json
+
 from hbconfig import Config
+from sklearn import tree
 
 from .twitter import TwitterManager
+from .pocket import Pocket
 
 from ..slack.slackbot import SlackerAdapter
 from ..slack.template import MsgTemplate
 
 from ..utils.data_handler import DataHandler
+from ..utils.data_loader import FeedData
+from ..utils.data_loader import FeedDataLoader
 from ..utils.logger import Logger
 from ..utils.logger import DataLogger
 
@@ -34,13 +40,19 @@ class FeedNotifier:
             for feed in feed_list:
                 noti_list += self.get_notify_list(category, feed)
 
+        feed_classifier = FeedClassifier()
         twitter = TwitterManager(self.slackbot)
 
         for feed in noti_list:
             twitter.feed_tweet(feed)
 
             feed_header = feed[0].split("\n")
-            self.feed_logger.info({"category": feed_header[0], "title": feed_header[1]})
+            self.feed_logger.info(
+                json.dumps({"category": feed_header[0], "title": feed_header[1]}))
+
+            if feed_classifier.predict(feed):
+                self.slackbot.send_message(text=MsgResource.PREDICT_FEED_TRUE(title=feed_header[1]))
+                continue
 
             attachments = MsgTemplate.make_feed_template(feed)
             self.slackbot.send_message(attachments=attachments)
@@ -99,3 +111,36 @@ class FeedNotifier:
         text = re.sub('&nbsp;|\t|\r|', '', text)
         text = re.sub(entry_link, '', text)
         return text
+
+
+class FeedClassifier:
+
+    def __init__(self):
+        self.logger = Logger().get_logger()
+
+        train_X = FeedData().train_X
+        train_y = FeedData().train_y
+        self.category_ids = FeedData().category_ids
+
+        self.clf = tree.DecisionTreeClassifier()
+        self.clf = self.clf.fit(train_X, train_y)
+
+    def predict(self, feed):
+        category_id = self.category_ids[feed[0].strip()]
+        result = self.clf.predict(category_id)[0]
+
+        if result == FeedDataLoader.TRUE_LABEL:
+            self.logger.info("predict result is True, Save feed to Pocket ...")
+            pocket = Pocket()
+            tags = self.extract_tags(feed[0])
+            pocket.add(feed[2], tags=tags)
+            return True
+        else:
+            return False
+
+    def extract_tags(self, tags):
+        tags = tags.strip()
+        tags = tags.replace("[", "")
+        tags = tags.replace("]", "")
+        tags = tags.split(" - ")
+        return tags

@@ -69,22 +69,31 @@ class MessageLogger(object):
 
 class DataLogger(object):
 
+    class __Logger:
+        def __init__(self, data_name):
+            print("data logger " + data_name)
+            self._logger = logging.getLogger(data_name)
+            self._logger.setLevel(logging.INFO)
+
+            dirname = './log/data'
+            if not os.path.isdir(dirname):
+                os.makedirs(dirname)
+
+            fileHandler = logging.FileHandler(
+                    dirname + f"/{data_name}.log")
+
+            formatter = logging.Formatter('%(asctime)s > %(message)s')
+            fileHandler.setFormatter(formatter)
+
+            self._logger.addHandler(fileHandler)
+
+    instance = {}
+
     def __init__(self, data_name):
-        print("data logger " + data_name)
-        self.logger = logging.getLogger(data_name)
-        self.logger.setLevel(logging.INFO)
+        self.data_name = data_name
 
-        dirname = './log/data'
-        if not os.path.isdir(dirname):
-            os.makedirs(dirname)
-
-        fileHandler = logging.FileHandler(
-                dirname + f"/{data_name}.log")
-
-        formatter = logging.Formatter('%(asctime)s > %(message)s')
-        fileHandler.setFormatter(formatter)
-
-        self.logger.addHandler(fileHandler)
+        if data_name not in DataLogger.instance:
+            DataLogger.instance[data_name] = DataLogger.__Logger(data_name)
 
     def get_logger(self):
-        return self.logger
+        return self.instance[self.data_name]._logger

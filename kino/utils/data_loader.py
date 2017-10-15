@@ -1,4 +1,6 @@
 import arrow
+import json
+import os
 import numpy as np
 import re
 from dateutil import tz
@@ -11,7 +13,7 @@ from .data_handler import DataHandler
 from .classes import Skill
 
 
-class DataLoader(object):
+class SkillDataLoader(object):
 
     def __init__(self):
         pass
@@ -117,7 +119,7 @@ class RemoveOldDataQueue(Queue):
 class SkillData(object):
     class __Singleton:
         def __init__(self):
-            data_loader = DataLoader()
+            data_loader = SkillDataLoader()
             self.q = data_loader.load_skill_queue(max_qsize=400)
 
     instance = None
@@ -125,6 +127,74 @@ class SkillData(object):
     def __init__(self):
         if not SkillData.instance:
             SkillData.instance = SkillData.__Singleton()
+
+    def __getattr__(self, name):
+        return getattr(self.instance, name)
+
+
+class FeedDataLoader:
+
+    FALSE_LABEL = 0
+    TRUE_LABEL = 1
+
+    def __init__(self):
+        self.data_handler = DataHandler()
+
+    def load_data(self, fname):
+        data = self.data_handler.read_log_data(fname)
+        return data.split("\n")
+
+    def make_train_set(self, feed, pocket):
+        feed = self.map_str_to_dict(feed)
+        pocket = self.map_str_to_dict(pocket)
+        pocket_title = set(map(lambda p: p["title"].strip(), pocket))
+
+        train_y = []
+        for f in feed:
+            if f["title"].strip() in pocket_title:
+                train_y.append(self.TRUE_LABEL)
+            else:
+                train_y.append(self.FALSE_LABEL)
+
+        train_X, category_ids = self.map_category2id(feed)
+        train_X = np.array(train_X).reshape(len(feed), 1)
+
+        return train_X, train_y, category_ids
+
+    def map_str_to_dict(self, data):
+        data_list = []
+        for d in data:
+            try:
+                data_list.append(json.loads(d[d.index("> {") + 2:]))
+            except:
+                print("Faild convert to dict", d)
+        return data_list
+
+    def map_category2id(self, feed):
+        keys = set(map(lambda f: f['category'].strip(), feed))
+
+        category_ids = {}
+        for idx, key in enumerate(list(keys)):
+            category_ids[key] = idx
+
+        return list(map(lambda f: category_ids[f["category"].strip()], feed)), category_ids
+
+
+class FeedData(object):
+    class __Singleton:
+        def __init__(self):
+            data_loader = FeedDataLoader()
+
+            feed = data_loader.load_data("feed.log")
+            pocket = data_loader.load_data("pocket.log")
+
+            self.train_X, self.train_y, self.category_ids = data_loader.make_train_set(feed, pocket)
+
+    instance = None
+
+    def __init__(self):
+        if not FeedData.instance:
+            FeedData.instance = FeedData.__Singleton()
 
     def __getattr__(self, name):
         return getattr(self.instance, name)

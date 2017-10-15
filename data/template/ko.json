@@ -327,5 +327,7 @@
       "4": "하하하 하하하 하하하 하하하",
       "5": "하하하 하하하 하하하 하하하 하하하 "
     },
-    "HUMOR_SORRY": "죄송합니다..."
+    "HUMOR_SORRY": "죄송합니다...",
+
+    "PREDICT_FEED_TRUE": "Pocket에 항상 넣으시는 Feed 네요! 제가 알아서 넣어놓겠습니다 ㅎㅎ \n - Title : {title}"
 }
