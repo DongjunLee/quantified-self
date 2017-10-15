@@ -28,7 +28,7 @@ from .slack.slackbot import SlackerAdapter
 from .skills.question import AttentionQuestion
 from .skills.question import HappyQuestion
 
-from .utils.data_loader import DataLoader
+from .utils.data_loader import SkillDataLoader
 from .utils.data_loader import SkillData
 from .utils.logger import Logger
 from .utils.logger import MessageLogger
@@ -244,7 +244,7 @@ class MsgRouter:
         getattr(Functions(slackbot=self.slackbot), func_name)(**f_params)
 
     def __memory_predictor_skills(self):
-        data_loader = DataLoader()
+        data_loader = SkillDataLoader()
         X = data_loader.make_X()[0]
         y = data_loader.make_y(self.text)
         if y is not None:

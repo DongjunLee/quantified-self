@@ -69,8 +69,10 @@ class Webhook(object):
                 link = link.replace("<", "")
                 link = link.replace(">", "")
 
+                feed = (subreddit, title, link)
+
                 twitter = TwitterManager()
-                twitter.reddit_tweet((subreddit, title, link))
+                twitter.reddit_tweet(feed)
 
                 # save feed train data
                 self.feed_logger.info(

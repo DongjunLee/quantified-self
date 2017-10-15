@@ -30,10 +30,6 @@ class KinoBot:
                 master_name=MASTER_NAME,
                 bot_name=BOT_NAME))
 
-        # load skill data
-        if Config.bot.get("SKILL_PREDICT", False):
-            SkillData()
-
         giphy = GiphyClient()
         giphy.search("Hello!")
 

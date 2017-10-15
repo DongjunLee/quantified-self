@@ -12,6 +12,7 @@ class DataHandler(object):
     def __init__(self):
         self.data_path = "data/"
         self.record_path = "record/"
+        self.log_data_path = "log/data/"
 
     def read_file(self, fname):
         text = self.read_text(fname)
@@ -20,8 +21,11 @@ class DataHandler(object):
         else:
             return json.loads(text)
 
-    def read_text(self, fname):
-        path = os.path.join(self.data_path + fname)
+    def read_text(self, fname, fpath=None):
+        if fpath is None:
+            fpath = self.data_path
+
+        path = os.path.join(fpath + fname)
         try:
             with open(path, 'r') as infile:
                 return infile.read()
@@ -140,3 +144,6 @@ class DataHandler(object):
 
                 feeds[curr_category].append((feed_name, feed_link))
         return feeds
+
+    def read_log_data(self, fname):
+        return self.read_text(fname, fpath=self.log_data_path)

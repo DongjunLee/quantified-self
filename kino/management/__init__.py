@@ -4,6 +4,7 @@ import json
 from ..functions import Functions
 from ..utils.data_handler import DataHandler
 from ..utils.data_loader import SkillData
+from ..utils.data_loader import FeedData
 
 
 
@@ -50,4 +51,9 @@ def parse_doc(doc_string):
     return parsed_doc
 
 def prepare_skill_data():
+    print("setting skill logs for Skill Predictor ...")
     SkillData()
+
+def prepare_feed_data():
+    print("setting feed and pocket logs for Feed Classifier ...")
+    FeedData()

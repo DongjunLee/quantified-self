@@ -306,6 +306,8 @@
     "EMPTY_IDEA": "Your idea inbox is empty! what is your idea?",
 
     "JENKINS_BUILD_START": "Yep! I'll Start a build on a job",
-    "JENKINS_JOB_NOT_UNDERSTAND": "I do not know which project to deploy. Please tell me the project name and branch."
+    "JENKINS_JOB_NOT_UNDERSTAND": "I do not know which project to deploy. Please tell me the project name and branch.",
+
+    "PREDICT_FEED_TRUE": "The feed that is always save to Pocket! I will put it in my hand \n - Title: {title}"
 
 }
