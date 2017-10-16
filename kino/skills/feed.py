@@ -40,8 +40,10 @@ class FeedNotifier:
             for feed in feed_list:
                 noti_list += self.get_notify_list(category, feed)
 
-        feed_classifier = FeedClassifier()
         twitter = TwitterManager(self.slackbot)
+
+        if Config.bot.get("FEED_CLASSIFIER", False):
+            feed_classifier = FeedClassifier()
 
         for feed in noti_list:
             twitter.feed_tweet(feed)
@@ -50,7 +52,7 @@ class FeedNotifier:
             self.feed_logger.info(
                 json.dumps({"category": feed_header[0], "title": feed_header[1]}))
 
-            if feed_classifier.predict(feed):
+            if Config.bot.get("FEED_CLASSIFIER", False) and feed_classifier.predict(feed):
                 self.slackbot.send_message(text=MsgResource.PREDICT_FEED_TRUE(title=feed_header[1]))
                 continue
 
