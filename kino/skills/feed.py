@@ -9,6 +9,7 @@ from sklearn import tree
 from .twitter import TwitterManager
 from .pocket import Pocket
 
+from ..slack.resource import MsgResource
 from ..slack.slackbot import SlackerAdapter
 from ..slack.template import MsgTemplate
 
@@ -40,18 +41,24 @@ class FeedNotifier:
             for feed in feed_list:
                 noti_list += self.get_notify_list(category, feed)
 
-        feed_classifier = FeedClassifier()
         twitter = TwitterManager(self.slackbot)
+
+        if Config.bot.get("FEED_CLASSIFIER", False):
+            feed_classifier = FeedClassifier()
 
         for feed in noti_list:
             twitter.feed_tweet(feed)
 
             feed_header = feed[0].split("\n")
-            self.feed_logger.info(
-                json.dumps({"category": feed_header[0], "title": feed_header[1]}))
+            category = feed_header[0]
+            title = feed_header[1]
 
-            if feed_classifier.predict(feed):
-                self.slackbot.send_message(text=MsgResource.PREDICT_FEED_TRUE(title=feed_header[1]))
+            self.feed_logger.info(
+                json.dumps({"category": category, "title": title}))
+
+            if Config.bot.get("FEED_CLASSIFIER", False) \
+                and feed_classifier.predict(category, title):
+                self.slackbot.send_message(text=MsgResource.PREDICT_FEED_TRUE(title=title))
                 continue
 
             attachments = MsgTemplate.make_feed_template(feed)
@@ -125,15 +132,15 @@ class FeedClassifier:
         self.clf = tree.DecisionTreeClassifier()
         self.clf = self.clf.fit(train_X, train_y)
 
-    def predict(self, feed):
-        category_id = self.category_ids[feed[0].strip()]
+    def predict(self, category, title):
+        category_id = self.category_ids[category.strip()]
         result = self.clf.predict(category_id)[0]
 
         if result == FeedDataLoader.TRUE_LABEL:
             self.logger.info("predict result is True, Save feed to Pocket ...")
             pocket = Pocket()
-            tags = self.extract_tags(feed[0])
-            pocket.add(feed[2], tags=tags)
+            tags = self.extract_tags(category)
+            pocket.add(title, tags=tags)
             return True
         else:
             return False

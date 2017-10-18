@@ -164,15 +164,16 @@
     },
 
     "TODOIST_TIME" : "Is scheduled for.",
-    "TODOIST_FEEDBACK" : "Todoist job history today.",
+    "TODOIST_FEEDBACK" : "Today's work history.",
 
     "TODOIST_FEEDBACK_OVERDUE": {
-      "10": "You still have a lot of work to do. TT",
+      "10": "You still have a lot of work to do.",
       "4": "We have a few things to do. Let's try.",
+      "1": "You're almost done! Cheer up",
       "0": "Oh ... you've done everything that was planned! Now take a break. :+1:"
     },
 
-    "TODOIST_FEEDBACK_EVENT": "Today we added a total of {a_count} tasks, completed {c_count} tasks, and delayed {u_count} tasks.",
+    "TODOIST_FEEDBACK_EVENT": "Today you added a total of {a_count} tasks, completed {c_count} tasks, and delayed {u_count} tasks.",
 
     "TODOIST_REMAIN" : "A list of tasks that are still remain.",
     "TODOIST_AUTO_UPDATE" : "I have updated your overdue tasks to today.",
