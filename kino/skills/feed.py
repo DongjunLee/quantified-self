@@ -52,12 +52,13 @@ class FeedNotifier:
             feed_header = feed[0].split("\n")
             category = feed_header[0]
             title = feed_header[1]
+            link = feed[1]
 
             self.feed_logger.info(
                 json.dumps({"category": category, "title": title}))
 
             if Config.bot.get("FEED_CLASSIFIER", False) \
-                and feed_classifier.predict(category, title):
+                and feed_classifier.predict(link, category):
                 self.slackbot.send_message(text=MsgResource.PREDICT_FEED_TRUE(title=title))
                 continue
 
@@ -132,7 +133,7 @@ class FeedClassifier:
         self.clf = tree.DecisionTreeClassifier()
         self.clf = self.clf.fit(train_X, train_y)
 
-    def predict(self, category, title):
+    def predict(self, link, category):
         category_id = self.category_ids[category.strip()]
         result = self.clf.predict(category_id)[0]
 
@@ -140,7 +141,7 @@ class FeedClassifier:
             self.logger.info("predict result is True, Save feed to Pocket ...")
             pocket = Pocket()
             tags = self.extract_tags(category)
-            pocket.add(title, tags=tags)
+            pocket.add(link, tags=tags)
             return True
         else:
             return False

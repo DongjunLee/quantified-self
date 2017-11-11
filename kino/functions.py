@@ -30,6 +30,8 @@ from .slack.resource import MsgResource
 
 from .utils.arrow import ArrowUtil
 from .utils.data_handler import DataHandler
+from .utils.data_loader import SkillData
+from .utils.data_loader import FeedData
 from .utils.logger import Logger
 from .utils.member import Member
 
@@ -57,7 +59,12 @@ class Functions(object):
         summary.check_go_to_bed()
         summary.check_commit_count()
 
+        self._reset_data()
+
+    def _reset_data(self):
         self.data_handler.edit_cache(("feed_links", []))
+        FeedData().reset()
+        SkillData().reset()
 
     def feed_notify(self):
         feed_notifier = FeedNotifier()
