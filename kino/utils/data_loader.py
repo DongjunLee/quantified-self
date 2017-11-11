@@ -131,6 +131,9 @@ class SkillData(object):
     def __getattr__(self, name):
         return getattr(self.instance, name)
 
+    def reset(self):
+        SkillData.instance = SkillData.__Singleton()
+
 
 class FeedDataLoader:
 
@@ -198,3 +201,7 @@ class FeedData(object):
 
     def __getattr__(self, name):
         return getattr(self.instance, name)
+
+    def reset(self):
+        FeedData.instance = FeedData.__Singleton()
+
