@@ -309,12 +309,12 @@ class Functions(object):
     def today_summary(self, timely: str=None):
         """
         keyword: [["하루", "마무리"], ["하루", "요약"], ["today", "summary"]]
-        description: "Today summary - **todoist_feedback**, **toggl_report**, **rescuetime_efficiency**, **happy_report**, **attention_report**, **github_commit**"
+        description: "Today summary - **toggl_report**, **rescuetime_efficiency**, **happy_report**, **attention_report**, **github_commit**"
         icon: ":night_with_stars: "
         """
 
         self.slackbot.send_message(text=MsgResource.TODAY_SUMMARY)
-        self.todoist_feedback()
+        # self.todoist_feedback()
         self.toggl_report(timely=timely)
         self.rescuetime_efficiency(timely=timely)
         self.happy_report(timely=timely)
