@@ -78,7 +78,10 @@ class RescueTime(object):
 
     def get_point(self):
         response = self.__data_summary_request().json()
-        today = response[0]
+        try:
+            today = response[0]
+        except IndexError as e:
+            today = {'productivity_pulse': 80}
         return Score.percent(today['productivity_pulse'], 100, 80)
 
     def __data_summary_request(self):
