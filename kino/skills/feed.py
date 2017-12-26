@@ -59,7 +59,7 @@ class FeedNotifier:
 
             if Config.bot.get("FEED_CLASSIFIER", False) \
                 and feed_classifier.predict(link, category):
-                self.slackbot.send_message(text=MsgResource.PREDICT_FEED_TRUE(title=title))
+                self.slackbot.send_message(text=MsgResource.PREDICT_FEED_TRUE(title=category + ": " + title))
                 continue
 
             attachments = MsgTemplate.make_feed_template(feed)
