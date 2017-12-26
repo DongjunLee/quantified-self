@@ -130,10 +130,10 @@ class DataHandler(object):
         return templates
 
     def read_feeds(self):
-        awesome_feeds_url = Config.profile.feed.AWESOME_FEEDS_URL
+        awesome_feeds_url = Config.profile.feed.get("AWESOME_FEEDS_URL", "")
         raw_awesome_feeds = requests.get(awesome_feeds_url).text
 
-        feeds = {"Github": [("Github Activity", Config.profile.feed.GITHUB)]}
+        feeds = {"Github": [("Github Activity", Config.profile.feed.get("GITHUB", "")]}
         curr_category = None
         for line in raw_awesome_feeds.splitlines():
             if line.startswith("##"):
