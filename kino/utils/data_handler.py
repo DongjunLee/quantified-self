@@ -6,6 +6,9 @@ import os
 import re
 import requests
 
+from hbconfig import Config
+
+
 
 class DataHandler(object):
 
@@ -127,10 +130,10 @@ class DataHandler(object):
         return templates
 
     def read_feeds(self):
-        awesome_feeds_url = 'https://raw.githubusercontent.com/DongjunLee/awesome-feeds/master/README.md'
+        awesome_feeds_url = Config.profile.feed.AWESOME_FEEDS_URL
         raw_awesome_feeds = requests.get(awesome_feeds_url).text
 
-        feeds = {}
+        feeds = {"Github": [("Github Activity", Config.profile.feed.GITHUB)]}
         curr_category = None
         for line in raw_awesome_feeds.splitlines():
             if line.startswith("##"):
