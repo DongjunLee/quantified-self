@@ -52,7 +52,7 @@ class FeedNotifier:
             title = feed_header[1]
             link = feed[1]
 
-            if category == "Github":
+            if "Github Activity" in category:
                 pass
             else:
                 twitter.feed_tweet(feed)
