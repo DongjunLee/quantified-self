@@ -47,12 +47,15 @@ class FeedNotifier:
             feed_classifier = FeedClassifier()
 
         for feed in noti_list:
-            twitter.feed_tweet(feed)
-
             feed_header = feed[0].split("\n")
             category = feed_header[0]
             title = feed_header[1]
             link = feed[1]
+
+            if category == "Github":
+                pass
+            else:
+                twitter.feed_tweet(feed)
 
             self.feed_logger.info(
                 json.dumps({"category": category, "title": title}))
