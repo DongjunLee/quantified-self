@@ -5,6 +5,7 @@ from hbconfig import Config
 from .rescue_time import RescueTime
 from .toggl import TogglManager
 from .todoist import TodoistManager
+from .trello import TrelloManager
 from .github import GithubManager
 
 from ..slack.resource import MsgResource
@@ -28,7 +29,7 @@ class Summary(object):
             "Productive",
             "Happy",
             "Sleep",
-            "REPEAT_TASK",
+            "Repeat_Task",
             "Total"]
 
         if Config.profile.personal:
@@ -240,11 +241,11 @@ class Summary(object):
         return Score.percent(sleep_time, 100, 700)
 
     def __repeat_task_score(self):
-        todoist = TodoistManager()
+        trello = TrelloManager()
         minus_point = 15
         if self.is_holiday():
             minus_point /= 2
-        return 100 - (minus_point * todoist.get_repeat_task_count())
+        return 100 - (minus_point * trello.get_card_count_by_list_name("Tasks"))
 
     def record_write_diary(self):
         self.data_handler.edit_record(('Diary', True))

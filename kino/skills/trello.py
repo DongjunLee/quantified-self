@@ -21,6 +21,13 @@ class TrelloManager(object):
                 return l
         return None
 
+    def get_card_count_by_list_name(self, name):
+        l = self.get_list_by_name(name)
+        if l is None:
+            raise ValueError(f"there is no {name} list in trello board.")
+
+        return len(l.list_cards())
+
     def get_random_card_name(self, list_name: str="Inbox"):
         l = self.get_list_by_name(list_name)
         if l is None or len(l.list_cards()) == 0:
