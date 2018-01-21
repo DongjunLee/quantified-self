@@ -41,7 +41,7 @@ class FeedNotifier:
             for feed in feed_list:
                 noti_list += self.get_notify_list(category, feed)
 
-        twitter = TwitterManager(self.slackbot)
+        # twitter = TwitterManager(self.slackbot)
 
         if Config.bot.get("FEED_CLASSIFIER", False):
             feed_classifier = FeedClassifier()
@@ -52,10 +52,10 @@ class FeedNotifier:
             title = feed_header[1]
             link = feed[1]
 
-            if "Github Activity" in category:
-                pass
-            else:
-                twitter.feed_tweet(feed)
+            # if "Github Activity" in category:
+                # pass
+            # else:
+                # twitter.feed_tweet(feed)
 
             self.feed_logger.info(
                 json.dumps({"category": category, "title": title}))

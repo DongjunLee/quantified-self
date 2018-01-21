@@ -152,7 +152,7 @@ class Summary(object):
                 "Happy": round(happy * 100) / 100,
                 "Productive": round(productive * 100) / 100,
                 "Sleep": round(sleep * 100) / 100,
-                "REPEAT_TASK": round(repeat * 100) / 100,
+                "Repeat_Task": round(repeat * 100) / 100,
                 "Diary": diary,
                 "Exercise": exercise,
                 "BAT": bat,
