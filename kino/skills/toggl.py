@@ -28,7 +28,6 @@ class TogglManager(object):
         wid = self.toggl.getWorkspace(
             name=Config.open_api.toggl.WORKSPACE_NAME)['id']
         self.toggl.setWorkspaceId(wid)
-        self.entity = TogglProjectEntity().entity
 
         if slackbot is None:
             self.slackbot = SlackerAdapter(channel=Config.slack.channel.get('TASK', '#general'))
@@ -59,14 +58,13 @@ class TogglManager(object):
             else:
                 # matching name
                 lower_description = description.lower()
-                name = None
-                for key, value_list in self.entity['project'].items():
-                    if any(v in lower_description for v in value_list):
-                        name = key
-                        pid = self.__get_pid(name=name)
-                        break
-                    else:
-                        pid = None
+
+                TOGGL_DELIMEITER = " - "
+                if TOGGL_DELIMEITER in lower_description:
+                    name = lower_description.split(" - ")[0]
+                    pid = self.__get_pid(name=name)
+                else:
+                    pid = None
 
             self.toggl.startTimeEntry(description=description, pid=pid)
             self.slackbot.send_message(text=MsgResource.TOGGL_START)
@@ -179,18 +177,3 @@ class TogglManager(object):
         else:
             total_hours = 0
         return Score.percent(total_hours, 100, 800)
-
-
-class TogglProjectEntity(object):
-    class __Entity:
-        def __init__(self):
-            self.entity = DataHandler().read_file("toggl.json")
-
-    instance = None
-
-    def __init__(self):
-        if not TogglProjectEntity.instance:
-            TogglProjectEntity.instance = TogglProjectEntity.__Entity()
-
-    def __getattr__(self, name):
-        return getattr(self.instance, name)
