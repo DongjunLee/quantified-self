@@ -9,7 +9,6 @@ from .background import schedule
 from .nlp.ner import NamedEntitiyRecognizer
 
 from .skills.bus import Bus
-from .skills.card import BusinessCard
 from .skills.feed import FeedNotifier
 from .skills.github import GithubManager
 from .skills.humor import Humor
@@ -23,6 +22,7 @@ from .skills.summary import Summary
 from .skills.todoist import TodoistManager
 from .skills.toggl import TogglManager
 from .skills.trello import TrelloManager
+from .skills.twitter import TwitterManager
 from .skills.weather import Weather
 
 from .slack.slackbot import SlackerAdapter
@@ -69,6 +69,9 @@ class Functions(object):
     def feed_notify(self):
         feed_notifier = FeedNotifier()
         feed_notifier.notify_all()
+
+        twitter_manager = TwitterManager()
+        twitter_manager.notify_popular_tweet()
 
     def air_quality(self):
         """

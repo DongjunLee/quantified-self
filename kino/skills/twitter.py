@@ -14,6 +14,9 @@ class TwitterManager:
     MAX_TEXT_LENGTH = 135
     MAX_LINK_LENGTH = 80
 
+    HOME_TIMELINE_COUNT = 50
+    FAVORITE_THRESHOLD = 50
+
     def __init__(self, slackbot=None):
         self.logger = Logger().get_logger()
 
@@ -25,9 +28,31 @@ class TwitterManager:
                   access_token_secret=Config.open_api.twitter.ACCESS_TOKEN_SECRET)
 
         if slackbot is None:
-            self.slackbot = SlackerAdapter(channel=Config.slack.channel.get('FEED', '#general'))
+            self.slackbot = SlackerAdapter(channel=Config.slack.channel.get('SNS', '#general'))
         else:
             self.slackbot = slackbot
+
+    def notify_popular_tweet(self):
+        self.logger.info("Check popular tweet")
+        cache_data = self.data_handler.read_cache()
+        cache_tweet_ids = set(cache_data.get("tweet_ids", []))
+
+        for tweet in self.get_popular_tweet():
+            self.slackbot.send_message(text=f"*Popular Tweet*\n - :+1: ({tweet[3]}) {tweet[1]}: {tweet[2]}", giphy=False)
+            cache_tweet_ids.add(tweet[0])
+        self.data_handler.edit_cache(("tweet_ids", list(cache_tweet_ids)))
+
+    def get_popular_tweet(self):
+        cache_data = self.data_handler.read_cache()
+        cache_tweet_ids = set(cache_data.get("tweet_ids", []))
+
+        tweets = []
+        for r in self.api.GetHomeTimeline(count=self.HOME_TIMELINE_COUNT):
+            if r.retweeted_status is not None:
+                r = r.retweeted_status
+            if r.favorite_count > 50 and r.id not in cache_tweet_ids:
+                tweets.append((r.id, r.user.name, r.text, r.favorite_count))
+        return tweets
 
     def tweet(self, text: str) -> None:
         if len(text) > self.MAX_TEXT_LENGTH:
