@@ -75,7 +75,7 @@ Kino is getting smarter! **Pull requests** are always welcome. :D
 	- Working Hour
 	- Tasks
 	- Happy & Attention Score
-- Notify latest **[Feed](https://github.com/DongjunLee/awesome-feeds)**
+- Notify latest **[Feed](https://github.com/DongjunLee/awesome-feeds)** & Popular Tweet
 	- Automatically save to [Pocket](https://getpocket.com/) based on your activity (Feed Catogory Classifier)
 - Integrate with **[Giphy](https://giphy.com/)**
 - **Customize Webhook** for [IFTTT](https://ifttt.com/) or [Zapier](https://zapier.com)

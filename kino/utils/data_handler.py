@@ -133,7 +133,7 @@ class DataHandler(object):
         awesome_feeds_url = Config.profile.feed.get("AWESOME_FEEDS_URL", "https://raw.githubusercontent.com/DongjunLee/awesome-feeds/master/README.md")
         raw_awesome_feeds = requests.get(awesome_feeds_url).text
 
-        feeds = {"Github": [("Github Activity", Config.profile.feed.get("GITHUB", ""))]}
+        feeds = {"Github": [("Activity", Config.profile.feed.get("GITHUB", ""))]}
         curr_category = None
         for line in raw_awesome_feeds.splitlines():
             if line.startswith("##"):

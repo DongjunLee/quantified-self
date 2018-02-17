@@ -41,8 +41,6 @@ class FeedNotifier:
             for feed in feed_list:
                 noti_list += self.get_notify_list(category, feed)
 
-        # twitter = TwitterManager(self.slackbot)
-
         if Config.bot.get("FEED_CLASSIFIER", False):
             feed_classifier = FeedClassifier()
 
@@ -51,11 +49,6 @@ class FeedNotifier:
             category = feed_header[0]
             title = feed_header[1]
             link = feed[1]
-
-            # if "Github Activity" in category:
-                # pass
-            # else:
-                # twitter.feed_tweet(feed)
 
             self.feed_logger.info(
                 json.dumps({"category": category, "title": title}))
@@ -107,7 +100,7 @@ class FeedNotifier:
         for entry in noti_list:
             _, entry_link, _ = entry
             cache_entry_links.add(entry_link)
-            self.data_handler.edit_cache(("feed_links", list(cache_entry_links)))
+        self.data_handler.edit_cache(("feed_links", list(cache_entry_links)))
 
         return noti_list
 
@@ -137,7 +130,10 @@ class FeedClassifier:
         self.clf = self.clf.fit(train_X, train_y)
 
     def predict(self, link, category):
-        category_id = self.category_ids[category.strip()]
+        category_id = self.category_ids.get(category.strip(), None)
+        if category_id is None:
+            return False
+
         result = self.clf.predict(category_id)[0]
 
         if result == FeedDataLoader.TRUE_LABEL:
