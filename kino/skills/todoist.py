@@ -173,26 +173,43 @@ class TodoistManager(object):
             return None
 
     def complete_by_toggl(self, description, time):
-        description = description.strip()
+        if " - " in description:
+            label, task_name = description.strip(" - ")
+        else:
+            label = None
+            task_name = description
+        task_name = task_name.split()[0]
 
-        task, assigned_time = self.__get_task_by_name(description)
+        task, assigned_time = self.__get_task_by_name(task_name, label=label)
         if task is None:
-            print('todoist에 관련된 일이 없습니다.')
+            pass
         else:
             self.__complete(task, assigned_time=assigned_time, time=time)
 
-    def __get_task_by_name(self, name):
+    def __get_task_by_name(self, name, label=None):
         if " - " in name:
             name = name.split(" - ")[1]
             name = name.strip()
 
         tasks = self.get_tasks_with_overdue()
         for t in tasks:
-            content = t['content']
-            if name in content:
-                assigned_time = self.__parse_assigned_time(content)
+            task_content = t['content']
+
+            if name in task_content:
+
+                if label is not None:
+                    task_label_names = self.__get_label_names(t)
+                    if label not in task_label_names:
+                        continue
+
+                assigned_time = self.__parse_assigned_time(task_content)
                 return t, assigned_time
+
         return None, None
+
+    def __get_label_names(self, task):
+        labels = task["labels"]
+        return [self.todoist_api.labels.get_by_id(label).data["name"] for label in labels]
 
     def __complete(self, task, assigned_time=None, time=None):
         item = self.todoist_api.items.get_by_id(task['id'])
