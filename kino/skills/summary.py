@@ -267,14 +267,43 @@ class Summary(object):
         else:
             return holiday
 
+    def check_sleep_time(self):
+        self.slackbot.send_message(text=MsgResource.GOOD_MORNING)
+
+        record = self.data_handler.read_record()
+        activity = record.get('activity', {})
+        go_to_bed_time = arrow.get(activity.get('go_to_bed', None))
+
+        wake_up_time = arrow.now()
+        self.data_handler.edit_record_with_category(
+            'activity', ('wake_up', str(wake_up_time)))
+
+        sleep_time = (wake_up_time - go_to_bed_time).seconds / 60 / 60
+        sleep_time = round(sleep_time * 100) / 100
+
+        self.data_handler.edit_record(('Sleep', str(sleep_time)))
+
+        self.slackbot.send_message(
+            text=MsgResource.SLEEP_TIME(
+                bed_time=go_to_bed_time.format("HH:mm"),
+                wakeup_time=wake_up_time.format("HH:mm"),
+                diff_h=str(sleep_time)))
+
     def check_go_to_bed(self):
-        state = State()
-        state.check()
-        presence_log = state.current[state.SLEEP]
-        if presence_log['presence'] == 'away':
-            go_to_bed_time = arrow.get(presence_log['time'])
-            self.data_handler.edit_record_with_category(
-                'activity', ('go_to_bed', str(go_to_bed_time)))
+        go_to_bed_time = arrow.now()
+        self.data_handler.edit_record_with_category(
+            'activity', ('go_to_bed', str(go_to_bed_time)))
+
+        self.slackbot.send_message(text=MsgResource.GOOD_NIGHT)
+
+        # slack presence issue
+        # state = State()
+        # state.check()
+        # presence_log = state.current[state.SLEEP]
+        # if presence_log['presence'] == 'away':
+            # go_to_bed_time = arrow.get(presence_log['time'])
+            # self.data_handler.edit_record_with_category(
+                # 'activity', ('go_to_bed', str(go_to_bed_time)))
 
     def check_commit_count(self):
         github = GithubManager()

@@ -12,12 +12,14 @@ from ..slack.resource import MsgResource
 from ..slack.slackbot import SlackerAdapter
 from ..slack.template import MsgTemplate
 
+from ..utils.data_handler import DataHandler
 from ..utils.profile import Profile
 
 
 class Weather(object):
 
     def __init__(self, slackbot=None):
+        self.data_handler = DataHandler()
         self.profile = Profile()
 
         if slackbot is None:
@@ -27,23 +29,38 @@ class Weather(object):
 
 
     def forecast(self, timely='current'):
-        geolocator = GoogleV3()
-        location = geolocator.geocode(self.profile.get_location())
+        cache_data = self.data_handler.read_cache()
+
+        user_location = self.profile.get_location()
+        if user_location in cache_data:
+            address = cache_data[user_location]["address"]
+            lat = cache_data[user_location]["lat"]
+            lon = cache_data[user_location]["lon"]
+        else:
+            geolocator = GoogleV3()
+            location = geolocator.geocode(user_location)
+
+            address = location.address
+            lat = location.latitude
+            lon = location.longitude
+
+            self.data_handler.edit_cache((user_location, {
+                "address": address,
+                "lat": lat,
+                "lon": lon}))
 
         api_key = Config.open_api.dark_sky.TOKEN
-        lat = location.latitude
-        lon = location.longitude
         dark_sky = forecastio.load_forecast(api_key, lat, lon)
 
         if timely == 'current':
             currently = dark_sky.currently()
-            self.__forecast(currently, timely, location.address)
+            self.__forecast(currently, timely, address)
         elif timely == 'daily':
             hourly = dark_sky.hourly()
-            self.__forecast(hourly, timely, location.address)
+            self.__forecast(hourly, timely, address)
         elif timely == 'weekly':
             daily = dark_sky.daily()
-            self.__forecast(daily, timely, location.address)
+            self.__forecast(daily, timely, address)
 
     def __forecast(self, forecast, timely, address):
         icon = forecast.icon
