@@ -93,9 +93,10 @@ class Worker(object):
             self.profile.get_schedule('GO_TO_BED'), False,
             'send_message', {"text": MsgResource.PROFILE_GO_TO_BED}, False)
 
-        self.__excute_profile_schedule(
-            self.profile.get_schedule('CHECK_GO_TO_BED'), False,
-            'check_go_to_bed', {}, False)
+        # slack presence issue
+        # self.__excute_profile_schedule(
+            # self.profile.get_schedule('CHECK_GO_TO_BED'), False,
+            # 'check_go_to_bed', {}, False)
 
         interval = Config.profile.feed.INTERVAL
         self.__excute_feed_schedule(interval)

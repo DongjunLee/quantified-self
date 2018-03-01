@@ -73,6 +73,37 @@ class Functions(object):
         twitter_manager = TwitterManager()
         twitter_manager.notify_popular_tweet()
 
+    def good_morning(self):
+        """
+        keyword: ["굿모닝", "좋은 아침", "good morning"]
+        description: "Good Morning"
+        icon: ":sunrise: "
+        """
+
+        summary = Summary()
+        summary.check_sleep_time()
+
+        self.forecast(timely="daily")
+        self.air_quality()
+
+        trello = TrelloManager()
+        trello.clean_board(except_list_name=self.IDEA_LIST)
+
+        self.kanban_sync()
+
+    def good_night(self):
+        """
+        keyword: ["굿나잇", "굿밤", "자다", "good night"]
+        description: "Good Night"
+        icon: ":night_with_stars: "
+        """
+
+        summary = Summary()
+        summary.check_go_to_bed()
+        summary.check_commit_count()
+
+        self._reset_data()
+
     def air_quality(self):
         """
         keyword: ["공기질", "미세먼지", "air quality"]
