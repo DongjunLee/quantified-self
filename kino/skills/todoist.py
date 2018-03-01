@@ -174,7 +174,9 @@ class TodoistManager(object):
 
     def complete_by_toggl(self, description, time):
         if " - " in description:
-            label, task_name = description.strip(" - ")
+            texts = description.split(" - ")
+            label = texts[0]
+            task_name = " ".join(texts[1:])
         else:
             label = None
             task_name = description
