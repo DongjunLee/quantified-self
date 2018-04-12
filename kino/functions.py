@@ -87,7 +87,7 @@ class Functions(object):
         self.air_quality()
 
         trello = TrelloManager()
-        trello.clean_board(except_list_name=self.IDEA_LIST)
+        trello.clean_board(except_list_name=[self.IDEA_LIST, self.KANBAN_BREAK])
 
         self.kanban_sync()
 

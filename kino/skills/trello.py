@@ -45,7 +45,7 @@ class TrelloManager(object):
     def clean_board(self, except_list_name=None):
         l_list = self.board.all_lists()
         for l in l_list:
-            if except_list_name is not None and l.name == except_list_name:
+            if except_list_name is not None and l.name in except_list_name:
                 pass
             else:
                 l.archive_all_cards()
