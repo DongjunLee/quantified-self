@@ -55,7 +55,7 @@ class KinoBot:
                 self.slackbot.send_message(text=MsgResource.NAP)
 
         except BaseException:
-            self.logger.error("Session Error. restart in 5 minutes..")
+            self.logger.error("Session Error. restart in 5 seconds..")
             self.logger.exception("bot")
-            time.sleep(5 * 60)
+            time.sleep(5)
             self.start_session(nap=True)
