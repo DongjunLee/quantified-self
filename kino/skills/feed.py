@@ -6,7 +6,6 @@ import json
 from hbconfig import Config
 from sklearn import tree
 
-from .twitter import TwitterManager
 from .pocket import Pocket
 
 from ..slack.resource import MsgResource
@@ -21,6 +20,8 @@ from ..utils.logger import DataLogger
 
 
 class FeedNotifier:
+
+    MAX_KEEP = 50
 
     def __init__(self, slackbot: SlackerAdapter=None) -> None:
         self.logger = Logger().get_logger()
@@ -61,7 +62,6 @@ class FeedNotifier:
             attachments = MsgTemplate.make_feed_template(feed)
             self.slackbot.send_message(attachments=attachments)
 
-
     def get_notify_list(self, category: str, feed: tuple) -> list:
         cache_data = self.data_handler.read_cache()
 
@@ -100,7 +100,8 @@ class FeedNotifier:
         for entry in noti_list:
             _, entry_link, _ = entry
             cache_entry_links.add(entry_link)
-        self.data_handler.edit_cache(("feed_links", list(cache_entry_links)))
+
+        self.data_handler.edit_cache(("feed_links", list(cache_entry_links)[-self.MAX_KEEP:]))
 
         return noti_list
 
@@ -150,4 +151,4 @@ class FeedClassifier:
         tags = tags.replace("[", "")
         tags = tags.replace("]", "")
         tags = tags.split(" - ")
-        return tags
+

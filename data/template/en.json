@@ -8,6 +8,8 @@
       "An error has occurred.",
       "Beep-beep - process failure"
     ],
+    "SESSION_ERROR" : "An session error occurred. I'll be back..!",
+
     "NOT_UNDERSTANDING" : [
       "I do not know what you mean. Make me smart!",
       "What? I'm still a little stupid ...",

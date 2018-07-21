@@ -63,6 +63,8 @@ class Functions(object):
 
     def _reset_data(self):
         self.data_handler.edit_cache(("feed_links", []))
+        self.data_handler.edit_cache(("tweet_ids", []))
+
         FeedData().reset()
         SkillData().reset()
 
@@ -87,7 +89,7 @@ class Functions(object):
         self.air_quality()
 
         trello = TrelloManager()
-        trello.clean_board(except_list_name=self.IDEA_LIST)
+        trello.clean_board(except_list_name=[self.IDEA_LIST, self.KANBAN_BREAK])
 
         self.kanban_sync()
 

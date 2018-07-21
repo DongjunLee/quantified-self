@@ -11,6 +11,8 @@ from ..utils.logger import Logger
 
 class TwitterManager:
 
+    MAX_KEEP = 50
+
     MAX_TEXT_LENGTH = 135
     MAX_LINK_LENGTH = 80
 
@@ -40,7 +42,7 @@ class TwitterManager:
         for tweet in self.get_popular_tweet():
             self.slackbot.send_message(text=f"*Popular Tweet*\n - :+1: ({tweet[3]}) {tweet[1]}: {tweet[2]}", giphy=False)
             cache_tweet_ids.add(tweet[0])
-        self.data_handler.edit_cache(("tweet_ids", list(cache_tweet_ids)))
+        self.data_handler.edit_cache(("tweet_ids", list(cache_tweet_ids)[-self.MAX_KEEP]))
 
     def get_popular_tweet(self):
         cache_data = self.data_handler.read_cache()

@@ -1,5 +1,3 @@
-# coding: UTF-8
-
 import asyncio
 import time
 import websockets
@@ -13,7 +11,7 @@ from .slack.slackbot import SlackerAdapter
 from .slack.slackbot import GiphyClient
 
 from .utils.logger import Logger
-from .utils.data_loader import SkillData
+
 
 
 class KinoBot:
@@ -32,6 +30,8 @@ class KinoBot:
 
         giphy = GiphyClient()
         giphy.search("Hello!")
+
+        self.error_delay = 5
 
     def start_session(self, nap: bool=False):
         try:
@@ -55,7 +55,12 @@ class KinoBot:
                 self.slackbot.send_message(text=MsgResource.NAP)
 
         except BaseException:
-            self.logger.error("Session Error. restart in 5 minutes..")
+            self.slackbot.send_message(text=MsgResource.SESSION_ERROR)
+
+            self.logger.error("Session Error. restart in 5 seconds..")
             self.logger.exception("bot")
-            time.sleep(5 * 60)
+            time.sleep(5)
             self.start_session(nap=True)
+
+            if self.error_delay <= 1000:
+                self.error_delay *= 2
