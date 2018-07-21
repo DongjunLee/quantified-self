@@ -63,6 +63,8 @@ class Functions(object):
 
     def _reset_data(self):
         self.data_handler.edit_cache(("feed_links", []))
+        self.data_handler.edit_cache(("tweet_ids", []))
+
         FeedData().reset()
         SkillData().reset()
 
