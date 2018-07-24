@@ -11,7 +11,7 @@ from ..utils.logger import Logger
 
 class TwitterManager:
 
-    MAX_KEEP = 50
+    MAX_KEEP = 200
 
     MAX_TEXT_LENGTH = 135
     MAX_LINK_LENGTH = 80
