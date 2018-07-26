@@ -151,4 +151,5 @@ class FeedClassifier:
         tags = tags.replace("[", "")
         tags = tags.replace("]", "")
         tags = tags.split(" - ")
+        return tags
 
