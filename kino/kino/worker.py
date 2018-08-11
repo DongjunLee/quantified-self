@@ -100,6 +100,7 @@ class Worker(object):
 
         interval = Config.profile.feed.INTERVAL
         self.__excute_feed_schedule(interval)
+        self.__excute_health_check()
 
     def __excute_profile_schedule(
             self,
