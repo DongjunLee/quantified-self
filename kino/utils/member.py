@@ -6,7 +6,6 @@ from ..utils.data_handler import DataHandler
 
 
 class Member(object):
-
     def __init__(self):
         self.data_handler = DataHandler()
         self.slackbot = SlackerAdapter()
@@ -15,12 +14,12 @@ class Member(object):
         user_ids = self.__parse_user_ids(text)
         member_data = self.__get_member_data()
 
-        user_names = list(map(lambda x: self.get_name(
-            x, member_data=member_data), user_ids))
         user_names = list(
-            filter(
-                lambda x: x is not None and x.lower() != "no ki",
-                user_names))
+            map(lambda x: self.get_name(x, member_data=member_data), user_ids)
+        )
+        user_names = list(
+            filter(lambda x: x is not None and x.lower() != "no ki", user_names)
+        )
         return user_names
 
     def __parse_user_ids(self, text):

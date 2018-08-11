@@ -9,9 +9,7 @@ import requests
 from hbconfig import Config
 
 
-
 class DataHandler(object):
-
     def __init__(self):
         self.data_path = "data/"
         self.record_path = "record/"
@@ -30,14 +28,14 @@ class DataHandler(object):
 
         path = os.path.join(fpath + fname)
         try:
-            with open(path, 'r') as infile:
+            with open(path, "r") as infile:
                 return infile.read()
         except BaseException:
             return ""
 
     def write_file(self, fname, data):
         path = os.path.join(self.data_path + fname)
-        with open(path, 'w') as outfile:
+        with open(path, "w") as outfile:
             json.dump(data, outfile)
 
     def read_json_then_add_data(self, fname, category, input_data):
@@ -48,7 +46,7 @@ class DataHandler(object):
             total_data[category] = category_data
             c_index = 1
         else:
-            c_index = category_data['index'] + 1
+            c_index = category_data["index"] + 1
         category_data["index"] = c_index
         c_index = "#" + str(c_index)
         category_data[c_index] = input_data
@@ -78,7 +76,7 @@ class DataHandler(object):
     def get_current_data(self, fname, category):
         total_data = self.read_file(fname)
         category_data = total_data[category]
-        c_index = "#" + str(category_data['index'])
+        c_index = "#" + str(category_data["index"])
         current_category_data = category_data[c_index]
         return c_index, current_category_data
 
@@ -86,12 +84,12 @@ class DataHandler(object):
         date = arrow.now().replace(days=int(days))
         if date_string is not None:
             date = arrow.get(date_string)
-        fname = self.record_path + date.format('YYYY-MM-DD') + ".json"
+        fname = self.record_path + date.format("YYYY-MM-DD") + ".json"
         return self.read_file(fname)
 
     def write_record(self, data, days=0):
         date = arrow.now().replace(days=int(days))
-        fname = self.record_path + date.format('YYYY-MM-DD') + ".json"
+        fname = self.record_path + date.format("YYYY-MM-DD") + ".json"
         self.write_file(fname, data)
 
     def edit_record(self, data, days=0):
@@ -130,7 +128,10 @@ class DataHandler(object):
         return templates
 
     def read_feeds(self):
-        awesome_feeds_url = Config.profile.feed.get("AWESOME_FEEDS_URL", "https://raw.githubusercontent.com/DongjunLee/awesome-feeds/master/README.md")
+        awesome_feeds_url = Config.profile.feed.get(
+            "AWESOME_FEEDS_URL",
+            "https://raw.githubusercontent.com/DongjunLee/awesome-feeds/master/README.md",
+        )
         raw_awesome_feeds = requests.get(awesome_feeds_url).text
 
         feeds = {"Github": [("Activity", Config.profile.feed.get("GITHUB", ""))]}
@@ -143,7 +144,7 @@ class DataHandler(object):
             elif line.startswith("- "):
                 feed_name = re.findall("\[.+\]", line)[0][1:-1]
                 line = line.replace(" ", "")
-                feed_link = line[line.index("):") + len("):"):]
+                feed_link = line[line.index("):") + len("):") :]
 
                 feeds[curr_category].append((feed_name, feed_link))
         return feeds

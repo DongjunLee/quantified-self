@@ -6,15 +6,14 @@ from ..slack.resource import MsgResource
 from ..slack.slackbot import SlackerAdapter
 
 
-
 class JenkinsClient:
-
     def __init__(self, slackbot=None):
         config = Config()
         self.api = jenkins.Jenkins(
             config.open_api.jenkins.URL,
             username=config.open_api.jenkins.USERNAME,
-            password=config.open_api.jenkins.PASSWORD)
+            password=config.open_api.jenkins.PASSWORD,
+        )
         self.token = config.open_api.jenkins.TOKEN
 
         if slackbot is None:

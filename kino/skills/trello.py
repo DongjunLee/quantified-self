@@ -4,14 +4,13 @@ from hbconfig import Config
 
 
 class TrelloManager(object):
-
     def __init__(self):
         trello_config = Config.open_api.trello
 
         self.client = TrelloClient(
             api_key=trello_config.API_KEY,
             api_secret=trello_config.API_SECRET,
-            token=trello_config.TOKEN
+            token=trello_config.TOKEN,
         )
         self.board = self.client.get_board(trello_config.BOARD)
 
@@ -28,7 +27,7 @@ class TrelloManager(object):
 
         return len(l.list_cards())
 
-    def get_random_card_name(self, list_name: str="Inbox"):
+    def get_random_card_name(self, list_name: str = "Inbox"):
         l = self.get_list_by_name(list_name)
         if l is None or len(l.list_cards()) == 0:
             return None

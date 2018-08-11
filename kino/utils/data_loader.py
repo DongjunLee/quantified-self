@@ -14,7 +14,6 @@ from .classes import Skill
 
 
 class SkillDataLoader(object):
-
     def __init__(self):
         pass
 
@@ -60,7 +59,7 @@ class SkillDataLoader(object):
         return q
 
     def convert_data(self, line, prev_func):
-        datetime_pattern = '\d+-\d+-\d+ \d+:\d+'
+        datetime_pattern = "\d+-\d+-\d+ \d+:\d+"
         r = re.findall(datetime_pattern, line)
         if len(r) == 0:
             return None
@@ -68,16 +67,17 @@ class SkillDataLoader(object):
         t = arrow.get(r[0], tzinfo=tz.tzlocal())
 
         day_of_week = t.isoweekday()
-        hour = int(t.format('HH'))
-        minute = int(t.format('mm'))
+        hour = int(t.format("HH"))
+        minute = int(t.format("mm"))
 
         if day_of_week == 6 or day_of_week == 7:
             is_holiday = 1
         else:
             is_holiday = 0
 
-        return np.array([day_of_week, hour, minute, prev_func,
-                         is_holiday], dtype=np.int32)
+        return np.array(
+            [day_of_week, hour, minute, prev_func, is_holiday], dtype=np.int32
+        )
 
     def make_X(self):
         day_of_week, hour, minute, is_holiday = ArrowUtil.convert_now2data()
@@ -94,7 +94,8 @@ class SkillDataLoader(object):
                     prev_func = idx
 
         return np.array(
-            [[day_of_week, hour, minute, prev_func, is_holiday]], dtype=np.int32)
+            [[day_of_week, hour, minute, prev_func, is_holiday]], dtype=np.int32
+        )
 
     def make_y(self, text):
         skill_list = list(map(lambda x: x[0], Skill.classes))
@@ -105,7 +106,6 @@ class SkillDataLoader(object):
 
 
 class RemoveOldDataQueue(Queue):
-
     def put_nowait(self, *args, **kwargs):
         if self.full():
             try:
@@ -168,19 +168,22 @@ class FeedDataLoader:
         data_list = []
         for d in data:
             try:
-                data_list.append(json.loads(d[d.index("> {") + 2:]))
+                data_list.append(json.loads(d[d.index("> {") + 2 :]))
             except:
                 print("Faild convert to dict", d)
         return data_list
 
     def map_category2id(self, feed):
-        keys = set(map(lambda f: f['category'].strip(), feed))
+        keys = set(map(lambda f: f["category"].strip(), feed))
 
         category_ids = {}
         for idx, key in enumerate(list(keys)):
             category_ids[key] = idx
 
-        return list(map(lambda f: category_ids[f["category"].strip()], feed)), category_ids
+        return (
+            list(map(lambda f: category_ids[f["category"].strip()], feed)),
+            category_ids,
+        )
 
 
 class FeedData(object):
@@ -191,7 +194,9 @@ class FeedData(object):
             feed = data_loader.load_data("feed.log")
             pocket = data_loader.load_data("pocket.log")
 
-            self.train_X, self.train_y, self.category_ids = data_loader.make_train_set(feed, pocket)
+            self.train_X, self.train_y, self.category_ids = data_loader.make_train_set(
+                feed, pocket
+            )
 
     instance = None
 
@@ -204,4 +209,3 @@ class FeedData(object):
 
     def reset(self):
         FeedData.instance = FeedData.__Singleton()
-

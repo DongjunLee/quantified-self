@@ -14,10 +14,10 @@ class NamedEntitiyRecognizer(object):
             self.data_handler = DataHandler()
 
             self.ner = self.data_handler.read_file("ner.json")
-            self.kino = self.ner['kino']
-            self.schedule = self.ner['schedule']
+            self.kino = self.ner["kino"]
+            self.schedule = self.ner["schedule"]
             self.skills = self.data_handler.read_file("skills.json")
-            self.params = self.ner['params']
+            self.params = self.ner["params"]
 
         def parse(self, item, text, get_all=False):
 
@@ -50,7 +50,9 @@ class NamedEntitiyRecognizer(object):
                 # STR => str -> regex
                 elif isinstance("", item_pattern_type):
                     if self.SPLIT_PATTERN in text:
-                        text = text[text.index(self.SPLIT_PATTERN) + len(self.SPLIT_PATTERN):]
+                        text = text[
+                            text.index(self.SPLIT_PATTERN) + len(self.SPLIT_PATTERN) :
+                        ]
 
                     result = re.findall(item_pattern, text)
                     if len(result) != 0:

@@ -4,20 +4,16 @@ from dateutil import tz
 
 
 class ArrowUtil(object):
-
     def __init__(self):
         pass
 
     @staticmethod
     def get_action_time(time: str) -> arrow.Arrow:
-        time_str = time.strip().replace('at', '')
+        time_str = time.strip().replace("at", "")
         if time_str == "now":
             return arrow.get(arrow.now(), tzinfo=tz.tzlocal())
         else:
-            return arrow.get(
-                time_str,
-                'MMMM D, YYYY  hh:mma',
-                tzinfo=tz.tzlocal())
+            return arrow.get(time_str, "MMMM D, YYYY  hh:mma", tzinfo=tz.tzlocal())
 
     @staticmethod
     def get_curr_time_diff(start=None, stop=None, base_hour=False) -> int:
@@ -50,13 +46,9 @@ class ArrowUtil(object):
             end_h = 23
             end_m = 59
 
-        start = now.replace(
-            hour=start_h,
-            minute=start_m,
-            second=0,
-            microsecond=0)
+        start = now.replace(hour=start_h, minute=start_m, second=0, microsecond=0)
         end = now.replace(hour=end_h, minute=end_m, second=0, microsecond=0)
-        if (start <= now <= end):
+        if start <= now <= end:
             return True
         else:
             return False
@@ -74,8 +66,8 @@ class ArrowUtil(object):
     def convert_now2data() -> tuple:
         now = arrow.now()
         day_of_week = now.isoweekday()
-        hour = int(now.format('HH'))
-        minute = int(now.format('mm'))
+        hour = int(now.format("HH"))
+        minute = int(now.format("mm"))
         is_holiday = not ArrowUtil.is_weekday()
 
         return (day_of_week, hour, minute, is_holiday)
@@ -115,7 +107,7 @@ class ArrowUtil(object):
             "6": "Sat",
             "7": "Sun",
             "8": "Weekday",
-            "9": "Weekend"
+            "9": "Weekend",
         }
 
         return ", ".join(map(lambda x: formats[x], day_of_week))

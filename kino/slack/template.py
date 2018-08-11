@@ -3,9 +3,7 @@
 from .resource import MsgResource
 
 
-
 class MsgTemplate:
-
     @staticmethod
     def make_schedule_template(pretext: str, data: dict) -> list:
         sorted(data.items())
@@ -21,26 +19,27 @@ class MsgTemplate:
             else:
                 attachment.pretext = pretext
 
-            if 'icon' in v:
-                icon = v['icon']
-                v.pop('icon', None)
+            if "icon" in v:
+                icon = v["icon"]
+                v.pop("icon", None)
             else:
                 icon = MsgResource.TIMER_ICON
 
-            attachment.title = icon + k + " " + \
-                v['description'] + " : " + v['time_interval']
-            del v['description']
-            del v['time_interval']
+            attachment.title = (
+                icon + k + " " + v["description"] + " : " + v["time_interval"]
+            )
+            del v["description"]
+            del v["time_interval"]
 
             attachment.fallback = "알람 관련한 정보입니다. channel에서 확인하세요!"
 
-            if 'color' in v:
-                attachment.color = v['color']
-                v.pop('color', None)
+            if "color" in v:
+                attachment.color = v["color"]
+                v.pop("color", None)
 
             fields = []
-            if 'registered_alarm' in v:
-                for d_k, d_v in v['registered_alarm'].items():
+            if "registered_alarm" in v:
+                for d_k, d_v in v["registered_alarm"].items():
                     fields.append(Field(" - " + d_k, d_v, short="true"))
 
             attachment.fields = fields
@@ -66,12 +65,10 @@ class MsgTemplate:
         fields = []
         for f_name, f_detail in data.items():
             title = f_detail["icon"] + f_name
-            text = MsgResource.ORANGE_DIAMOND_ICON + \
-                f_detail['description'] + "\n"
-            if len(f_detail['params']) != 0:
+            text = MsgResource.ORANGE_DIAMOND_ICON + f_detail["description"] + "\n"
+            if len(f_detail["params"]) != 0:
                 text += MsgResource.ORANGE_DIAMOND_ICON + "params" + "\n"
-                text += MsgResource.WHITE_ELEMENT_ICON + \
-                    ", ".join(f_detail['params'])
+                text += MsgResource.WHITE_ELEMENT_ICON + ", ".join(f_detail["params"])
 
             fields.append(Field(title, text, short="true"))
         attachment.fields = fields
@@ -112,11 +109,12 @@ class MsgTemplate:
 
     @staticmethod
     def make_weather_template(
-            address: str,
-            icon: str,
-            summary: str,
-            temperature=None,
-            fallback="weather fallback") -> list:
+        address: str,
+        icon: str,
+        summary: str,
+        temperature=None,
+        fallback="weather fallback",
+    ) -> list:
         attachments = []
 
         attachement = Attachement()
@@ -125,11 +123,7 @@ class MsgTemplate:
 
         fields = []
         fields.append(Field("Address", address))
-        fields.append(
-            Field(
-                "Sky Icon",
-                MsgResource.WEATHER_ICONS(icon),
-                short="true"))
+        fields.append(Field("Sky Icon", MsgResource.WEATHER_ICONS(icon), short="true"))
         if temperature:
             fields.append(Field("Temperature", temperature, short="true"))
         fields.append(Field("Summary", summary))
@@ -143,31 +137,32 @@ class MsgTemplate:
     def make_air_quality_template(station_name: str, data: dict) -> list:
         attachments = []
 
-        cai = data['cai']
+        cai = data["cai"]
 
         attachement = Attachement()
-        attachement.color = MsgResource.AIR_QUALITY_COLOR(cai['grade'])
-        attachement.fallback = cai['description'] + " : " + cai['value']
+        attachement.color = MsgResource.AIR_QUALITY_COLOR(cai["grade"])
+        attachement.fallback = cai["description"] + " : " + cai["value"]
         attachement.title = station_name + "의 대기질 정보 입니다."
         attachement.mrkdwn_in = ["text", "pretext"]
 
         fields = []
-        fields.append(Field(cai['description'], cai['value'] + "점"))
-        del data['cai']
-        del data['pm25']
+        fields.append(Field(cai["description"], cai["value"] + "점"))
+        del data["cai"]
+        del data["pm25"]
 
         for _, v in data.items():
             if isinstance(v, str):
                 continue
             fields.append(
                 Field(
-                    v['description'],
-                    v['value'] +
-                    v['unit'] +
-                    "\n" +
-                    MsgResource.AIR_QUALITY_TEXT(
-                        v['grade']),
-                    short="true"))
+                    v["description"],
+                    v["value"]
+                    + v["unit"]
+                    + "\n"
+                    + MsgResource.AIR_QUALITY_TEXT(v["grade"]),
+                    short="true",
+                )
+            )
 
         attachement.fields = fields
 
@@ -178,9 +173,9 @@ class MsgTemplate:
     def make_todoist_task_template(tasks: tuple) -> list:
         attachments = []
 
-        fallback = "\n" + \
-            "\n".join(
-                list(map(lambda x: x[2] + ": " + x[1] + "(" + x[0] + ")", tasks)))
+        fallback = "\n" + "\n".join(
+            list(map(lambda x: x[2] + ": " + x[1] + "(" + x[0] + ")", tasks))
+        )
         for t in tasks:
             project_name, title, time, priority = t
 
@@ -221,8 +216,13 @@ class MsgTemplate:
         fields = []
         for k, v in data.items():
             title = MsgResource.BUS_ICON + str(k) + "번 버스"
-            value = MsgResource.ORANGE_DIAMOND_ICON + \
-                v['bus1'] + "\n" + MsgResource.ORANGE_DIAMOND_ICON + v['bus2']
+            value = (
+                MsgResource.ORANGE_DIAMOND_ICON
+                + v["bus1"]
+                + "\n"
+                + MsgResource.ORANGE_DIAMOND_ICON
+                + v["bus2"]
+            )
 
             fields.append(Field(title, value, short="true"))
         attachement.fields = fields
@@ -235,10 +235,10 @@ class MsgTemplate:
         attachments = []
         attachement = Attachement()
 
-        attachement.color = data['Color']
-        total_score = data['Total']
-        del data['Color']
-        del data['Total']
+        attachement.color = data["Color"]
+        total_score = data["Total"]
+        del data["Color"]
+        del data["Total"]
 
         attachement.fallback = "종합점수:  " + str(total_score)
         attachement.text = "종합점수 입니다."
@@ -255,7 +255,6 @@ class MsgTemplate:
 
 
 class Attachement(dict):
-
     def __init__(self):
         self["color"] = "#438C56"
         self["mrkdwn_in"] = ["text", "pretext"]
@@ -277,7 +276,6 @@ class Attachement(dict):
 
 
 class Field(dict):
-
     def __init__(self, title, value, short="false"):
         self["title"] = title
         self["value"] = value
@@ -297,5 +295,3 @@ class Field(dict):
             del self[name]
         else:
             raise AttributeError("No such attribute: " + name)
-
-

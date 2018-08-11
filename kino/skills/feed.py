@@ -23,7 +23,7 @@ class FeedNotifier:
 
     MAX_KEEP = 50
 
-    def __init__(self, slackbot: SlackerAdapter=None) -> None:
+    def __init__(self, slackbot: SlackerAdapter = None) -> None:
         self.logger = Logger().get_logger()
         self.feed_logger = DataLogger("feed").get_logger()
 
@@ -31,7 +31,9 @@ class FeedNotifier:
         self.feeds = self.data_handler.read_feeds()
 
         if slackbot is None:
-            self.slackbot = SlackerAdapter(channel=Config.slack.channel.get('FEED', "#general"))
+            self.slackbot = SlackerAdapter(
+                channel=Config.slack.channel.get("FEED", "#general")
+            )
         else:
             self.slackbot = slackbot
 
@@ -51,12 +53,14 @@ class FeedNotifier:
             title = feed_header[1]
             link = feed[1]
 
-            self.feed_logger.info(
-                json.dumps({"category": category, "title": title}))
+            self.feed_logger.info(json.dumps({"category": category, "title": title}))
 
-            if Config.bot.get("FEED_CLASSIFIER", False) \
-                and feed_classifier.predict(link, category):
-                self.slackbot.send_message(text=MsgResource.PREDICT_FEED_TRUE(title=category + ": " + title))
+            if Config.bot.get("FEED_CLASSIFIER", False) and feed_classifier.predict(
+                link, category
+            ):
+                self.slackbot.send_message(
+                    text=MsgResource.PREDICT_FEED_TRUE(title=category + ": " + title)
+                )
                 continue
 
             attachments = MsgTemplate.make_feed_template(feed)
@@ -69,8 +73,8 @@ class FeedNotifier:
         f = feedparser.parse(feed_url)
 
         f.entries = sorted(
-            f.entries, key=lambda x: x.get(
-                'updated_parsed', 0), reverse=True)
+            f.entries, key=lambda x: x.get("updated_parsed", 0), reverse=True
+        )
 
         # get Latest Feed
         noti_list = []
@@ -89,7 +93,7 @@ class FeedNotifier:
 
         if f.entries:
             last_e = f.entries[0]
-            last_updated_date = arrow.get(last_e.get('updated_parsed', None))
+            last_updated_date = arrow.get(last_e.get("updated_parsed", None))
             self.data_handler.edit_cache((feed_url, str(last_updated_date)))
 
         # filter feeded entry link
@@ -101,25 +105,28 @@ class FeedNotifier:
             _, entry_link, _ = entry
             cache_entry_links.add(entry_link)
 
-        self.data_handler.edit_cache(("feed_links", list(cache_entry_links)[-self.MAX_KEEP:]))
+        self.data_handler.edit_cache(
+            ("feed_links", list(cache_entry_links)[-self.MAX_KEEP :])
+        )
 
         return noti_list
 
     def __make_entry_tuple(self, category: str, entry: dict, feed_name: str) -> tuple:
-        entry_title = f"[{category}] - {feed_name} \n" + entry.get('title', '')
-        entry_link = entry.get('link', '')
-        entry_description = f"Link : {entry_link} \n" + self.__remove_tag(entry.get('description', ''), entry_link)
+        entry_title = f"[{category}] - {feed_name} \n" + entry.get("title", "")
+        entry_link = entry.get("link", "")
+        entry_description = f"Link : {entry_link} \n" + self.__remove_tag(
+            entry.get("description", ""), entry_link
+        )
         return (entry_title, entry_link, entry_description)
 
     def __remove_tag(self, text: str, entry_link: str) -> str:
-        text = re.sub('<.+?>', '', text, 0, re.I | re.S)
-        text = re.sub('&nbsp;|\t|\r|', '', text)
-        text = re.sub(entry_link, '', text)
+        text = re.sub("<.+?>", "", text, 0, re.I | re.S)
+        text = re.sub("&nbsp;|\t|\r|", "", text)
+        text = re.sub(entry_link, "", text)
         return text
 
 
 class FeedClassifier:
-
     def __init__(self):
         self.logger = Logger().get_logger()
 
@@ -152,4 +159,3 @@ class FeedClassifier:
         tags = tags.replace("]", "")
         tags = tags.split(" - ")
         return tags
-

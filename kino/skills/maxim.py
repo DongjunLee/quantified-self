@@ -7,7 +7,6 @@ from ..utils.data_handler import DataHandler
 
 
 class Maxim(object):
-
     def __init__(self, slackbot=None):
         self.data_handler = DataHandler()
 

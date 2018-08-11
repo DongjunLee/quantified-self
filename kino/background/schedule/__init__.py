@@ -43,13 +43,14 @@ import logging
 import time
 import threading
 
-logger = logging.getLogger('schedule')
+logger = logging.getLogger("schedule")
 
 
 class CancelJob(object):
     """
     Can be returned from a job to unschedule itself.
     """
+
     pass
 
 
@@ -112,8 +113,11 @@ class Scheduler(object):
 
         :param delay_seconds: A delay added between every executed job
         """
-        logger.info('Running *all* %i jobs with %is delay inbetween',
-                    len(self.jobs), delay_seconds)
+        logger.info(
+            "Running *all* %i jobs with %is delay inbetween",
+            len(self.jobs),
+            delay_seconds,
+        )
         for job in self.jobs[:]:
             self._run_job(job)
             time.sleep(delay_seconds)
@@ -211,121 +215,127 @@ class Job(object):
 
     def __repr__(self):
         def format_time(t):
-            return t.strftime('%Y-%m-%d %H:%M:%S') if t else '[never]'
+            return t.strftime("%Y-%m-%d %H:%M:%S") if t else "[never]"
 
-        timestats = '(last run: %s, next run: %s)' % (
-                    format_time(self.last_run), format_time(self.next_run))
+        timestats = "(last run: %s, next run: %s)" % (
+            format_time(self.last_run),
+            format_time(self.next_run),
+        )
 
-        if hasattr(self.job_func, '__name__'):
+        if hasattr(self.job_func, "__name__"):
             job_func_name = self.job_func.__name__
         else:
             job_func_name = repr(self.job_func)
         args = [repr(x) for x in self.job_func.args]
-        kwargs = ['%s=%s' % (k, repr(v))
-                  for k, v in self.job_func.keywords.items()]
-        call_repr = job_func_name + '(' + ', '.join(args + kwargs) + ')'
+        kwargs = ["%s=%s" % (k, repr(v)) for k, v in self.job_func.keywords.items()]
+        call_repr = job_func_name + "(" + ", ".join(args + kwargs) + ")"
 
         if self.at_time is not None:
-            return 'Every %s %s at %s do %s %s' % (
-                   self.interval,
-                   self.unit[:-1] if self.interval == 1 else self.unit,
-                   self.at_time, call_repr, timestats)
+            return "Every %s %s at %s do %s %s" % (
+                self.interval,
+                self.unit[:-1] if self.interval == 1 else self.unit,
+                self.at_time,
+                call_repr,
+                timestats,
+            )
         else:
-            return 'Every %s %s do %s %s' % (
-                   self.interval,
-                   self.unit[:-1] if self.interval == 1 else self.unit,
-                   call_repr, timestats)
+            return "Every %s %s do %s %s" % (
+                self.interval,
+                self.unit[:-1] if self.interval == 1 else self.unit,
+                call_repr,
+                timestats,
+            )
 
     @property
     def second(self):
-        assert self.interval == 1, 'Use seconds instead of second'
+        assert self.interval == 1, "Use seconds instead of second"
         return self.seconds
 
     @property
     def seconds(self):
-        self.unit = 'seconds'
+        self.unit = "seconds"
         return self
 
     @property
     def minute(self):
-        assert self.interval == 1, 'Use minutes instead of minute'
+        assert self.interval == 1, "Use minutes instead of minute"
         return self.minutes
 
     @property
     def minutes(self):
-        self.unit = 'minutes'
+        self.unit = "minutes"
         return self
 
     @property
     def hour(self):
-        assert self.interval == 1, 'Use hours instead of hour'
+        assert self.interval == 1, "Use hours instead of hour"
         return self.hours
 
     @property
     def hours(self):
-        self.unit = 'hours'
+        self.unit = "hours"
         return self
 
     @property
     def day(self):
-        assert self.interval == 1, 'Use days instead of day'
+        assert self.interval == 1, "Use days instead of day"
         return self.days
 
     @property
     def days(self):
-        self.unit = 'days'
+        self.unit = "days"
         return self
 
     @property
     def week(self):
-        assert self.interval == 1, 'Use weeks instead of week'
+        assert self.interval == 1, "Use weeks instead of week"
         return self.weeks
 
     @property
     def weeks(self):
-        self.unit = 'weeks'
+        self.unit = "weeks"
         return self
 
     @property
     def monday(self):
-        assert self.interval == 1, 'Use mondays instead of monday'
-        self.start_day = 'monday'
+        assert self.interval == 1, "Use mondays instead of monday"
+        self.start_day = "monday"
         return self.weeks
 
     @property
     def tuesday(self):
-        assert self.interval == 1, 'Use tuesdays instead of tuesday'
-        self.start_day = 'tuesday'
+        assert self.interval == 1, "Use tuesdays instead of tuesday"
+        self.start_day = "tuesday"
         return self.weeks
 
     @property
     def wednesday(self):
-        assert self.interval == 1, 'Use wedesdays instead of wednesday'
-        self.start_day = 'wednesday'
+        assert self.interval == 1, "Use wedesdays instead of wednesday"
+        self.start_day = "wednesday"
         return self.weeks
 
     @property
     def thursday(self):
-        assert self.interval == 1, 'Use thursday instead of thursday'
-        self.start_day = 'thursday'
+        assert self.interval == 1, "Use thursday instead of thursday"
+        self.start_day = "thursday"
         return self.weeks
 
     @property
     def friday(self):
-        assert self.interval == 1, 'Use fridays instead of friday'
-        self.start_day = 'friday'
+        assert self.interval == 1, "Use fridays instead of friday"
+        self.start_day = "friday"
         return self.weeks
 
     @property
     def saturday(self):
-        assert self.interval == 1, 'Use saturdays instead of saturday'
-        self.start_day = 'saturday'
+        assert self.interval == 1, "Use saturdays instead of saturday"
+        self.start_day = "saturday"
         return self.weeks
 
     @property
     def sunday(self):
-        assert self.interval == 1, 'Use sundays instead of sunday'
-        self.start_day = 'sunday'
+        assert self.interval == 1, "Use sundays instead of sunday"
+        self.start_day = "sunday"
         return self.weeks
 
     def tag(self, *tags):
@@ -338,10 +348,10 @@ class Job(object):
         :return: The invoked job instance
         """
         if any([not isinstance(tag, collections.Hashable) for tag in tags]):
-            raise TypeError('Every tag should be hashable')
+            raise TypeError("Every tag should be hashable")
 
         if not all(isinstance(tag, collections.Hashable) for tag in tags):
-            raise TypeError('Tags must be hashable')
+            raise TypeError("Tags must be hashable")
         self.tags.update(tags)
         return self
 
@@ -355,13 +365,13 @@ class Job(object):
         :param time_str: A string in `XX:YY` format.
         :return: The invoked job instance
         """
-        assert self.unit in ('days', 'hours') or self.start_day
-        hour, minute = time_str.split(':')
+        assert self.unit in ("days", "hours") or self.start_day
+        hour, minute = time_str.split(":")
         minute = int(minute)
-        if self.unit == 'days' or self.start_day:
+        if self.unit == "days" or self.start_day:
             hour = int(hour)
             assert 0 <= hour <= 23
-        elif self.unit == 'hours':
+        elif self.unit == "hours":
             hour = 0
         assert 0 <= minute <= 59
         self.at_time = datetime.time(hour, minute)
@@ -402,7 +412,7 @@ class Job(object):
 
         :return: The return value returned by the `job_func`
         """
-        logger.info('Running job %s', self)
+        logger.info("Running job %s", self)
         ret = self.job_func()
         self.last_run = datetime.datetime.now()
         self._schedule_next_run()
@@ -412,19 +422,19 @@ class Job(object):
         """
         Compute the instant when this job should run next.
         """
-        assert self.unit in ('seconds', 'minutes', 'hours', 'days', 'weeks')
+        assert self.unit in ("seconds", "minutes", "hours", "days", "weeks")
         self.period = datetime.timedelta(**{self.unit: self.interval})
         self.next_run = datetime.datetime.now() + self.period
         if self.start_day is not None:
-            assert self.unit == 'weeks'
+            assert self.unit == "weeks"
             weekdays = (
-                'monday',
-                'tuesday',
-                'wednesday',
-                'thursday',
-                'friday',
-                'saturday',
-                'sunday'
+                "monday",
+                "tuesday",
+                "wednesday",
+                "thursday",
+                "friday",
+                "saturday",
+                "sunday",
             )
             assert self.start_day in weekdays
             weekday = weekdays.index(self.start_day)
@@ -433,23 +443,26 @@ class Job(object):
                 days_ahead += 7
             self.next_run += datetime.timedelta(days_ahead) - self.period
         if self.at_time is not None:
-            assert self.unit in ('days', 'hours') or self.start_day is not None
+            assert self.unit in ("days", "hours") or self.start_day is not None
             kwargs = {
-                'minute': self.at_time.minute,
-                'second': self.at_time.second,
-                'microsecond': 0
+                "minute": self.at_time.minute,
+                "second": self.at_time.second,
+                "microsecond": 0,
             }
-            if self.unit == 'days' or self.start_day is not None:
-                kwargs['hour'] = self.at_time.hour
+            if self.unit == "days" or self.start_day is not None:
+                kwargs["hour"] = self.at_time.hour
             self.next_run = self.next_run.replace(**kwargs)
             # If we are running for the first time, make sure we run
             # at the specified time *today* (or *this hour*) as well
             if not self.last_run:
                 now = datetime.datetime.now()
-                if (self.unit == 'days' and self.at_time > now.time() and
-                        self.interval == 1):
+                if (
+                    self.unit == "days"
+                    and self.at_time > now.time()
+                    and self.interval == 1
+                ):
                     self.next_run = self.next_run - datetime.timedelta(days=1)
-                elif self.unit == 'hours' and self.at_time.minute > now.minute:
+                elif self.unit == "hours" and self.at_time.minute > now.minute:
                     self.next_run = self.next_run - datetime.timedelta(hours=1)
         if self.start_day is not None and self.at_time is not None:
             # Let's see if we will still make that time we specified today

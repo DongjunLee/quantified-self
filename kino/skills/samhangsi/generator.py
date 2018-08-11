@@ -1,4 +1,4 @@
-#-- coding: utf-8 -*-
+# -- coding: utf-8 -*-
 
 import argparse
 
@@ -8,7 +8,6 @@ import tensorflow as tf
 
 from .data_loader import TextLoader
 from .model import CharRNN
-
 
 
 class SamhangSiGenerator:
@@ -27,20 +26,21 @@ class SamhangSiGenerator:
             if vocab is None:
                 return None
             return {idx: key for key, idx in vocab.items()}
+
         self.vocab = data_loader.vocab
         self.rev_vocab = get_rev_vocab(data_loader.vocab)
 
     def _make_estimator(self):
         params = tf.contrib.training.HParams(**Config.model.to_dict())
-        run_config = tf.contrib.learn.RunConfig(
-            model_dir=Config.train.model_dir)
+        run_config = tf.contrib.learn.RunConfig(model_dir=Config.train.model_dir)
 
         char_rnn = CharRNN()
         self.estimator = tf.estimator.Estimator(
-                model_fn=char_rnn.model_fn,
-                model_dir=Config.train.model_dir,
-                params=params,
-                config=run_config)
+            model_fn=char_rnn.model_fn,
+            model_dir=Config.train.model_dir,
+            params=params,
+            config=run_config,
+        )
 
     def generate(self, word):
         result = ""
@@ -61,9 +61,8 @@ class SamhangSiGenerator:
             X[0, 0] = sample
 
             predict_input_fn = tf.estimator.inputs.numpy_input_fn(
-                  x={"input_data": X},
-                  num_epochs=1,
-                  shuffle=False)
+                x={"input_data": X}, num_epochs=1, shuffle=False
+            )
 
             result = self.estimator.predict(input_fn=predict_input_fn)
             probs = next(result)["probs"]
@@ -71,12 +70,12 @@ class SamhangSiGenerator:
             def weighted_pick(weights):
                 t = np.cumsum(weights)
                 s = np.sum(weights)
-                return(int(np.searchsorted(t, np.random.rand(1)*s)))
+                return int(np.searchsorted(t, np.random.rand(1) * s))
 
             sample = weighted_pick(probs)
             sentence.append(sample)
 
-        sentence = list(map(lambda sample: self.rev_vocab.get(sample, ''), sentence))
+        sentence = list(map(lambda sample: self.rev_vocab.get(sample, ""), sentence))
         sentence = "".join(sentence)
         return sentence
 
@@ -84,9 +83,8 @@ class SamhangSiGenerator:
         print("word: " + word)
         result = result.replace("\n", " ")
         for char in word[1:]:
-            result = result.replace(char, "\n"+char, 1)
+            result = result.replace(char, "\n" + char, 1)
         return result
-
 
 
 def main(word):
@@ -95,14 +93,15 @@ def main(word):
     print(result)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
-                        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('--config', type=str, default='config',
-                        help='config file name')
-    parser.add_argument('--word', type=str, default='삼행시',
-                        help='Input Korean word (ex. 삼행시)')
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+    parser.add_argument("--config", type=str, default="config", help="config file name")
+    parser.add_argument(
+        "--word", type=str, default="삼행시", help="Input Korean word (ex. 삼행시)"
+    )
     args = parser.parse_args()
 
     Config(args.config)

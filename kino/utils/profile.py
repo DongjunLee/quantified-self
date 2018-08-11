@@ -7,14 +7,13 @@ from .data_handler import DataHandler
 
 
 class Profile(object):
-
     def __init__(self):
         profile = Config.profile
-        self.personal = profile.get('personal', None)
-        self.schedule = profile.get('schedule', None)
-        self.location = profile.get('location', None)
-        self.task = profile.get('task', None)
-        self.score = profile.get('score', None)
+        self.personal = profile.get("personal", None)
+        self.schedule = profile.get("schedule", None)
+        self.location = profile.get("location", None)
+        self.task = profile.get("task", None)
+        self.score = profile.get("score", None)
 
     def get_schedule(self, keyword, parsed=False):
         if parsed:
@@ -36,11 +35,11 @@ class Profile(object):
 
         data_handler = DataHandler()
         record = data_handler.read_record()
-        activity = record.get('activity', {})
+        activity = record.get("activity", {})
 
-        in_company = activity.get('in_company', None)
-        out_company = activity.get('out_company', None)
-        in_home = activity.get('in_home', None)
+        in_company = activity.get("in_company", None)
+        out_company = activity.get("out_company", None)
+        in_home = activity.get("in_home", None)
 
         is_work = False
         if self.personal:
@@ -52,7 +51,8 @@ class Profile(object):
                     is_work = False
                 else:
                     diff = ArrowUtil.get_curr_time_diff(
-                        start=out_company, base_hour=True)
+                        start=out_company, base_hour=True
+                    )
                     if diff > 1:
                         is_work = False
                     else:
@@ -65,14 +65,14 @@ class Profile(object):
 
         if is_work:
             if station:
-                return self.location['WORK_PLACE_STATION_NAME']
+                return self.location["WORK_PLACE_STATION_NAME"]
             else:
-                return self.location['WORK_PLACE']
+                return self.location["WORK_PLACE"]
         else:
             if station:
-                return self.location['HOME_STATION_NAME']
+                return self.location["HOME_STATION_NAME"]
             else:
-                return self.location['HOME']
+                return self.location["HOME"]
 
     def get_timezone(self):
         if self.location is None:

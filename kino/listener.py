@@ -11,7 +11,6 @@ from .utils.logger import Logger
 
 
 class MsgListener(object):
-
     def __init__(self) -> None:
         self.router = MsgRouter()
         self.slackbot = SlackerAdapter()
@@ -36,10 +35,11 @@ class MsgListener(object):
     def handle_user_message(self) -> MsgRouter.message_route:
         try:
             self.router.message_route(
-                text=self.msg['text'],
-                user=self.msg['user'],
-                channel=self.msg['channel'],
-                direct=self.is_direct())
+                text=self.msg["text"],
+                user=self.msg["user"],
+                channel=self.msg["channel"],
+                direct=self.is_direct(),
+            )
         except Exception as e:
             self.logger.error(f"USER Listener Error: {e}")
             self.logger.exception("user")
@@ -48,9 +48,8 @@ class MsgListener(object):
     def handle_webhook_message(self) -> MsgRouter.message_route:
         try:
             self.router.message_route(
-                text=self.make_full_text(),
-                direct=self.is_direct(),
-                webhook=True)
+                text=self.make_full_text(), direct=self.is_direct(), webhook=True
+            )
         except Exception as e:
             self.logger.error(f"Webhook Listener Error: {e}")
             self.logger.exception("webhook")
@@ -96,11 +95,10 @@ class MsgListener(object):
         if msg is None:
             msg = self.msg
 
-        if msg.get(
-                "username",
-                None) == "IFTTT" or self.msg.get(
-                "username",
-                None) == "incoming-webhook":
+        if (
+            msg.get("username", None) == "IFTTT"
+            or self.msg.get("username", None) == "incoming-webhook"
+        ):
             return True
         else:
             return False
@@ -112,9 +110,16 @@ class MsgListener(object):
         text = msg.get("text", "$#")
         channel = msg.get("channel", "")
         slack_bot_id = self.slackbot.get_bot_id()
-        if f"<@{slack_bot_id}>" in text or channel.startswith("D") or any(
-                [ text.lower().startswith(t.lower()) \
-                        for t in Config.bot.get("TRIGGER", ["키노야", "Hey kino"]) ]):
+        if (
+            f"<@{slack_bot_id}>" in text
+            or channel.startswith("D")
+            or any(
+                [
+                    text.lower().startswith(t.lower())
+                    for t in Config.bot.get("TRIGGER", ["키노야", "Hey kino"])
+                ]
+            )
+        ):
             return True
         else:
             return False
@@ -135,8 +140,8 @@ class MsgListener(object):
         if self.is_presence() and not self.is_self():
             try:
                 self.router.presence_route(
-                        user=self.msg['user'],
-                        presence=self.msg['presence'])
+                    user=self.msg["user"], presence=self.msg["presence"]
+                )
             except Exception as e:
                 self.logger.error(f"Presence Listener Error: {e}")
                 self.logger.exception("presence")
@@ -144,7 +149,7 @@ class MsgListener(object):
 
     def is_presence(self, msg=None) -> bool:
         if msg is None:
-           msg = self.msg
+            msg = self.msg
 
         msg_type = msg.get("type", None)
         if msg_type == "presence_change":
@@ -155,7 +160,7 @@ class MsgListener(object):
     def handle_dnd_change(self) -> MsgRouter.dnd_route:
         if self.is_dnd_updated_user() and not self.is_self():
             try:
-                self.router.dnd_route(dnd=self.msg['dnd_status'])
+                self.router.dnd_route(dnd=self.msg["dnd_status"])
             except Exception as e:
                 self.logger.error(f"dnd_change Listener Error: {e}")
                 self.logger.exception("dnd")
