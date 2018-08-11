@@ -129,6 +129,17 @@ class Worker(object):
             }
         )
 
+    def __excute_health_check(self):
+        schedule.every(30).minutes.do(
+            self.__run_threaded, self.function_runner, {
+                "repeat": True,
+                "func_name": "health_check",
+                "params": {},
+                "day_of_week": [0],
+                "not_holiday": False
+            }
+        )
+
     def __set_custom_schedule(self):
         schedule_fname = "schedule.json"
         schedule_data = self.data_handler.read_file(schedule_fname)

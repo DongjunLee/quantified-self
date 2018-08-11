@@ -2,6 +2,7 @@
 
 import random
 import re
+import subprocess
 import time
 
 from .background import schedule
@@ -74,6 +75,15 @@ class Functions(object):
 
         twitter_manager = TwitterManager()
         twitter_manager.notify_popular_tweet()
+
+    def health_check(self):
+        bot_id = self.slackbot.get_bot_id()
+
+        if self.slackbot.is_active(bot_id):
+            print("Healthy.")
+        else:
+            # NOTE: restart with script.
+            subprocess.call("sh ~/restart_kino.sh", shell=True)
 
     def good_morning(self):
         """

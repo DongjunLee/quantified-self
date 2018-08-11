@@ -127,6 +127,10 @@ class SlackerAdapter(object):
     def get_users(self):
         return self.slacker.users.list().body['members']
 
+    def is_active(self, user_id):
+        result = self.slacker.users.get_presence(user_id).body
+        return result["presence"] == "active"
+
 
 class GiphyClient:
 
