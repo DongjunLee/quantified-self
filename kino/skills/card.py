@@ -8,7 +8,6 @@ from ..utils.member import Member
 
 
 class BusinessCard(object):
-
     def __init__(self, slackbot=None):
         self.fname = "card.json"
         self.data_handler = DataHandler()
@@ -21,17 +20,13 @@ class BusinessCard(object):
     def read_holder(self):
         card_data = self.data_handler.read_file(self.fname)
         holder_names = ", ".join(card_data.get("holder", []))
-        holder_names = re.sub('([A-Z])+', r'\1-', holder_names)
-        self.slackbot.send_message(
-            text=MsgResource.CARD_HOLDER(
-                names=holder_names))
+        holder_names = re.sub("([A-Z])+", r"\1-", holder_names)
+        self.slackbot.send_message(text=MsgResource.CARD_HOLDER(names=holder_names))
 
     def read_history(self):
         card_data = self.data_handler.read_file(self.fname)
         historys = "\n - ".join(card_data.get("history", [])[-5:])
-        self.slackbot.send_message(
-            text=MsgResource.CARD_HISTORY(
-                historys=historys))
+        self.slackbot.send_message(text=MsgResource.CARD_HISTORY(historys=historys))
 
     def forward(self, member):
         if member is None:
@@ -56,8 +51,8 @@ class BusinessCard(object):
 
             if from_name not in holder_data:
                 self.slackbot.send_message(
-                    text=MsgResource.NOT_CARD_HOLDER(
-                        from_name=from_name))
+                    text=MsgResource.NOT_CARD_HOLDER(from_name=from_name)
+                )
                 return
 
             holder_data.remove(from_name)
@@ -65,8 +60,8 @@ class BusinessCard(object):
 
             history_data = card_data.get("history", [])
             history_data.append(
-                arrow.now().format("YYYY-MM-DD HH:mm") +
-                f": {from_name} -> {to_name}")
+                arrow.now().format("YYYY-MM-DD HH:mm") + f": {from_name} -> {to_name}"
+            )
 
             card_data["holder"] = holder_data
             card_data["history"] = history_data
@@ -74,6 +69,5 @@ class BusinessCard(object):
             self.data_handler.write_file(self.fname, card_data)
 
         self.slackbot.send_message(
-            text=MsgResource.CARD_FORWARD(
-                from_name=from_name,
-                to_name=to_name))
+            text=MsgResource.CARD_FORWARD(from_name=from_name, to_name=to_name)
+        )

@@ -28,46 +28,30 @@ class State(object):
         self.data_handler.write_file(self.fname, self.current)
 
     def flow_start(self, class_name, func_name):
-        data = {
-            "class": class_name,
-            "def": func_name,
-            "step": 1
-        }
+        data = {"class": class_name, "def": func_name, "step": 1}
         self.save(self.FLOW, data)
 
     def flow_next_step(self, num=1):
         self.check()
         current_flow = self.current[self.FLOW]
-        step_num = current_flow['step'] + num
-        current_flow['step'] = step_num
+        step_num = current_flow["step"] + num
+        current_flow["step"] = step_num
         self.data_handler.write_file(self.fname, self.current)
 
     def flow_complete(self):
         self.save(self.FLOW, {})
 
     def memory_skill(self, text, func_name, params):
-        data = {
-            "text": text,
-            "class": "Functions",
-            "def": func_name,
-            "params": params
-        }
+        data = {"text": text, "class": "Functions", "def": func_name, "params": params}
         self.save(self.MEMORY, data)
 
     def do_action(self, event):
-        time = ArrowUtil.get_action_time(event['time'])
-        data = {
-            "action": event['action'],
-            "time": str(time)
-        }
+        time = ArrowUtil.get_action_time(event["time"])
+        data = {"action": event["action"], "time": str(time)}
         self.save(self.ACTION, data)
 
     def presence_log(self, user, presence):
-        data = {
-            "user": user,
-            "presence": presence,
-            "time": str(arrow.now())
-        }
+        data = {"user": user, "presence": presence, "time": str(arrow.now())}
         self.save(self.SLEEP, data)
 
     def advice_rest(self, diff_min):
@@ -80,7 +64,5 @@ class State(object):
         now = arrow.now()
         advice = now.replace(minutes=rest_mins)
 
-        data = {
-            "time": str(advice)
-        }
+        data = {"time": str(advice)}
         self.save(self.REST, data)

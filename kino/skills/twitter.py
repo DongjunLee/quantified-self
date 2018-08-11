@@ -8,7 +8,6 @@ from ..utils.data_handler import DataHandler
 from ..utils.logger import Logger
 
 
-
 class TwitterManager:
 
     MAX_KEEP = 200
@@ -24,13 +23,17 @@ class TwitterManager:
 
         self.data_handler = DataHandler()
 
-        self.api = twitter.Api(consumer_key=Config.open_api.twitter.CONSUMER_KEY,
-                  consumer_secret=Config.open_api.twitter.CONSUMER_SECRET,
-                  access_token_key=Config.open_api.twitter.ACCESS_TOKEN_KEY,
-                  access_token_secret=Config.open_api.twitter.ACCESS_TOKEN_SECRET)
+        self.api = twitter.Api(
+            consumer_key=Config.open_api.twitter.CONSUMER_KEY,
+            consumer_secret=Config.open_api.twitter.CONSUMER_SECRET,
+            access_token_key=Config.open_api.twitter.ACCESS_TOKEN_KEY,
+            access_token_secret=Config.open_api.twitter.ACCESS_TOKEN_SECRET,
+        )
 
         if slackbot is None:
-            self.slackbot = SlackerAdapter(channel=Config.slack.channel.get('SNS', '#general'))
+            self.slackbot = SlackerAdapter(
+                channel=Config.slack.channel.get("SNS", "#general")
+            )
         else:
             self.slackbot = slackbot
 
@@ -40,9 +43,14 @@ class TwitterManager:
         cache_tweet_ids = set(cache_data.get("tweet_ids", []))
 
         for tweet in self.get_popular_tweet():
-            self.slackbot.send_message(text=f"*Popular Tweet*\n - :+1: ({tweet[3]}) {tweet[1]}: {tweet[2]}", giphy=False)
+            self.slackbot.send_message(
+                text=f"*Popular Tweet*\n - :+1: ({tweet[3]}) {tweet[1]}: {tweet[2]}",
+                giphy=False,
+            )
             cache_tweet_ids.add(tweet[0])
-        self.data_handler.edit_cache(("tweet_ids", list(cache_tweet_ids)[-self.MAX_KEEP]))
+        self.data_handler.edit_cache(
+            ("tweet_ids", list(cache_tweet_ids)[-self.MAX_KEEP])
+        )
 
     def get_popular_tweet(self):
         cache_data = self.data_handler.read_cache()
@@ -58,7 +66,7 @@ class TwitterManager:
 
     def tweet(self, text: str) -> None:
         if len(text) > self.MAX_TEXT_LENGTH:
-            text = text[:self.MAX_TEXT_LENGTH - 3] + "..."
+            text = text[: self.MAX_TEXT_LENGTH - 3] + "..."
         try:
             self.api.PostUpdate(text)
         except BaseException as e:
@@ -71,13 +79,15 @@ class TwitterManager:
         self.logger.info("tweet latest feed. title: " + title + " link: " + link)
 
         if len(link) > self.MAX_LINK_LENGTH:
-            self.logger.info("Skip to tweet. Link length is too long. length: " +str(len(link)))
+            self.logger.info(
+                "Skip to tweet. Link length is too long. length: " + str(len(link))
+            )
             return
 
         remain_text_length = self.MAX_TEXT_LENGTH - len(tweet_title) - len(link)
 
         if len(title) > remain_text_length:
-            title = title[:remain_text_length - 3] + "..."
+            title = title[: remain_text_length - 3] + "..."
 
         self.tweet(f"{tweet_title}\n{title}\n{link}")
 
@@ -94,13 +104,15 @@ class TwitterManager:
         tweet_title = "#kino_bot, #reddit_" + subreddit.lower()
 
         if len(link) > self.MAX_LINK_LENGTH:
-            self.logger.info("Skip to tweet. Link length is too long. length: " +str(len(link)))
+            self.logger.info(
+                "Skip to tweet. Link length is too long. length: " + str(len(link))
+            )
             return
 
         remain_text_length = self.MAX_TEXT_LENGTH - len(tweet_title) - len(link)
 
         if len(title) > remain_text_length:
-            title = title[:remain_text_length - 3] + "..."
+            title = title[: remain_text_length - 3] + "..."
 
         self.tweet(f"{tweet_title}\n{title}\n{link}")
 

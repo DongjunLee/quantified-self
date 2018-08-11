@@ -9,16 +9,18 @@ class Logger(object):
             self._logger = logging.getLogger("crumbs")
             self._logger.setLevel(logging.INFO)
             formatter = logging.Formatter(
-                '[%(levelname)s|%(filename)s:%(lineno)s] %(asctime)s > %(message)s')
+                "[%(levelname)s|%(filename)s:%(lineno)s] %(asctime)s > %(message)s"
+            )
 
             now = datetime.datetime.now()
 
-            dirname = './log/activity/' + now.strftime("%Y-%m-%d")
+            dirname = "./log/activity/" + now.strftime("%Y-%m-%d")
             if not os.path.isdir(dirname):
                 os.makedirs(dirname)
 
             fileHandler = logging.FileHandler(
-                dirname + "/Kino_" + now.strftime("%Y-%m-%d %H:%M") + ".log")
+                dirname + "/Kino_" + now.strftime("%Y-%m-%d %H:%M") + ".log"
+            )
             streamHandler = logging.StreamHandler()
 
             fileHandler.setFormatter(formatter)
@@ -42,16 +44,16 @@ class MessageLogger(object):
         def __init__(self):
             self._logger = logging.getLogger("message")
             self._logger.setLevel(logging.INFO)
-            formatter = logging.Formatter(
-                '%(asctime)s > %(message)s')
+            formatter = logging.Formatter("%(asctime)s > %(message)s")
 
             now = datetime.datetime.now()
 
-            dirname = './log/message'
+            dirname = "./log/message"
             if not os.path.isdir(dirname):
                 os.mkdir(dirname)
             fileHandler = logging.FileHandler(
-                dirname + "/" + now.strftime("%Y-%m-%d") + ".log")
+                dirname + "/" + now.strftime("%Y-%m-%d") + ".log"
+            )
 
             fileHandler.setFormatter(formatter)
             self._logger.addHandler(fileHandler)
@@ -66,23 +68,20 @@ class MessageLogger(object):
         return self.instance._logger
 
 
-
 class DataLogger(object):
-
     class __Logger:
         def __init__(self, data_name):
             print("data logger " + data_name)
             self._logger = logging.getLogger(data_name)
             self._logger.setLevel(logging.INFO)
 
-            dirname = './log/data'
+            dirname = "./log/data"
             if not os.path.isdir(dirname):
                 os.makedirs(dirname)
 
-            fileHandler = logging.FileHandler(
-                    dirname + f"/{data_name}.log")
+            fileHandler = logging.FileHandler(dirname + f"/{data_name}.log")
 
-            formatter = logging.Formatter('%(asctime)s > %(message)s')
+            formatter = logging.Formatter("%(asctime)s > %(message)s")
             fileHandler.setFormatter(formatter)
 
             self._logger.addHandler(fileHandler)

@@ -5,7 +5,6 @@ from kino.slack.template import MsgTemplate
 
 
 class MsgTemplateTest(unittest.TestCase):
-
     def setUp(self):
         Config("config_example")
         print(Config)
@@ -27,18 +26,13 @@ class MsgTemplateTest(unittest.TestCase):
         self.assertEqual(isinstance(attachments, list), True)
 
     def test_weather(self):
-        attachments = MsgTemplate.make_weather_template("address", "icon", "summary", "temperature")
+        attachments = MsgTemplate.make_weather_template(
+            "address", "icon", "summary", "temperature"
+        )
         self.assertEqual(isinstance(attachments, list), True)
 
     def test_air_quality(self):
-        data = {
-            "cai": {
-                "grade": "1",
-                "value": "good",
-                "description": "좋음"
-                },
-            "pm25": {}
-        }
+        data = {"cai": {"grade": "1", "value": "good", "description": "좋음"}, "pm25": {}}
         attachments = MsgTemplate.make_air_quality_template("station_name", data)
         self.assertEqual(isinstance(attachments, list), True)
 
@@ -55,9 +49,6 @@ class MsgTemplateTest(unittest.TestCase):
         self.assertEqual(isinstance(attachments, list), True)
 
     def test_summary(self):
-        data = {
-                "Color": "RED",
-                "Total": "90"
-                }
+        data = {"Color": "RED", "Total": "90"}
         attachments = MsgTemplate.make_summary_template(data)
         self.assertEqual(isinstance(attachments, list), True)

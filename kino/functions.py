@@ -2,6 +2,7 @@
 
 import random
 import re
+import subprocess
 import time
 
 from .background import schedule
@@ -34,7 +35,6 @@ from .utils.data_loader import SkillData
 from .utils.data_loader import FeedData
 from .utils.logger import Logger
 from .utils.member import Member
-
 
 
 class Functions(object):
@@ -74,6 +74,15 @@ class Functions(object):
 
         twitter_manager = TwitterManager()
         twitter_manager.notify_popular_tweet()
+
+    def health_check(self):
+        bot_id = self.slackbot.get_bot_id()
+
+        if self.slackbot.is_active(bot_id):
+            print("Healthy.")
+        else:
+            # NOTE: restart with script.
+            subprocess.call("sh ~/restart_kino.sh", shell=True)
 
     def good_morning(self):
         """
@@ -116,7 +125,7 @@ class Functions(object):
         weather = Weather(slackbot=self.slackbot)
         weather.air_quality()
 
-    def attention_question(self, text: str=None):
+    def attention_question(self, text: str = None):
         """
         keyword: [["집중도", "조사"], ["집중도", "확인"], ["attention", "question"]]
         description: "Attention survey after do task."
@@ -126,7 +135,7 @@ class Functions(object):
         attention = AttentionQuestion(slackbot=self.slackbot)
         attention.question()
 
-    def attention_report(self, timely: str="daily"):
+    def attention_report(self, timely: str = "daily"):
         """
         keyword: [["집중도", "리포트"], ["attention", "report"]]
         description: "Attention Report."
@@ -134,11 +143,11 @@ class Functions(object):
         """
 
         if timely is None:
-            timely = 'daily'
+            timely = "daily"
         attention = AttentionQuestion(slackbot=self.slackbot)
         attention.report(timely=timely)
 
-    def bus_stop(self, station_id: str=None, real_time: str=None):
+    def bus_stop(self, station_id: str = None, real_time: str = None):
         """
         keyword: [["버스", "도착"], ["버스", "언제"], ["버스", "조회"]]
         description: "Bus arrival information. (can use only Korea (gbus api))"
@@ -150,7 +159,7 @@ class Functions(object):
         bus = Bus(slackbot=self.slackbot)
         bus.arrive_info(station_id, real_time=real_time)
 
-    def forecast(self, timely: str="current"):
+    def forecast(self, timely: str = "current"):
         """
         keyword: ["날씨", "예보", "weather", "forecast"]
         description: "Weather forecast. (using [darksky](https://darksky.net/))"
@@ -158,11 +167,11 @@ class Functions(object):
         """
 
         if timely is None:
-            timely = 'current'
+            timely = "current"
         weather = Weather(slackbot=self.slackbot)
         weather.forecast(timely=timely)
 
-    def github_commit(self, timely: str="daily"):
+    def github_commit(self, timely: str = "daily"):
         """
         keyword: ["커밋", "commit", "깃헙", "github"]
         description: "Check [Github](https://github.com) push count."
@@ -170,7 +179,7 @@ class Functions(object):
         """
 
         if timely is None:
-            timely = 'daily'
+            timely = "daily"
         github = GithubManager(slackbot=self.slackbot)
         github.commit(timely=timely)
 
@@ -184,7 +193,7 @@ class Functions(object):
         happy = HappyQuestion(slackbot=self.slackbot)
         happy.question()
 
-    def happy_report(self, timely: str="daily"):
+    def happy_report(self, timely: str = "daily"):
         """
         keyword: [["행복도", "리포트"], ["happy", "report"]]
         description: "Happiness Report."
@@ -192,7 +201,7 @@ class Functions(object):
         """
 
         if timely is None:
-            timely = 'daily'
+            timely = "daily"
         happy = HappyQuestion(slackbot=self.slackbot)
         happy.report(timely=timely)
 
@@ -219,7 +228,7 @@ class Functions(object):
             time.sleep(1)
             self.slackbot.send_message(text=MsgResource.HUMOR_SORRY)
 
-    def jenkins_build(self, job_name: str=None, branch: str=None):
+    def jenkins_build(self, job_name: str = None, branch: str = None):
         """
         keyword: ["배포", "deploy"]
         description: "Build a registered project for Jenkins."
@@ -247,10 +256,10 @@ class Functions(object):
         task_list.archive_all_cards()
 
         for task in today_label_tasks:
-            card_name = task['label'] + " - " + task['content']
+            card_name = task["label"] + " - " + task["content"]
             task_list.add_card(re.sub(r" \d+분", "", card_name))
 
-    def keep_idea(self, hashtag: str=None):
+    def keep_idea(self, hashtag: str = None):
         """
         keyword: [["keep", "idea"], ["킵", "아이디어"], ["아이디어", "저장"], ["아이디어", "기억"]]
         description: "Keep idea in Trello board's inbox list."
@@ -290,7 +299,7 @@ class Functions(object):
         else:
             self.slackbot.send_message(text=MsgResource.REMIND_IDEA(idea=idea))
 
-    def rescuetime_efficiency(self, timely: str="daily"):
+    def rescuetime_efficiency(self, timely: str = "daily"):
         """
         keyword: ["레스큐타임 효율성", "작업 효율", "생산성 차트", ["rescuetime", "chart"]]
         description: "RescueTime Efficiency Chart"
@@ -298,11 +307,11 @@ class Functions(object):
         """
 
         if timely is None:
-            timely = 'daily'
+            timely = "daily"
         rescuetime = RescueTime(slackbot=self.slackbot)
         rescuetime.efficiency(timely=timely)
 
-    def samhangsi(self, samhangsi_tag: str=None):
+    def samhangsi(self, samhangsi_tag: str = None):
         """
         keyword: ["삼행시"]
         description: "I am thinking about the Samhangsi with the kor ballad! (using [char-rnn-tensorflow](https://github.com/DongjunLee/char-rnn-tensorflow))"
@@ -310,7 +319,7 @@ class Functions(object):
         """
 
         word = samhangsi_tag[1:]
-        non_hangul = re.findall('[^ ㄱ-ㅣ가-힣]+', word)
+        non_hangul = re.findall("[^ ㄱ-ㅣ가-힣]+", word)
         if len(non_hangul) > 0:
             self.slackbot.send_message(text=MsgResource.SAMHANGSI_ONLY_KOR)
             return
@@ -323,7 +332,7 @@ class Functions(object):
         result = generator.generate(word)
         self.slackbot.send_message(text=result)
 
-    def send_message(self, text: str=None):
+    def send_message(self, text: str = None):
         """
         keyword: []
         description: "Send a text message."
@@ -342,7 +351,7 @@ class Functions(object):
         todoist = TodoistManager(slackbot=self.slackbot)
         todoist.schedule()
 
-    def today_summary(self, timely: str=None):
+    def today_summary(self, timely: str = None):
         """
         keyword: [["하루", "마무리"], ["하루", "요약"], ["today", "summary"]]
         description: "Today summary - **toggl_report**, **rescuetime_efficiency**, **happy_report**, **attention_report**, **github_commit**"
@@ -387,7 +396,7 @@ class Functions(object):
         toggl = TogglManager(slackbot=self.slackbot)
         toggl.check_toggl_timer()
 
-    def toggl_report(self, kind: str="chart", timely: str="daily"):
+    def toggl_report(self, kind: str = "chart", timely: str = "daily"):
         """
         keyword: [["작업", "리포트"], ["task", "report"]]
         description: "Toggl task Report."
@@ -395,13 +404,13 @@ class Functions(object):
         """
 
         if kind is None:
-            kind = 'chart'
+            kind = "chart"
         if timely is None:
-            timely = 'daily'
+            timely = "daily"
         toggl = TogglManager(slackbot=self.slackbot)
         toggl.report(kind=kind, timely=timely)
 
-    def toggl_timer(self, description: str=None):
+    def toggl_timer(self, description: str = None):
         """
         keyword: ["toggl"]
         description: "Toggl Timer."
@@ -431,7 +440,7 @@ class Functions(object):
         summary = Summary(slackbot=self.slackbot)
         summary.total_score()
 
-    def translate(self, english: str="", source: str="en", target: str="ko"):
+    def translate(self, english: str = "", source: str = "en", target: str = "ko"):
         """
         keyword: ["번역", "translate"]
         description: "Language translation using [Naver Papago api](https://developers.naver.com/docs/nmt/reference/)."
@@ -444,7 +453,6 @@ class Functions(object):
             target = "ko"
         naver = Naver(slackbot=self.slackbot)
         naver.translate(english, source=source, target=target)
-
 
 
 class RegisteredFuctions(object):
@@ -463,21 +471,21 @@ class RegisteredFuctions(object):
 
 
 class FunctionRunner(object):
-
     def __init__(self, text=None):
         self.input = text
         self.functions = Functions().registered
         self.logger = Logger().get_logger()
 
     def load_function(
-            self,
-            start_time=None,
-            end_time=None,
-            func_name=None,
-            params=None,
-            repeat=False,
-            day_of_week=None,
-            not_holiday=False):
+        self,
+        start_time=None,
+        end_time=None,
+        func_name=None,
+        params=None,
+        repeat=False,
+        day_of_week=None,
+        not_holiday=False,
+    ):
 
         if not_holiday and Summary().is_holiday():
             return
@@ -492,17 +500,13 @@ class FunctionRunner(object):
             self.__excute(func_name, params)
 
     def __excute(self, func_name, params):
-        self.logger.info(
-            "load_function: " +
-            str(func_name) +
-            ", " +
-            str(params))
+        self.logger.info("load_function: " + str(func_name) + ", " + str(params))
         getattr(Functions(), func_name)(**params)
 
     def filter_f_params(self, text, func_name):
         ner = NamedEntitiyRecognizer()
 
-        func_param_list = ner.skills[func_name]['params']
+        func_param_list = ner.skills[func_name]["params"]
         params = {k: ner.parse(v, text) for k, v in ner.params.items()}
 
         member = Member()

@@ -36,7 +36,6 @@ from .utils.state import State
 
 
 class MsgRouter:
-
     def __init__(self) -> None:
         self.logger = Logger().get_logger()
         self.msg_logger = MessageLogger().get_logger()
@@ -47,8 +46,8 @@ class MsgRouter:
 
         self.f_runner = FunctionRunner()
 
-    def presence_route(self, user: str=None, presence: str=None):
-        ''' Check Presence (Slack Users active/away)'''
+    def presence_route(self, user: str = None, presence: str = None):
+        """ Check Presence (Slack Users active/away)"""
         self.presence_manager.check_wake_up(presence)
         self.presence_manager.check_flow(presence)
         self.presence_manager.check_predictor(presence)
@@ -59,31 +58,30 @@ class MsgRouter:
     def __on_flow(self):
         flow_classes = self.__make_flow_classes()
         route_class, behave, step_num = self.dialog_manager.get_flow(
-            classes=flow_classes)
+            classes=flow_classes
+        )
 
         self.logger.info(
-            "From Flow - route to: " +
-            route_class.__class__.__name__ +
-            ", " +
-            str(behave))
+            "From Flow - route to: "
+            + route_class.__class__.__name__
+            + ", "
+            + str(behave)
+        )
 
-        getattr(
-            route_class(
-                slackbot=self.slackbot),
-            behave)(
-            step=step_num,
-            params=self.text)
+        getattr(route_class(slackbot=self.slackbot), behave)(
+            step=step_num, params=self.text
+        )
 
     def __make_flow_classes(self):
         return {
             "Between": Between,
             "Scheduler": Scheduler,
             "AttentionQuestion": AttentionQuestion,
-            "HappyQuestion": HappyQuestion
+            "HappyQuestion": HappyQuestion,
         }
 
-    def dnd_route(self, user: str=None, dnd: dict=None):
-        ''' Check DND (Slack Do not disturb)'''
+    def dnd_route(self, user: str = None, dnd: dict = None):
+        """ Check DND (Slack Do not disturb)"""
 
         # Do not disturb
         self.dnd_manager.call_is_holiday(dnd=dnd)
@@ -91,24 +89,26 @@ class MsgRouter:
         self.logger.info(f"user: {user} dnd: {dnd}")
 
     def message_route(
-            self,
-            text: str=None,
-            user: str=None,
-            channel: str=None,
-            direct: bool=False,
-            webhook: bool=False):
-        ''' Check Message'''
+        self,
+        text: str = None,
+        user: str = None,
+        channel: str = None,
+        direct: bool = False,
+        webhook: bool = False,
+    ):
+        """ Check Message"""
 
         if text is not None:
-            self.msg_logger.info(json.dumps({"channel": channel, "user": user, "text": text}))
+            self.msg_logger.info(
+                json.dumps({"channel": channel, "user": user, "text": text})
+            )
             self.preprocessing(text)
 
         if Config.bot.ONLY_DIRECT is True and direct is False:
             # Skip
             return
 
-        self.slackbot = SlackerAdapter(
-            channel=channel, input_text=text, user=user)
+        self.slackbot = SlackerAdapter(channel=channel, input_text=text, user=user)
 
         ner = NamedEntitiyRecognizer()
 
@@ -128,7 +128,7 @@ class MsgRouter:
             return
 
         # Check - CRUD (Worker, Schedule, Between, FunctionManager)
-        kino_keywords = {k: v['keyword'] for k, v in ner.kino.items()}
+        kino_keywords = {k: v["keyword"] for k, v in ner.kino.items()}
         classname = ner.parse(kino_keywords, self.parsed_text)
 
         if classname is not None:
@@ -136,7 +136,7 @@ class MsgRouter:
             return
 
         # Check - skills
-        skill_keywords = {k: v['keyword'] for k, v in ner.skills.items()}
+        skill_keywords = {k: v["keyword"] for k, v in ner.skills.items()}
         func_name = ner.parse(skill_keywords, self.parsed_text)
         if func_name is not None:
             self.__call_skills(func_name)
@@ -171,18 +171,18 @@ class MsgRouter:
 
     def check_memory_skill(self):
         classes = self.__make_memory_classes()
-        route_class, func_name, params = self.dialog_manager.get_memory(
-            classes=classes)
+        route_class, func_name, params = self.dialog_manager.get_memory(classes=classes)
 
         route_class = route_class()
         f_params = self.f_runner.filter_f_params(self.parsed_text, func_name)
         if len(f_params) > 0:
 
             self.logger.info(
-                "From Memory - route to: " +
-                route_class.__class__.__name__ +
-                ", " +
-                str(func_name))
+                "From Memory - route to: "
+                + route_class.__class__.__name__
+                + ", "
+                + str(func_name)
+            )
 
             getattr(route_class, func_name)(**f_params)
             return True
@@ -190,32 +190,25 @@ class MsgRouter:
             return False
 
     def __make_memory_classes(self):
-        return {
-            "Functions": Functions
-        }
+        return {"Functions": Functions}
 
     def __call_help(self):
         route_class = Guide(self.slackbot)
         behave = "help"
         self.logger.info(
-            "route to: " +
-            route_class.__class__.__name__ +
-            ", " +
-            str(behave))
+            "route to: " + route_class.__class__.__name__ + ", " + str(behave)
+        )
         getattr(route_class, behave)()
 
     def __call_CRUD(self, ner: str, classname: str):
         crud_classes = self.__make_crud_classes()
-        route_class = crud_classes[classname](
-            text=self.text, slackbot=self.slackbot)
-        behave_ner = ner.kino[classname]['behave']
+        route_class = crud_classes[classname](text=self.text, slackbot=self.slackbot)
+        behave_ner = ner.kino[classname]["behave"]
         behave = ner.parse(behave_ner, self.parsed_text)
 
         self.logger.info(
-            "route to: " +
-            route_class.__class__.__name__ +
-            ", " +
-            str(behave))
+            "route to: " + route_class.__class__.__name__ + ", " + str(behave)
+        )
         getattr(route_class, behave)()
 
     def __make_crud_classes(self):
@@ -223,24 +216,20 @@ class MsgRouter:
             "Between": Between,
             "Scheduler": Scheduler,
             "SkillList": SkillList,
-            "Worker": Worker
+            "Worker": Worker,
         }
 
     def __call_skills(self, func_name: str):
         if self.dialog_manager.is_toggl_timer(func_name):
-            f_params = {
-                "description": self.text[self.text.index("toggl") + 5:]}
+            f_params = {"description": self.text[self.text.index("toggl") + 5 :]}
         else:
-            f_params = self.f_runner.filter_f_params(
-                self.parsed_text, func_name)
+            f_params = self.f_runner.filter_f_params(self.parsed_text, func_name)
 
         state = State()
         state.memory_skill(self.text, func_name, f_params)
         self.logger.info(
-            "From call skills - route to: " +
-            func_name +
-            ", " +
-            str(f_params))
+            "From call skills - route to: " + func_name + ", " + str(f_params)
+        )
         getattr(Functions(slackbot=self.slackbot), func_name)(**f_params)
 
     def __memory_predictor_skills(self):

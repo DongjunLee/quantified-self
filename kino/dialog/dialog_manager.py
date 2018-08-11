@@ -4,7 +4,6 @@ from ..utils.state import State
 
 
 class DialogManager(object):
-
     def __init__(self):
         self.state = State()
         self.data_handler = DataHandler()

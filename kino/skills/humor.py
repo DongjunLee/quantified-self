@@ -2,10 +2,11 @@ import random
 import requests
 
 
-
 class Humor:
 
-    HONEYJAM_URL = "https://raw.githubusercontent.com/DongjunLee/honeyjam/master/README.md"
+    HONEYJAM_URL = (
+        "https://raw.githubusercontent.com/DongjunLee/honeyjam/master/README.md"
+    )
 
     def __init__(self):
         pass
@@ -20,8 +21,8 @@ class Humor:
         return questions[ran_index], answers[ran_index]
 
     def _make_questions_and_answers(self, content):
-        remove_front = content[content.index("---")+3:]
-        remove_front_and_footer = remove_front[:remove_front.index("###")]
+        remove_front = content[content.index("---") + 3 :]
+        remove_front_and_footer = remove_front[: remove_front.index("###")]
         content = remove_front_and_footer
 
         questions = []

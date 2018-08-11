@@ -13,7 +13,6 @@ from nltk.stem.wordnet import WordNetLemmatizer
 
 
 class Disintegrator:
-
     def __init__(self, text):
         self.text = text
         self.lang_code = langid.classify(text)[0]
@@ -36,25 +35,22 @@ class Disintegrator:
 
 
 class KorDisintegrator:
-
     def __init__(self):
         self.ko_twitter = Twitter()
 
     def convert2simple(self, sentence="", norm=True, stem=True):
-        disintegrated_sentence = self.ko_twitter.pos(
-            sentence, norm=norm, stem=stem)
+        disintegrated_sentence = self.ko_twitter.pos(sentence, norm=norm, stem=stem)
         convert_sentence = []
 
         for w, t in disintegrated_sentence:
-            if t not in ['Eomi', 'Josa', 'KoreanParticle', 'Punctuation']:
+            if t not in ["Eomi", "Josa", "KoreanParticle", "Punctuation"]:
                 convert_sentence.append(w)
         return " ".join(convert_sentence)
 
 
 class EngDisintegrator:
-
     def __init__(self):
-        self.stopwords = set(stopwords.words('english'))
+        self.stopwords = set(stopwords.words("english"))
         self.lemmatizer = WordNetLemmatizer()
 
     def convert2simple(self, sentence=""):
@@ -64,13 +60,13 @@ class EngDisintegrator:
         return " ".join(self.__lemmatize(tokenized))
 
     def __filter_punctuation(self, tokenized):
-        regex = re.compile('[%s]' % re.escape(string.punctuation))
+        regex = re.compile("[%s]" % re.escape(string.punctuation))
 
         tokenized_no_punctuation = []
 
         for token in tokenized:
-            new_token = regex.sub(u'', token)
-            if not new_token == u'':
+            new_token = regex.sub("", token)
+            if not new_token == "":
                 tokenized_no_punctuation.append(new_token)
         return tokenized_no_punctuation
 
@@ -81,20 +77,19 @@ class EngDisintegrator:
         lemmatized_tokens = []
         for tag in nltk.pos_tag(tokenized):
             lemmatized_tokens.append(
-                self.lemmatizer.lemmatize(
-                    tag[0], self.__get_wordnet_pos(
-                        tag[1])))
+                self.lemmatizer.lemmatize(tag[0], self.__get_wordnet_pos(tag[1]))
+            )
         return lemmatized_tokens
 
     def __get_wordnet_pos(self, treebank_tag):
 
-        if treebank_tag.startswith('J'):
+        if treebank_tag.startswith("J"):
             return wordnet.ADJ
-        elif treebank_tag.startswith('V'):
+        elif treebank_tag.startswith("V"):
             return wordnet.VERB
-        elif treebank_tag.startswith('N'):
+        elif treebank_tag.startswith("N"):
             return wordnet.NOUN
-        elif treebank_tag.startswith('R'):
+        elif treebank_tag.startswith("R"):
             return wordnet.ADV
         else:
-            return ''
+            return ""

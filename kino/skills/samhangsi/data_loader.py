@@ -5,9 +5,8 @@ from six.moves import cPickle
 import numpy as np
 
 
-class TextLoader():
-
-    def __init__(self, data_dir, batch_size=None, seq_length=None, encoding='utf-8'):
+class TextLoader:
+    def __init__(self, data_dir, batch_size=None, seq_length=None, encoding="utf-8"):
         self.data_dir = data_dir
         self.batch_size = batch_size
         self.seq_length = seq_length
@@ -32,30 +31,31 @@ class TextLoader():
         self.chars, _ = zip(*count_pairs)
         self.vocab_size = len(self.chars)
         self.vocab = dict(zip(self.chars, range(len(self.chars))))
-        with open(vocab_file, 'wb') as f:
+        with open(vocab_file, "wb") as f:
             cPickle.dump(self.chars, f)
         self.tensor = np.array(list(map(self.vocab.get, data)))
         np.save(tensor_file, self.tensor)
 
     def load_preprocessed(self, vocab_file, tensor_file):
-        with open(vocab_file, 'rb') as f:
+        with open(vocab_file, "rb") as f:
             self.chars = cPickle.load(f)
         self.vocab_size = len(self.chars)
         self.vocab = dict(zip(self.chars, range(len(self.chars))))
         self.tensor = np.load(tensor_file)
 
     def make_train_and_test_set(self, train_size=0.8, test_size=0.2):
-        self.num_batches = int(self.tensor.size / (self.batch_size *
-                                                   self.seq_length))
+        self.num_batches = int(self.tensor.size / (self.batch_size * self.seq_length))
 
         # When the data (tensor) is too small,
         # let's give them a better error message
         if self.num_batches == 0:
             assert False, "Not enough data. Make seq_length and batch_size small."
-        if train_size + test_size > 1 :
+        if train_size + test_size > 1:
             assert False, "train_size and test_size are large. sum > 1"
 
-        self.tensor = self.tensor[:self.num_batches * self.batch_size * self.seq_length]
+        self.tensor = self.tensor[
+            : self.num_batches * self.batch_size * self.seq_length
+        ]
         xdata = self.tensor
         ydata = np.copy(self.tensor)
         ydata[:-1] = xdata[1:]
@@ -76,13 +76,14 @@ class TextLoader():
         return train_X, test_X, train_y, test_y
 
     def create_batches(self):
-        self.num_batches = int(self.tensor.size / (self.batch_size *
-                                                   self.seq_length))
+        self.num_batches = int(self.tensor.size / (self.batch_size * self.seq_length))
 
-        self.X_batches = np.split(self.X.reshape(self.batch_size, -1),
-                                  self.num_batches, 1)
-        self.y_batches = np.split(self.y.reshape(self.batch_size, -1),
-                                  self.num_batches, 1)
+        self.X_batches = np.split(
+            self.X.reshape(self.batch_size, -1), self.num_batches, 1
+        )
+        self.y_batches = np.split(
+            self.y.reshape(self.batch_size, -1), self.num_batches, 1
+        )
         self.reset_batch_pointer()
 
     def next_batch(self):

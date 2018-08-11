@@ -7,7 +7,6 @@ from kino.utils.arrow import ArrowUtil
 
 
 class ArrowUtilTest(unittest.TestCase):
-
     def setUp(self):
         Config("config_example")
         print(Config)
@@ -35,7 +34,9 @@ class ArrowUtilTest(unittest.TestCase):
 
         self.assertEqual(ArrowUtil.is_today_day_of_week([0]), True)
         self.assertEqual(ArrowUtil.is_today_day_of_week([today_day_of_week]), True)
-        self.assertEqual(ArrowUtil.is_today_day_of_week([today_day_of_week, 4, 5]), True)
+        self.assertEqual(
+            ArrowUtil.is_today_day_of_week([today_day_of_week, 4, 5]), True
+        )
         self.assertEqual(ArrowUtil.is_today_day_of_week([10]), False)
 
         if ArrowUtil.is_weekday():
@@ -44,16 +45,32 @@ class ArrowUtilTest(unittest.TestCase):
             self.assertEqual(ArrowUtil.is_today_day_of_week([9]), True)
 
     def test_is_between(self):
-        self.assertEqual(ArrowUtil.is_between((10, 0), (20, 0), now=arrow.Arrow(2017, 8, 14, 12, 0)), True)
-        self.assertEqual(ArrowUtil.is_between((0, 0), (24, 0), now=arrow.Arrow(2017, 8, 14, 12, 0)), True)
-        self.assertEqual(ArrowUtil.is_between((10, 0), (24, 0), now=arrow.Arrow(2017, 8, 14, 9, 0)), False)
-        self.assertEqual(ArrowUtil.is_between((10, 0), (20, 0), now=arrow.Arrow(2017, 8, 14, 10, 0)), True)
-        self.assertEqual(ArrowUtil.is_between((10, 0), (20, 0), now=arrow.Arrow(2017, 8, 14, 20, 0)), True)
-
+        self.assertEqual(
+            ArrowUtil.is_between((10, 0), (20, 0), now=arrow.Arrow(2017, 8, 14, 12, 0)),
+            True,
+        )
+        self.assertEqual(
+            ArrowUtil.is_between((0, 0), (24, 0), now=arrow.Arrow(2017, 8, 14, 12, 0)),
+            True,
+        )
+        self.assertEqual(
+            ArrowUtil.is_between((10, 0), (24, 0), now=arrow.Arrow(2017, 8, 14, 9, 0)),
+            False,
+        )
+        self.assertEqual(
+            ArrowUtil.is_between((10, 0), (20, 0), now=arrow.Arrow(2017, 8, 14, 10, 0)),
+            True,
+        )
+        self.assertEqual(
+            ArrowUtil.is_between((10, 0), (20, 0), now=arrow.Arrow(2017, 8, 14, 20, 0)),
+            True,
+        )
 
     def test_get_curr_time_diff(self):
         start = arrow.Arrow(2017, 8, 14, 12, 0)
         end = arrow.Arrow(2017, 8, 14, 13, 0)
 
         self.assertEqual(ArrowUtil.get_curr_time_diff(start=start, stop=end), 60)
-        self.assertEqual(ArrowUtil.get_curr_time_diff(start=start, stop=end, base_hour=True), 1)
+        self.assertEqual(
+            ArrowUtil.get_curr_time_diff(start=start, stop=end, base_hour=True), 1
+        )

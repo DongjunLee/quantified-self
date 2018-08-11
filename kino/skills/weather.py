@@ -17,7 +17,6 @@ from ..utils.profile import Profile
 
 
 class Weather(object):
-
     def __init__(self, slackbot=None):
         self.data_handler = DataHandler()
         self.profile = Profile()
@@ -27,8 +26,7 @@ class Weather(object):
         else:
             self.slackbot = slackbot
 
-
-    def forecast(self, timely='current'):
+    def forecast(self, timely="current"):
         cache_data = self.data_handler.read_cache()
 
         user_location = self.profile.get_location()
@@ -44,21 +42,20 @@ class Weather(object):
             lat = location.latitude
             lon = location.longitude
 
-            self.data_handler.edit_cache((user_location, {
-                "address": address,
-                "lat": lat,
-                "lon": lon}))
+            self.data_handler.edit_cache(
+                (user_location, {"address": address, "lat": lat, "lon": lon})
+            )
 
         api_key = Config.open_api.dark_sky.TOKEN
         dark_sky = forecastio.load_forecast(api_key, lat, lon)
 
-        if timely == 'current':
+        if timely == "current":
             currently = dark_sky.currently()
             self.__forecast(currently, timely, address)
-        elif timely == 'daily':
+        elif timely == "daily":
             hourly = dark_sky.hourly()
             self.__forecast(hourly, timely, address)
-        elif timely == 'weekly':
+        elif timely == "weekly":
             daily = dark_sky.daily()
             self.__forecast(daily, timely, address)
 
@@ -66,7 +63,7 @@ class Weather(object):
         icon = forecast.icon
         summary = forecast.summary
 
-        if timely == 'current':
+        if timely == "current":
             temperature = str(forecast.temperature) + "도"
             fallback = summary + " " + temperature
         else:
@@ -74,17 +71,18 @@ class Weather(object):
             fallback = summary + " " + temperature
 
         attachments = MsgTemplate.make_weather_template(
-            address, icon, summary, temperature=temperature, fallback=fallback)
+            address, icon, summary, temperature=temperature, fallback=fallback
+        )
         self.slackbot.send_message(attachments=attachments)
 
     def __hourly_temperature(self, forecast):
         hourly_temp = []
         h = forecast.data
         for i in range(0, 24, 3):
-            time = arrow.get(
-                h[i].d['time'],
-                tzinfo=self.profile.get_timezone()).format('D일 H시')
-            temperature = h[i].d['temperature']
+            time = arrow.get(h[i].d["time"], tzinfo=self.profile.get_timezone()).format(
+                "D일 H시"
+            )
+            temperature = h[i].d["temperature"]
             hourly_temp.append("- " + time + ": " + str(temperature) + "도")
         hourly_temp = "\n".join(hourly_temp)
         return hourly_temp
@@ -97,10 +95,7 @@ class Weather(object):
 
         try:
             response = airkorea.forecast(station_name)
-            attachments = MsgTemplate.make_air_quality_template(
-                station_name, response)
+            attachments = MsgTemplate.make_air_quality_template(station_name, response)
             self.slackbot.send_message(attachments=attachments)
         except BaseException as e:
             self.slackbot.send_message(text=MsgResource.ERROR)
-
-

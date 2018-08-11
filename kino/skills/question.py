@@ -15,7 +15,6 @@ from ..utils.state import State
 
 
 class Question(object):
-
     def __init__(self):
         self.category = ""
         self.msg_question_step_0 = ""
@@ -33,18 +32,17 @@ class Question(object):
 
         def step_0(params):
             flow = DialogManager().get_flow(is_raw=True)
-            if flow.get('class', None) == self.__class__.__name__:
+            if flow.get("class", None) == self.__class__.__name__:
                 pass
             else:
-                self.slackbot.send_message(
-                    text=self.msg_question_step_0)
+                self.slackbot.send_message(text=self.msg_question_step_0)
                 state.flow_start(self.__class__.__name__, "question")
 
         def step_1(params):
             if params is None:
                 return
 
-            numbers = re.findall(r'\d+', params)
+            numbers = re.findall(r"\d+", params)
             if len(numbers) != 1:
                 self.slackbot.send_message(text=self.msg_flow)
                 return
@@ -54,12 +52,10 @@ class Question(object):
                 point = 100
 
             now = arrow.now()
-            time = now.format('HH:mm')
-            self.data_handler.edit_record_with_category(
-                self.category, (time, point))
+            time = now.format("HH:mm")
+            self.data_handler.edit_record_with_category(self.category, (time, point))
 
-            self.slackbot.send_message(
-                text=self.msg_question_step_1(point))
+            self.slackbot.send_message(text=self.msg_question_step_1(point))
             state.flow_complete()
 
         locals()["step_" + str(step)](params)
@@ -75,7 +71,8 @@ class Question(object):
                 return total_minute
 
             ordered_question_data = collections.OrderedDict(
-                sorted(question_data.items(), key=convert_time))
+                sorted(question_data.items(), key=convert_time)
+            )
 
             x_ticks = list(ordered_question_data.keys())  # time
             time = list(range(len(x_ticks)))
@@ -91,16 +88,17 @@ class Question(object):
                 x_ticks=x_ticks,
                 x_label=self.category + " Point",
                 y_label="Time",
-                title=title)
+                title=title,
+            )
             self.slackbot.file_upload(
                 f_name,
                 title=title,
-                channel=Config.slack.channel.get('REPORT', '#general'),
-                comment=self.msg_report)
+                channel=Config.slack.channel.get("REPORT", "#general"),
+                comment=self.msg_report,
+            )
 
 
 class HappyQuestion(Question):
-
     def __init__(self, slackbot=None):
         self.category = "happy"
         self.msg_question_step_0 = MsgResource.HAPPY_QUESTION_STEP_0
@@ -110,13 +108,13 @@ class HappyQuestion(Question):
 
         if slackbot is None:
             self.slackbot = SlackerAdapter(
-                channel=Config.slack.channel.get("DEFAULT", "#general"))
+                channel=Config.slack.channel.get("DEFAULT", "#general")
+            )
         else:
             self.slackbot = slackbot
 
 
 class AttentionQuestion(Question):
-
     def __init__(self, slackbot=None):
         self.category = "attention"
         self.msg_question_step_0 = MsgResource.ATTENTION_QUESTION_STEP_0
@@ -125,6 +123,8 @@ class AttentionQuestion(Question):
         self.msg_report = MsgResource.ATTENTION_REPORT
 
         if slackbot is None:
-            self.slackbot = SlackerAdapter(channel=Config.slack.channel.get("TASK", "#general"))
+            self.slackbot = SlackerAdapter(
+                channel=Config.slack.channel.get("TASK", "#general")
+            )
         else:
             self.slackbot = slackbot

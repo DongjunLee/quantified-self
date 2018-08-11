@@ -7,7 +7,6 @@ from ..utils.data_handler import DataHandler
 
 class MsgResourceType(type):
     class __MsgResource:
-
         def __init__(self):
             data_handler = DataHandler()
 
@@ -23,8 +22,7 @@ class MsgResourceType(type):
         def __getattr__(self, name):
             self.pool[name] = {}
 
-            message = self.template[Config.bot.LANG_CODE].get(
-                name, "empty")
+            message = self.template[Config.bot.LANG_CODE].get(name, "empty")
             if isinstance(message, list):
                 message = random.choice(message)
 
@@ -32,9 +30,7 @@ class MsgResourceType(type):
                 self.pool[name] = {"args": args, "kwargs": kwargs}
                 return "{" + name + "}"
 
-            if isinstance(
-                    message, dict) or (
-                    "{" in message and "}" in message):
+            if isinstance(message, dict) or ("{" in message and "}" in message):
                 return wrapper
             else:
                 return "{" + name + "}"
@@ -44,8 +40,7 @@ class MsgResourceType(type):
             m_args = self.pool[name].get("args", None)
             m_kwargs = self.pool[name].get("kwargs", None)
 
-            message = self.template[self.lang_code].get(
-                name, "MsgResource not exist.")
+            message = self.template[self.lang_code].get(name, "MsgResource not exist.")
             if isinstance(message, list):
                 message = random.choice(message)
 
