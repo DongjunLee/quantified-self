@@ -11,7 +11,6 @@ from ..skills.question import AttentionQuestion
 from ..skills.todoist import TodoistManager
 
 from ..utils.arrow import ArrowUtil
-from ..utils.data_handler import DataHandler
 from ..utils.logger import Logger
 from ..utils.score import Score
 from ..utils.state import State
@@ -34,14 +33,21 @@ class TogglManager(object):
         else:
             self.slackbot = slackbot
 
-    def timer(self, description=None, doing=True, done=True):
+    def timer(self, description="", doing=True, done=True):
         state = State()
         state.check()
 
-        advice_rest_time = state.current.get(state.REST, {}).get("time", None)
+        rest_state = state.current.get(state.REST, {})
+        advice_rest_time = rest_state.get("time", None)
+        need_focus = any(c for c in ["develop", "research"] if c in description.lower())
+
+        # Advice to you to take a break (work overtime)
         if advice_rest_time is not None:
+            is_advice_check = rest_state.get("try", False)
             advice_rest_time = arrow.get(advice_rest_time)
-            if advice_rest_time > arrow.now():
+            if need_focus and not is_advice_check \
+                    and advice_rest_time > arrow.now():
+                state.advice_check()
                 self.slackbot.send_message(
                     text=MsgResource.TOGGL_ADVICE_REST(
                         time=advice_rest_time.format("HH:mm")
@@ -94,7 +100,7 @@ class TogglManager(object):
 
             state.advice_rest(diff_min)
 
-            if diff_min > 40:
+            if diff_min >= 40:
                 attention = AttentionQuestion()
                 attention.question()
 
@@ -115,7 +121,7 @@ class TogglManager(object):
         diff_min = ArrowUtil.get_curr_time_diff(start=current_timer["start"])
         self.logger.info("diff_min: " + str(diff_min))
         diff_min_divide_10 = int(diff_min / 10)
-        if diff_min > 100:
+        if diff_min > 150:
             self.slackbot.send_message(text=MsgResource.TOGGL_NOTI_RELAY)
         else:
             for i in range(3, 10, 3):

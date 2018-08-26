@@ -202,7 +202,7 @@
       "It's hard to do it again. How about resting a little and starting again?"
     ],
     "TOGGL_REPORT" : "Report by Toggl.",
-    "TOGGL_ADVICE_REST": "It's time to relax until {time}! :dancer:",
+    "TOGGL_ADVICE_REST": "The brain needs rest. How about taking a break to {time}! :dancer:",
 
     "TOGGL_ALREADY_DOING" : "There is a work already in progress.",
     "TOGGL_ALREADY_BREAK" : "Hut, were not you take a rest? There is currently no work in progress.",
