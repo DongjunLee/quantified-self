@@ -64,5 +64,13 @@ class State(object):
         now = arrow.now()
         advice = now.replace(minutes=rest_mins)
 
-        data = {"time": str(advice)}
+        data = {"time": str(advice), "try": False}
         self.save(self.REST, data)
+
+    def advice_check(self):
+        self.check()
+        rest_state = self.current.get(self.REST)
+
+        rest_state["try"] = True
+        self.save(self.REST, rest_state)
+
