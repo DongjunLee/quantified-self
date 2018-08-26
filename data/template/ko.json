@@ -203,7 +203,7 @@
       "힘드시죠ㅠㅠ 조금 쉬었다가 다시 시작하시는 건 어떠신가요?ㅠㅠ"
     ],
     "TOGGL_REPORT" : "Toggl에 저장되어있는 Report 입니다.",
-    "TOGGL_ADVICE_REST": "뇌에는 휴식이 필합니다. {time} 까지는 쉬시는 건 어떠신가요? :dancer:",
+    "TOGGL_ADVICE_REST": "뇌에는 휴식이 필요합니다. {time} 까지는 쉬시는 건 어떠신가요? :dancer:",
 
     "TOGGL_ALREADY_DOING" : "이미 진행 중인 작업이 있습니다.",
     "TOGGL_ALREADY_BREAK" : "헛, 쉬시는 중 아니셨나요? 현재 진행 중인 작업이 없습니다..",
