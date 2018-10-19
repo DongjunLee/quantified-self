@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import arrow
-from dateutil import tz
 import forecastio
-from geopy.geocoders import GoogleV3
+from geopy.geocoders import Nominatim
 from hbconfig import Config
+from urllib import parse
 
 from ..open_api.airkoreaPy import AirKorea
 
@@ -30,12 +30,14 @@ class Weather(object):
         cache_data = self.data_handler.read_cache()
 
         user_location = self.profile.get_location()
+        user_location = parse.quote(user_location)  # user_location is Korean
+
         if user_location in cache_data:
             address = cache_data[user_location]["address"]
             lat = cache_data[user_location]["lat"]
             lon = cache_data[user_location]["lon"]
         else:
-            geolocator = GoogleV3()
+            geolocator = Nominatim(user_agent="kino-bot")
             location = geolocator.geocode(user_location)
 
             address = location.address
@@ -97,5 +99,5 @@ class Weather(object):
             response = airkorea.forecast(station_name)
             attachments = MsgTemplate.make_air_quality_template(station_name, response)
             self.slackbot.send_message(attachments=attachments)
-        except BaseException as e:
+        except BaseException:
             self.slackbot.send_message(text=MsgResource.ERROR)
