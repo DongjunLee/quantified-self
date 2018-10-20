@@ -28,14 +28,14 @@ class DataHandler(object):
 
         path = os.path.join(fpath + fname)
         try:
-            with open(path, "r") as infile:
-                return infile.read()
+            with open(path, "rb") as infile:
+                return infile.read().decode("utf-8")
         except BaseException:
             return ""
 
     def write_file(self, fname, data):
         path = os.path.join(self.data_path + fname)
-        with open(path, "w") as outfile:
+        with open(path, "w", encoding="utf-8") as outfile:
             json.dump(data, outfile)
 
     def read_json_then_add_data(self, fname, category, input_data):
