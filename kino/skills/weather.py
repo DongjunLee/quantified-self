@@ -30,12 +30,12 @@ class Weather(object):
         cache_data = self.data_handler.read_cache()
 
         user_location = self.profile.get_location()
-        user_location = parse.quote(user_location)  # user_location is Korean
+        parsed_user_location = parse.quote(user_location)  # user_location is Korean
 
-        if user_location in cache_data:
-            address = cache_data[user_location]["address"]
-            lat = cache_data[user_location]["lat"]
-            lon = cache_data[user_location]["lon"]
+        if parsed_user_location in cache_data:
+            address = cache_data[parsed_user_location]["address"]
+            lat = cache_data[parsed_user_location]["lat"]
+            lon = cache_data[parsed_user_location]["lon"]
         else:
             geolocator = Nominatim(user_agent="kino-bot")
             location = geolocator.geocode(user_location)
@@ -45,7 +45,7 @@ class Weather(object):
             lon = location.longitude
 
             self.data_handler.edit_cache(
-                (user_location, {"address": address, "lat": lat, "lon": lon})
+                (parsed_user_location, {"address": address, "lat": lat, "lon": lon})
             )
 
         api_key = Config.open_api.dark_sky.TOKEN
