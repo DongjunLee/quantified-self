@@ -35,7 +35,7 @@ class DataHandler(object):
 
     def write_file(self, fname, data):
         path = os.path.join(self.data_path + fname)
-        with open(path, "wb") as outfile:
+        with open(path, "w", encoding="utf-8") as outfile:
             json.dump(data, outfile)
 
     def read_json_then_add_data(self, fname, category, input_data):

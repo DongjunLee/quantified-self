@@ -13,11 +13,13 @@ from ..slack.slackbot import SlackerAdapter
 from ..slack.template import MsgTemplate
 
 from ..utils.data_handler import DataHandler
+from ..utils.logger import Logger
 from ..utils.profile import Profile
 
 
 class Weather(object):
     def __init__(self, slackbot=None):
+        self.logger = Logger().get_logger()
         self.data_handler = DataHandler()
         self.profile = Profile()
 
@@ -100,4 +102,5 @@ class Weather(object):
             attachments = MsgTemplate.make_air_quality_template(station_name, response)
             self.slackbot.send_message(attachments=attachments)
         except BaseException:
+            self.logger.exception("air_auality")
             self.slackbot.send_message(text=MsgResource.ERROR)
