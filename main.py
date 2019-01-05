@@ -17,4 +17,4 @@ if __name__ == "__main__":
         prepare_feed_data()
 
     kino_bot = KinoBot()
-    kino_bot.start_session()
+    kino_bot.start_session(init=True)

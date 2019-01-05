@@ -63,10 +63,12 @@ class Worker(object):
 
         Scheduler().create_with_ner(**ner_dict)
 
-    def run(self):
+    def run(self, init=False):
         self.set_schedules()
         schedule.run_continuously(interval=1)
-        self.slackbot.send_message(text=MsgResource.WORKER_START)
+
+        if not init:
+            self.slackbot.send_message(text=MsgResource.WORKER_START)
 
     def set_schedules(self):
         if self.profile:
@@ -235,7 +237,8 @@ class Worker(object):
         job_thread = threading.Thread(target=job_func, kwargs=param)
         job_thread.start()
 
-    def stop(self):
+    def stop(self, init=False):
         schedule.clear()
 
-        self.slackbot.send_message(text=MsgResource.WORKER_STOP)
+        if not init:
+            self.slackbot.send_message(text=MsgResource.WORKER_STOP)
