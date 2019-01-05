@@ -4,19 +4,23 @@ import websockets
 
 from hbconfig import Config
 
-from .listener import MsgListener
+from kino.bot.worker import Worker
+from kino.listener import MsgListener
 
-from .slack.resource import MsgResource
-from .slack.slackbot import SlackerAdapter
-from .slack.slackbot import GiphyClient
+from kino.slack.resource import MsgResource
+from kino.slack.slackbot import SlackerAdapter
+from kino.slack.slackbot import GiphyClient
 
-from .utils.logger import Logger
+from kino.utils.logger import Logger
 
 
 class KinoBot:
     def __init__(self) -> None:
         self.slackbot = SlackerAdapter()
         self.logger = Logger().get_logger()
+        self.worker = Worker(slackbot=self.slackbot)
+
+        self.error_delay = 1  # Unit (Second)
 
         # Send a message to channel (init)
         MASTER_NAME = Config.bot.MASTER_NAME
@@ -28,9 +32,11 @@ class KinoBot:
         giphy = GiphyClient()
         giphy.search("Hello!")
 
-        self.error_delay = 5
 
-    def start_session(self, nap: bool = False):
+    def start_session(self, init: bool = False, nap: bool = False):
+        self.worker.stop(init=init)
+        self.worker.run(init=init)
+
         try:
             # Start RTM
             endpoint = self.slackbot.start_real_time_messaging_session()
@@ -52,9 +58,7 @@ class KinoBot:
                 self.slackbot.send_message(text=MsgResource.NAP)
 
         except BaseException:
-            self.slackbot.send_message(text=MsgResource.SESSION_ERROR)
-
-            self.logger.error("Session Error. restart in 5 seconds..")
+            self.logger.error(f"Session Error. restart in {self.error_delay} seconds..")
             self.logger.exception("bot")
             time.sleep(5)
             self.start_session(nap=True)

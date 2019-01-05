@@ -19,8 +19,8 @@ from .notifier.between import Between
 from .notifier.scheduler import Scheduler
 from .notifier.skill_list import SkillList
 
-from .kino.help import Guide
-from .kino.worker import Worker
+from .bot.help import Guide
+from .bot.worker import Worker
 
 from .slack.resource import MsgResource
 from .slack.slackbot import SlackerAdapter
