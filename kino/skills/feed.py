@@ -21,7 +21,7 @@ from ..utils.logger import DataLogger
 
 class FeedNotifier:
 
-    MAX_KEEP = 50
+    MAX_KEEP = 40
 
     def __init__(self, slackbot: SlackerAdapter = None) -> None:
         self.logger = Logger().get_logger()
@@ -67,7 +67,8 @@ class FeedNotifier:
             self.slackbot.send_message(attachments=attachments)
 
     def get_notify_list(self, category: str, feed: tuple) -> list:
-        cache_data = self.data_handler.read_cache()
+        CACHE_FILE_NAME = "cache_feed.json"
+        cache_data = self.data_handler.read_cache(fname=CACHE_FILE_NAME)
 
         feed_name, feed_url = feed
         f = feedparser.parse(feed_url)
@@ -94,7 +95,7 @@ class FeedNotifier:
         if f.entries:
             last_e = f.entries[0]
             last_updated_date = arrow.get(last_e.get("updated_parsed", None))
-            self.data_handler.edit_cache((feed_url, str(last_updated_date)))
+            self.data_handler.edit_cache((feed_url, str(last_updated_date)), fname=CACHE_FILE_NAME)
 
         # filter feeded entry link
         cache_entry_links = set(cache_data.get("feed_links", []))
@@ -106,7 +107,7 @@ class FeedNotifier:
             cache_entry_links.add(entry_link)
 
         self.data_handler.edit_cache(
-            ("feed_links", list(cache_entry_links)[-self.MAX_KEEP :])
+            ("feed_links", list(cache_entry_links)[-self.MAX_KEEP :]), fname=CACHE_FILE_NAME
         )
 
         return noti_list
