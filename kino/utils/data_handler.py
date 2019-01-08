@@ -36,7 +36,7 @@ class DataHandler(object):
     def write_file(self, fname, data):
         path = os.path.join(self.data_path + fname)
         with open(path, "w", encoding="utf-8") as outfile:
-            json.dump(data, outfile)
+            json.dump(data, outfile, indent=4)
 
     def read_json_then_add_data(self, fname, category, input_data):
         total_data = self.read_file(fname)
@@ -107,12 +107,10 @@ class DataHandler(object):
         category_data[data[0]] = data[1]
         self.edit_record((category, category_data), days=days)
 
-    def read_cache(self):
-        fname = "cache.json"
+    def read_cache(self, fname="cache.json"):
         return self.read_file(fname)
 
-    def edit_cache(self, data):
-        fname = "cache.json"
+    def edit_cache(self, data, fname="cache.json"):
         cache = self.read_cache()
         cache[data[0]] = data[1]
         self.write_file(fname, cache)
