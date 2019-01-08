@@ -1,9 +1,6 @@
-import matplotlib
-
-matplotlib.use("TkAgg")
-
 import arrow
 import itertools
+import matplotlib
 import requests
 from hbconfig import Config
 
