@@ -22,3 +22,7 @@ hb-config
 python-jenkins
 tensorflow
 pocket
+
+fitbit
+cherrypy
+

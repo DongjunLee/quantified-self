@@ -80,8 +80,8 @@ class Worker(object):
         self.__excute_profile_schedule(
             self.profile.get_schedule("WAKE_UP"),
             False,
-            "send_message",
-            {"text": MsgResource.PROFILE_WAKE_UP},
+            "good_morning",
+            {},
             True,
         )
 
@@ -104,8 +104,8 @@ class Worker(object):
         self.__excute_profile_schedule(
             self.profile.get_schedule("GO_TO_BED"),
             False,
-            "send_message",
-            {"text": MsgResource.PROFILE_GO_TO_BED},
+            "good_night",
+            {},
             False,
         )
 
