@@ -2,22 +2,21 @@
 import arrow
 from hbconfig import Config
 
-from .rescue_time import RescueTime
-from .toggl import TogglManager
-from .todoist import TodoistManager
-from .trello import TrelloManager
-from .github import GithubManager
+from kino.skills.fitbit import Fitbit
+from kino.skills.github import GithubManager
+from kino.skills.toggl import TogglManager
+from kino.skills.todoist import TodoistManager
+from kino.skills.trello import TrelloManager
+from kino.skills.rescue_time import RescueTime
 
-from ..slack.resource import MsgResource
-from ..slack.slackbot import SlackerAdapter
-from ..slack.template import MsgTemplate
-from ..slack.plot import Plot
+from kino.slack.resource import MsgResource
+from kino.slack.slackbot import SlackerAdapter
+from kino.slack.template import MsgTemplate
+from kino.slack.plot import Plot
 
-from ..utils.arrow import ArrowUtil
-from ..utils.data_handler import DataHandler
-from ..utils.profile import Profile
-from ..utils.score import Score
-from ..utils.state import State
+from kino.utils.arrow import ArrowUtil
+from kino.utils.data_handler import DataHandler
+from kino.utils.score import Score
 
 
 class Summary(object):
@@ -226,6 +225,8 @@ class Summary(object):
             return 80
 
     def __sleep_score(self):
+        self.__get_sleep_time_with_fitbit()
+
         activity_data = self.data_handler.read_record().get("activity", {})
 
         go_to_bed_time = arrow.get(activity_data.get("go_to_bed", None))
@@ -241,6 +242,22 @@ class Summary(object):
             sleep_time = 700
 
         return Score.percent(sleep_time, 100, 700)
+
+    def __get_sleep_time_with_fitbit(self):
+        fitbit = Fitbit()
+        sleep_data = fitbit.get_sleep_summary()
+
+        self.data_handler.edit_record_with_category(
+            "activity", ("wake_up", sleep_data["wake_up"])
+        )
+        self.data_handler.edit_record_with_category(
+            "activity", ("go_to_bed", sleep_data["go_to_bed"])
+        )
+
+        sleep_time = sleep_data["totalTimeInBed"] / 60
+        self.data_handler.edit_record_with_category(
+            "activity", ("sleep_time", sleep_time)
+        )
 
     def __repeat_task_score(self):
         trello = TrelloManager()

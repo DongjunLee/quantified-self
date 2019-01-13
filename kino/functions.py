@@ -11,6 +11,7 @@ from .nlp.ner import NamedEntitiyRecognizer
 
 from .skills.bus import Bus
 from .skills.feed import FeedNotifier
+from kino.skills.fitbit import Fitbit
 from .skills.github import GithubManager
 from .skills.humor import Humor
 from .skills.maxim import Maxim
@@ -91,8 +92,7 @@ class Functions(object):
         icon: ":sunrise: "
         """
 
-        summary = Summary()
-        summary.check_sleep_time()
+        self.slackbot.send_message(text=MsgResource.PROFILE_WAKE_UP)
 
         self.forecast(timely="daily")
         self.air_quality()
@@ -109,8 +109,9 @@ class Functions(object):
         icon: ":night_with_stars: "
         """
 
+        self.slackbot.send_message(text=MsgResource.PROFILE_GO_TO_BED)
+
         summary = Summary()
-        summary.check_go_to_bed()
         summary.check_commit_count()
 
         self._reset_data()

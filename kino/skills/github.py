@@ -3,13 +3,13 @@ import datetime
 from github import Github
 from hbconfig import Config
 
-from ..slack.resource import MsgResource
-from ..slack.slackbot import SlackerAdapter
-from ..slack.plot import Plot
+from kino.slack.resource import MsgResource
+from kino.slack.slackbot import SlackerAdapter
+from kino.slack.plot import Plot
 
-from ..utils.arrow import ArrowUtil
-from ..utils.data_handler import DataHandler
-from ..utils.score import Score
+from kino.utils.arrow import ArrowUtil
+from kino.utils.data_handler import DataHandler
+from kino.utils.score import Score
 
 
 class GithubManager(object):
