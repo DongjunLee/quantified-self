@@ -27,8 +27,8 @@ class Fitbit:
 
     def _authorize(self):
         auth_server = OAuth2Server(
-            Config.open_api.fitbit.client_id,
-            Config.open_api.fitbit.client_secret)
+            Config.open_api.fitbit.CLIENT_ID,
+            Config.open_api.fitbit.CLIENT_SECRET)
         auth_server.browser_authorize()
 
         self.api = auth_server.fitbit
