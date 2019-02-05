@@ -211,33 +211,33 @@
     "KANBAN_SYNC" : "Let's meet the sink between Todoist and Kanban board.",
 
     "ATTENTION_QUESTION_STEP_0" : [
-      "How much did you focus on your work? (Out of 100)",
-      "Did you concentrate on this work? I am curious about it (out of 100 points)",
-      "clap: :clap: Did you focus well? (Out of 100)"
+      "How much did you focus on your work? \n (1점 :weary: | 2점 :disappointed: | 3점 :neutral_face: | 4점 :thinking_face: | 5점 :star-struck: )",
+      "Did you concentrate on this work? I am curious about it \n (1점 :weary: | 2점 :disappointed: | 3점 :neutral_face: | 4점 :thinking_face: | 5점 :star-struck: )",
+      "clap: :clap: Did you focus well? \n (1점 :weary: | 2점 :disappointed: | 3점 :neutral_face: | 4점 :thinking_face: | 5점 :star-struck: )"
     ],
 
     "ATTENTION_QUESTION_STEP_1": {
-      "92": "Your concentration is the best! :laughing: ",
-      "85": "You're having fun! :smile: ",
-      "77": "I think it's a good thing! :smiley: ",
-      "70": "It seems a little difficult or boring ..! :simple_smile: ",
-      "50": "you did not want to do that .. :angry: "
+      "5": "Your concentration is the best! :laughing: ",
+      "4": "You're having fun! :smile: ",
+      "3": "I think it's a good thing! :smiley: ",
+      "2": "It seems a little difficult or boring ..! :simple_smile: ",
+      "1": "you did not want to do that .. :angry: "
     },
 
     "ATTENTION_REPORT" : "Attention Report.",
 
     "HAPPY_QUESTION_STEP_0" : [
-      "How is your day today? (Out of 100)",
-      "Let's think about what the day is like for a while. (Out of 100)",
-      "Be Happy! Please tell us how you feel now! (Out of 100)"
+      "How is your day today? \n (1 point :rage: | 2 point :pensive: | 3 point :slightly_smiling_face: | 4 point :laughing: | 5 point :heart_eyes: )",
+      "Let's think about what the day is like for a while. \n (1 point :rage: | 2 point :pensive: | 3 point :slightly_smiling_face: | 4 point :laughing: | 5 point :heart_eyes: )",
+      "Be Happy! Please tell us how you feel now! \n (1 point :rage: | 2 point :pensive: | 3 point :slightly_smiling_face: | 4 point :laughing: | 5 point :heart_eyes: )"
     ],
 
     "HAPPY_QUESTION_STEP_1": {
-      "100": "Feel the best !! :laughing: ",
-      "90": "I think you are happy. Looks good! :smile: ",
-      "80": "I think you are smiling. :smiley: ",
-      "70": "You might be so so.. :simple_smile: ",
-      "50": "What happened? You do not feel well. :angry: "
+      "5": "Feel the best !! :laughing: ",
+      "4": "I think you are happy. Looks good! :smile: ",
+      "3": "I think you are smiling. :smiley: ",
+      "2": "You might be so so.. :simple_smile: ",
+      "1": "What happened? You do not feel well. :angry: "
     },
 
     "HAPPY_REPORT" : "Happy Report",

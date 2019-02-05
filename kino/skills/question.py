@@ -48,8 +48,8 @@ class Question(object):
                 return
 
             point = int(numbers[0])
-            if point > 100:
-                point = 100
+            if point > 5:
+                point = 5
 
             now = arrow.now()
             time = now.format("HH:mm")
