@@ -236,9 +236,9 @@ class MsgTemplate:
         attachement = Attachement()
 
         attachement.color = data["Color"]
-        total_score = data["Total"]
+        total_score = data["total"]
         del data["Color"]
-        del data["Total"]
+        del data["total"]
 
         attachement.fallback = "종합점수:  " + str(total_score)
         attachement.text = "종합점수 입니다."

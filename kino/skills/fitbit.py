@@ -25,12 +25,15 @@ class Fitbit:
         else:
             self.slackbot = slackbot
 
-    def get_sleep_summary(self):
+    def get_sleeps(self):
         sleep_data = self.api.sleep()
 
-        summary_data = sleep_data["summary"]
-        for data in sleep_data["sleep"]:
-            if data["isMainSleep"]:
-                summary_data["go_to_bed"] = data["startTime"]
-                summary_data["wake_up"] = data["endTime"]
-        return summary_data
+        datas = []
+        for s in sleep_data["sleep"]:
+            data = {
+                "is_main": s["isMainSleep"],
+                "start_time": s["startTime"],
+                "end_time": s["endTime"]
+            }
+            datas.append(data)
+        return datas

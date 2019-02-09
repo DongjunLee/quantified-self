@@ -11,13 +11,17 @@ from ..skills.question import AttentionQuestion
 from ..skills.todoist import TodoistManager
 
 from ..utils.arrow import ArrowUtil
+from ..utils.data_handler import DataHandler
 from ..utils.logger import Logger
+from ..utils.profile import Profile
 from ..utils.score import Score
 from ..utils.state import State
 
 
 class TogglManager(object):
     def __init__(self, slackbot=None):
+        self.data_handler = DataHandler()
+        self.profile = Profile()
         self.logger = Logger().get_logger()
 
         self.toggl = Toggl()
@@ -81,13 +85,28 @@ class TogglManager(object):
                 self.slackbot.send_message(text=MsgResource.TOGGL_ALREADY_DOING)
                 return
 
-            stop = self.toggl.stopTimeEntry(current_timer["id"])
-            description = stop["data"].get("description", "no description")
-            diff_min = ArrowUtil.get_curr_time_diff(
-                start=stop["data"]["start"], stop=stop["data"]["stop"]
-            )
+            response = self.toggl.stopTimeEntry(current_timer["id"])
+            print("response:", response)
+
+            start_time = response["data"]["start"]
+            end_time = response["data"]["stop"]
+
+            pid = response["data"].get("pid", None)
+            project_name = "Empty"
+            project_color = "#A9A9A9"
+            if pid is not None:
+                project = self.toggl.getProject(response["data"]["pid"])
+                project_name = project["data"]["name"]
+                project_color = project["data"]["hex_color"]
+            description = response["data"].get("description", "no description")
+
+            self._save_data(start_time, end_time, project_name, project_color, description)
 
             self.slackbot.send_message(text=MsgResource.TOGGL_STOP)
+
+            diff_min = ArrowUtil.get_curr_time_diff(
+                start=start_time, stop=end_time
+            )
             self.slackbot.send_message(
                 text=MsgResource.TOGGL_STOP_SUMMARY(
                     description=description, diff_min=diff_min
@@ -111,6 +130,20 @@ class TogglManager(object):
         else:
             pid = project["id"]
         return pid
+
+    def _save_data(self, start_time, end_time, project_name, project_color, description):
+        timezone = self.profile.get_timezone()
+        start_time = arrow.get(start_time).to(timezone)
+        end_time = arrow.get(end_time).to(timezone)
+
+        data = {
+            "start_time": start_time.format("YYYY-MM-DDTHH:mm:ssZZ"),
+            "end_time": end_time.format("YYYY-MM-DDTHH:mm:ssZZ"),
+            "project": project_name,
+            "description": description,
+            "color": project_color
+        }
+        self.data_handler.edit_activity("task", data)
 
     def check_toggl_timer(self):
         current_timer = self.toggl.currentRunningTimeEntry()["data"]

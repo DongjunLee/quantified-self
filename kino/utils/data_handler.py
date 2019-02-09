@@ -8,6 +8,8 @@ import requests
 
 from hbconfig import Config
 
+from kino.utils.arrow import ArrowUtil
+
 
 class DataHandler(object):
     def __init__(self):
@@ -106,6 +108,48 @@ class DataHandler(object):
         category_data = record.get(category, {})
         category_data[data[0]] = data[1]
         self.edit_record((category, category_data), days=days)
+
+    def edit_activity(self, category, data, days=0):
+        record = self.read_record(days=days)
+        activity_data = record.get("activity", {})
+        if type(data) == list:
+            activity_data[category] = data
+        elif type(data) == dict:
+            if category in activity_data:
+                activity_data[category].append(data)
+            else:
+                activity_data[category] = [data]
+        else:
+            raise ValueError("only 'list' and 'dict' type is availabile.")
+
+        self.edit_record(("activity", activity_data), days=days)
+
+    def edit_attention(self, category, data, days=0):
+        record = self.read_record(days=days)
+        activity_data = record.get("activity", {})
+
+        assert category in activity_data
+
+        latest_data = activity_data[category][-1]
+        task_end_time = arrow.get(latest_data["end_time"])
+        current_time = data["time"]
+
+        if ArrowUtil.get_curr_time_diff(task_end_time, current_time) < 40:
+            latest_data["score"] = data["score"]
+        else:
+            pass
+
+        self.edit_record(("activity", activity_data), days=days)
+
+    def read_summary(self, days=0):
+        record_data = self.read_record(days=days)
+        return record_data.get("summary", {})
+
+    def edit_summary(self, data, days=0):
+        record = self.read_record(days=days)
+        summary_data = record.get("summary", {})
+        summary_data.update(data)
+        self.edit_record(("summary", summary_data), days=days)
 
     def read_cache(self, fname="cache.json"):
         return self.read_file(fname)
