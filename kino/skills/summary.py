@@ -128,9 +128,11 @@ class Summary(object):
             repeat = self.__repeat_task_score()
 
             today_data = self.data_handler.read_record()
-            do_diary = today_data.get("do_diary", False)
-            do_exercise = today_data.get("do_exercise", False)
-            do_bat = today_data.get("do_bat", False)
+            summary_data = today_data.get("summary", {})
+
+            do_diary = summary_data.get("do_diary", False)
+            do_exercise = summary_data.get("do_exercise", False)
+            do_bat = summary_data.get("do_bat", False)
 
             total = (
                 Score.percent(attention, Config.score.get("ATTENTION", 20), 100)
