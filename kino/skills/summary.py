@@ -271,16 +271,16 @@ class Summary(object):
         return 100 - (minus_point * trello.get_card_count_by_list_name("Tasks"))
 
     def record_write_diary(self):
-        self.data_handler.edit_summary(("do_diary", True))
+        self.data_handler.edit_summary({"do_diary", True})
 
     def record_exercise(self):
-        self.data_handler.edit_summary(("do_exercise", True))
+        self.data_handler.edit_summary({"do_exercise", True})
 
     def record_bat(self):
-        self.data_handler.edit_summary(("bat", True))
+        self.data_handler.edit_summary({"bat", True})
 
     def record_holiday(self, dnd):
-        self.data_handler.edit_summary(("is_holiday", dnd))
+        self.data_handler.edit_summary({"is_holiday", dnd})
 
     def is_holiday(self):
         record = self.data_handler.read_record()
