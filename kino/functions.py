@@ -11,7 +11,6 @@ from .nlp.ner import NamedEntitiyRecognizer
 
 from .skills.bus import Bus
 from .skills.feed import FeedNotifier
-from kino.skills.fitbit import Fitbit
 from .skills.github import GithubManager
 from .skills.humor import Humor
 from .skills.maxim import Maxim
@@ -115,6 +114,10 @@ class Functions(object):
         summary.check_commit_count()
 
         self._reset_data()
+
+    def activity_task_sync(self):
+        toggl = TogglManager(slackbot=self.slackbot)
+        toggl.sync_task()
 
     def air_quality(self):
         """

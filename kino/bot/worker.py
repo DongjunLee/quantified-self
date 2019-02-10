@@ -109,6 +109,15 @@ class Worker(object):
             False,
         )
 
+        # Toggl Tasks <-> Activity Tasks Sync
+        self.__excute_profile_schedule(
+            "23:55",
+            False,
+            "activity_task_sync",
+            {},
+            False,
+        )
+
         # slack presence issue
         # self.__excute_profile_schedule(
         # self.profile.get_schedule('CHECK_GO_TO_BED'), False,

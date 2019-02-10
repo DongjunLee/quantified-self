@@ -85,28 +85,18 @@ class TogglManager(object):
                 self.slackbot.send_message(text=MsgResource.TOGGL_ALREADY_DOING)
                 return
 
-            response = self.toggl.stopTimeEntry(current_timer["id"])
-            print("response:", response)
-
-            start_time = response["data"]["start"]
-            end_time = response["data"]["stop"]
-
-            pid = response["data"].get("pid", None)
-            project_name = "Empty"
-            project_color = "#A9A9A9"
-            if pid is not None:
-                project = self.toggl.getProject(response["data"]["pid"])
-                project_name = project["data"]["name"]
-                project_color = project["data"]["hex_color"]
-            description = response["data"].get("description", "no description")
-
-            self._save_data(start_time, end_time, project_name, project_color, description)
+            response = self.toggl.stopTimeEntry(current_timer["id"])["data"]
+            self._save_data(response)
 
             self.slackbot.send_message(text=MsgResource.TOGGL_STOP)
 
+            start_time = response["start"]
+            end_time = response["stop"]
             diff_min = ArrowUtil.get_curr_time_diff(
                 start=start_time, stop=end_time
             )
+
+            description = response["description"]
             self.slackbot.send_message(
                 text=MsgResource.TOGGL_STOP_SUMMARY(
                     description=description, diff_min=diff_min
@@ -131,19 +121,42 @@ class TogglManager(object):
             pid = project["id"]
         return pid
 
-    def _save_data(self, start_time, end_time, project_name, project_color, description):
+    def _save_data(self, toggl_data):
+        data = self._convert_activity_task_format(toggl_data)
+        self.data_handler.edit_activity("task", data)
+
+    def _convert_activity_task_format(self, toggl_data):
+        entry_id = toggl_data["id"]
+
         timezone = self.profile.get_timezone()
-        start_time = arrow.get(start_time).to(timezone)
+        start_time = arrow.get(toggl_data["start"]).to(timezone)
+
+        if "end" in toggl_data:
+            end_time = toggl_data["end"]
+        elif "stop" in toggl_data:
+            end_time = toggl_data["stop"]
+        else:
+            raise ValueError(f"unexpected toggl data format. \n{toggl_data}")
         end_time = arrow.get(end_time).to(timezone)
 
-        data = {
+        project_name = "Empty"
+        project_color = "#A9A9A9"
+        pid = toggl_data.get("pid", None)
+        if pid is not None:
+            project = self.toggl.getProject(pid)["data"]
+            project_name = project["name"]
+            project_color = project["hex_color"]
+
+        description = toggl_data["description"]
+
+        return {
+            "toggl_id": entry_id,
             "start_time": start_time.format("YYYY-MM-DDTHH:mm:ssZZ"),
             "end_time": end_time.format("YYYY-MM-DDTHH:mm:ssZZ"),
             "project": project_name,
             "description": description,
             "color": project_color
         }
-        self.data_handler.edit_activity("task", data)
 
     def check_toggl_timer(self):
         current_timer = self.toggl.currentRunningTimeEntry()["data"]
@@ -210,16 +223,40 @@ class TogglManager(object):
             )
 
     def get_point(self):
-        now = arrow.now()
-        data = {
-            "since": now.format("YYYY-MM-DD"),
-            "until": now.format("YYYY-MM-DD"),
-            "calculate": "time",
-        }
-
-        today = self.toggl.getDetailedReport(data)
+        params = self._make_today_params()
+        today = self.toggl.getDetailedReport(params)
         if today["total_grand"]:
             total_hours = round(today["total_grand"] / 60 / 60 / 10)
         else:
             total_hours = 0
         return Score.percent(total_hours, 100, 800)
+
+    def sync_task(self):
+        params = self._make_today_params()
+        detailed_reports = self.toggl.getDetailedReport(params)["data"]
+        activity_data = self.data_handler.read_acitivity()
+
+        unadded_tasks = []
+        for toggl_data in detailed_reports:
+            is_add = False
+            for task in activity_data.get("task", []):
+                if task["toggl_id"] == toggl_data["id"]:
+                    data = self._convert_activity_task_format(toggl_data)
+                    task = data
+                    is_add = True
+                    break
+
+            if not is_add:
+                unadded_tasks.append(toggl_data)
+
+        for task in unadded_tasks:
+            self._save_data(task)
+
+    def _make_today_params(self):
+        now = arrow.now()
+        params = {
+            "since": now.format("YYYY-MM-DD"),
+            "until": now.format("YYYY-MM-DD"),
+            "calculate": "time",
+        }
+        return params

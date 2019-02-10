@@ -109,6 +109,10 @@ class DataHandler(object):
         category_data[data[0]] = data[1]
         self.edit_record((category, category_data), days=days)
 
+    def read_acitivity(self, days=0):
+        record_data = self.read_record(days=days)
+        return record_data.get("activity", [])
+
     def edit_activity(self, category, data, days=0):
         record = self.read_record(days=days)
         activity_data = record.get("activity", {})
