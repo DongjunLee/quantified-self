@@ -214,11 +214,12 @@ class Summary(object):
         BASE_SCORE = 60
         SCORE_UNIT = 8
 
-        attention_data = self.data_handler.read_record().get("attention", {})
-        if len(attention_data) > 0:
-            return sum(list(map(lambda x: BASE_SCORE + int(x * SCORE_UNIT), attention_data.values()))) / len(
-                attention_data
-            )
+        record_data = self.data_handler.read_record()
+        activity_data = record_data["activity"]
+        task_data = activity_data.get("task", [])
+        if len(task_data) > 0:
+            attention_scores = [BASE_SCORE + t.get("score", 3) * SCORE_UNIT for t in task_data]
+            return sum(attention_scores) / len(attention_scores)
         else:
             return BASE_SCORE
 
@@ -226,11 +227,12 @@ class Summary(object):
         BASE_SCORE = 60
         SCORE_UNIT = 8
 
-        happy_data = self.data_handler.read_record().get("happy", {})
+        record_data = self.data_handler.read_record()
+        activity_data = record_data["activity"]
+        happy_data = activity_data.get("happy", [])
         if len(happy_data) > 0:
-            return sum(list(map(lambda x: BASE_SCORE + int(x * SCORE_UNIT), happy_data.values()))) / len(
-                happy_data
-            )
+            happy_scores = [BASE_SCORE + h.get("score", 3) * SCORE_UNIT for h in happy_data]
+            return sum(happy_scores) / len(happy_scores)
         else:
             return BASE_SCORE
 
