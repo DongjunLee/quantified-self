@@ -4,3 +4,6 @@ dash-core-components==0.42.1  # Supercharged components
 dash-table==3.1.11  # Interactive DataTable component (new!)
 
 plotly
+
+arrow
+numpy
