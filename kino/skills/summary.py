@@ -128,9 +128,9 @@ class Summary(object):
             repeat = self.__repeat_task_score()
 
             today_data = self.data_handler.read_record()
-            diary = today_data.get("Diary", False)
-            exercise = today_data.get("Exercise", False)
-            bat = today_data.get("BAT", False)
+            do_diary = today_data.get("do_diary", False)
+            do_exercise = today_data.get("do_exercise", False)
+            do_bat = today_data.get("do_bat", False)
 
             total = (
                 Score.percent(attention, Config.score.get("ATTENTION", 20), 100)
@@ -140,11 +140,11 @@ class Summary(object):
                 + Score.percent(repeat, Config.score.get("REPEAT_TASK", 10), 100)
             )
 
-            if diary:
+            if do_diary:
                 total += Config.score.get("DIARY", 5)
-            if exercise:
+            if do_exercise:
                 total += Config.score.get("EXERCISE", 5)
-            if bat:
+            if do_bat:
                 total += Config.score.get("BAT", 5)
 
             if total > 100:
@@ -156,9 +156,9 @@ class Summary(object):
                 "productive": round(productive * 100) / 100,
                 "sleep": round(sleep * 100) / 100,
                 "repeat_task": round(repeat * 100) / 100,
-                "do_diary": diary,
-                "exercise": exercise,
-                "bat": bat,
+                "do_diary": do_diary,
+                "do_exercise": do_exercise,
+                "do_bat": do_bat,
                 "total": round(total * 100) / 100,
             }
             return data
@@ -277,7 +277,7 @@ class Summary(object):
         self.data_handler.edit_summary({"do_exercise": True})
 
     def record_bat(self):
-        self.data_handler.edit_summary({"bat": True})
+        self.data_handler.edit_summary({"do_bat": True})
 
     def record_holiday(self, dnd):
         self.data_handler.edit_summary({"is_holiday": dnd})
