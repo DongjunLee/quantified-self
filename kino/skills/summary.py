@@ -211,28 +211,28 @@ class Summary(object):
         )
 
     def __attention_score(self):
-        DEFAULT_SCORE = 60
-        SCORE_UNIT = 20
+        BASE_SCORE = 60
+        SCORE_UNIT = 8
 
         attention_data = self.data_handler.read_record().get("attention", {})
         if len(attention_data) > 0:
-            return sum(list(map(lambda x: int(x * SCORE_UNIT), attention_data.values()))) / len(
+            return sum(list(map(lambda x: BASE_SCORE + int(x * SCORE_UNIT), attention_data.values()))) / len(
                 attention_data
             )
         else:
-            return DEFAULT_SCORE
+            return BASE_SCORE
 
     def __happy_score(self):
-        DEFAULT_SCORE = 60
-        SCORE_UNIT = 20
+        BASE_SCORE = 60
+        SCORE_UNIT = 8
 
         happy_data = self.data_handler.read_record().get("happy", {})
         if len(happy_data) > 0:
-            return sum(list(map(lambda x: int(x * SCORE_UNIT), happy_data.values()))) / len(
+            return sum(list(map(lambda x: BASE_SCORE + int(x * SCORE_UNIT), happy_data.values()))) / len(
                 happy_data
             )
         else:
-            return DEFAULT_SCORE
+            return BASE_SCORE
 
     def __sleep_score(self):
         self.__get_sleep_time_with_fitbit()
