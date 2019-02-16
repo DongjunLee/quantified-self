@@ -209,9 +209,7 @@ def make_daily_schedule_fig(n):
         if start_date == end_date or start_score != end_score:
             continue
 
-        fig["data"][index]["opacity"] = 0.1
-
-        description = d["text"]
+        description = d.get("text", "")
         project_names = list(colors.keys())
 
         project_name = "Empty"
