@@ -174,32 +174,65 @@ def make_daily_schedule_fig(n):
         df.append(task)
 
     fig = ff.create_gantt(df, colors=colors, index_col='Resource', title='Daily Schedule', group_tasks=True,
-                        show_colorbar=True, bar_width=0.5, showgrid_x=True, showgrid_y=True, width=1200, height=600)
+                        show_colorbar=True, bar_width=0.3, showgrid_x=True, showgrid_y=True, width=1200, height=600)
 
-    # Happy
-    # scatter_trace=dict(
-        # type='scatter',
-        # name="Happy",
-        # x=[datetime.datetime(2019, 2, 5, 9, 00), datetime.datetime(2019, 2, 5, 10, 00)],
-        # y=[1, 3]
-    # )
-    # fig['data'].append(scatter_trace)
+    happy_data = activity_data["happy"]
+
+    if len(happy_data) > 0:
+        xs = [arrow.get(d["time"]).format("YYYY-MM-DD HH:mm:ss") for d in happy_data]
+        ys = [d["score"] for d in happy_data]
+
+        scatter_trace=dict(
+            type='scatter',
+            mode="markers",
+            marker=dict(
+                size=10,
+                color="#439C59",
+                line=dict(
+                    width=2,
+                ),
+            ),
+            name="Happy",
+            x=xs,
+            y=ys,
+        )
+        fig['data'].append(scatter_trace)
 
     # Annotations
     fig['layout']['annotations'] = []
     for index, d in enumerate(fig['data']):
+        if len(d['x']) != 2:
+            continue
+
         start_date, end_date = d['x']
         start_score, end_score = d['y']
-
         if start_date == end_date or start_score != end_score:
             continue
+
+        fig["data"][index]["opacity"] = 0.1
+
+        description = d["text"]
+        project_names = list(colors.keys())
+
+        project_name = "Empty"
+        for p_name in project_names:
+            if description.startswith(p_name):
+                project_name = p_name
+                break
 
         if type(start_date) != datetime.datetime:
             start_date = parser.parse(start_date)
         if type(end_date) != datetime.datetime:
             end_date = parser.parse(end_date)
 
-        ays = [50, -50, 70, -70, 90, -90]
+        up_ays = [-50, -90, -70, -110]
+        down_ays = [50, 90, 70, 110]
+
+        if start_score > 2:  # large than 3
+            ays = up_ays
+        else:
+            ays = down_ays
+
         ay = ays[index % len(ays)]
 
         annotation = dict(
@@ -211,14 +244,15 @@ def make_daily_schedule_fig(n):
             font=dict(
                 family='Courier New, monospace',
                 size=12,
-                color='#222'
+                color='#fff'
             ),
-            bgcolor='#fff',
-            bordercolor='#222',
-            borderpad=4,
+            bgcolor=colors.get(project_name, "#DEDEDE"),
+            bordercolor='#666',
+            borderpad=2,
             arrowhead=7,
             ax=0,
             ay=ay,
+            opacity=0.7,
         )
         fig['layout']['annotations'].append(annotation)
 
