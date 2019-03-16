@@ -14,7 +14,7 @@ class AirKorea(object):
             + stationName
             + "&dataTerm=daily&pageNo=1&numOfRows=1&ServiceKey="
             + self.token
-            + "&ver=1.3&_returnType=json"
+            + "&ver=1.7.1&_returnType=json"
         )
         r = requests.get(self.base_url + resource_path + params)
 

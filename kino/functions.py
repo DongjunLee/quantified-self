@@ -93,7 +93,6 @@ class Functions(object):
         self.slackbot.send_message(text=MsgResource.PROFILE_WAKE_UP)
 
         self.forecast(timely="daily")
-        self.air_quality()
 
         trello = TrelloManager()
         trello.clean_board(except_list_name=[self.IDEA_LIST, self.KANBAN_BREAK])
@@ -173,6 +172,8 @@ class Functions(object):
             timely = "current"
         weather = Weather(slackbot=self.slackbot)
         weather.forecast(timely=timely)
+
+        self.air_quality()
 
     def github_commit(self, timely: str = "daily"):
         """
