@@ -110,6 +110,9 @@ class FeedNotifier:
             ("feed_links", list(cache_entry_links)[-self.MAX_KEEP :]), fname=CACHE_FILE_NAME
         )
 
+        if len(cache_data) == 0:  # cache_data is Empty. (Error)
+            return []
+
         return noti_list
 
     def __make_entry_tuple(self, category: str, entry: dict, feed_name: str) -> tuple:

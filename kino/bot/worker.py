@@ -64,11 +64,20 @@ class Worker(object):
         Scheduler().create_with_ner(**ner_dict)
 
     def run(self, init=False):
+        if self.is_running():
+            return
+
         self.set_schedules()
         schedule.run_continuously(interval=1)
 
         if not init:
             self.slackbot.send_message(text=MsgResource.WORKER_START)
+
+    def is_running(self):
+        if len(schedule.jobs) > 0:
+            return True
+        else:
+            return False
 
     def set_schedules(self):
         if self.profile:

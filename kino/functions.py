@@ -77,7 +77,6 @@ class Functions(object):
 
     def health_check(self):
         bot_id = self.slackbot.get_bot_id()
-
         if self.slackbot.is_active(bot_id):
             print("Healthy.")
         else:

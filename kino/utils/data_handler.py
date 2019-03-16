@@ -12,6 +12,7 @@ from kino.utils.arrow import ArrowUtil
 
 
 class DataHandler(object):
+
     def __init__(self):
         self.data_path = "data/"
         self.record_path = "record/"
