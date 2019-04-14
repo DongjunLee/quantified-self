@@ -42,6 +42,7 @@ def make_stacked_bar_fig():
     categories = ["Article", "Blog", "Book", "Develop", "Exercise", "Hobby", "Meeting", "MOOC", "Planning", "Research", "Review", "Seminar", "Empty"]
     task_reports = {}
 
+    colors = {"Empty": "#DEDEDE"}
     dates = get_sundays_of_this_month()
 
     for c in categories:
@@ -66,13 +67,25 @@ def make_stacked_bar_fig():
 
             task_reports[project][task_index] += duration_hours
 
+            # Color
+            if project not in colors:
+                colors[project] = t["color"]
+
     data = []
     for category, task_report in task_reports.items():
         data.append(
             go.Bar(
                 x=dates,
                 y=task_report,
-                name=category
+                name=category,
+                marker=dict(
+                    color=colors.get(category, "#DEDEDE"),
+                    line=dict(
+                        color='#222',
+                        width=1,
+                    ),
+                ),
+                opacity=0.8
             )
         )
 
