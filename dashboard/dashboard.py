@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import arrow
+import calendar
 import datetime
 from dateutil import parser
 
@@ -8,8 +9,6 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
-
-import numpy as np
 
 import plotly.figure_factory as ff
 import plotly.graph_objs as go
@@ -23,23 +22,57 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 data_handler = DataHandler()
 
 
-def make_stacked_bar_fig():
+def get_sundays_of_this_month():
+    WEEKDAY_SUNDAY = 6
 
-    dates = [
-        datetime.datetime(2019, 1, 1),
-        datetime.datetime(2019, 1, 8),
-        datetime.datetime(2019, 1, 15),
-        datetime.datetime(2019, 1, 22),
-        datetime.datetime(2019, 1, 29)]
+    now = arrow.now()
+    day_count = calendar.monthrange(now.year, now.month)[1]
+
+    start_date = datetime.datetime(now.year, now.month, 1)
+    end_date = datetime.datetime(now.year, now.month, day_count)
+
+    sunday_dates = []
+    for r in arrow.Arrow.range('day', start_date, end_date):
+        if r.weekday() == WEEKDAY_SUNDAY:
+            sunday_dates.append(r)
+    return sunday_dates
+
+
+def make_stacked_bar_fig():
     categories = ["Article", "Blog", "Book", "Develop", "Exercise", "Hobby", "Meeting", "MOOC", "Planning", "Research", "Review", "Seminar"]
+    task_reports = {}
+
+    dates = get_sundays_of_this_month()
+
+    for c in categories:
+        task_reports[c] = [0] * len(dates)
+
+    for i in range(arrow.now().day, 0, -1):
+        offset_day = i-1
+        record_data = data_handler.read_record(days=-offset_day)
+
+        curr_day = arrow.now().day - offset_day
+        for task_index, sunday_date in enumerate(dates):
+            if sunday_date.day - curr_day < 7 and sunday_date.day - curr_day >= 0:
+                break
+
+        activity_data = record_data.get("activity", {})
+        task_data = activity_data.get("task", [])
+        for t in task_data:
+            project = t["project"]
+
+            duration = (arrow.get(t["end_time"]) - arrow.get(t["start_time"])).seconds
+            duration_mins = round(duration / 60)
+
+            task_reports[project][task_index] += duration_mins
 
     data = []
-    for c in categories:
+    for category, task_report in task_reports.items():
         data.append(
             go.Bar(
                 x=dates,
-                y=[1, 2, 3, 4, 5],
-                name=c
+                y=task_report,
+                name=category
             )
         )
 
@@ -53,28 +86,48 @@ def make_stacked_bar_fig():
     return fig
 
 
-def make_scatter_line_fig():
-    N = 5
-    dates = [datetime.datetime(2019, 1, 1),
-             datetime.datetime(2019, 1, 8),
-             datetime.datetime(2019, 1, 15),
-             datetime.datetime(2019, 1, 22),
-             datetime.datetime(2019, 1, 29)]
-    random_y0 = np.random.randn(N) + 5
-    random_y1 = np.random.randn(N) + 7
-    random_y2 = np.random.randn(N) + 10
+def make_weekly_dates(N):
+    format_date_list = []
+    now = arrow.now()
+    for i in range(-(N-1), 1, 1):
+        date = now.replace(days=i)
+        format_date_list.append(date.format("YYYY-MM-DD"))
+    return format_date_list
 
-    ys = [random_y0, random_y1, random_y2]
+
+def make_scatter_line_fig():
+    week_days = 7
+
+    weekly_data = []
+    for i in range(week_days):
+        record_data = data_handler.read_record(days=-i)
+        weekly_data.append(record_data)
+
+    dates = make_weekly_dates(week_days)
+
+    def get_score(data, category):
+        summary = data.get("summary", {})
+        return summary.get(category, 0)
+
+    attention_scores = [get_score(data, "attention") for data in weekly_data]
+    happy_scores = [get_score(data, "happy") for data in weekly_data]
+    productive_scores = [get_score(data, "productive") for data in weekly_data]
+    sleep_scores = [get_score(data, "sleep") for data in weekly_data]
+    repeat_task_scores = [get_score(data, "repeat_task") for data in weekly_data]
+    total_scores = [get_score(data, "total") for data in weekly_data]
+
+    names = ["attention", "happy", "productive", "sleep", "repeat_task", "total"]
+    ys = [attention_scores, happy_scores, productive_scores, sleep_scores, repeat_task_scores, total_scores]
 
     # Create traces
     data = []
-    for index, y in enumerate(ys):
+    for name, y in zip(names, ys):
         data.append(
             go.Scatter(
                 x=dates,
                 y=y,
                 mode="lines+markers",
-                name=index
+                name=name
             )
         )
 
@@ -180,7 +233,7 @@ def make_daily_schedule_fig(n):
 
     if len(happy_data) > 0:
         xs = [arrow.get(d["time"]).format("YYYY-MM-DD HH:mm:ss") for d in happy_data]
-        ys = [d["score"] for d in happy_data]
+        ys = [d["score"]-1 for d in happy_data]
 
         scatter_trace=dict(
             type='scatter',
