@@ -39,7 +39,7 @@ def get_sundays_of_this_month():
 
 
 def make_stacked_bar_fig():
-    categories = ["Article", "Blog", "Book", "Develop", "Exercise", "Hobby", "Meeting", "MOOC", "Planning", "Research", "Review", "Seminar"]
+    categories = ["Article", "Blog", "Book", "Develop", "Exercise", "Hobby", "Meeting", "MOOC", "Planning", "Research", "Review", "Seminar", "Empty"]
     task_reports = {}
 
     dates = get_sundays_of_this_month()
@@ -62,9 +62,9 @@ def make_stacked_bar_fig():
             project = t["project"]
 
             duration = (arrow.get(t["end_time"]) - arrow.get(t["start_time"])).seconds
-            duration_mins = round(duration / 60)
+            duration_hours = round(duration / 60 / 60, 1)
 
-            task_reports[project][task_index] += duration_mins
+            task_reports[project][task_index] += duration_hours
 
     data = []
     for category, task_report in task_reports.items():
