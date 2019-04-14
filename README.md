@@ -4,28 +4,13 @@
 
 <h3 align="center">
   <sup><strong>
-    Personal Assistant Based on Slack Bot for Developer <br/>
-    Suitable for personal or small teams
+    Personal Assistant Based on Slack Bot for Myself
   </strong></sup>
 </h3>
 
 
 <p align="center">
-
-  <a href="https://github.com/DongjunLee/kino-bot">
-    <img src="https://img.shields.io/badge/Quantified%20Self-Job%20Automation-brightgreen.svg" alt="Project Introduction">
-  </a>
-  
-  <a href="https://github.com/DongjunLee/kino-bot">
-    <img src="https://img.shields.io/badge/Bot-Slack-brightgreen.svg" alt="Project Introduction">
-  </a>
-  
-  <a href="https://github.com/DongjunLee/kino-bot">
-    <img src="https://img.shields.io/badge/Personal-Small%20Team-brightgreen.svg" alt="Project Introduction">
-  </a>
-  
-  <br/>
-  
+ 
   <a href="https://travis-ci.org/badges/shields">
     <img src="https://travis-ci.org/DongjunLee/kino-bot.svg?branch=master" alt="build status">
   </a>
@@ -33,6 +18,12 @@
   <a href="https://codecov.io/gh/DongjunLee/kino-bot">
     <img src="https://codecov.io/gh/DongjunLee/kino-bot/branch/develop/graph/badge.svg" alt="Codecov" />
   </a>
+  
+  <a href="https://github.com/ambv/black">
+    <img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code Style">
+  </a>
+  
+  <br/>
   
   <a href="https://requires.io/github/DongjunLee/kino-bot/requirements/?branch=master">
     <img src="https://requires.io/github/DongjunLee/kino-bot/requirements.svg?branch=master" alt="Requirements Status" />
@@ -42,12 +33,6 @@
     <img src='https://dependencyci.com/github/DongjunLee/kino-bot/badge' alt='Dependency Status' />
   </a>
   
-  <br/>
-  
-  <a href="https://github.com/ambv/black">
-    <img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code Style">
-  </a>
-
   <a href="https://www.codacy.com/app/humanbrain.djlee/kino-bot?utm_source=github.com&utm_medium=referral&utm_content=DongjunLee/kino-bot&utm_campaign=badger">
     <img src="https://api.codacy.com/project/badge/Grade/401e8a56ebe241daa8b2d0453e16a80c" alt="Codacy">
   </a>
@@ -58,19 +43,9 @@
 
 ## kino-bot
 
-**Kino** is a **personal assistant** based on **Slack Bot**. It was developed as a personal project to **improve my life quality** by automatically **quantified self**. Various Tracking Tools (cf. RescueTime, Toggl, Todoist) and various third-party (cf. Github, DarkSky, Gbus and etc..) are customized as kino's skill. In addition, kino can automate the parts in everyday life and work. I will also use machine learning and deep learning to grow beyond simple bot to become a smart assistant.  
+**Kino** is a **personal assistant** based on **Slack Bot**. It was developed as a personal project to **improve my life quality** by automatically **quantified self**. Various Tracking Tools (cf. RescueTime, Toggl, Todoist) and various third-party (cf. Github, DarkSky, Gbus and etc..) are customized as kino's skill. In addition, kino can automate the parts of everyday life and work. I will also use machine learning and deep learning to grow beyond simple bot to become a smart assistant.  
 
 Kino is getting smarter! **Pull requests** are always welcome. :D
-
-
-## Blog
-
-| Article - Title| English | Korean |
-| ------- | ------- | ------- |
-| Personal Assistant Kino Part 1 — Overview | [Medium](https://medium.com/@humanbrain.djlee/personal-assistant-kino-part-1-overview-496b97de4afd) | [Github page](https://dongjunlee.github.io/Personal_Assistant_Kino_Part_1_Overview/) |
-| Personal Assistant Kino Part 2 - Skill & Scheduler | [Medium](https://medium.com/@humanbrain.djlee/personal-assistant-kino-part-2-skill-scheduler-3cf25070fe8e) | [Github page](https://dongjunlee.github.io/Personal_Assistant_Kino_Part_2_Skill_and_Scheduler/) |
-| Personal Assistant Kino Part 3 - T3 | [Medium](https://medium.com/@humanbrain.djlee/personal-assistant-kino-part-3-t3-d078b65462be) | [Github page](https://dongjunlee.github.io/Personal_Assistant_Kino_Part_3_T3/) |
-| Personal Assistant Kino Part 4 - Smart Feed | [Medium](https://medium.com/@humanbrain.djlee/personal-assistant-kino-part-4-smart-feed-b9e4cab966) | [Github page](https://dongjunlee.github.io/Personal_Assistant_Kino_Part_4_Smart_Feed/) |
 
 
 ## Feature
@@ -79,14 +54,24 @@ Kino is getting smarter! **Pull requests** are always welcome. :D
 - **Skill** : make your own skill and simply register skill writing function's doc.
 - **Scheduler** : jobs(skill) running in background
 - Automatic **Tracking**
-	- Sleep Time
-	- Working Hour
-	- Tasks
+	- Sleep Time (`Fitbit`)
+	- Working Hour (`Toggl`)
+	- Tasks (`Todoist` and `Toggl`)
 	- Happy & Attention Score
 - Notify latest **[Feed](https://github.com/DongjunLee/awesome-feeds)** & Popular Tweet
 	- Automatically save to [Pocket](https://getpocket.com/) based on your activity (Feed Catogory Classifier)
 - Integrate with **[Giphy](https://giphy.com/)**
 - **Customize Webhook** for [IFTTT](https://ifttt.com/) or [Zapier](https://zapier.com)
+- Interactive **Dashboard**
+
+### Blog
+
+| Article - Title| English | Korean |
+| ------- | ------- | ------- |
+| Personal Assistant Kino Part 1 — Overview. | [Medium](https://medium.com/@humanbrain.djlee/personal-assistant-kino-part-1-overview-496b97de4afd) | [Github page](https://dongjunlee.github.io/Personal_Assistant_Kino_Part_1_Overview/) |
+| Personal Assistant Kino Part 2 - Skill & Scheduler. | [Medium](https://medium.com/@humanbrain.djlee/personal-assistant-kino-part-2-skill-scheduler-3cf25070fe8e) | [Github page](https://dongjunlee.github.io/Personal_Assistant_Kino_Part_2_Skill_and_Scheduler/) |
+| Personal Assistant Kino Part 3 - T3. | [Medium](https://medium.com/@humanbrain.djlee/personal-assistant-kino-part-3-t3-d078b65462be) | [Github page](https://dongjunlee.github.io/Personal_Assistant_Kino_Part_3_T3/) |
+| Personal Assistant Kino Part 4 - Smart Feed. | [Medium](https://hackernoon.com/personal-assistant-kino-part-4-smart-feed-b9e4cab966) | [Github page](https://dongjunlee.github.io/Personal_Assistant_Kino_Part_4_Smart_Feed/) |
 
 
 ## Prerequisites
@@ -156,18 +141,10 @@ kino-bot has **27** skills.
  - :chart: **total_score** : Overall score  - Productivity (RescueTime, Github Commit, Todoist, Toggl), Mean happiness, mean attention, Exercise, Diary.
  - :crystal_ball: **translate** : Language translation using [Naver Papago api](https://developers.naver.com/docs/nmt/reference/).
 
-## Work in progress
+## Integration with ML/DL
 
-- [conversation-tensorflow](https://github.com/DongjunLee/conversation-tensorflow) : A neural chatbot using sequence to sequence model with attentional decode
-- text-classification-tensorflow : filtering module that using **feed**'s title
-	- Kino tells me that all of the feeds that interest me are saved in the pocket. Data is automatically accumulating.
-	- feed : all training data
-	- pocket : label 1 (true) data
-
-
-## for Developer
-
-if you want develop your own bot, clone **base** branch and implements skills.
+- [CLaF](https://github.com/naver/claf) : Clova Language Framework
+  - [OpenQA](https://github.com/naver/claf#open-qa-drqa): DrQA is a system for reading comprehension applied to open-domain question answering. The system has to combine the challenges of document retrieval (finding the relevant documents) with that of machine comprehension of text (identifying the answers from those documents). 
 
 
 ## License

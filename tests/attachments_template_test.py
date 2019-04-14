@@ -49,6 +49,6 @@ class MsgTemplateTest(unittest.TestCase):
         self.assertEqual(isinstance(attachments, list), True)
 
     def test_summary(self):
-        data = {"Color": "RED", "Total": "90"}
+        data = {"Color": "RED", "total": "90"}
         attachments = MsgTemplate.make_summary_template(data)
         self.assertEqual(isinstance(attachments, list), True)

@@ -212,33 +212,33 @@
     "KANBAN_SYNC" : "Todoist와 Kanban board 간의 싱크를 맞추겠습니다.",
 
     "ATTENTION_QUESTION_STEP_0" : [
-      "진행하신 작업에 얼마나 집중하셨나요? (100점 만점)",
-      "이번 작업은 집중이 잘 되셨나요. 궁금합니다ㅎㅎ (100점 만점)",
-      "작업하느라 고생하셨습니다!ㅎㅎ :clap: :clap: 집중은 잘 되셨나요? (100점 만점)"
+      "진행하신 작업에 얼마나 집중하셨나요? \n (1점 :weary: | 2점 :disappointed: | 3점 :neutral_face: | 4점 :thinking_face: | 5점 :star-struck: )",
+      "이번 작업은 집중이 잘 되셨나요. 궁금합니다ㅎㅎ \n (1점 :weary: | 2점 :disappointed: | 3점 :neutral_face: | 4점 :thinking_face: | 5점 :star-struck: )",
+      "작업하느라 고생하셨습니다!ㅎㅎ :clap: :clap: 집중은 잘 되셨나요? \n (1점 :weary: | 2점 :disappointed: | 3점 :neutral_face: | 4점 :thinking_face: | 5점 :star-struck: )"
     ],
 
     "ATTENTION_QUESTION_STEP_1": {
-      "92": "몰입력 최고군요! :laughing: ",
-      "85": "일이 재미있으시군요! ㅎㅎ :smile: ",
-      "77": "할만한 일인 것 같아요! :smiley: ",
-      "70": "좀 어렵거나, 재미없으신 일인 것 같군요..! :simple_smile: ",
-      "50": "하기 싫은 작업이였군요..ㅠㅠ :angry: "
+      "5": "몰입력 최고군요! :laughing: ",
+      "4": "일이 재미있으시군요! ㅎㅎ :smile: ",
+      "3": "할만한 일인 것 같아요! :smiley: ",
+      "2": "좀 어렵거나, 재미없으신 일인 것 같군요..! :simple_smile: ",
+      "1": "하기 싫은 작업이였군요..ㅠㅠ :angry: "
     },
 
     "ATTENTION_REPORT" : "집중도 Report 입니다.",
 
     "HAPPY_QUESTION_STEP_0" : [
-      "오늘 하루는 어떠신가요? (100점 만점)",
-      "ㅎㅎ잠시 오늘 하루는 어떤지 생각해볼까요? (100점 만점)",
-      "Be Happy! 지금 기분이 어떠신지 점수로 알려주세요! (100점 만점)"
+      "오늘 하루는 어떠신가요? \n (1점 :rage: | 2점 :pensive: | 3점 :slightly_smiling_face: | 4점 :laughing: | 5점 :heart_eyes: )",
+  		"ㅎㅎ잠시 오늘 하루는 어떤지 생각해볼까요? \n (1점 :rage: | 2점 :pensive: | 3점 :slightly_smiling_face: | 4점 :laughing: | 5점 :heart_eyes: )",
+  		"Be Happy! 지금 기분이 어떠신지 점수로 알려주세요! \n (1점 :rage: | 2점 :pensive: | 3점 :slightly_smiling_face: | 4점 :laughing: | 5점 :heart_eyes: )"
     ],
 
     "HAPPY_QUESTION_STEP_1": {
-      "100": "기분 최고!! :laughing: ",
-      "90": "행복하시군요ㅎㅎ 보기 좋습니다. :smile: ",
-      "80": "슬며시 미소를 짓고 계신 것 같아요ㅎㅎ :smiley: ",
-      "70": "그냥 그러시군요.. :simple_smile: ",
-      "50": "무슨 일 있으신가요? 기분이 안 좋아보입니다ㅠㅠ :angry: "
+      "5": "기분 최고!! :laughing: ",
+      "4": "행복하시군요ㅎㅎ 보기 좋습니다. :smile: ",
+      "3": "슬며시 미소를 짓고 계신 것 같아요ㅎㅎ :smiley: ",
+      "2": "그냥 그러시군요.. :simple_smile: ",
+      "1": "무슨 일 있으신가요? 기분이 안 좋아보입니다ㅠㅠ :angry: "
     },
 
     "HAPPY_REPORT" : "행복도 Report 입니다.",

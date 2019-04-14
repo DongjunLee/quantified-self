@@ -48,17 +48,27 @@ class Question(object):
                 return
 
             point = int(numbers[0])
-            if point > 100:
-                point = 100
+            if point > 5:
+                point = 5
 
-            now = arrow.now()
-            time = now.format("HH:mm")
-            self.data_handler.edit_record_with_category(self.category, (time, point))
-
+            self._save_data(point)
             self.slackbot.send_message(text=self.msg_question_step_1(point))
             state.flow_complete()
 
         locals()["step_" + str(step)](params)
+
+    def _save_data(self, point):
+        now = arrow.now()
+        time = now.format("YYYY-MM-DDTHH:mm:ssZZ")
+        data = {
+            "time": time,
+            "score": point
+        }
+
+        if self.category == "attention":
+            self.data_handler.edit_attention("task", data)
+        else:
+            self.data_handler.edit_activity(self.category, data)
 
     def report(self, timely="daily"):
 

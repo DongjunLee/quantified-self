@@ -23,12 +23,12 @@ class Summary(object):
     def __init__(self, slackbot=None):
         self.data_handler = DataHandler()
         self.column_list = [
-            "Attention",
-            "Productive",
-            "Happy",
-            "Sleep",
-            "Repeat_Task",
-            "Total",
+            "attention",
+            "productive",
+            "happy",
+            "sleep",
+            "repeat_task",
+            "total",
         ]
 
         if Config.profile.personal:
@@ -45,9 +45,9 @@ class Summary(object):
 
     def total_score(self):
         today_data = self.__get_total_score()
-        self.data_handler.edit_record(today_data)
+        self.data_handler.edit_summary(today_data)
 
-        color = MsgResource.SCORE_COLOR(today_data["Total"])
+        color = MsgResource.SCORE_COLOR(today_data["total"])
         today_data["Color"] = color
 
         yesterday_data = self.__get_total_score(-1)
@@ -128,9 +128,11 @@ class Summary(object):
             repeat = self.__repeat_task_score()
 
             today_data = self.data_handler.read_record()
-            diary = today_data.get("Diary", False)
-            exercise = today_data.get("Exercise", False)
-            bat = today_data.get("BAT", False)
+            summary_data = today_data.get("summary", {})
+
+            do_diary = summary_data.get("do_diary", False)
+            do_exercise = summary_data.get("do_exercise", False)
+            do_bat = summary_data.get("do_bat", False)
 
             total = (
                 Score.percent(attention, Config.score.get("ATTENTION", 20), 100)
@@ -140,30 +142,30 @@ class Summary(object):
                 + Score.percent(repeat, Config.score.get("REPEAT_TASK", 10), 100)
             )
 
-            if diary:
+            if do_diary:
                 total += Config.score.get("DIARY", 5)
-            if exercise:
+            if do_exercise:
                 total += Config.score.get("EXERCISE", 5)
-            if bat:
+            if do_bat:
                 total += Config.score.get("BAT", 5)
 
             if total > 100:
                 total = 100
 
             data = {
-                "Attention": round(attention * 100) / 100,
-                "Happy": round(happy * 100) / 100,
-                "Productive": round(productive * 100) / 100,
-                "Sleep": round(sleep * 100) / 100,
-                "Repeat_Task": round(repeat * 100) / 100,
-                "Diary": diary,
-                "Exercise": exercise,
-                "BAT": bat,
-                "Total": round(total * 100) / 100,
+                "attention": round(attention * 100) / 100,
+                "happy": round(happy * 100) / 100,
+                "productive": round(productive * 100) / 100,
+                "sleep": round(sleep * 100) / 100,
+                "repeat_task": round(repeat * 100) / 100,
+                "do_diary": do_diary,
+                "do_exercise": do_exercise,
+                "do_bat": do_bat,
+                "total": round(total * 100) / 100,
             }
             return data
         elif isinstance(days, int):
-            data = self.data_handler.read_record(days=days)
+            data = self.data_handler.read_summary(days=days)
             for c in self.column_list:
                 if c not in data:
                     data[c] = 0
@@ -176,12 +178,14 @@ class Summary(object):
         todoist_point = TodoistManager().get_point()
 
         data = {
-            "rescue_time": round(rescue_time_point * 100) / 100,
-            "toggl": round(toggl_point * 100) / 100,
-            "github": round(github_point * 100) / 100,
-            "todoist": round(todoist_point * 100) / 100,
+            "productive_details": {
+                "rescue_time": round(rescue_time_point * 100) / 100,
+                "toggl": round(toggl_point * 100) / 100,
+                "github": round(github_point * 100) / 100,
+                "todoist": round(todoist_point * 100) / 100,
+            }
         }
-        self.data_handler.edit_record(("productive", data))
+        self.data_handler.edit_summary(data)
 
         base_point = 0
         rescue_time_ratio = Config.score.productives.get("RESCUE_TIME", 10)
@@ -207,32 +211,47 @@ class Summary(object):
         )
 
     def __attention_score(self):
-        attention_data = self.data_handler.read_record().get("attention", {})
-        if len(attention_data) > 0:
-            return sum(list(map(lambda x: int(x), attention_data.values()))) / len(
-                attention_data
-            )
+        BASE_SCORE = 60
+        SCORE_UNIT = 8
+
+        record_data = self.data_handler.read_record()
+        activity_data = record_data["activity"]
+        task_data = activity_data.get("task", [])
+        if len(task_data) > 0:
+            attention_scores = [BASE_SCORE + t.get("score", 3) * SCORE_UNIT for t in task_data]
+            return sum(attention_scores) / len(attention_scores)
         else:
-            return 80
+            return BASE_SCORE
 
     def __happy_score(self):
-        happy_data = self.data_handler.read_record().get("happy", {})
+        BASE_SCORE = 60
+        SCORE_UNIT = 8
+
+        record_data = self.data_handler.read_record()
+        activity_data = record_data["activity"]
+        happy_data = activity_data.get("happy", [])
         if len(happy_data) > 0:
-            return sum(list(map(lambda x: int(x), happy_data.values()))) / len(
-                happy_data
-            )
+            happy_scores = [BASE_SCORE + h.get("score", 3) * SCORE_UNIT for h in happy_data]
+            return sum(happy_scores) / len(happy_scores)
         else:
-            return 80
+            return BASE_SCORE
 
     def __sleep_score(self):
         self.__get_sleep_time_with_fitbit()
 
         activity_data = self.data_handler.read_record().get("activity", {})
+        sleep_data = activity_data.get("sleep", [])
 
-        go_to_bed_time = arrow.get(activity_data.get("go_to_bed", None))
-        wake_up_time = arrow.get(activity_data.get("wake_up", None))
+        if len(sleep_data) == 0:
+            sleep_start_time = arrow.now()
+            sleep_end_time = arrow.now()
+        else:
+            for s in sleep_data:
+                if s["is_main"]:
+                    sleep_start_time = arrow.get(s.get("start_time", None))
+                    sleep_end_time = arrow.get(s.get("end_time", None))
 
-        sleep_time = (wake_up_time - go_to_bed_time).seconds / 60 / 60
+        sleep_time = (sleep_end_time - sleep_start_time).seconds / 60 / 60
         sleep_time = sleep_time * 100
 
         if sleep_time > 800:
@@ -245,19 +264,8 @@ class Summary(object):
 
     def __get_sleep_time_with_fitbit(self):
         fitbit = Fitbit()
-        sleep_data = fitbit.get_sleep_summary()
-
-        self.data_handler.edit_record_with_category(
-            "activity", ("wake_up", sleep_data["wake_up"])
-        )
-        self.data_handler.edit_record_with_category(
-            "activity", ("go_to_bed", sleep_data["go_to_bed"])
-        )
-
-        sleep_time = sleep_data["totalTimeInBed"] / 60
-        self.data_handler.edit_record_with_category(
-            "activity", ("sleep_time", sleep_time)
-        )
+        sleep_data = fitbit.get_sleeps()
+        self.data_handler.edit_activity("sleep", sleep_data)
 
     def __repeat_task_score(self):
         trello = TrelloManager()
@@ -267,16 +275,16 @@ class Summary(object):
         return 100 - (minus_point * trello.get_card_count_by_list_name("Tasks"))
 
     def record_write_diary(self):
-        self.data_handler.edit_record(("Diary", True))
+        self.data_handler.edit_summary({"do_diary": True})
 
     def record_exercise(self):
-        self.data_handler.edit_record(("Exercise", True))
+        self.data_handler.edit_summary({"do_exercise": True})
 
     def record_bat(self):
-        self.data_handler.edit_record(("BAT", True))
+        self.data_handler.edit_summary({"do_bat": True})
 
     def record_holiday(self, dnd):
-        self.data_handler.edit_record(("Holiday", dnd))
+        self.data_handler.edit_summary({"is_holiday": dnd})
 
     def is_holiday(self):
         record = self.data_handler.read_record()
@@ -331,7 +339,7 @@ class Summary(object):
     def check_commit_count(self):
         github = GithubManager()
         commit_count = github.commit(timely=-1)
-        self.data_handler.edit_record(("Github", commit_count))
+        self.data_handler.edit_summary(("github_commit_count", commit_count))
 
     def total_chart(self):
         records = []

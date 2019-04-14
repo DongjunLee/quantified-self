@@ -11,7 +11,6 @@ from .nlp.ner import NamedEntitiyRecognizer
 
 from .skills.bus import Bus
 from .skills.feed import FeedNotifier
-from kino.skills.fitbit import Fitbit
 from .skills.github import GithubManager
 from .skills.humor import Humor
 from .skills.maxim import Maxim
@@ -78,7 +77,6 @@ class Functions(object):
 
     def health_check(self):
         bot_id = self.slackbot.get_bot_id()
-
         if self.slackbot.is_active(bot_id):
             print("Healthy.")
         else:
@@ -95,7 +93,6 @@ class Functions(object):
         self.slackbot.send_message(text=MsgResource.PROFILE_WAKE_UP)
 
         self.forecast(timely="daily")
-        self.air_quality()
 
         trello = TrelloManager()
         trello.clean_board(except_list_name=[self.IDEA_LIST, self.KANBAN_BREAK])
@@ -115,6 +112,10 @@ class Functions(object):
         summary.check_commit_count()
 
         self._reset_data()
+
+    def activity_task_sync(self):
+        toggl = TogglManager(slackbot=self.slackbot)
+        toggl.sync_task()
 
     def air_quality(self):
         """
@@ -171,6 +172,8 @@ class Functions(object):
             timely = "current"
         weather = Weather(slackbot=self.slackbot)
         weather.forecast(timely=timely)
+
+        self.air_quality()
 
     def github_commit(self, timely: str = "daily"):
         """
