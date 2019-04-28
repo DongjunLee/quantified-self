@@ -38,67 +38,6 @@ def get_sundays_of_this_month():
     return sunday_dates
 
 
-def make_stacked_bar_fig():
-    categories = ["Article", "Blog", "Book", "Develop", "Exercise", "Hobby", "Meeting", "MOOC", "Planning", "Research", "Review", "Seminar", "Empty"]
-    task_reports = {}
-
-    colors = {"Empty": "#DEDEDE"}
-    dates = get_sundays_of_this_month()
-
-    for c in categories:
-        task_reports[c] = [0] * len(dates)
-
-    for i in range(arrow.now().day, 0, -1):
-        offset_day = i-1
-        record_data = data_handler.read_record(days=-offset_day)
-
-        curr_day = arrow.now().day - offset_day
-        for task_index, sunday_date in enumerate(dates):
-            if sunday_date.day - curr_day < 7 and sunday_date.day - curr_day >= 0:
-                break
-
-        activity_data = record_data.get("activity", {})
-        task_data = activity_data.get("task", [])
-        for t in task_data:
-            project = t["project"]
-
-            duration = (arrow.get(t["end_time"]) - arrow.get(t["start_time"])).seconds
-            duration_hours = round(duration / 60 / 60, 1)
-
-            task_reports[project][task_index] += duration_hours
-
-            # Color
-            if project not in colors:
-                colors[project] = t["color"]
-
-    data = []
-    for category, task_report in task_reports.items():
-        data.append(
-            go.Bar(
-                x=dates,
-                y=task_report,
-                name=category,
-                marker=dict(
-                    color=colors.get(category, "#DEDEDE"),
-                    line=dict(
-                        color='#222',
-                        width=1,
-                    ),
-                ),
-                opacity=0.8
-            )
-        )
-
-    layout = go.Layout(
-        autosize=True,
-        barmode='stack',
-        title="Weekly Task Report"
-    )
-
-    fig = go.Figure(data=data, layout=layout)
-    return fig
-
-
 def make_weekly_dates(N):
     format_date_list = []
     now = arrow.now()
@@ -106,51 +45,6 @@ def make_weekly_dates(N):
         date = now.replace(days=i)
         format_date_list.append(date.format("YYYY-MM-DD"))
     return format_date_list
-
-
-def make_scatter_line_fig():
-    week_days = 7
-
-    weekly_data = []
-    for i in range(week_days):
-        record_data = data_handler.read_record(days=-i)
-        weekly_data.append(record_data)
-
-    dates = make_weekly_dates(week_days)
-
-    def get_score(data, category):
-        summary = data.get("summary", {})
-        return summary.get(category, 0)
-
-    attention_scores = [get_score(data, "attention") for data in weekly_data]
-    happy_scores = [get_score(data, "happy") for data in weekly_data]
-    productive_scores = [get_score(data, "productive") for data in weekly_data]
-    sleep_scores = [get_score(data, "sleep") for data in weekly_data]
-    repeat_task_scores = [get_score(data, "repeat_task") for data in weekly_data]
-    total_scores = [get_score(data, "total") for data in weekly_data]
-
-    names = ["attention", "happy", "productive", "sleep", "repeat_task", "total"]
-    ys = [attention_scores, happy_scores, productive_scores, sleep_scores, repeat_task_scores, total_scores]
-
-    # Create traces
-    data = []
-    for name, y in zip(names, ys):
-        data.append(
-            go.Scatter(
-                x=dates,
-                y=y,
-                mode="lines+markers",
-                name=name
-            )
-        )
-
-    layout = go.Layout(
-        autosize=True,
-        title="Summary Chart"
-    )
-
-    fig = go.Figure(data=data, layout=layout)
-    return fig
 
 
 app.layout = html.Div([
@@ -170,7 +64,7 @@ app.layout = html.Div([
             html.Div([
                 dcc.Graph(id='live-daily-schedule'),
                 dcc.Interval(
-                    id='interval-component',
+                    id='interval-component1',
                     interval=10*1000,  # every 10 secs
                     n_intervals=0
                 )],
@@ -178,21 +72,25 @@ app.layout = html.Div([
                 style={'margin-top': '20'},
             ),
             html.Div([
-                dcc.Graph(
-                    id='example-graph2',
-                    figure=make_stacked_bar_fig()
+                dcc.Graph(id='live-weekly-reports'),
+                dcc.Interval(
+                    id='interval-component2',
+                    interval=60*60*24*1000,  # every 1 day
+                    n_intervals=0
                 )],
                 className='five columns',
-                style={'margin-top': '20'}
+                style={'margin-top': '20'},
             ),
             html.Div([
-                dcc.Graph(
-                    id='example-graph3',
-                    figure=make_scatter_line_fig()
+                dcc.Graph(id='live-daily-chart'),
+                dcc.Interval(
+                    id='interval-component3',
+                    interval=60*60*24*1000,  # every 1 day
+                    n_intervals=0
                 )],
                 className='five columns',
-                style={'margin-top': '20'}
-            )
+                style={'margin-top': '20'},
+            ),
         ])
     ], className='columns printwidth100 noprintscroll')
 
@@ -201,7 +99,7 @@ app.layout = html.Div([
 
 # Multiple components can update everytime interval gets fired.
 @app.callback(Output('live-daily-schedule', 'figure'),
-              [Input('interval-component', 'n_intervals')])
+              [Input('interval-component1', 'n_intervals')])
 def make_daily_schedule_fig(n):
     today_record_data = data_handler.read_record()
     activity_data = today_record_data["activity"]
@@ -320,6 +218,118 @@ def make_daily_schedule_fig(n):
         )
         fig['layout']['annotations'].append(annotation)
 
+    return fig
+
+
+# Multiple components can update everytime interval gets fired.
+@app.callback(Output('live-weekly-reports', 'figure'),
+              [Input('interval-component2', 'n_intervals')])
+def make_stacked_bar_fig(n):
+    categories = ["Article", "Blog", "Book", "Develop", "Exercise", "Hobby", "Meeting", "MOOC", "Planning", "Research", "Review", "Seminar", "Empty"]
+    task_reports = {}
+
+    colors = {"Empty": "#DEDEDE"}
+    dates = get_sundays_of_this_month()
+
+    for c in categories:
+        task_reports[c] = [0] * len(dates)
+
+    for i in range(arrow.now().day, 0, -1):
+        offset_day = i-1
+        record_data = data_handler.read_record(days=-offset_day)
+
+        curr_day = arrow.now().day - offset_day
+        for task_index, sunday_date in enumerate(dates):
+            if sunday_date.day - curr_day < 7 and sunday_date.day - curr_day >= 0:
+                break
+
+        activity_data = record_data.get("activity", {})
+        task_data = activity_data.get("task", [])
+        for t in task_data:
+            project = t["project"]
+
+            duration = (arrow.get(t["end_time"]) - arrow.get(t["start_time"])).seconds
+            duration_hours = round(duration / 60 / 60, 1)
+
+            task_reports[project][task_index] += duration_hours
+
+            # Color
+            if project not in colors:
+                colors[project] = t["color"]
+
+    data = []
+    for category, task_report in task_reports.items():
+        data.append(
+            go.Bar(
+                x=dates,
+                y=task_report,
+                name=category,
+                marker=dict(
+                    color=colors.get(category, "#DEDEDE"),
+                    line=dict(
+                        color='#222',
+                        width=1,
+                    ),
+                ),
+                opacity=0.8
+            )
+        )
+
+    layout = go.Layout(
+        autosize=True,
+        barmode='stack',
+        title="Weekly Task Report"
+    )
+
+    fig = go.Figure(data=data, layout=layout)
+    return fig
+
+
+# Multiple components can update everytime interval gets fired.
+@app.callback(Output('live-daily-chart', 'figure'),
+              [Input('interval-component3', 'n_intervals')])
+def make_scatter_line_fig(n):
+    week_days = 7
+
+    weekly_data = []
+    for i in range(week_days):
+        record_data = data_handler.read_record(days=-i)
+        weekly_data.append(record_data)
+
+    dates = make_weekly_dates(week_days)
+
+    def get_score(data, category):
+        summary = data.get("summary", {})
+        return summary.get(category, 0)
+
+    attention_scores = [get_score(data, "attention") for data in weekly_data]
+    happy_scores = [get_score(data, "happy") for data in weekly_data]
+    productive_scores = [get_score(data, "productive") for data in weekly_data]
+    sleep_scores = [get_score(data, "sleep") for data in weekly_data]
+    repeat_task_scores = [get_score(data, "repeat_task") for data in weekly_data]
+    total_scores = [get_score(data, "total") for data in weekly_data]
+
+    names = ["attention", "happy", "productive", "sleep", "repeat_task", "total"]
+    ys = [attention_scores, happy_scores, productive_scores, sleep_scores, repeat_task_scores, total_scores]
+
+    # Create traces
+    data = []
+    for name, y in zip(names, ys):
+        data.append(
+            go.Scatter(
+                x=dates,
+                y=y,
+                mode="lines+markers",
+                name=name
+            )
+        )
+
+    layout = go.Layout(
+        autosize=True,
+        title="Summary Chart"
+    )
+
+    fig = go.Figure(data=data, layout=layout)
     return fig
 
 
