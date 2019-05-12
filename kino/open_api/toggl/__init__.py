@@ -249,7 +249,7 @@ class Toggl:
         :return: Project object
         """
         for project in self.getWorkspaceProjects():
-            if project["name"] == name:
+            if project["name"].lower() == name.lower():
                 return project
         print("Could not find project by the name")
         return None
