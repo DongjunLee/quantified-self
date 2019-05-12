@@ -114,7 +114,7 @@ class TogglManager(object):
                 attention.question()
 
     def __get_pid(self, name=None):
-        project = self.toggl.getWorkspaceProject(name=name.title())
+        project = self.toggl.getWorkspaceProject(name=name)
         if project is None:
             pid = None
         else:
