@@ -69,6 +69,12 @@ class Functions(object):
         SkillData().reset()
 
     def feed_notify(self):
+        """
+        keyword: ["feed test"]
+        description: "Feed Test"
+        icon: ":spock-hand: "
+        """
+
         feed_notifier = FeedNotifier()
         feed_notifier.notify_all()
 
