@@ -15,22 +15,18 @@
     <img src="https://travis-ci.org/DongjunLee/kino-bot.svg?branch=master" alt="build status">
   </a>
   
+  <a href="https://requires.io/github/DongjunLee/kino-bot/requirements/?branch=develop">
+    <img src="https://requires.io/github/DongjunLee/kino-bot/requirements.svg?branch=develop" alt="Requirements Status" />
+  </a>
+  
+  <br/>
+  
   <a href="https://codecov.io/gh/DongjunLee/kino-bot">
     <img src="https://codecov.io/gh/DongjunLee/kino-bot/branch/develop/graph/badge.svg" alt="Codecov" />
   </a>
   
   <a href="https://github.com/ambv/black">
     <img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code Style">
-  </a>
-  
-  <br/>
-  
-  <a href="https://requires.io/github/DongjunLee/kino-bot/requirements/?branch=develop">
-    <img src="https://requires.io/github/DongjunLee/kino-bot/requirements.svg?branch=develop" alt="Requirements Status" />
-  </a>
-  
-  <a href='https://dependencyci.com/github/DongjunLee/kino-bot'>
-    <img src='https://dependencyci.com/github/DongjunLee/kino-bot/badge' alt='Dependency Status' />
   </a>
   
   <a href="https://www.codacy.com/app/humanbrain.djlee/kino-bot?utm_source=github.com&utm_medium=referral&utm_content=DongjunLee/kino-bot&utm_campaign=badger">
