@@ -65,6 +65,7 @@ class Worker(object):
 
     def run(self, init=False):
         if self.is_running():
+            self.logger.info("Already running.")
             return
 
         self.set_schedules()
