@@ -2,6 +2,7 @@ import arrow
 import re
 import feedparser
 import json
+import time
 
 from hbconfig import Config
 from sklearn import tree
@@ -53,6 +54,10 @@ class FeedNotifier:
             title = feed_header[1]
             link = feed[1]
 
+            # Depense
+            if not link.startswith("http"):
+                continue
+
             self.feed_logger.info(json.dumps({"category": category, "title": title}))
 
             if Config.bot.get("FEED_CLASSIFIER", False) and feed_classifier.predict(
@@ -73,8 +78,14 @@ class FeedNotifier:
         feed_name, feed_url = feed
         f = feedparser.parse(feed_url)
 
+        def get_timestamp(x):
+            update_time = x.get("updated_parsed", arrow.now().timestamp)
+            if type(update_time) == time.struct_time:
+                update_time = time.mktime(update_time)
+            return update_time
+
         f.entries = sorted(
-            f.entries, key=lambda x: x.get("updated_parsed", 0), reverse=True
+            f.entries, key=lambda x: get_timestamp(x), reverse=True
         )
 
         # get Latest Feed
@@ -82,7 +93,11 @@ class FeedNotifier:
         if feed_url in cache_data:
             previous_update_date = arrow.get(cache_data[feed_url])
             for e in f.entries:
-                e_updated_date = arrow.get(e.updated_parsed)
+                if getattr(e, "updated_parsed", None):
+                    e_updated_date = arrow.get(e.updated_parsed)
+                else:
+                    e_updated_date = arrow.now()
+
                 if e_updated_date > previous_update_date:
                     noti_list.append(self.__make_entry_tuple(category, e, feed_name))
 
@@ -150,10 +165,14 @@ class FeedClassifier:
 
         if result == FeedDataLoader.TRUE_LABEL:
             self.logger.info("predict result is True, Save feed to Pocket ...")
-            pocket = Pocket()
-            tags = self.extract_tags(category)
-            pocket.add(link, tags=tags)
-            return True
+            try:
+                pocket = Pocket()
+                tags = self.extract_tags(category)
+                pocket.add(link, tags=tags)
+                return True
+            except BaseException as e:
+                self.logger.exception(e)
+                return False
         else:
             return False
 

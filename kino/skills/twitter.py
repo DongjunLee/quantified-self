@@ -49,7 +49,7 @@ class TwitterManager:
             )
             cache_tweet_ids.add(tweet[0])
         self.data_handler.edit_cache(
-            ("tweet_ids", list(cache_tweet_ids)[-self.MAX_KEEP])
+            ("tweet_ids", list(cache_tweet_ids)[-self.MAX_KEEP:])
         )
 
     def get_popular_tweet(self):

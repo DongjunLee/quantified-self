@@ -48,6 +48,7 @@ class Functions(object):
     def __init__(self, slackbot=None):
         self.data_handler = DataHandler()
         self.registered = RegisteredFuctions().list
+        self.logger = Logger().get_logger()
 
         if slackbot is None:
             self.slackbot = SlackerAdapter()
@@ -69,6 +70,12 @@ class Functions(object):
         SkillData().reset()
 
     def feed_notify(self):
+        """
+        keyword: ["feed test"]
+        description: "Feed Test"
+        icon: ":spock-hand: "
+        """
+
         feed_notifier = FeedNotifier()
         feed_notifier.notify_all()
 
@@ -78,7 +85,7 @@ class Functions(object):
     def health_check(self):
         bot_id = self.slackbot.get_bot_id()
         if self.slackbot.is_active(bot_id):
-            print("Healthy.")
+            self.logger.info("Healthy.")
         else:
             # NOTE: restart with script.
             subprocess.call("sh ~/restart_kino.sh", shell=True)

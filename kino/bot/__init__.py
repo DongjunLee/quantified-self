@@ -20,7 +20,7 @@ class KinoBot:
         self.logger = Logger().get_logger()
         self.worker = Worker(slackbot=self.slackbot)
 
-        self.error_delay = 1  # Unit (Second)
+        self.error_delay = 5  # Unit (Second)
 
         # Send a message to channel (init)
         MASTER_NAME = Config.bot.MASTER_NAME
@@ -34,8 +34,11 @@ class KinoBot:
 
 
     def start_session(self, init: bool = False, nap: bool = False):
-        self.worker.stop(init=init)
-        self.worker.run(init=init)
+        if nap:
+            self.slackbot.send_message(text=MsgResource.NAP)
+        else:
+            self.worker.stop(init=init)
+            self.worker.run(init=init)
 
         try:
             # Start RTM
@@ -54,14 +57,10 @@ class KinoBot:
             asyncio.get_event_loop().run_until_complete(execute_bot())
             asyncio.get_event_loop().run_forever()
 
-            if nap:
-                self.slackbot.send_message(text=MsgResource.NAP)
+
 
         except BaseException:
             self.logger.error(f"Session Error. restart in {self.error_delay} seconds..")
             self.logger.exception("bot")
-            time.sleep(5)
+            time.sleep(self.error_delay)
             self.start_session(nap=True)
-
-            if self.error_delay <= 1000:
-                self.error_delay *= 2
