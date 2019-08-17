@@ -23,4 +23,5 @@ python-jenkins
 tensorflow
 pocket
 
+claf>=0.1.6
 fitbit
