@@ -225,7 +225,11 @@ def make_daily_schedule_fig(n):
 @app.callback(Output('live-weekly-reports', 'figure'),
               [Input('interval-component2', 'n_intervals')])
 def make_stacked_bar_fig(n):
-    categories = ["Article", "Blog", "Book", "Develop", "Exercise", "Hobby", "Meeting", "MOOC", "Planning", "Research", "Review", "Seminar", "Empty"]
+    categories = [
+        "Article", "Blog", "Book", "Develop", "Exercise",
+        "Hobby", "Management", "Meeting", "MOOC", "Planning",
+        "Research", "Review", "Seminar", "Empty"
+    ]
     task_reports = {}
 
     colors = {"Empty": "#DEDEDE"}

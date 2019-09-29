@@ -6,7 +6,7 @@ slacker
 websockets
 xmljson
 matplotlib
-todoist-python
+todoist-python>=8.0.0
 python-forecastio
 geopy
 konlpy
