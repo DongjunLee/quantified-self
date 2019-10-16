@@ -69,7 +69,8 @@ class TodoistManager(object):
             if item["due"] is None or not item["due"].get("date", False):
                 continue
 
-            if item["due"]["date"] >= today_due_format:
+            if item["due"]["date"] < today_due_format:
+                print(item["due"]["date"], today_due_format, item["content"])
                 task_list.append(item)
 
         if kind == "all":
@@ -312,9 +313,8 @@ class TodoistManager(object):
         label = self.todoist_api.labels.get_by_id(label_id)
         return label.data["name"]
 
-    def get_tasks_with_overdue_and_label(self):
-        tasks = self.get_tasks_with_overdue()
-
+    def get_today_tasks_with_label(self):
+        tasks = self.__get_today_task()
         label_tasks = list(filter(lambda x: len(x["labels"]) > 0, tasks))
 
         return list(
