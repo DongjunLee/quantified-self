@@ -70,7 +70,6 @@ class TodoistManager(object):
                 continue
 
             if item["due"]["date"] < today_due_format:
-                print(item["due"]["date"], today_due_format, item["content"])
                 task_list.append(item)
 
         if kind == "all":
@@ -256,9 +255,13 @@ class TodoistManager(object):
         item = self.todoist_api.items.get_by_id(task["id"])
         if (assigned_time is None) or (time >= assigned_time):
             self.__update_task_duration(item, task, assigned_time)
-            if "매" in task["date_string"]:
+            if task["due"].get("is_recurring", False):
+                due_date = arrow.get(task["due"]["date"])
+                due_date.shift(days=+1).format("YYYY-MM-DD")  # next day
+                task["due"]["date"] = due_date
+
                 self.todoist_api.items.update_date_complete(
-                    task["id"], date_string=task["date_string"]
+                    task["id"], due=task["due"]
                 )
             else:
                 item.complete()
