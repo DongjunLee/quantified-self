@@ -56,11 +56,21 @@ class TodoistManager(object):
 
     def __get_overdue_task(self, kind="count"):
         task_list = []
-        # 7 day ~ 1 day before
-        for i in range(7, 0, -1):
-            query = str(i) + " day before"
-            before = self.todoist_api.query([query])[0]["data"]
-            task_list += before
+
+        today_due_format = arrow.now().format("YYYY-MM-DD")
+
+        self.todoist_api.sync_token = "*"  # Full Sync
+        results = self.todoist_api.sync()
+        for item in results["items"]:
+            if not item:
+                continue
+            if item["checked"] != 0:
+                continue
+            if item["due"] is None or not item["due"].get("date", False):
+                continue
+
+            if item["due"]["date"] >= today_due_format:
+                task_list.append(item)
 
         if kind == "all":
             return task_list
@@ -76,8 +86,31 @@ class TodoistManager(object):
         return point
 
     def __get_today_task(self):
-        self.todoist_api.sync()
-        return self.todoist_api.query(["today"])[0]["data"]
+        today_due_format = arrow.now().format("YYYY-MM-DD")
+
+        task_list = []
+        self.todoist_api.sync_token = "*"  # Full Sync
+        results = self.todoist_api.sync()
+        for item in results["items"]:
+            if not item:
+                continue
+            if item["checked"] != 0:
+                continue
+            if item["due"] is None or not item["due"].get("date", False):
+                continue
+
+            due_date = item["due"]["date"]
+            if len(due_date) == len("YYYY-MM-DD") and due_date == today_due_format:
+                task_list.append(item)
+            if len(due_date) > len("YYYY-MM-DD"):
+                if "Z" in due_date:
+                    due_datetime = arrow.get(due_date).to("Asia/Seoul")
+                else:
+                    due_datetime = arrow.get(due_date).replace(tzinfo="Asia/Seoul")
+
+                if due_datetime.format("YYYY-MM-DD") == today_due_format:
+                    task_list.append(item)
+        return task_list
 
     def get_repeat_task_count(self):
         task = self.__get_today_task()
@@ -101,12 +134,16 @@ class TodoistManager(object):
     def __get_task(self, today_task):
         task_list = []
         for t in today_task:
-            due_time = "anytime"
-            if "due_date_utc" in t and (
-                ":" in t["date_string"] or "분" in t["date_string"]
-            ):
-                due_time = parse(t["due_date_utc"]).astimezone(timezone("Asia/Seoul"))
-                due_time = due_time.strftime("%H:%M")
+            due_date = t["due"]["date"]
+            if len(due_date) == len("YYYY-MM-DD"):
+                due_time = "anytime"
+            else:
+                if "Z" in due_date:
+                    due_time = parse(due_date).astimezone(timezone("Asia/Seoul"))
+                    due_time = due_time.strftime("%H:%M")
+                else:
+                    due_time = arrow.get(due_date).replace(tzinfo="Asia/Seoul")
+                    due_time = due_date.format("H:M")
 
             project = self.todoist_api.projects.get_data(t["project_id"])
             project_name = project["project"]["name"]
