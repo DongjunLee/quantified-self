@@ -42,7 +42,7 @@ def make_weekly_dates(N):
     format_date_list = []
     now = arrow.now()
     for i in range(-(N-1), 1, 1):
-        date = now.replace(days=i)
+        date = now.shift(days=i)
         format_date_list.append(date.format("YYYY-MM-DD"))
     return format_date_list
 

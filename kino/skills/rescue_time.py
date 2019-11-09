@@ -24,9 +24,9 @@ class RescueTime(object):
     def efficiency(self, timely="daily"):
         now = arrow.now()
         if timely == "daily":
-            before_days = now.replace(days=0)
+            before_days = now.shift(days=0)
         elif timely == "weekly":
-            before_days = now.replace(days=-6)
+            before_days = now.shift(days=-6)
 
         start = now.format("YYYY-MM-DD")
         end = before_days.format("YYYY-MM-DD")
