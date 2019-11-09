@@ -21,7 +21,11 @@ class DataHandler(object):
 
         self.s3_client = None
         if Config.db.record_upload_to_s3:
-            self.s3_client = boto3.client('s3')
+            self.s3_client = boto3.client(
+                's3',
+                aws_access_key_id=Config.db.s3.ACCESS_KEY,
+                aws_secret_access_key=Config.db.s3.SECRET_KEY
+            )
 
     def read_file(self, fname):
         text = self.read_text(fname)
