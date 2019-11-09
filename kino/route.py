@@ -84,8 +84,7 @@ class MsgRouter:
         """ Check DND (Slack Do not disturb)"""
 
         # Do not disturb
-        self.dnd_manager.call_is_holiday(dnd=dnd)
-
+        self.dnd_manager.focus(dnd=dnd)
         self.logger.info(f"user: {user} dnd: {dnd}")
 
     def message_route(

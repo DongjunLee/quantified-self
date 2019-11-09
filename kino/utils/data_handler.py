@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import arrow
+import boto3
 import json
 import os
 import re
@@ -17,6 +18,10 @@ class DataHandler(object):
         self.data_path = "data/"
         self.record_path = "record/"
         self.log_data_path = "log/data/"
+
+        self.s3_client = None
+        if Config.db.record_upload_to_s3:
+            self.s3_client = boto3.client('s3')
 
     def read_file(self, fname):
         text = self.read_text(fname)
@@ -94,6 +99,16 @@ class DataHandler(object):
         date = arrow.now().replace(days=int(days))
         fname = self.record_path + date.format("YYYY-MM-DD") + ".json"
         self.write_file(fname, data)
+
+        if Config.db.record_upload_to_s3:
+            file_path = os.path.join(self.data_path, fname)
+            bucket_name = Config.db.s3.RECORD_BUCKET_NAME
+
+            year = date.format("YYYY")
+            basename = date.format("YYYY-MM-DD") + ".json"
+            object_key = f"{year}/{basename}"
+
+            self.s3_client.upload_file(file_path, bucket_name, object_key)
 
     def edit_record(self, data, days=0):
         record = self.read_record(days=days)
