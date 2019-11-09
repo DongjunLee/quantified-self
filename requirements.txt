@@ -1,4 +1,4 @@
-arrow
+arrow>=0.15.4
 asyncio
 boto3
 requests
