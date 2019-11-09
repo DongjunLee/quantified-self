@@ -332,5 +332,8 @@
     },
     "HUMOR_SORRY": "죄송합니다...",
 
-    "PREDICT_FEED_TRUE": "Pocket에 항상 넣으시는 Feed 네요! 제가 알아서 넣어놓겠습니다 ㅎㅎ \n - Title : {title}"
+    "PREDICT_FEED_TRUE": "Pocket에 항상 넣으시는 Feed 네요! 제가 알아서 넣어놓겠습니다 ㅎㅎ \n - Title : {title}",
+
+    "FOCUS": "일에 집중하셔야하는 군요. 화이팅!",
+    "FOCUS_FINISH": "일에 집중은 잘 되셨나요? 계속 서포트를 하겠습니다."
 }

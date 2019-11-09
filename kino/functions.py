@@ -90,6 +90,16 @@ class Functions(object):
             # NOTE: restart with script.
             subprocess.call("sh ~/restart_kino.sh", shell=True)
 
+    def holiday_setting(self):
+        """
+        keyword: ["휴일", "쉬는 날", "holiday"]
+        description: "Holiday!"
+        icon: ":relaxed: "
+        """
+
+        Summary().record_holiday(True)
+        self.slackbot.send_message(text=MsgResource.HOLIDAY)
+
     def good_morning(self):
         """
         keyword: ["굿모닝", "좋은 아침", "good morning"]

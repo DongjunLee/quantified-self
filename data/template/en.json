@@ -311,6 +311,9 @@
     "JENKINS_BUILD_START": "Yep! I'll Start a build on a job",
     "JENKINS_JOB_NOT_UNDERSTAND": "I do not know which project to deploy. Please tell me the project name and branch.",
 
-    "PREDICT_FEED_TRUE": "The feed that is always save to Pocket! I will put it in my hand \n - Title: {title}"
+    "PREDICT_FEED_TRUE": "The feed that is always save to Pocket! I will put it in my hand \n - Title: {title}",
+
+    "FOCUS": "You need to focus on your work. Go for it!",
+    "FOCUS_FINISH": "Focus on work well? I'm going to continue support."
 
 }
