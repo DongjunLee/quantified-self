@@ -1,5 +1,6 @@
 arrow
 asyncio
+boto3
 requests
 seaborn
 slacker
