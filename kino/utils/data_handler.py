@@ -200,7 +200,7 @@ class DataHandler(object):
         )
         raw_awesome_feeds = requests.get(awesome_feeds_url).text
 
-        feeds = {"Github": [("Activity", Config.profile.feed.get("GITHUB", ""))]}
+        feeds = {"Github": [("Activity", Config.profile.feed.get("GITHUB", ""), False)]}
         curr_category = None
         for line in raw_awesome_feeds.splitlines():
             if line.startswith("##"):
@@ -211,8 +211,12 @@ class DataHandler(object):
                 feed_name = re.findall("\[.+\]", line)[0][1:-1]
                 line = line.replace(" ", "")
                 feed_link = line[line.index("):") + len("):") :]
+                save_pocket = False
+                if "**" in feed_name:
+                    save_pocket = True
+                    feed_name = feed_name.replace("**", "")
 
-                feeds[curr_category].append((feed_name, feed_link))
+                feeds[curr_category].append((feed_name, feed_link, save_pocket))
         return feeds
 
     def read_log_data(self, fname):

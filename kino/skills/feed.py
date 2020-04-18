@@ -48,7 +48,7 @@ class FeedNotifier:
         if Config.bot.get("FEED_CLASSIFIER", False):
             feed_classifier = FeedClassifier()
 
-        for feed in noti_list:
+        for (feed, save_pocket) in noti_list:
             feed_header = feed[0].split("\n")
             category = feed_header[0]
             title = feed_header[1]
@@ -61,7 +61,7 @@ class FeedNotifier:
             self.feed_logger.info(json.dumps({"category": category, "title": title}))
 
             if Config.bot.get("FEED_CLASSIFIER", False) and feed_classifier.predict(
-                link, category
+                link, category, force=save_pocket
             ):
                 self.slackbot.send_message(
                     text=MsgResource.PREDICT_FEED_TRUE(title=category + ": " + title)
@@ -75,13 +75,15 @@ class FeedNotifier:
         CACHE_FILE_NAME = "cache_feed.json"
         cache_data = self.data_handler.read_cache(fname=CACHE_FILE_NAME)
 
-        feed_name, feed_url = feed
+        feed_name, feed_url, save_pocket = feed
         f = feedparser.parse(feed_url)
 
         def get_timestamp(x):
             update_time = x.get("updated_parsed", arrow.now().timestamp)
             if type(update_time) == time.struct_time:
                 update_time = time.mktime(update_time)
+            if update_time is None:
+                return arrow.now().timestamp
             return update_time
 
         f.entries = sorted(
@@ -128,6 +130,8 @@ class FeedNotifier:
         if len(cache_data) == 0:  # cache_data is Empty. (Error)
             return []
 
+        # Append 'save_pocket' flags
+        noti_list = [(link, save_pocket) for link in noti_list]
         return noti_list
 
     def __make_entry_tuple(self, category: str, entry: dict, feed_name: str) -> tuple:
@@ -156,24 +160,31 @@ class FeedClassifier:
         self.clf = tree.DecisionTreeClassifier()
         self.clf = self.clf.fit(train_X, train_y)
 
-    def predict(self, link, category):
+    def predict(self, link, category, force=False):
         category_id = self.category_ids.get(category.strip(), None)
         if category_id is None:
             return False
 
-        result = self.clf.predict(category_id)[0]
+        if force is True:
+            save_result = self.save_to_pocket(category, link)
+            return save_result
 
-        if result == FeedDataLoader.TRUE_LABEL:
+        predict_result = self.clf.predict(category_id)[0]
+        if predict_result == FeedDataLoader.TRUE_LABEL:
             self.logger.info("predict result is True, Save feed to Pocket ...")
-            try:
-                pocket = Pocket()
-                tags = self.extract_tags(category)
-                pocket.add(link, tags=tags)
-                return True
-            except BaseException as e:
-                self.logger.exception(e)
-                return False
+            save_result = self.save_to_pocket(category, link)
+            return save_result
         else:
+            return False
+
+    def save_to_pocket(self, category, link):
+        try:
+            pocket = Pocket()
+            tags = self.extract_tags(category)
+            pocket.add(link, tags=tags)
+            return True
+        except BaseException as e:
+            self.logger.exception(e)
             return False
 
     def extract_tags(self, tags):
