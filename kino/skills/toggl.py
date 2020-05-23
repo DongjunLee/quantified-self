@@ -182,9 +182,9 @@ class TogglManager(object):
         now = arrow.now()
 
         if timely == "daily":
-            before_days = now.replace(days=0)
+            before_days = now.shift(days=0)
         elif timely == "weekly":
-            before_days = now.replace(days=-6)
+            before_days = now.shift(days=-6)
 
         data = {
             "since": before_days.format("YYYY-MM-DD"),

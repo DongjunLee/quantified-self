@@ -87,7 +87,7 @@ class GithubManager(object):
 
     def __time_point(self, days):
         today = arrow.now()
-        point_date = today.replace(days=days)
+        point_date = today.shift(days=days)
         point_date = datetime.datetime(
             point_date.year, point_date.month, point_date.day
         )

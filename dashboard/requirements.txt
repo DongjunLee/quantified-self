@@ -1,6 +1,7 @@
 dash  # The core dash backend
 dash-html-components  # HTML components
 dash-core-components  # Supercharged components
+dash-bootstrap-components  # Bootstrap components
 dash-table  # Interactive DataTable component (new!)
 
 plotly

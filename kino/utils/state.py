@@ -62,7 +62,7 @@ class State(object):
             rest_mins = 6 + diff_min // 10
 
         now = arrow.now()
-        advice = now.replace(minutes=rest_mins)
+        advice = now.shift(minutes=rest_mins)
 
         data = {"time": str(advice), "try": False}
         self.save(self.REST, data)

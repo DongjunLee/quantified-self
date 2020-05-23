@@ -21,7 +21,11 @@ class DataHandler(object):
 
         self.s3_client = None
         if Config.db.record_upload_to_s3:
-            self.s3_client = boto3.client('s3')
+            self.s3_client = boto3.client(
+                's3',
+                aws_access_key_id=Config.db.s3.ACCESS_KEY,
+                aws_secret_access_key=Config.db.s3.SECRET_KEY
+            )
 
     def read_file(self, fname):
         text = self.read_text(fname)
@@ -89,14 +93,14 @@ class DataHandler(object):
         return c_index, current_category_data
 
     def read_record(self, days=0, date_string=None):
-        date = arrow.now().replace(days=int(days))
+        date = arrow.now().shift(days=int(days))
         if date_string is not None:
             date = arrow.get(date_string)
         fname = self.record_path + date.format("YYYY-MM-DD") + ".json"
         return self.read_file(fname)
 
     def write_record(self, data, days=0):
-        date = arrow.now().replace(days=int(days))
+        date = arrow.now().shift(days=int(days))
         fname = self.record_path + date.format("YYYY-MM-DD") + ".json"
         self.write_file(fname, data)
 
@@ -196,7 +200,7 @@ class DataHandler(object):
         )
         raw_awesome_feeds = requests.get(awesome_feeds_url).text
 
-        feeds = {"Github": [("Activity", Config.profile.feed.get("GITHUB", ""))]}
+        feeds = {"Github": [("Activity", Config.profile.feed.get("GITHUB", ""), False)]}
         curr_category = None
         for line in raw_awesome_feeds.splitlines():
             if line.startswith("##"):
@@ -207,8 +211,12 @@ class DataHandler(object):
                 feed_name = re.findall("\[.+\]", line)[0][1:-1]
                 line = line.replace(" ", "")
                 feed_link = line[line.index("):") + len("):") :]
+                save_pocket = False
+                if "**" in feed_name:
+                    save_pocket = True
+                    feed_name = feed_name.replace("**", "")
 
-                feeds[curr_category].append((feed_name, feed_link))
+                feeds[curr_category].append((feed_name, feed_link, save_pocket))
         return feeds
 
     def read_log_data(self, fname):
