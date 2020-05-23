@@ -44,7 +44,7 @@
 Kino is getting smarter! **Pull requests** are always welcome. :D
 
 
-## Feature
+## Features
 
 - Support **mutiple languages** (Korean and English)
 - **Skill** : make your own skill and simply register skill writing function's doc.
@@ -59,6 +59,26 @@ Kino is getting smarter! **Pull requests** are always welcome. :D
 - Integrate with **[Giphy](https://giphy.com/)**
 - **Customize Webhook** for [IFTTT](https://ifttt.com/) or [Zapier](https://zapier.com)
 - Interactive **Dashboard**
+
+### Dashboard
+
+- Based on [plotly/dash](https://github.com/plotly/dash) and [plotly/plotly.py](https://github.com/plotly/plotly.py)
+
+**Daily Schedule**
+
+![image](images/daily_schedule.png)
+
+**Daily Habit**
+
+![image](images/daily_heatmap.png)
+
+**Daily Summary**
+
+![image](images/daily_summary.png)
+
+**Weekly Task Report**
+
+![image](images/weekly_task_report.png)
 
 ### Blog
 
