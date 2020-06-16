@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import arrow
+import copy
 import datetime
 from dateutil import parser
 import math
@@ -21,15 +22,35 @@ from data_handler import DataHandler
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 app.config["suppress_callback_exceptions"] = True
 
-data_handler = DataHandler()
 
+data_handler = DataHandler()
 
 DAILY_TAP = "daily"
 WEEKLY_TAP = "weekly"
 MONTHLY_TAP = "monthly"
 QUATERLY_TAP = "quarterly"
 
-tab_list = [DAILY_TAP, WEEKLY_TAP]
+tab_list = [
+    DAILY_TAP,
+    WEEKLY_TAP
+]
+
+task_categories = [
+    "Article",
+    "Blog",
+    "Book",
+    "Develop",
+    "Exercise",
+    "Hobby",
+    "Management",
+    "Meeting",
+    "MOOC",
+    "Planning",
+    "Research",
+    "Review",
+    "Seminar",
+    "Think",
+]
 
 
 # the style arguments for the sidebar. We use position:fixed and a fixed width
@@ -52,7 +73,11 @@ CONTENT_STYLE = {
 
 sidebar = html.Div(
     [
-        html.H2("Quantified Self", className="display-5"),
+        html.A(
+            html.H2("Quantified Self", className="display-5"),
+            href="/",
+            style={"text-decoration": "none"},
+        ),
         html.Hr(),
         html.P("BeHappy Project", className="lead"),
         dbc.Nav(
@@ -62,6 +87,13 @@ sidebar = html.Div(
             ],
             vertical=True,
             pills=True,
+        ),
+
+        # Interval
+        dcc.Interval(
+            id="interval-component-10min",
+            interval=10 * 60 * 1000,  # every 10 mins
+            n_intervals=0,
         ),
     ],
     style=SIDEBAR_STYLE,
@@ -78,16 +110,27 @@ app.layout = html.Div([dcc.Location(id="url"), sidebar, content])
 )
 def toggle_active_links(pathname):
     if pathname == "/":
-        # Treat page 1 as the homepage / index
-        return True
+        return [False] * len(tab_list)
     return [pathname == f"/{tab}" for tab in tab_list]
 
 
-def make_card_html(body, title_text=None, size=12):
+def make_card_html(body, title_text=None, size=12, thresholds=[]):
+    background_color = "white"
+    value = None
+    if type(body[0]) == html.P and body[0].children:
+        value = int(body[0].children)
+
+    if value is not None and len(thresholds) == 2:
+        good_threshold, bad_threshold = thresholds
+        if value >= good_threshold:
+            background_color = "palegreen"
+        elif value < bad_threshold:
+            background_color = "lightsalmon"
+
     card_html = html.Div(
         [
             html.Div(
-                [html.Div(body, className="card-body")],
+                [html.Div(body, className="card-body", style={"background-color": background_color})],
                 className="card mb-3 text-center",
             )
         ],
@@ -103,28 +146,79 @@ def make_card_html(body, title_text=None, size=12):
 
 @app.callback(Output("page-content", "children"), [Input("url", "pathname")])
 def render_page_content(pathname):
-    if pathname == f"/{DAILY_TAP}":
+
+    if pathname == "/":  # Dashboard Tab
 
         # Daily Dashboard
         daily_task_hour_card = make_card_html(
-            [html.P("8")], title_text="Task Hour", size=2
+            [
+                html.P(id="daily_task_hour_card"),
+            ], title_text="Task Hour", size=2,
         )
 
         daily_sleep_hour_card = make_card_html(
-            [html.P("8")], title_text="Sleep Hour", size=2
+            [html.P(id="daily_sleep_hour_card")], title_text="Sleep Hour", size=2,
         )
 
         daily_remain_hour_card = make_card_html(
-            [html.P("8")], title_text="Remain Hour", size=2
+            [html.P(id="daily_remain_hour_card")], title_text="Remain Hour", size=2
         )
 
         daily_exercise_card = make_card_html(
-            [html.P("O")], title_text="Exercise", size=2
+            [html.P(id="daily_exercise_card")], title_text="Exercise", size=2
         )
 
-        daily_diary_card = make_card_html([html.P("O")], title_text="Diary", size=2)
+        daily_diary_card = make_card_html([html.P(id="daily_diary_card")], title_text="Diary", size=2)
 
-        daily_bat_card = make_card_html([html.P("O")], title_text="BAT", size=2)
+        daily_bat_card = make_card_html([html.P(id="daily_bat_card")], title_text="BAT", size=2)
+
+        # Weekly Dashboard
+        weekly_task_total_hour_card = make_card_html([html.P(id="weekly_task_total_hour_card")], title_text="Total Hour", size=3
+        )
+
+        weekly_exercise_card = make_card_html(
+            [html.P(id="weekly_exercise_count_card")], title_text="Exercise Count", size=3
+        )
+
+        weekly_diary_card = make_card_html(
+            [html.P(id="weekly_diary_count_card")], title_text="Diary Count", size=3
+        )
+
+        weekly_bat_card = make_card_html(
+            [html.P(id="weekly_bat_count_card")], title_text="BAT Count", size=3
+        )
+
+        dashboard_div = html.Div([], className="container-fluid row")
+        dashboard_div.children.extend([
+            html.H2("Daily", className="col-sm-12"),
+            html.Hr(),
+            daily_task_hour_card,
+            daily_sleep_hour_card,
+            daily_remain_hour_card,
+            daily_exercise_card,
+            daily_diary_card,
+            daily_bat_card,
+        ])
+        dashboard_div.children.extend([
+            html.H2("Weekly", className="col-sm-12"),
+            html.Hr(),
+            weekly_task_total_hour_card,
+            weekly_exercise_card,
+            weekly_diary_card,
+            weekly_bat_card,
+        ])
+
+        # Weekly Task Category
+        for task_category in task_categories:
+            dashboard_div.children.append(
+                make_card_html(
+                    [html.P(id=f"weekly_{task_category.lower()}_card")], title_text=task_category, size=2, thresholds=[2, 4]
+                )
+            )
+
+        return dashboard_div
+
+    elif pathname == f"/{DAILY_TAP}":
 
         # Daily - Schedule
         daily_schedule_card = make_card_html(
@@ -143,11 +237,6 @@ def render_page_content(pathname):
                     style={"text-align": "center"},
                 ),
                 dcc.Graph(id="live-daily-schedule"),
-                dcc.Interval(
-                    id="interval-component1",
-                    interval=10 * 60 * 1000,  # every 10 mins
-                    n_intervals=0,
-                ),
             ]
         )
 
@@ -171,11 +260,6 @@ def render_page_content(pathname):
                     style={"text-align": "center"},
                 ),
                 dcc.Graph(id="live-calendar-heatmap"),
-                dcc.Interval(
-                    id="interval-component4",
-                    interval=60 * 60 * 24 * 1000,  # every 1 day
-                    n_intervals=0,
-                ),
             ]
         )
 
@@ -183,22 +267,11 @@ def render_page_content(pathname):
         daily_summary_card = make_card_html(
             [
                 dcc.Graph(id="live-daily-chart"),
-                dcc.Interval(
-                    id="interval-component3",
-                    interval=60 * 60 * 24 * 1000,  # every 1 day
-                    n_intervals=0,
-                ),
             ]
         )
 
         return html.Div(
             [
-                daily_task_hour_card,
-                daily_sleep_hour_card,
-                daily_remain_hour_card,
-                daily_exercise_card,
-                daily_diary_card,
-                daily_bat_card,
                 daily_schedule_card,
                 daily_cal_heatmap_card,
                 daily_summary_card,
@@ -207,21 +280,6 @@ def render_page_content(pathname):
         )
 
     elif pathname == f"/{WEEKLY_TAP}":
-
-        # Weekly Dashboard
-        weekly_task_total_hour_card = make_card_html(
-            [html.P("51")], title_text="Total Hour", size=3
-        )
-
-        weekly_exercise_card = make_card_html(
-            [html.P("5")], title_text="Exercise Count", size=3
-        )
-
-        weekly_diary_card = make_card_html(
-            [html.P("5")], title_text="Diary Count", size=3
-        )
-
-        weekly_bat_card = make_card_html([html.P("5")], title_text="BAT Count", size=3)
 
         # Weekly Task - Stack Bar Chart
         weekly_task_card = make_card_html(
@@ -243,26 +301,12 @@ def render_page_content(pathname):
                     style={"text-align": "center"},
                 ),
                 dcc.Graph(id="live-weekly-stack-reports"),
-                dcc.Interval(
-                    id="interval-component2",
-                    interval=60 * 60 * 24 * 1000,  # every 1 day
-                    n_intervals=0,
-                ),
                 dcc.Graph(id="live-weekly-pie-reports"),
-                dcc.Interval(
-                    id="interval-component5",
-                    interval=60 * 60 * 24 * 1000,  # every 1 day
-                    n_intervals=0,
-                ),
             ]
         )
 
         return html.Div(
             [
-                weekly_task_total_hour_card,
-                weekly_exercise_card,
-                weekly_diary_card,
-                weekly_bat_card,
                 weekly_task_card,
             ],
             className="container-fluid row",
@@ -275,7 +319,7 @@ def render_page_content(pathname):
 @app.callback(
     Output("live-daily-schedule", "figure"),
     [
-        Input("interval-component1", "n_intervals"),
+        Input("interval-component-10min", "n_intervals"),
         Input("date-picker-daily-schedule", "date"),
     ],
 )
@@ -446,7 +490,7 @@ def get_base_of_range(start_date, end_date, weekday_value=0):
 @app.callback(
     Output("live-weekly-stack-reports", "figure"),
     [
-        Input("interval-component2", "n_intervals"),
+        Input("interval-component-10min", "n_intervals"),
         Input("date-picker-range-weekly", "start_date"),
         Input("date-picker-range-weekly", "end_date"),
     ],
@@ -547,7 +591,7 @@ def make_stacked_bar_fig(n, start_date, end_date):
 @app.callback(
     Output("live-weekly-pie-reports", "figure"),
     [
-        Input("interval-component2", "n_intervals"),
+        Input("interval-component-10min", "n_intervals"),
         Input("date-picker-range-weekly", "start_date"),
         Input("date-picker-range-weekly", "end_date"),
     ],
@@ -556,23 +600,9 @@ def make_pie_chart_fig(n, start_date, end_date):
     start_date = arrow.get(start_date)
     end_date = arrow.get(end_date)
 
-    categories = [
-        "Article",
-        "Blog",
-        "Book",
-        "Develop",
-        "Exercise",
-        "Hobby",
-        "Management",
-        "Meeting",
-        "MOOC",
-        "Planning",
-        "Research",
-        "Review",
-        "Seminar",
-        "Think",
-        "Empty",
-    ]
+    categories = copy.deepcopy(task_categories)
+    categories.append("Empty")
+
     task_reports = {}
 
     colors = {"Empty": "#DEDEDE"}
@@ -661,7 +691,7 @@ def make_weekly_dates(N):
 
 
 @app.callback(
-    Output("live-daily-chart", "figure"), [Input("interval-component3", "n_intervals")]
+    Output("live-daily-chart", "figure"), [Input("interval-component-10min", "n_intervals")]
 )
 def make_scatter_line_fig(n):
     week_days = 7
@@ -669,7 +699,7 @@ def make_scatter_line_fig(n):
     weekly_data = []
     for i in range(-(week_days - 1), 1):
         record_data = data_handler.read_record(days=i)
-        if "summary" not in record_data:
+        if "summary" not in record_data or "total" not in record_data["summary"]:
             record_data = data_handler.read_record(days=i, redownload=True)
         weekly_data.append(record_data)
 
@@ -710,7 +740,7 @@ def make_scatter_line_fig(n):
 @app.callback(
     Output("live-calendar-heatmap", "figure"),
     [
-        Input("interval-component4", "n_intervals"),
+        Input("interval-component-10min", "n_intervals"),
         Input("date-picker-range-calendar-heatmap", "start_date"),
         Input("date-picker-range-calendar-heatmap", "end_date"),
     ],
@@ -774,15 +804,147 @@ def make_calendar_heatmap_fig(n, start_date, end_date):
     return fig
 
 
-# # Selectors -> well text
-# @app.callback(
-# Output("well_text", "children"),
-# [
-# Input('url', 'value')
-# ],
-# )
-# def update_well_text(t):
-# return 100
+@app.callback(
+    [
+        Output(component_id='daily_task_hour_card', component_property='children'),
+        Output(component_id='daily_sleep_hour_card', component_property='children'),
+        Output(component_id='daily_remain_hour_card', component_property='children'),
+        Output(component_id='daily_exercise_card', component_property='children'),
+        Output(component_id='daily_diary_card', component_property='children'),
+        Output(component_id='daily_bat_card', component_property='children'),
+    ],
+    [Input(component_id='interval-component-10min', component_property='n_intervals')]
+)
+def update_daily(n):
+    today_record_data = data_handler.read_record(redownload=True)
+    activity_data = today_record_data.get("activity", {})
+
+    task_hour = 0
+    today_tasks = activity_data.get("task", [])
+    for t in today_tasks:
+        duration = (arrow.get(t["end_time"]) - arrow.get(t["start_time"])).seconds
+        duration_hours = duration / 60 / 60
+
+        task_hour += duration_hours
+    task_hour = round(task_hour, 1)
+
+    sleep_hour = 0
+    today_sleep = activity_data.get("sleep", [])
+    for s in today_sleep:
+        if s["is_main"] is True:
+            start_time = arrow.get(s["start_time"])
+            end_time = arrow.get(s["end_time"])
+
+            sleep_hour = (end_time - start_time).seconds
+            sleep_hour = sleep_hour / 60 / 60
+
+    remain_hour = 24 - task_hour - sleep_hour
+
+    today_summary = today_record_data.get("summary", {})
+
+    exercise = "X"
+    if "do_exercise" in today_summary and today_summary["do_exercise"]:
+        exercise= "O"
+
+    diary = "X"
+    if "do_diary" in today_summary and today_summary["do_diary"]:
+        diary= "O"
+
+    bat = "X"
+    if "do_bat" in today_summary and today_summary["do_bat"]:
+        bat= "O"
+
+    return round(task_hour, 1), round(sleep_hour, 1), round(remain_hour, 1), exercise, diary, bat
+
+
+@app.callback(
+    [
+        Output(component_id='weekly_bat_count_card', component_property='children'),
+        Output(component_id='weekly_diary_count_card', component_property='children'),
+        Output(component_id='weekly_exercise_count_card', component_property='children'),
+    ],
+    [Input(component_id='interval-component-10min', component_property='n_intervals')]
+)
+def update_weekly(n):
+    end_date = arrow.now()
+    start_date = end_date.shift(days=-end_date.weekday())
+
+    WEEKDAY_SUNDAY = 6
+    sunday_dates = get_base_of_range(start_date, end_date, weekday_value=WEEKDAY_SUNDAY)
+
+    bat_count = 0
+    diary_count = 0
+    exercise_count = 0
+
+    weekly_index = 0
+    for r in arrow.Arrow.range("day", start_date, end_date):
+        offset_day = (arrow.now() - r).days
+        record_data = data_handler.read_record(days=-offset_day)
+
+        summary_data = record_data["summary"]
+        if summary_data["do_bat"] is True:
+            bat_count += 1
+        if summary_data["do_diary"] is True:
+            diary_count += 1
+        if summary_data["do_exercise"] is True:
+            exercise_count += 1
+
+        for weekly_index, base_date in enumerate(sunday_dates):
+            days_diff = (base_date - r).days
+            if days_diff < 7 and days_diff >= 0:
+                break
+
+    return bat_count, diary_count, exercise_count
+
+
+@app.callback(
+    [Output(component_id=f"weekly_{task_category.lower()}_card", component_property='children') for task_category in task_categories] + [
+        Output(component_id='weekly_task_total_hour_card', component_property='children'),
+    ],
+    [Input(component_id='interval-component-10min', component_property='n_intervals')]
+)
+def update_weekly_task_category(n):
+    task_reports = {}
+
+    end_date = arrow.now()
+    start_date = end_date.shift(days=-end_date.weekday())
+
+    WEEKDAY_SUNDAY = 6
+    sunday_dates = get_base_of_range(start_date, end_date, weekday_value=WEEKDAY_SUNDAY)
+
+    categories = copy.deepcopy(task_categories)
+    categories.append("Empty")
+
+    for c in categories:
+        task_reports[c] = [0] * len(sunday_dates)
+
+    weekly_index = 0
+    for r in arrow.Arrow.range("day", start_date, end_date):
+        offset_day = (arrow.now() - r).days
+        record_data = data_handler.read_record(days=-offset_day)
+
+        for weekly_index, base_date in enumerate(sunday_dates):
+            days_diff = (base_date - r).days
+            if days_diff < 7 and days_diff >= 0:
+                break
+
+        activity_data = record_data.get("activity", {})
+        task_data = activity_data.get("task", [])
+        for t in task_data:
+            project = t["project"]
+
+            duration = (arrow.get(t["end_time"]) - arrow.get(t["start_time"])).seconds
+            duration_hours = round(duration / 60 / 60, 1)
+
+            task_reports[project][weekly_index] += duration_hours
+
+    results = []
+    for task_category in task_categories:
+        results.append(task_reports[task_category][0])
+
+    total_hour = round(sum(results), 1)
+    results.append(total_hour)
+    return results
 
 
 if __name__ == "__main__":
