@@ -1,31 +1,24 @@
 # Quantified Self
 
-<p align="center"><p align="center">
+<a href="https://travis-ci.org/badges/shields">
+  <img src="https://travis-ci.org/DongjunLee/kino-bot.svg?branch=master" alt="build status">
+</a>
 
-  <a href="https://travis-ci.org/badges/shields">
-    <img src="https://travis-ci.org/DongjunLee/kino-bot.svg?branch=master" alt="build status">
-  </a>
+<a href="https://requires.io/github/DongjunLee/kino-bot/requirements/?branch=develop">
+  <img src="https://requires.io/github/DongjunLee/kino-bot/requirements.svg?branch=develop" alt="Requirements Status" />
+</a>
 
-  <a href="https://requires.io/github/DongjunLee/kino-bot/requirements/?branch=develop">
-    <img src="https://requires.io/github/DongjunLee/kino-bot/requirements.svg?branch=develop" alt="Requirements Status" />
-  </a>
+<a href="https://codecov.io/gh/DongjunLee/kino-bot">
+  <img src="https://codecov.io/gh/DongjunLee/kino-bot/branch/develop/graph/badge.svg" alt="Codecov" />
+</a>
 
-  <br/>
+<a href="https://github.com/ambv/black">
+  <img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code Style">
+</a>
 
-  <a href="https://codecov.io/gh/DongjunLee/kino-bot">
-    <img src="https://codecov.io/gh/DongjunLee/kino-bot/branch/develop/graph/badge.svg" alt="Codecov" />
-  </a>
-
-  <a href="https://github.com/ambv/black">
-    <img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code Style">
-  </a>
-
-  <a href="https://www.codacy.com/app/humanbrain.djlee/kino-bot?utm_source=github.com&utm_medium=referral&utm_content=DongjunLee/kino-bot&utm_campaign=badger">
-    <img src="https://api.codacy.com/project/badge/Grade/401e8a56ebe241daa8b2d0453e16a80c" alt="Codacy">
-  </a>
-
-</p>
-
+<a href="https://www.codacy.com/app/humanbrain.djlee/kino-bot?utm_source=github.com&utm_medium=referral&utm_content=DongjunLee/kino-bot&utm_campaign=badger">
+  <img src="https://api.codacy.com/project/badge/Grade/401e8a56ebe241daa8b2d0453e16a80c" alt="Codacy">
+</a>
 
 
 [Quantified Self](https://quantifiedself.com/) 란 개인의 일상활동에서 신체적·정신적 상태를 센싱 및 트래킹하여 이를 수치화함으로써 자신의 상태를 분석하고 삶의 질을 개선하기 위한 방법을 연구하여 실생활에 적용하는 활동을 의미합니다. Gary Wolf와 Tom Kelly에 의해 소개되었으며, 2010년 [Ted Talk](https://www.ted.com/talks/gary_wolf_the_quantified_self?language=ko)에서 주목을 받아, 그 이후 하나의 운동형태로 커뮤니티가 형성되어 QS 웹사이트를 통해 전개되어 왔다고 합니다. 그들의 미션은 다음과 같습니다.
@@ -90,7 +83,7 @@ Log는 ML 학습을 통해서 자동화를 시키기 위한 데이터 목록입�
 
 - Dashboard
 
-  
+
 
 ### Chatbot (kino-bot)
 
@@ -108,7 +101,7 @@ Log는 ML 학습을 통해서 자동화를 시키기 위한 데이터 목록입�
 
 - **Skill** : 직접 구현하여 스킬을 등록하고 Trigger를 설정할 수 있습니다.
 
-  
+
 
 #### Register Skills
 
@@ -152,7 +145,7 @@ Log는 ML 학습을 통해서 자동화를 시키기 위한 데이터 목록입�
 
   - e.g.) 1시간 마다 미세먼지 알려줘, 매일 8시에 하루 브리핑 해줘
 
-    
+
 
 ### Webhook
 
@@ -165,7 +158,7 @@ Log는 ML 학습을 통해서 자동화를 시키기 위한 데이터 목록입�
 
 -  [plotly/dash](https://github.com/plotly/dash) 와 [plotly/plotly.py](https://github.com/plotly/plotly.py) 기반으로 구현
 
-  
+
 
 **Daily Schedule**
 
