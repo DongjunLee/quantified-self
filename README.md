@@ -40,10 +40,10 @@
 
 | Article - Title                                     | English                                                      | Korean                                                       |
 | --------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| Personal Assistant Kino Part 1 — Overview.          | [Medium](https://medium.com/@humanbrain.djlee/personal-assistant-kino-part-1-overview-496b97de4afd) | [Github page]([https://dongjunlee.github.io/quantified%20self/Personal_Assistant_Kino_Part_1_Overview/](https://dongjunlee.github.io/quantified self/Personal_Assistant_Kino_Part_1_Overview/)) |
-| Personal Assistant Kino Part 2 - Skill & Scheduler. | [Medium](https://medium.com/@humanbrain.djlee/personal-assistant-kino-part-2-skill-scheduler-3cf25070fe8e) | [Github page]([https://dongjunlee.github.io/quantified%20self/Personal_Assistant_Kino_Part_2_Skill_and_Scheduler/](https://dongjunlee.github.io/quantified self/Personal_Assistant_Kino_Part_2_Skill_and_Scheduler/)) |
-| Personal Assistant Kino Part 3 - T3.                | [Medium](https://medium.com/@humanbrain.djlee/personal-assistant-kino-part-3-t3-d078b65462be) | [Github page]([https://dongjunlee.github.io/quantified%20self/Personal_Assistant_Kino_Part_3_T3/](https://dongjunlee.github.io/quantified self/Personal_Assistant_Kino_Part_3_T3/)) |
-| Personal Assistant Kino Part 4 - Smart Feed.        | [Medium](https://hackernoon.com/personal-assistant-kino-part-4-smart-feed-b9e4cab966) | [Github page]([https://dongjunlee.github.io/quantified%20self/Personal_Assistant_Kino_Part_4_Smart_Feed/](https://dongjunlee.github.io/quantified self/Personal_Assistant_Kino_Part_4_Smart_Feed/)) |
+| Personal Assistant Kino Part 1 — Overview.          | [Medium](https://medium.com/@humanbrain.djlee/personal-assistant-kino-part-1-overview-496b97de4afd) | [Github page](https://dongjunlee.github.io/quantified self/Personal_Assistant_Kino_Part_1_Overview/) |
+| Personal Assistant Kino Part 2 - Skill & Scheduler. | [Medium](https://medium.com/@humanbrain.djlee/personal-assistant-kino-part-2-skill-scheduler-3cf25070fe8e) | [Github page](https://dongjunlee.github.io/quantified self/Personal_Assistant_Kino_Part_2_Skill_and_Scheduler/) |
+| Personal Assistant Kino Part 3 - T3.                | [Medium](https://medium.com/@humanbrain.djlee/personal-assistant-kino-part-3-t3-d078b65462be) | [Github page](https://dongjunlee.github.io/quantified self/Personal_Assistant_Kino_Part_3_T3/) |
+| Personal Assistant Kino Part 4 - Smart Feed.        | [Medium](https://hackernoon.com/personal-assistant-kino-part-4-smart-feed-b9e4cab966) | [Github page](https://dongjunlee.github.io/quantified self/Personal_Assistant_Kino_Part_4_Smart_Feed/) |
 
 
 
