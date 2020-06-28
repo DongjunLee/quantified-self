@@ -21,6 +21,7 @@
 </a>
 
 
+
 [Quantified Self](https://quantifiedself.com/) 란 개인의 일상활동에서 신체적·정신적 상태를 센싱 및 트래킹하여 이를 수치화함으로써 자신의 상태를 분석하고 삶의 질을 개선하기 위한 방법을 연구하여 실생활에 적용하는 활동을 의미합니다. Gary Wolf와 Tom Kelly에 의해 소개되었으며, 2010년 [Ted Talk](https://www.ted.com/talks/gary_wolf_the_quantified_self?language=ko)에서 주목을 받아, 그 이후 하나의 운동형태로 커뮤니티가 형성되어 QS 웹사이트를 통해 전개되어 왔다고 합니다. 그들의 미션은 다음과 같습니다.
 
 > To improve quality of life by generating and sharing knowledge on Quantified Self (QS)
@@ -33,10 +34,10 @@
 
 | Article - Title                                     | English                                                      | Korean                                                       |
 | --------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| Personal Assistant Kino Part 1 — Overview.          | [Medium](https://medium.com/@humanbrain.djlee/personal-assistant-kino-part-1-overview-496b97de4afd) | [Github page](https://dongjunlee.github.io/quantified self/Personal_Assistant_Kino_Part_1_Overview/) |
-| Personal Assistant Kino Part 2 - Skill & Scheduler. | [Medium](https://medium.com/@humanbrain.djlee/personal-assistant-kino-part-2-skill-scheduler-3cf25070fe8e) | [Github page](https://dongjunlee.github.io/quantified self/Personal_Assistant_Kino_Part_2_Skill_and_Scheduler/) |
-| Personal Assistant Kino Part 3 - T3.                | [Medium](https://medium.com/@humanbrain.djlee/personal-assistant-kino-part-3-t3-d078b65462be) | [Github page](https://dongjunlee.github.io/quantified self/Personal_Assistant_Kino_Part_3_T3/) |
-| Personal Assistant Kino Part 4 - Smart Feed.        | [Medium](https://hackernoon.com/personal-assistant-kino-part-4-smart-feed-b9e4cab966) | [Github page](https://dongjunlee.github.io/quantified self/Personal_Assistant_Kino_Part_4_Smart_Feed/) |
+| Personal Assistant Kino Part 1 — Overview.          | [Medium](https://medium.com/@humanbrain.djlee/personal-assistant-kino-part-1-overview-496b97de4afd) | [Github page](https://dongjunlee.github.io/quantified%20self/Personal_Assistant_Kino_Part_1_Overview/) |
+| Personal Assistant Kino Part 2 - Skill & Scheduler. | [Medium](https://medium.com/@humanbrain.djlee/personal-assistant-kino-part-2-skill-scheduler-3cf25070fe8e) | [Github page](https://dongjunlee.github.io/quantified%20self/Personal_Assistant_Kino_Part_2_Skill_and_Scheduler/) |
+| Personal Assistant Kino Part 3 - T3.                | [Medium](https://medium.com/@humanbrain.djlee/personal-assistant-kino-part-3-t3-d078b65462be) | [Github page](https://dongjunlee.github.io/quantified%20self/Personal_Assistant_Kino_Part_3_T3/) |
+| Personal Assistant Kino Part 4 - Smart Feed.        | [Medium](https://hackernoon.com/personal-assistant-kino-part-4-smart-feed-b9e4cab966) | [Github page](https://dongjunlee.github.io/quantified%20self/Personal_Assistant_Kino_Part_4_Smart_Feed/) |
 
 
 
