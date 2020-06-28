@@ -1,3 +1,5 @@
+# Quantified Self
+
 <p align="center"><p align="center">
 
   <a href="https://travis-ci.org/badges/shields">
@@ -25,8 +27,6 @@
 </p>
 
 
-
-## Quantified Self
 
 [Quantified Self](https://quantifiedself.com/) 란 개인의 일상활동에서 신체적·정신적 상태를 센싱 및 트래킹하여 이를 수치화함으로써 자신의 상태를 분석하고 삶의 질을 개선하기 위한 방법을 연구하여 실생활에 적용하는 활동을 의미합니다. Gary Wolf와 Tom Kelly에 의해 소개되었으며, 2010년 [Ted Talk](https://www.ted.com/talks/gary_wolf_the_quantified_self?language=ko)에서 주목을 받아, 그 이후 하나의 운동형태로 커뮤니티가 형성되어 QS 웹사이트를 통해 전개되어 왔다고 합니다. 그들의 미션은 다음과 같습니다.
 
