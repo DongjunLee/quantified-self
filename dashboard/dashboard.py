@@ -25,6 +25,10 @@ app.config["suppress_callback_exceptions"] = True
 
 data_handler = DataHandler()
 
+start_date = arrow.now().shift(days=-14)
+end_date = arrow.now()
+this_week_task_reports = data_handler.make_task_reports(start_date, end_date)
+
 DAILY_TAP = "daily"
 WEEKLY_TAP = "weekly"
 MONTHLY_TAP = "monthly"
@@ -474,19 +478,6 @@ def make_daily_schedule_fig(n, date):
     return fig
 
 
-def get_base_of_range(start_date, end_date, weekday_value=0):
-    # if start_date.weekday() != weekday_value:
-    # start_date = start_date.shift(days=-(start_date.weekday() - weekday_value))
-    if end_date.weekday() != weekday_value:
-        end_date = end_date.shift(days=+(abs(end_date.weekday() - weekday_value)))
-
-    base_dates = []
-    for r in arrow.Arrow.range("day", start_date, end_date):
-        if r.weekday() == weekday_value:
-            base_dates.append(r)
-    return base_dates
-
-
 @app.callback(
     Output("live-weekly-stack-reports", "figure"),
     [
@@ -496,59 +487,13 @@ def get_base_of_range(start_date, end_date, weekday_value=0):
     ],
 )
 def make_stacked_bar_fig(n, start_date, end_date):
-    start_date = arrow.get(start_date)
-    end_date = arrow.get(end_date)
-
-    categories = [
-        "Article",
-        "Blog",
-        "Book",
-        "Develop",
-        "Exercise",
-        "Hobby",
-        "Management",
-        "Meeting",
-        "MOOC",
-        "Planning",
-        "Research",
-        "Review",
-        "Seminar",
-        "Think",
-        "Empty",
-    ]
-    task_reports = {}
-
     colors = {"Empty": "#DEDEDE"}
-
-    WEEKDAY_SUNDAY = 6
-    sunday_dates = get_base_of_range(start_date, end_date, weekday_value=WEEKDAY_SUNDAY)
-
-    for c in categories:
-        task_reports[c] = [0] * len(sunday_dates)
-
-    weekly_index = 0
-    for r in arrow.Arrow.range("day", start_date, end_date):
-        offset_day = (arrow.now() - r).days
-        record_data = data_handler.read_record(days=-offset_day)
-
-        for weekly_index, base_date in enumerate(sunday_dates):
-            days_diff = (base_date - r).days
-            if days_diff < 7 and days_diff >= 0:
-                break
-
-        activity_data = record_data.get("activity", {})
-        task_data = activity_data.get("task", [])
-        for t in task_data:
-            project = t["project"]
-
-            duration = (arrow.get(t["end_time"]) - arrow.get(t["start_time"])).seconds
-            duration_hours = round(duration / 60 / 60, 1)
-
-            task_reports[project][weekly_index] += duration_hours
-
-            # Color
-            if project not in colors:
-                colors[project] = t["color"]
+    sunday_dates, task_reports = data_handler.make_task_reports(
+        start_date,
+        end_date,
+        colors=colors,
+        return_base_dates=True
+    )
 
     data = []
     for category, task_report in task_reports.items():
@@ -608,7 +553,7 @@ def make_pie_chart_fig(n, start_date, end_date):
     colors = {"Empty": "#DEDEDE"}
 
     WEEKDAY_SUNDAY = 6
-    sunday_dates = get_base_of_range(start_date, end_date, weekday_value=WEEKDAY_SUNDAY)
+    sunday_dates = data_handler.get_base_of_range(start_date, end_date, weekday_value=WEEKDAY_SUNDAY)
 
     for c in categories:
         task_reports[c] = [0] * len(sunday_dates)
@@ -870,7 +815,7 @@ def update_weekly(n):
     start_date = end_date.shift(days=-end_date.weekday())
 
     WEEKDAY_SUNDAY = 6
-    sunday_dates = get_base_of_range(start_date, end_date, weekday_value=WEEKDAY_SUNDAY)
+    sunday_dates = data_handler.get_base_of_range(start_date, end_date, weekday_value=WEEKDAY_SUNDAY)
 
     bat_count = 0
     diary_count = 0
@@ -881,13 +826,16 @@ def update_weekly(n):
         offset_day = (arrow.now() - r).days
         record_data = data_handler.read_record(days=-offset_day)
 
-        summary_data = record_data["summary"]
-        if summary_data["do_bat"] is True:
-            bat_count += 1
-        if summary_data["do_diary"] is True:
-            diary_count += 1
-        if summary_data["do_exercise"] is True:
-            exercise_count += 1
+        summary_data = record_data.get("summary", None)
+        if summary_data is None:
+            pass
+        else:
+            if summary_data["do_bat"] is True:
+                bat_count += 1
+            if summary_data["do_diary"] is True:
+                diary_count += 1
+            if summary_data["do_exercise"] is True:
+                exercise_count += 1
 
         for weekly_index, base_date in enumerate(sunday_dates):
             days_diff = (base_date - r).days
@@ -904,43 +852,13 @@ def update_weekly(n):
     [Input(component_id='interval-component-10min', component_property='n_intervals')]
 )
 def update_weekly_task_category(n):
-    task_reports = {}
-
-    end_date = arrow.now()
-    start_date = end_date.shift(days=-end_date.weekday())
-
-    WEEKDAY_SUNDAY = 6
-    sunday_dates = get_base_of_range(start_date, end_date, weekday_value=WEEKDAY_SUNDAY)
-
-    categories = copy.deepcopy(task_categories)
-    categories.append("Empty")
-
-    for c in categories:
-        task_reports[c] = [0] * len(sunday_dates)
-
-    weekly_index = 0
-    for r in arrow.Arrow.range("day", start_date, end_date):
-        offset_day = (arrow.now() - r).days
-        record_data = data_handler.read_record(days=-offset_day)
-
-        for weekly_index, base_date in enumerate(sunday_dates):
-            days_diff = (base_date - r).days
-            if days_diff < 7 and days_diff >= 0:
-                break
-
-        activity_data = record_data.get("activity", {})
-        task_data = activity_data.get("task", [])
-        for t in task_data:
-            project = t["project"]
-
-            duration = (arrow.get(t["end_time"]) - arrow.get(t["start_time"])).seconds
-            duration_hours = round(duration / 60 / 60, 1)
-
-            task_reports[project][weekly_index] += duration_hours
-
     results = []
-    for task_category in task_categories:
-        results.append(task_reports[task_category][0])
+    for task_category in data_handler.TASK_CATEGORIES:
+        if task_category == "Empty":
+            continue
+
+        task_hour = round(this_week_task_reports[task_category][-1], 1)
+        results.append(task_hour)
 
     total_hour = round(sum(results), 1)
     results.append(total_hour)
