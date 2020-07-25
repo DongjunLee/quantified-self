@@ -4,8 +4,9 @@ dash-core-components  # Supercharged components
 dash-bootstrap-components  # Bootstrap components
 dash-table  # Interactive DataTable component (new!)
 
-plotly
+plotly >= 4.9.0
 
 arrow
 numpy
 boto3
+pandas
