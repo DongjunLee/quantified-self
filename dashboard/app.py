@@ -28,6 +28,7 @@ app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 app.config["suppress_callback_exceptions"] = True
 
 data_handler = DataHandler()
+kpi = data_handler.read_kpi()
 
 
 DAILY_TAP = "daily"
@@ -78,7 +79,7 @@ sidebar = html.Div(
             pills=True,
         ),
 
-        html.P("Sleep", className="lead"),
+        html.P("Sleep", className="lead", style={"margin-top": "10px"}),
 
         # Interval
         dcc.Interval(
@@ -105,7 +106,7 @@ def toggle_active_links(pathname):
     return [pathname == f"/{tab}" for tab in tab_list]
 
 
-def make_card_html(body, title_text=None, size=12, thresholds=[]):
+def make_card_html(body, card_id=None, title_text=None, size=12, thresholds=[]):
     background_color = "white"
     value = None
     if type(body[0]) == html.P and body[0].children:
@@ -119,14 +120,24 @@ def make_card_html(body, title_text=None, size=12, thresholds=[]):
             background_color = "lightsalmon"
 
     card_html = html.Div(
-        [
-            html.Div(
-                [html.Div(body, className="card-body", style={"background-color": background_color})],
-                className="card mb-3 text-center",
-            )
-        ],
+        [html.Div([], className="card mb-3 text-center")],
         className=f"col-sm-{size}",
     )
+    if card_id is None:
+        div = html.Div(
+            body,
+            className="card-body",
+            style={"background-color": background_color}
+        )
+    else:
+        div = html.Div(
+            body,
+            id=card_id,
+            className="card-body",
+            style={"background-color": background_color}
+        )
+
+    card_html.children[0].children.append(div)
 
     if title_text is not None:
         title = html.H6(title_text, className="card-title")
@@ -143,40 +154,91 @@ def render_page_content(pathname):
         # Daily Dashboard
         daily_task_hour_card = make_card_html(
             [
-                html.P(id="daily_task_hour_card"),
-            ], title_text="Task Hour", size=2,
+                html.P(id="daily_task_hour_value"),
+            ],
+            card_id="daily_task_hour_card",
+            title_text="Task Hour",
+            size=2,
         )
 
         daily_sleep_hour_card = make_card_html(
-            [html.P(id="daily_sleep_hour_card")], title_text="Sleep Hour", size=2,
+            [
+                html.P(id="daily_sleep_hour_value")
+            ],
+            card_id="daily_sleep_hour_card",
+            title_text="Sleep Hour",
+            size=2,
         )
 
         daily_remain_hour_card = make_card_html(
-            [html.P(id="daily_remain_hour_card")], title_text="Remain Hour", size=2
+            [
+                html.P(id="daily_remain_hour_value")
+            ],
+            card_id="daily_remain_hour_card",
+            title_text="Remain Hour",
+            size=2
         )
 
         daily_exercise_card = make_card_html(
-            [html.P(id="daily_exercise_card")], title_text="Exercise", size=2
+            [
+                html.P(id="daily_exercise_value")
+            ],
+            card_id="daily_exercise_card",
+            title_text="Exercise",
+            size=2
         )
 
-        daily_diary_card = make_card_html([html.P(id="daily_diary_card")], title_text="Diary", size=2)
+        daily_diary_card = make_card_html(
+            [
+                html.P(id="daily_diary_value")
+            ],
+            card_id="daily_diary_card",
+            title_text="Diary",
+            size=2
+        )
 
-        daily_bat_card = make_card_html([html.P(id="daily_bat_card")], title_text="BAT", size=2)
+        daily_bat_card = make_card_html(
+            [
+                html.P(id="daily_bat_value")
+            ],
+            card_id="daily_bat_card",
+            title_text="BAT",
+            size=2
+        )
 
         # Weekly Dashboard
-        weekly_task_total_hour_card = make_card_html([html.P(id="weekly_task_total_hour_card")], title_text="Total Hour", size=3
+        weekly_task_total_hour_card = make_card_html(
+            [
+                html.P(id="weekly_task_total_hour_value")
+            ],
+            card_id="weekly_task_total_hour_card",
+            title_text="Total Hour",
+            size=3
         )
 
         weekly_exercise_card = make_card_html(
-            [html.P(id="weekly_exercise_count_card")], title_text="Exercise Count", size=3
+            [
+                html.P(id="weekly_exercise_count_value")
+            ],
+            card_id="weekly_exercise_count_card",
+            title_text="Exercise Count",
+            size=3
         )
 
         weekly_diary_card = make_card_html(
-            [html.P(id="weekly_diary_count_card")], title_text="Diary Count", size=3
+            [
+                html.P(id="weekly_diary_count_value")],
+            card_id="weekly_diary_count_card",
+            title_text="Diary Count",
+            size=3
         )
 
         weekly_bat_card = make_card_html(
-            [html.P(id="weekly_bat_count_card")], title_text="BAT Count", size=3
+            [
+                html.P(id="weekly_bat_count_value")],
+            card_id="weekly_bat_count_card",
+            title_text="BAT Count",
+            size=3
         )
 
         dashboard_div = html.Div([], className="container-fluid row")
@@ -201,9 +263,15 @@ def render_page_content(pathname):
 
         # Weekly Task Category
         for task_category in data_handler.TASK_CATEGORIES:
+            task_category_lower = task_category.lower()
             dashboard_div.children.append(
                 make_card_html(
-                    [html.P(id=f"weekly_{task_category.lower()}_card")], title_text=task_category, size=2, thresholds=[2, 4]
+                    [
+                        html.P(id=f"weekly_{task_category_lower}_value")
+                    ],
+                    card_id=f"weekly_{task_category_lower}_card",
+                    title_text=task_category,
+                    size=2
                 )
             )
 
@@ -339,39 +407,53 @@ def render_page_content(pathname):
 
 @app.callback(
     [
-        Output(component_id='daily_task_hour_card', component_property='children'),
-        Output(component_id='daily_sleep_hour_card', component_property='children'),
-        Output(component_id='daily_remain_hour_card', component_property='children'),
-        Output(component_id='daily_exercise_card', component_property='children'),
-        Output(component_id='daily_diary_card', component_property='children'),
-        Output(component_id='daily_bat_card', component_property='children'),
+        Output(component_id='daily_task_hour_card', component_property='style'),
+        Output(component_id='daily_task_hour_value', component_property='children'),
+        Output(component_id='daily_sleep_hour_card', component_property='style'),
+        Output(component_id='daily_sleep_hour_value', component_property='children'),
+        Output(component_id='daily_remain_hour_card', component_property='style'),
+        Output(component_id='daily_remain_hour_value', component_property='children'),
+        Output(component_id='daily_exercise_card', component_property='style'),
+        Output(component_id='daily_exercise_value', component_property='children'),
+        Output(component_id='daily_diary_card', component_property='style'),
+        Output(component_id='daily_diary_value', component_property='children'),
+        Output(component_id='daily_bat_card', component_property='style'),
+        Output(component_id='daily_bat_value', component_property='children'),
     ],
     [Input(component_id='interval-component-10min', component_property='n_intervals')]
 )
 def update_daily(n):
-    return _update_daily()
+    return _update_daily(kpi["daily"])
 
 
 @app.callback(
     [
-        Output(component_id='weekly_bat_count_card', component_property='children'),
-        Output(component_id='weekly_diary_count_card', component_property='children'),
-        Output(component_id='weekly_exercise_count_card', component_property='children'),
+        Output(component_id='weekly_bat_count_card', component_property='style'),
+        Output(component_id='weekly_bat_count_value', component_property='children'),
+        Output(component_id='weekly_diary_count_card', component_property='style'),
+        Output(component_id='weekly_diary_count_value', component_property='children'),
+        Output(component_id='weekly_exercise_count_card', component_property='style'),
+        Output(component_id='weekly_exercise_count_value', component_property='children'),
     ],
     [Input(component_id='interval-component-10min', component_property='n_intervals')]
 )
 def update_weekly(n):
-    return _update_weekly()
+    return _update_weekly(kpi["weekly"])
 
 
 @app.callback(
-    [Output(component_id=f"weekly_{task_category.lower()}_card", component_property='children') for task_category in data_handler.TASK_CATEGORIES] + [
-        Output(component_id='weekly_task_total_hour_card', component_property='children'),
+    [
+        Output(component_id='weekly_task_total_hour_card', component_property='style'),
+        Output(component_id='weekly_task_total_hour_value', component_property='children'),
+    ] + [
+        Output(component_id=f"weekly_{task_category.lower()}_{id_str}", component_property=property_str)
+        for task_category in data_handler.TASK_CATEGORIES
+        for (id_str, property_str) in [("card", "style"), ("value", "children")]
     ],
     [Input(component_id='interval-component-10min', component_property='n_intervals')]
 )
 def update_weekly_task_category(n):
-    return _update_weekly_task_category()
+    return _update_weekly_task_category(kpi["weekly"])
 
 
 

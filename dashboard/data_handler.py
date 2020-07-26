@@ -28,6 +28,9 @@ class DataHandler:
 
     BASE_WEEKDAY = 6  # Sunday
 
+    GOOD_COLOR = "palegreen"
+    BAD_COLOR = "lightsalmon"
+
     def __init__(self):
         self.s3_client = boto3.client('s3')
         self.record_path = "../data/record/"
@@ -70,6 +73,9 @@ class DataHandler:
     def read_summary(self, days=0):
         record_data = self.read_record(days=days)
         return record_data.get("summary", {})
+
+    def read_kpi(self):
+        return self.read_file("kpi.json")
 
     def make_task_reports(self, start_date, end_date, colors=None, date_unit=DateUnit.DAILY, return_base_dates=False):
         start_date = arrow.get(start_date)
