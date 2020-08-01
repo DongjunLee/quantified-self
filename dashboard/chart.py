@@ -98,8 +98,8 @@ def _make_daily_schedule_fig(date):
         bar_width=0.3,
         showgrid_x=True,
         showgrid_y=True,
-        width=1000,
-        height=600,
+        width=800,
+        height=500,
     )
 
     happy_data = activity_data["happy"]
@@ -282,7 +282,12 @@ def _make_pie_chart_fig(start_date, end_date):
 
     pie_chart_count = weekly_index + 1
 
-    COL_COUNT = 4
+    if start_date.date() == end_date.date():
+        COL_COUNT = 1
+    else:
+        # Default COL_COUNT
+        COL_COUNT = 4
+
     ROW_COUNT = math.ceil(pie_chart_count / COL_COUNT)
 
     pie_values = []

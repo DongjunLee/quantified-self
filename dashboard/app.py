@@ -61,6 +61,13 @@ CONTENT_STYLE = {
     "background-color": "#f4f7fc",
 }
 
+DATE_PICKER_STYLE = {
+    "text-align": "center",
+    "width": "100%",
+    "margin-bottom": "15px",
+}
+
+
 sidebar = html.Div(
     [
         html.A(
@@ -106,18 +113,14 @@ def toggle_active_links(pathname):
     return [pathname == f"/{tab}" for tab in tab_list]
 
 
-def make_card_html(body, card_id=None, title_text=None, size=12, thresholds=[]):
-    background_color = "white"
-    value = None
-    if type(body[0]) == html.P and body[0].children:
-        value = int(body[0].children)
-
-    if value is not None and len(thresholds) == 2:
-        good_threshold, bad_threshold = thresholds
-        if value >= good_threshold:
-            background_color = "palegreen"
-        elif value < bad_threshold:
-            background_color = "lightsalmon"
+def make_card_html(
+    body,
+    card_id=None,
+    title_text=None,
+    size=12,
+    background_color="white",
+    class_name="",
+):
 
     card_html = html.Div(
         [html.Div([], className="card mb-3 text-center")],
@@ -126,14 +129,14 @@ def make_card_html(body, card_id=None, title_text=None, size=12, thresholds=[]):
     if card_id is None:
         div = html.Div(
             body,
-            className="card-body",
+            className="card-body " + class_name,
             style={"background-color": background_color}
         )
     else:
         div = html.Div(
             body,
             id=card_id,
-            className="card-body",
+            className="card-body " + class_name,
             style={"background-color": background_color}
         )
 
@@ -241,30 +244,44 @@ def render_page_content(pathname):
             size=3
         )
 
-        dashboard_div = html.Div([], className="container-fluid row")
-        dashboard_div.children.extend([
-            html.H2("Daily", className="col-sm-12"),
-            html.Hr(),
-            daily_task_hour_card,
-            daily_sleep_hour_card,
-            daily_remain_hour_card,
-            daily_exercise_card,
-            daily_diary_card,
-            daily_bat_card,
+        dashboard_div = html.Div([
+            html.H2("Habits", className="col-sm-12"),
         ])
         dashboard_div.children.extend([
-            html.H2("Weekly", className="col-sm-12"),
-            html.Hr(),
+            make_card_html([
+                html.Div([
+                    html.H3("Daily"),
+                    html.Hr(),
+                ], className="col-sm-12"),
+                daily_task_hour_card,
+                daily_sleep_hour_card,
+                daily_remain_hour_card,
+                daily_exercise_card,
+                daily_diary_card,
+                daily_bat_card,
+            ],
+            class_name="container-fluid row")
+        ])
+
+        weekly_dashboard_items =[
+            html.Div([
+                html.H3("Weekly", className="col-sm-12"),
+                html.Hr(),
+            ], className="col-sm-12"),
             weekly_task_total_hour_card,
             weekly_exercise_card,
             weekly_diary_card,
             weekly_bat_card,
-        ])
+
+            html.Div([
+                html.Hr(),
+            ], className="col-sm-12", style={"margin-bottom": "15px"}),
+        ]
 
         # Weekly Task Category
         for task_category in data_handler.TASK_CATEGORIES:
             task_category_lower = task_category.lower()
-            dashboard_div.children.append(
+            weekly_dashboard_items.append(
                 make_card_html(
                     [
                         html.P(id=f"weekly_{task_category_lower}_value")
@@ -275,11 +292,17 @@ def render_page_content(pathname):
                 )
             )
 
+        weekly_dashboard_card = make_card_html(
+            weekly_dashboard_items,
+            class_name="container-fluid row",
+        )
+        dashboard_div.children.append(weekly_dashboard_card)
+
         return dashboard_div
 
     elif pathname == f"/{DAILY_TAP}":
 
-        # Daily - Schedule
+        # Daily - Schedule * Pie Chart
         daily_schedule_card = make_card_html(
             [
                 html.Div(
@@ -293,10 +316,17 @@ def render_page_content(pathname):
                             max_date_allowed=arrow.now().datetime,
                         ),
                     ],
-                    style={"text-align": "center"},
+                    style=DATE_PICKER_STYLE,
                 ),
-                dcc.Graph(id="live-daily-schedule"),
-            ]
+                make_card_html([
+                    dcc.Graph(id="live-daily-schedule"),
+                ],
+                size=8),
+                make_card_html([
+                    dcc.Graph(id="live-daily-task-pie-reports"),
+                ], size=4),
+            ],
+            class_name="container-fluid row"
         )
 
         # Daily - Calendar Heatmap
@@ -316,13 +346,13 @@ def render_page_content(pathname):
                             max_date_allowed=arrow.now().datetime,
                         ),
                     ],
-                    style={"text-align": "center"},
+                    style=DATE_PICKER_STYLE,
                 ),
                 dcc.Graph(id="live-calendar-heatmap"),
             ]
         )
 
-        # Daily Task - Stack Bar & Pie Chart
+        # Daily Task - Stack Bar Chart
         # Daily Summary Chart
         now = arrow.now()
         before_7_days = now.shift(days=-7)
@@ -343,11 +373,16 @@ def render_page_content(pathname):
                             max_date_allowed=arrow.now().datetime,
                         ),
                     ],
-                    style={"text-align": "center"},
+                    style=DATE_PICKER_STYLE,
                 ),
-                dcc.Graph(id="live-daily-stack-reports"),
-                dcc.Graph(id="live-daily-chart"),
-            ]
+                make_card_html([
+                    dcc.Graph(id="live-daily-stack-reports"),
+                ], size=6),
+                make_card_html([
+                    dcc.Graph(id="live-daily-chart"),
+                ], size=6),
+            ],
+            class_name="container-fluid row"
         )
 
         return html.Div(
@@ -382,10 +417,10 @@ def render_page_content(pathname):
                             max_date_allowed=arrow.now().datetime,
                         ),
                     ],
-                    style={"text-align": "center"},
+                    style=DATE_PICKER_STYLE,
                 ),
                 dcc.Graph(id="live-weekly-stack-reports"),
-                dcc.Graph(id="live-weekly-pie-reports"),
+                dcc.Graph(id="live-weekly-task-pie-reports"),
             ]
         )
 
@@ -474,6 +509,17 @@ def make_daily_schedule_fig(n, date):
 
 
 @app.callback(
+    Output("live-daily-task-pie-reports", "figure"),
+    [
+        Input("interval-component-10min", "n_intervals"),
+        Input("date-picker-daily-schedule", "date"),
+    ],
+)
+def make_daily_pie_chart_fig(n, date):
+    return _make_pie_chart_fig(date, date)
+
+
+@app.callback(
     Output("live-daily-chart", "figure"),
     [
         Input("interval-component-10min", "n_intervals"),
@@ -526,14 +572,14 @@ def make_weekly_task_stacked_bar_fig(n, start_date, end_date):
 
 
 @app.callback(
-    Output("live-weekly-pie-reports", "figure"),
+    Output("live-weekly-task-pie-reports", "figure"),
     [
         Input("interval-component-10min", "n_intervals"),
         Input("date-picker-range-weekly", "start_date"),
         Input("date-picker-range-weekly", "end_date"),
     ],
 )
-def make_pie_chart_fig(n, start_date, end_date):
+def make_weekly_pie_chart_fig(n, start_date, end_date):
     return _make_pie_chart_fig(start_date, end_date)
 
 
