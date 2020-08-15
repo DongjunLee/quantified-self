@@ -4,7 +4,7 @@ import arrow
 import boto3
 import json
 
-from date_unit import DateUnit
+from date_unit import DateUnit, TaskGroup
 
 
 class DataHandler:
@@ -77,43 +77,38 @@ class DataHandler:
     def read_kpi(self):
         return self.read_file("kpi.json")
 
-    def make_task_reports(self, start_date, end_date, colors=None, date_unit=DateUnit.DAILY, return_base_dates=False):
+    def make_task_reports(
+        self,
+        start_date,
+        end_date,
+        colors=None,
+        date_unit=DateUnit.DAILY,
+        group_by=TaskGroup.TIME,
+        return_base_dates=False
+    ):
         start_date = arrow.get(start_date)
         end_date = arrow.get(end_date)
 
-        task_reports = {}
+        base_dates = self._make_base_dates(start_date, end_date, date_unit=date_unit)
+        task_reports = self._initialize_tass_reports(base_dates, group_by=group_by)
 
         if date_unit == DateUnit.DAILY:
-            base_dates = [date.replace(hour=0, minute=0) for date in arrow.Arrow.range("day", start_date, end_date)]
-
-            for c in self.TASK_CATEGORIES:
-                task_reports[c] = [0] * len(base_dates)
-
             for daily_index, r in enumerate(arrow.Arrow.range("day", start_date, end_date)):
                 offset_day = (arrow.now() - r).days
                 record_data = self.read_record(days=-offset_day)
 
                 activity_data = record_data.get("activity", {})
-                task_data = activity_data.get("task", [])
-                for t in task_data:
-                    project = t["project"]
-
-                    duration = (arrow.get(t["end_time"]) - arrow.get(t["start_time"])).seconds
-                    duration_hours = round(duration / 60 / 60, 1)
-
-                    task_reports[project][daily_index] += duration_hours
-
-                    # Color (For Task Stacked Bar)
-                    if colors is not None:
-                        if project not in colors:
-                            colors[project] = t["color"]
+                task_datas = activity_data.get("task", [])
+                for task_data in task_datas:
+                    self._mapping_task_data_to_reports(
+                        task_data,
+                        daily_index,
+                        task_reports,
+                        colors=colors,
+                        group_by=group_by,
+                    )
 
         elif date_unit == DateUnit.WEEKLY:
-            base_dates = self.get_weekly_base_of_range(start_date, end_date, weekday_value=self.BASE_WEEKDAY)
-
-            for c in self.TASK_CATEGORIES:
-                task_reports[c] = [0] * len(base_dates)
-
             weekly_index = 0
             for r in arrow.Arrow.range("day", start_date, end_date):
                 offset_day = (arrow.now() - r).days
@@ -125,24 +120,60 @@ class DataHandler:
                         break
 
                 activity_data = record_data.get("activity", {})
-                task_data = activity_data.get("task", [])
-                for t in task_data:
-                    project = t["project"]
-
-                    duration = (arrow.get(t["end_time"]) - arrow.get(t["start_time"])).seconds
-                    duration_hours = round(duration / 60 / 60, 1)
-
-                    task_reports[project][weekly_index] += duration_hours
-
-                    # Color (For Task Stacked Bar)
-                    if colors is not None:
-                        if project not in colors:
-                            colors[project] = t["color"]
+                task_datas = activity_data.get("task", [])
+                for task_data in task_datas:
+                    self._mapping_task_data_to_reports(
+                        task_data,
+                        weekly_index,
+                        task_reports,
+                        colors=colors,
+                        group_by=group_by,
+                    )
 
         if return_base_dates is True:
             base_dates = [d.format("YYYY-MM-DD HH:mm:ss") for d in base_dates]
             return base_dates, task_reports
         return task_reports
+
+    def _make_base_dates(self, start_date, end_date, date_unit=DateUnit.DAILY):
+        if date_unit == DateUnit.DAILY:
+            base_dates = [date.replace(hour=0, minute=0) for date in arrow.Arrow.range("day", start_date, end_date)]
+        elif date_unit == DateUnit.WEEKLY:
+            base_dates = self.get_weekly_base_of_range(start_date, end_date, weekday_value=self.BASE_WEEKDAY)
+        else:
+            raise ValueError("Invalid DateUnit")
+        return base_dates
+
+    def _initialize_tass_reports(self, base_dates, group_by=TaskGroup.TIME):
+        task_reports = {}
+        for c in self.TASK_CATEGORIES:
+            if group_by == TaskGroup.TIME:
+                task_reports[c] = [0] * len(base_dates)
+            elif group_by == TaskGroup.TASK_NAME:
+                task_reports[c] = []
+                for i in range(len(base_dates)):
+                    task_reports[c].append({})  # independent dict
+        return task_reports
+
+    def _mapping_task_data_to_reports(self, task_data, index, task_reports, colors=None, group_by=TaskGroup.TIME):
+        category = task_data["project"]
+
+        duration = (arrow.get(task_data["end_time"]) - arrow.get(task_data["start_time"])).seconds
+        duration_hours = round(duration / 60 / 60, 1)
+
+        if group_by == TaskGroup.TIME:
+            task_reports[category][index] += duration_hours
+        elif group_by == TaskGroup.TASK_NAME:
+            task_name = task_data["description"].split(" - ")[1]  # FIXED
+            if task_name in task_reports[category][index]:
+                task_reports[category][index][task_name] += duration_hours
+            else:
+                task_reports[category][index][task_name] = duration_hours
+
+        # Color (For Task Stacked Bar)
+        if colors is not None:
+            if category not in colors:
+                colors[category] = task_data["color"]
 
     def get_daily_base_of_range(self, start_date, end_date):
         base_dates = []

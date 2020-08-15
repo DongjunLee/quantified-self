@@ -256,7 +256,7 @@ def make_dashboard_content():
                 ],
                 card_id=f"weekly_{task_category_lower}_card",
                 title_text=task_category,
-                size=2
+                size=3
             )
         )
 

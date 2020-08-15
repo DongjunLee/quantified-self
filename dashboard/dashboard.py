@@ -1,18 +1,32 @@
 import arrow
 
+import dash_html_components as html
+
 from data_handler import DataHandler
-from date_unit import DateUnit
+from date_unit import DateUnit, TaskGroup
 
 
 data_handler = DataHandler()
 
 start_date = arrow.now().shift(days=-14)
 end_date = arrow.now()
-this_week_task_reports = data_handler.make_task_reports(start_date, end_date, date_unit=DateUnit.WEEKLY)
 
+this_week_time_task_reports = data_handler.make_task_reports(
+    start_date,
+    end_date,
+    date_unit=DateUnit.WEEKLY,
+    group_by=TaskGroup.TIME,
+)
+this_week_task_name_task_reports = data_handler.make_task_reports(
+    start_date,
+    end_date,
+    date_unit=DateUnit.WEEKLY,
+    group_by=TaskGroup.TASK_NAME,
+)
 
 
 def get_background_color(value, thresholds=[]):
+    """ Based on KPI """
     background_color = "white"
     if value is None or len(thresholds) == 0:
         return {"background-color": background_color}
@@ -139,11 +153,25 @@ def _update_weekly_task_category(weekly_kpi):
         if task_category == "Empty":
             continue
 
-        task_hour = round(this_week_task_reports[task_category][-1], 1)
+        task_hour = round(this_week_time_task_reports[task_category][-1], 1)
         total_hour += task_hour
 
+        task_html = html.Div([
+            html.Span(task_hour),
+            html.Hr(),
+        ])
+
+        task_list = html.Ul([], style={"text-align": "left"})
+        for task_name, each_task_hour in sorted(
+            this_week_task_name_task_reports[task_category][-1].items(),
+            key=lambda x: x[1],
+            reverse=True,
+        ):
+            task_list.children.append(html.Li(f"{task_name} : {round(each_task_hour, 1)}"))
+        task_html.children.append(task_list)
+
         results.append(get_background_color(task_hour, weekly_kpi.get(task_category.lower(), [])))
-        results.append(task_hour)
+        results.append(task_html)
 
     total_hour_result = [
         get_background_color(total_hour, weekly_kpi["task_hour"]),
