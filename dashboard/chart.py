@@ -29,23 +29,24 @@ def _make_daily_schedule_fig(date):
     else:
         record_data = data_handler.read_record(days=-days_diff)
 
-    activity_data = record_data["activity"]
-    task_data = activity_data["task"]
+    activity_data = record_data.get("activity", {})
+    task_data = activity_data.get("task", [])
 
     toggl_projects = [data["project"] for data in task_data]
-    colors = {}
+    colors = {"Empty": "#DEDEDE"}
     for data in task_data:
         colors[data["project"]] = data["color"]
 
     base_date = date
     tomorrow_base_date = arrow.get(base_date).shift(days=+1).format("YYYY-MM-DD")
 
+    DUMMY_RESOURCE = "Empty"
     df = [  # Labeling scores
-        dict(Task=5, Start=base_date, Finish=base_date, Resource=toggl_projects[0]),
-        dict(Task=4, Start=base_date, Finish=base_date, Resource=toggl_projects[0]),
-        dict(Task=3, Start=base_date, Finish=base_date, Resource=toggl_projects[0]),
-        dict(Task=2, Start=base_date, Finish=base_date, Resource=toggl_projects[0]),
-        dict(Task=1, Start=base_date, Finish=base_date, Resource=toggl_projects[0]),
+        dict(Task=5, Start=base_date, Finish=base_date, Resource=DUMMY_RESOURCE),
+        dict(Task=4, Start=base_date, Finish=base_date, Resource=DUMMY_RESOURCE),
+        dict(Task=3, Start=base_date, Finish=base_date, Resource=DUMMY_RESOURCE),
+        dict(Task=2, Start=base_date, Finish=base_date, Resource=DUMMY_RESOURCE),
+        dict(Task=1, Start=base_date, Finish=base_date, Resource=DUMMY_RESOURCE),
     ]
 
     # Labeling projects
@@ -102,7 +103,7 @@ def _make_daily_schedule_fig(date):
         height=500,
     )
 
-    happy_data = activity_data["happy"]
+    happy_data = activity_data.get("happy", [])
 
     if len(happy_data) > 0:
         xs = [arrow.get(d["time"]).format("YYYY-MM-DD HH:mm:ss") for d in happy_data]
@@ -241,8 +242,8 @@ def _make_task_stacked_bar_fig(start_date, end_date, date_unit=DateUnit.DAILY):
 
 
 def _make_pie_chart_fig(start_date, end_date):
-    start_date = arrow.get(start_date)
-    end_date = arrow.get(end_date)
+    start_date = arrow.get(start_date).replace(tzinfo='Asia/Seoul')
+    end_date = arrow.get(end_date).replace(tzinfo='Asia/Seoul')
 
     categories = copy.deepcopy(data_handler.TASK_CATEGORIES)
     categories.append("Empty")
@@ -325,13 +326,12 @@ def _make_pie_chart_fig(start_date, end_date):
     fig.update_traces(
         hole=.3, hoverinfo="label+percent+name", marker={"colors": pie_colors}
     )
-
     return fig
 
 
 def _make_summary_line_fig(start_date, end_date):
-    start_date = arrow.get(start_date)
-    end_date = arrow.get(end_date)
+    start_date = arrow.get(start_date).replace(tzinfo='Asia/Seoul')
+    end_date = arrow.get(end_date).replace(tzinfo='Asia/Seoul')
 
     summary_data = []
 
@@ -383,8 +383,8 @@ def _make_summary_line_fig(start_date, end_date):
 
 
 def _make_calendar_heatmap_fig(start_date, end_date):
-    start_date = arrow.get(start_date)
-    end_date = arrow.get(end_date)
+    start_date = arrow.get(start_date).replace(tzinfo='Asia/Seoul')
+    end_date = arrow.get(end_date).replace(tzinfo='Asia/Seoul')
 
     categories = ["BAT", "Diary", "Exercise"]
 
