@@ -386,7 +386,7 @@ def _make_calendar_heatmap_fig(start_date, end_date):
     start_date = arrow.get(start_date).replace(tzinfo='Asia/Seoul')
     end_date = arrow.get(end_date).replace(tzinfo='Asia/Seoul')
 
-    categories = ["BAT", "Diary", "Exercise"]
+    categories = ["BAT", "Blog", "Diary", "Exercise"]
 
     dates = []
 
@@ -396,12 +396,19 @@ def _make_calendar_heatmap_fig(start_date, end_date):
 
     for r in arrow.Arrow.range("day", start_date, end_date):
         offset_day = (arrow.now() - r).days
-        record_data = data_handler.read_record(days=-offset_day)
-        summary = record_data.get("summary", {})
+        habit_data = data_handler.read_habit(days=-offset_day)
 
         for i, category in enumerate(categories):
-            do_category = summary.get(f"do_{category.lower()}", False)
-            z[i].append(int(do_category))
+            category = category.lower()
+            do_category = f"do_{category}"
+            if do_category in habit_data:  # metric_v0 format
+                habit_point = int(habit_data[do_category])
+            elif category in habit_data:  # metric_v1 format
+                habit_point = int(habit_data[category])
+            else:
+                habit_point = 0
+
+            z[i].append(habit_point)
 
         dates.append(r.format("YYYY-MM-DD"))
 

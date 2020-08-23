@@ -74,6 +74,13 @@ class DataHandler:
         record_data = self.read_record(days=days)
         return record_data.get("summary", {})
 
+    def read_habit(self, days=0):
+        summary_data = self.read_summary(days=days)
+        if "habit" in summary_data:
+            return summary_data["habit"]
+        else:
+            return summary_data
+
     def read_kpi(self):
         return self.read_file("kpi.json")
 
