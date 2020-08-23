@@ -36,4 +36,4 @@ class Fitbit:
                 "end_time": s["endTime"]
             }
             datas.append(data)
-        return datas
+        return datas, sleep_data["summary"]

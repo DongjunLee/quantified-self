@@ -168,6 +168,8 @@ class Webhook(object):
                     Summary().record_exercise()
                 if "BAT" in msg:
                     Summary().record_bat()
+                if "Blog" in msg:
+                    Summary().record_blog()
 
         self.slackbot.send_message(
             text=msg, channel=Config.slack.channel.get("TASK", "#general")

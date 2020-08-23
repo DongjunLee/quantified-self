@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+import collections
+import os
+import re
 
 import arrow
 import boto3
 import json
-import os
-import re
 import requests
 
 from hbconfig import Config
@@ -115,12 +116,21 @@ class DataHandler(object):
             self.s3_client.upload_file(file_path, bucket_name, object_key)
 
     def edit_record(self, data, days=0):
+        def update(d, u):
+            """ dictionary update recursively  """
+            for k, v in u.items():
+                if isinstance(v, collections.abc.Mapping):
+                    d[k] = update(d.get(k, {}), v)
+                else:
+                    d[k] = v
+            return d
+
         record = self.read_record(days=days)
         if isinstance(data, tuple):
             record[data[0]] = data[1]
         elif isinstance(data, dict):
-            for k, v in data.items():
-                record[k] = v
+            update(record, data)
+
         self.write_record(record, days=days)
 
     def edit_record_with_category(self, category, data, days=0):
@@ -175,6 +185,18 @@ class DataHandler(object):
         summary_data.update(data)
         self.edit_record(("summary", summary_data), days=days)
 
+    def read_habit(self, days=0):
+        summary_data = self.read_summary(days=days)
+        if "habit" in summary_data:
+            return summary_data["habit"]
+        else:
+            return summary_data
+
+    def edit_habit(self, data, days=0):
+        habit_data = self.read_habit(days=days)
+        habit_data.update(data)
+        self.edit_summary({"habit": habit_data}, days=days)
+
     def read_cache(self, fname="cache.json"):
         return self.read_file(fname)
 
@@ -221,3 +243,22 @@ class DataHandler(object):
 
     def read_log_data(self, fname):
         return self.read_text(fname, fpath=self.log_data_path)
+
+    def read_metric(self):
+        metric_path = Config.metric.file_path
+        metric = self.read_file(metric_path)
+        if metric == {}:
+            raise ValueError("Error. check metric_path")
+
+        Metric = collections.namedtuple("Metric", "meta total attention happy habit productive sleep repeat_task holiday_policy")
+        return Metric(
+            meta=metric["meta"],
+            total=metric["total"],
+            attention=metric["detail"]["attention"],
+            happy=metric["detail"]["happy"],
+            habit=metric["detail"]["habit"],
+            productive=metric["detail"]["productive"],
+            sleep=metric["detail"]["sleep"],
+            repeat_task=metric["detail"]["repeat_task"],
+            holiday_policy=metric["holiday_policy"],
+        )
