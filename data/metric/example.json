@@ -1,0 +1,49 @@
+{
+	"meta": {
+		"start_date": "",
+		"end_date": "",
+		"description": ""
+	},
+	"total": {
+		"attention": 20,
+		"happy": 10,
+		"productive": 30,
+		"sleep": 20,
+		"repeat_task": 10,
+		"habit": 15
+	},
+	"detail": {
+		"attention": {
+			"base": 60,
+			"unit": [1, 2, 3, 4, 5],
+			"default": 3
+		},
+		"habit": {
+			"bat": 5,
+			"exercise": 5,
+			"diary": 5
+		},
+		"happy": {
+			"base": 60,
+			"unit": [1, 2, 3, 4, 5],
+			"default": 3
+		},
+		"productive": {
+			"github": 10,
+			"toggl": 30,
+			"todoist": 50,
+			"rescue_time": 10
+		},
+		"sleep": {
+			"policy": "base_duration",
+			"base_duration": 700
+		},
+    "repeat_task": {
+      "point": 15
+    }
+	},
+	"holiday_policy": {
+		"base": 50,
+		"ratio": 0.5
+	}
+}
