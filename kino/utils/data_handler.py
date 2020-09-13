@@ -197,8 +197,21 @@ class DataHandler(object):
         habit_data.update(data)
         self.edit_summary({"habit": habit_data}, days=days)
 
+    def read_detail(self, days=0):
+        record_data = self.read_record(days=days)
+        return record_data.get("detail", {})
+
+    def edit_detail(self, category, data, days=0):
+        record = self.read_record(days=days)
+        detail_data = record.get("detail", {})
+        detail_data[category] = data
+        self.edit_record(("detail", detail_data), days=days)
+
     def read_cache(self, fname="cache.json"):
-        return self.read_file(fname)
+        try:
+            return self.read_file(fname)
+        except:
+            return {}
 
     def edit_cache(self, data, fname="cache.json"):
         cache = self.read_cache(fname=fname)

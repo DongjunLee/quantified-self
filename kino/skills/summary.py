@@ -178,7 +178,7 @@ class Summary(object):
         todoist_point = TodoistManager().get_point()
 
         data = {
-            "productive_details": {
+            "productives": {
                 "rescue_time": round(rescue_time_point * 100) / 100,
                 "toggl": round(toggl_point * 100) / 100,
                 "github": round(github_point * 100) / 100,
@@ -261,8 +261,8 @@ class Summary(object):
 
             return Score.percent(sleep_time, 100, 700)
         elif policy == "fitbit":
-            summary_data = self.data_handler.read_summary()
-            sleep_summary = summary_data["sleep_details"]
+            detail_data = self.data_handler.read_detail()
+            sleep_summary = detail_data["sleep"]
             return self.__get_fitbit_sleep_score(sleep_summary)
 
     def __get_fitbit_sleep_score(self, summary):
@@ -283,7 +283,7 @@ class Summary(object):
         sleep_data, sleep_summary_data = fitbit.get_sleeps()
 
         self.data_handler.edit_activity("sleep", sleep_data)
-        self.data_handler.edit_summary({"sleep_details": sleep_summary_data})
+        self.data_handler.edit_detail("sleep", sleep_summary_data)
 
     def __repeat_task_score(self):
         trello = TrelloManager()
