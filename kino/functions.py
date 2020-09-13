@@ -71,8 +71,8 @@ class Functions(object):
 
     def feed_notify(self):
         """
-        keyword: ["feed test"]
-        description: "Feed Test"
+        keyword: [["피드", "알다"], ["피드", "있다"], ["새 소식", "있다"]]
+        description: "Feed"
         icon: ":spock-hand: "
         """
 
@@ -131,6 +131,12 @@ class Functions(object):
         self._reset_data()
 
     def activity_task_sync(self):
+        """
+        keyword: ["토글 싱크"]
+        description: "Toggl <-> Task Sync"
+        icon: ":tornado: "
+        """
+
         toggl = TogglManager(slackbot=self.slackbot)
         toggl.sync_task()
 
