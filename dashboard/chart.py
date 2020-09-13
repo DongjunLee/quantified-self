@@ -120,8 +120,13 @@ def _make_daily_schedule_fig(date):
         fig.add_trace(scatter_trace)
 
     # Annotations
+    up_index, down_index = -1, -1
+
+    up_ays = [i for i in range(30, 200, 20)]
+    down_ays = [-i for i in up_ays]
+
     annotations = []
-    for index, d in enumerate(fig["data"]):
+    for d in fig["data"]:
         if d["text"] is None:
             continue
 
@@ -155,13 +160,14 @@ def _make_daily_schedule_fig(date):
             if type(end_date) != datetime.datetime:
                 end_date = parser.parse(end_date)
 
-            up_ays = [-50, -90, -70, -110]
-            down_ays = [50, 90, 70, 110]
-
             if start_score > 2:  # large than 3
-                ays = up_ays
-            else:
                 ays = down_ays
+                down_index += 1
+                index = down_index
+            else:
+                ays = up_ays
+                up_index += 1
+                index = up_index
 
             ay = ays[index % len(ays)]
 
@@ -278,7 +284,7 @@ def _make_pie_chart_fig(start_date, end_date):
             task_reports[project][weekly_index] += duration_hours
 
             # Color
-            if project not in colors:
+            if project not in colors and "color" in t:
                 colors[project] = t["color"]
 
     pie_chart_count = weekly_index + 1
