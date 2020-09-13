@@ -21,11 +21,13 @@ from dashboard import (
 from index import (
     HABITS_DAILY_TAP,
     HABITS_WEEKLY_TAP,
+    HABITS_ANALYSIS_TAP,
     HABITS_TAB_LIST,
     make_app_layout,
     make_dashboard_content,
     make_habits_daily_content,
     make_habits_weekly_content,
+    make_habits_analysis_content,
 )
 from data_handler import DataHandler
 from date_unit import DateUnit
@@ -58,11 +60,15 @@ def render_page_content(pathname):
     if pathname == "/":  # Dashboard Tab
         return make_dashboard_content()
 
-    elif pathname == f"/{HABITS_DAILY_TAP}":
-        return make_habits_daily_content(arrow.now())
+    habit_tab_contents = [
+        (HABITS_DAILY_TAP, make_habits_daily_content),
+        (HABITS_WEEKLY_TAP, make_habits_weekly_content),
+        (HABITS_ANALYSIS_TAP, make_habits_analysis_content),
+    ]
 
-    elif pathname == f"/{HABITS_WEEKLY_TAP}":
-        return make_habits_weekly_content(arrow.now())
+    for (tab, content_function) in habit_tab_contents:
+        if pathname == f"/{tab}":
+            return content_function(arrow.now())
 
 
 """
@@ -76,14 +82,14 @@ def render_page_content(pathname):
         Output(component_id='daily_task_hour_value', component_property='children'),
         Output(component_id='daily_sleep_hour_card', component_property='style'),
         Output(component_id='daily_sleep_hour_value', component_property='children'),
-        Output(component_id='daily_remain_hour_card', component_property='style'),
-        Output(component_id='daily_remain_hour_value', component_property='children'),
-        Output(component_id='daily_exercise_card', component_property='style'),
-        Output(component_id='daily_exercise_value', component_property='children'),
-        Output(component_id='daily_diary_card', component_property='style'),
-        Output(component_id='daily_diary_value', component_property='children'),
         Output(component_id='daily_bat_card', component_property='style'),
         Output(component_id='daily_bat_value', component_property='children'),
+        Output(component_id='daily_blog_card', component_property='style'),
+        Output(component_id='daily_blog_value', component_property='children'),
+        Output(component_id='daily_diary_card', component_property='style'),
+        Output(component_id='daily_diary_value', component_property='children'),
+        Output(component_id='daily_exercise_card', component_property='style'),
+        Output(component_id='daily_exercise_value', component_property='children'),
     ],
     [Input(component_id='interval-component-10min', component_property='n_intervals')]
 )
@@ -95,6 +101,8 @@ def update_daily(n):
     [
         Output(component_id='weekly_bat_count_card', component_property='style'),
         Output(component_id='weekly_bat_count_value', component_property='children'),
+        Output(component_id='weekly_blog_count_card', component_property='style'),
+        Output(component_id='weekly_blog_count_value', component_property='children'),
         Output(component_id='weekly_diary_count_card', component_property='style'),
         Output(component_id='weekly_diary_count_value', component_property='children'),
         Output(component_id='weekly_exercise_count_card', component_property='style'),

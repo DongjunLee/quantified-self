@@ -8,10 +8,12 @@ from data_handler import DataHandler
 
 HABITS_DAILY_TAP = "habits_daily"
 HABITS_WEEKLY_TAP = "habits_weekly"
+HABITS_ANALYSIS_TAP = "habits_analysis"
 
 HABITS_TAB_LIST = [
     HABITS_DAILY_TAP,
-    HABITS_WEEKLY_TAP
+    HABITS_WEEKLY_TAP,
+    HABITS_ANALYSIS_TAP,
 ]
 
 
@@ -141,21 +143,21 @@ def make_dashboard_content():
         size=2,
     )
 
-    daily_remain_hour_card = make_card_html(
+    daily_bat_card = make_card_html(
         [
-            html.P(id="daily_remain_hour_value")
+            html.P(id="daily_bat_value")
         ],
-        card_id="daily_remain_hour_card",
-        title_text="Remain Hour",
+        card_id="daily_bat_card",
+        title_text="BAT",
         size=2
     )
 
-    daily_exercise_card = make_card_html(
+    daily_blog_card = make_card_html(
         [
-            html.P(id="daily_exercise_value")
+            html.P(id="daily_blog_value")
         ],
-        card_id="daily_exercise_card",
-        title_text="Exercise",
+        card_id="daily_blog_card",
+        title_text="Blog",
         size=2
     )
 
@@ -168,12 +170,12 @@ def make_dashboard_content():
         size=2
     )
 
-    daily_bat_card = make_card_html(
+    daily_exercise_card = make_card_html(
         [
-            html.P(id="daily_bat_value")
+            html.P(id="daily_exercise_value")
         ],
-        card_id="daily_bat_card",
-        title_text="BAT",
+        card_id="daily_exercise_card",
+        title_text="Exercise",
         size=2
     )
 
@@ -187,13 +189,20 @@ def make_dashboard_content():
         size=3
     )
 
-    weekly_exercise_card = make_card_html(
+    weekly_bat_card = make_card_html(
         [
-            html.P(id="weekly_exercise_count_value")
-        ],
-        card_id="weekly_exercise_count_card",
-        title_text="Exercise Count",
-        size=3
+            html.P(id="weekly_bat_count_value")],
+        card_id="weekly_bat_count_card",
+        title_text="BAT Count",
+        size=2
+    )
+
+    weekly_blog_card = make_card_html(
+        [
+            html.P(id="weekly_blog_count_value")],
+        card_id="weekly_blog_count_card",
+        title_text="Blog Count",
+        size=2
     )
 
     weekly_diary_card = make_card_html(
@@ -201,15 +210,16 @@ def make_dashboard_content():
             html.P(id="weekly_diary_count_value")],
         card_id="weekly_diary_count_card",
         title_text="Diary Count",
-        size=3
+        size=2
     )
 
-    weekly_bat_card = make_card_html(
+    weekly_exercise_card = make_card_html(
         [
-            html.P(id="weekly_bat_count_value")],
-        card_id="weekly_bat_count_card",
-        title_text="BAT Count",
-        size=3
+            html.P(id="weekly_exercise_count_value")
+        ],
+        card_id="weekly_exercise_count_card",
+        title_text="Exercise Count",
+        size=2
     )
 
     dashboard_div = html.Div([
@@ -223,10 +233,10 @@ def make_dashboard_content():
             ], className="col-sm-12"),
             daily_task_hour_card,
             daily_sleep_hour_card,
-            daily_remain_hour_card,
-            daily_exercise_card,
-            daily_diary_card,
             daily_bat_card,
+            daily_blog_card,
+            daily_diary_card,
+            daily_exercise_card,
         ],
         class_name="container-fluid row")
     ])
@@ -237,10 +247,10 @@ def make_dashboard_content():
             html.Hr(),
         ], className="col-sm-12"),
         weekly_task_total_hour_card,
-        weekly_exercise_card,
-        weekly_diary_card,
         weekly_bat_card,
-
+        weekly_blog_card,
+        weekly_diary_card,
+        weekly_exercise_card,
         html.Div([
             html.Hr(),
         ], className="col-sm-12", style={"margin-bottom": "15px"}),
@@ -394,6 +404,16 @@ def make_habits_weekly_content(now):
     return html.Div(
         [
             weekly_task_card,
+        ],
+        className="container-fluid row",
+    )
+
+
+def make_habits_analysis_content(now):
+    # TODO:
+
+    return html.Div(
+        [
         ],
         className="container-fluid row",
     )

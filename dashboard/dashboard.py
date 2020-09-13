@@ -52,6 +52,7 @@ def _update_daily(daily_kpi):
     today_record_data = data_handler.read_record(redownload=True)
     activity_data = today_record_data.get("activity", {})
 
+    # Task & Sleep
     task_hour = 0
     today_tasks = activity_data.get("task", [])
     for t in today_tasks:
@@ -70,36 +71,20 @@ def _update_daily(daily_kpi):
             sleep_hour = (end_time - start_time).seconds
             sleep_hour = sleep_hour / 60 / 60
 
-    remain_hour = 24 - task_hour - sleep_hour
-
-    today_summary = today_record_data.get("summary", {})
-
-    exercise = "X"
-    if "do_exercise" in today_summary and today_summary["do_exercise"]:
-        exercise= "O"
-
-    diary = "X"
-    if "do_diary" in today_summary and today_summary["do_diary"]:
-        diary= "O"
-
-    bat = "X"
-    if "do_bat" in today_summary and today_summary["do_bat"]:
-        bat= "O"
-
     results = [
         get_background_color(task_hour, daily_kpi["task_hour"]),
         round(task_hour, 1),
         get_background_color(sleep_hour, daily_kpi["sleep_hour"]),
         round(sleep_hour, 1),
-        get_background_color(remain_hour),
-        round(remain_hour, 1),
-        get_background_color(exercise, daily_kpi["exercise"]),
-        exercise,
-        get_background_color(diary, daily_kpi["diary"]),
-        diary,
-        get_background_color(bat, daily_kpi["bat"]),
-        bat
     ]
+
+    # Habits
+    habit_results = data_handler.read_habit_results()
+    for habit, result in zip(data_handler.HABITS, habit_results):
+        results += [
+            get_background_color(habit, daily_kpi[habit]),
+            result
+        ]
     return results
 
 
@@ -110,39 +95,33 @@ def _update_weekly(weekly_kpi):
     WEEKDAY_SUNDAY = 6
     sunday_dates = data_handler.get_weekly_base_of_range(start_date, end_date, weekday_value=WEEKDAY_SUNDAY)
 
-    bat_count = 0
-    diary_count = 0
-    exercise_count = 0
-
+    weekly_habit_results = []
     weekly_index = 0
     for r in arrow.Arrow.range("day", start_date, end_date):
         offset_day = (arrow.now() - r).days
-        record_data = data_handler.read_record(days=-offset_day)
-
-        summary_data = record_data.get("summary", None)
-        if summary_data is None:
-            pass
-        else:
-            if "do_bat" in summary_data and summary_data["do_bat"] is True:
-                bat_count += 1
-            if "do_diary" in summary_data and summary_data["do_diary"] is True:
-                diary_count += 1
-            if "do_exercise" in summary_data and summary_data["do_exercise"] is True:
-                exercise_count += 1
+        weekly_habit_results.append(data_handler.read_habit_results(days=-offset_day))
 
         for weekly_index, base_date in enumerate(sunday_dates):
             days_diff = (base_date - r).days
             if days_diff < 7 and days_diff >= 0:
                 break
 
-    results = [
-        get_background_color(bat_count, weekly_kpi["bat_count"]),
-        bat_count,
-        get_background_color(diary_count, weekly_kpi["diary_count"]),
-        diary_count,
-        get_background_color(exercise_count, weekly_kpi["exercise_count"]),
-        exercise_count,
-    ]
+    weekly_habit_counts = {}
+    for habit in data_handler.HABITS:
+        weekly_habit_counts[habit] = 0
+
+    for habit_results in weekly_habit_results:
+        for i in range(len(data_handler.HABITS)):
+            if habit_results[i] == "O":
+                habit = data_handler.HABITS[i]
+                weekly_habit_counts[habit] += 1
+
+    results = []
+    for habit, habit_count in weekly_habit_counts.items():
+        results += [
+            get_background_color(habit_count, weekly_kpi[f"{habit}_count"]),
+            habit_count,
+        ]
     return results
 
 

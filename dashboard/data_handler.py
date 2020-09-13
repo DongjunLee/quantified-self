@@ -26,6 +26,13 @@ class DataHandler:
         "Think",
     ]
 
+    HABITS = [
+        "bat",
+        "blog",
+        "diary",
+        "exercise"
+    ]
+
     BASE_WEEKDAY = 6  # Sunday
 
     GOOD_COLOR = "palegreen"
@@ -81,6 +88,20 @@ class DataHandler:
         else:
             return summary_data
 
+    def read_habit_results(self, days=0):
+        habit_data = self.read_habit(days=days)
+
+        habit_results = []
+        for habit in self.HABITS:
+            if (habit in habit_data and habit_data[habit]) or \
+                (f"do_{habit}" in habit_data and habit_data[f"do_{habit}"]):
+                habit_result = "O"
+            else:
+                habit_result = "X"
+
+            habit_results.append(habit_result)
+        return habit_results
+
     def read_kpi(self):
         return self.read_file("kpi.json")
 
@@ -97,7 +118,7 @@ class DataHandler:
         end_date = arrow.get(end_date)
 
         base_dates = self._make_base_dates(start_date, end_date, date_unit=date_unit)
-        task_reports = self._initialize_tass_reports(base_dates, group_by=group_by)
+        task_reports = self._initialize_task_reports(base_dates, group_by=group_by)
 
         if date_unit == DateUnit.DAILY:
             for daily_index, r in enumerate(arrow.Arrow.range("day", start_date, end_date)):
@@ -151,8 +172,9 @@ class DataHandler:
             raise ValueError("Invalid DateUnit")
         return base_dates
 
-    def _initialize_tass_reports(self, base_dates, group_by=TaskGroup.TIME):
+    def _initialize_task_reports(self, base_dates, group_by=TaskGroup.TIME):
         task_reports = {}
+
         for c in self.TASK_CATEGORIES:
             if group_by == TaskGroup.TIME:
                 task_reports[c] = [0] * len(base_dates)
@@ -164,6 +186,9 @@ class DataHandler:
 
     def _mapping_task_data_to_reports(self, task_data, index, task_reports, colors=None, group_by=TaskGroup.TIME):
         category = task_data["project"]
+        if category == "Empty":
+            print(task_data)
+            return  # Skip
 
         duration = (arrow.get(task_data["end_time"]) - arrow.get(task_data["start_time"])).seconds
         duration_hours = round(duration / 60 / 60, 1)
@@ -179,7 +204,7 @@ class DataHandler:
 
         # Color (For Task Stacked Bar)
         if colors is not None:
-            if category not in colors:
+            if category not in colors and "color" in task_data:
                 colors[category] = task_data["color"]
 
     def get_daily_base_of_range(self, start_date, end_date):
