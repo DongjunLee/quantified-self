@@ -410,10 +410,95 @@ def make_habits_weekly_content(now):
 
 
 def make_habits_analysis_content(now):
-    # TODO:
+
+    summary_total_card = make_card_html(
+        [
+            dcc.Graph(id="analysis_summary_total_chart"),
+        ],
+        title_text="Summary: Month x Total Average",
+        size=6
+    )
+
+    summary_corr_card = make_card_html(
+        [
+            dcc.Graph(id="analysis_summary_correlation_chart"),
+        ],
+        title_text="Summary: Correlation",
+        size=6
+    )
+
+    task_working_hour_card = make_card_html(
+        [
+            dcc.Graph(id="analysis_all_task_working_hour_chart"),
+        ],
+        title_text="Task: Month x WorkingHour",
+        size=6
+    )
+
+    task_scatter_card = make_card_html(
+        [
+            html.Div([
+                make_card_html([
+                    dcc.RangeSlider(
+                        id='all_task_working_minute_slider',
+                        min=1,
+                        max=360,
+                        step=5,
+                        value=[90, 360],
+                        marks={
+                            15: {"label": "15분"},
+                            30: {"label": "30분"},
+                            60: {"label": "1시간"},
+                            120: {"label": "2시간"},
+                            180: {"label": "3시간"},
+                            360: {"label": "6시간"},
+                        }
+                    ),
+                ], size=12, title_text="작업시간 (분)"),
+            ], className="container-fluid row"),
+            dcc.Graph(id="analysis_all_task_scatter_chart"),
+        ],
+        title_text="Task: HappyScore x AttentionScore with WorkingHour",
+        size=6
+    )
+
+    sleep_time_happy_card = make_card_html(
+        [
+            dcc.Graph(id="analysis_sleep_time_happy_chart"),
+        ],
+        title_text="SleepTime x Happy"
+    )
+    sleep_time_attention_card = make_card_html(
+        [
+            dcc.Graph(id="analysis_sleep_time_attention_chart"),
+        ],
+        title_text="SleepTime x Attention"
+    )
 
     return html.Div(
         [
+            html.Div(
+                [
+                    html.H4("Metric:"),
+                    dcc.Dropdown(
+                        id='metric_dropdown',
+                        options=[
+                            {'label': 'Metric_v0', 'value': 'metric_v0'},
+                            {'label': 'Metric_v1', 'value': 'metric_v1'},
+                        ],
+                        value='metric_v0',
+                        style={"width": "200px"},
+                    ),
+                ],
+                className="container-fluid row",
+                style={"margin-bottom": "15px"},
+            ),
+            summary_total_card,
+            summary_corr_card,
+            task_working_hour_card,
+            task_scatter_card,
+            sleep_time_happy_card,
+            sleep_time_attention_card,
         ],
         className="container-fluid row",
     )

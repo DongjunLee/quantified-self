@@ -12,6 +12,12 @@ from chart import (
     _make_pie_chart_fig,
     _make_summary_line_fig,
     _make_calendar_heatmap_fig,
+
+    _make_summary_chart_and_corr,
+    _make_sleep_happy_scatter_chart,
+    _make_sleep_attention_scatter_chart,
+    _make_task_working_hour_bar_chart,
+    _make_task_scatter_chart,
 )
 from dashboard import (
     _update_daily,
@@ -38,6 +44,7 @@ app.config["suppress_callback_exceptions"] = True
 
 data_handler = DataHandler()
 kpi = data_handler.read_kpi()
+metric_dfs = data_handler.read_record_df_by_metrics()
 
 tab_list = HABITS_TAB_LIST
 app.layout = make_app_layout()
@@ -220,6 +227,60 @@ def make_weekly_task_stacked_bar_fig(n, start_date, end_date):
 def make_weekly_pie_chart_fig(n, start_date, end_date):
     return _make_pie_chart_fig(start_date, end_date)
 
+
+
+@app.callback(
+    [
+        Output("analysis_summary_total_chart", "figure"),
+        Output("analysis_summary_correlation_chart", "figure"),
+    ],
+    [
+        Input("metric_dropdown", "value"),
+    ],
+)
+def make_summary_chart_fig(metric):
+    return _make_summary_chart_and_corr(metric_dfs[metric]["daily_summary"])
+
+
+@app.callback(
+    Output("analysis_sleep_time_happy_chart", "figure"),
+    [
+        Input("metric_dropdown", "value"),
+    ],
+)
+def make_sleep_happy_scatter_chart_fig(metric):
+    return _make_sleep_happy_scatter_chart(metric_dfs[metric]["sleep_activity"])
+
+
+@app.callback(
+    Output("analysis_sleep_time_attention_chart", "figure"),
+    [
+        Input("metric_dropdown", "value"),
+    ],
+)
+def make_sleep_attention_scatter_chart_fig(metric):
+    return _make_sleep_attention_scatter_chart(metric_dfs[metric]["sleep_activity"])
+
+
+@app.callback(
+    Output("analysis_all_task_working_hour_chart", "figure"),
+    [
+        Input("metric_dropdown", "value"),
+    ],
+)
+def make_task_working_hour_chart_fig(metric):
+    return _make_task_working_hour_bar_chart(metric_dfs[metric]["task_activity"])
+
+
+@app.callback(
+    Output("analysis_all_task_scatter_chart", "figure"),
+    [
+        Input("metric_dropdown", "value"),
+        Input("all_task_working_minute_slider", "value"),
+    ],
+)
+def make_task_scatter_chart_fig(metric, task_working_minutes):
+    return _make_task_scatter_chart(metric_dfs[metric]["task_activity"], task_working_minutes)
 
 
 if __name__ == "__main__":

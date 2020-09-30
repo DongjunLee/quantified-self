@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
+import json
+from pathlib import Path
+
 import arrow
 import boto3
-import json
+import pandas as pd
 
 from date_unit import DateUnit, TaskGroup
 
@@ -72,6 +75,151 @@ class DataHandler:
                 return {}
 
         return self.read_file(file_path)
+
+    def read_record_df_by_metrics(self):
+        metrics = [
+            {
+                "name": "metric_v0",
+                "start_date": "2017-01-30",
+                "end_date": "2020-08-23",
+            },
+            {
+                "name": "metric_v1",
+                "start_date": "2020-08-24",
+                "end_date": "2021-12-31",
+            },
+        ]
+
+        metric_dfs = {}
+        for m in metrics:
+            records = self.read_records_by_date(m["start_date"], m["end_date"])
+            metric_dfs[m["name"]] = {
+                "daily_summary": self._make_daily_summary_df(records),
+                "sleep_activity": self._make_sleep_activity_df(records),
+                "task_activity": self._make_task_activity_df(records),
+            }
+        return metric_dfs
+
+    def _make_daily_summary_df(self, records):
+        datas = []
+        for r in records:
+            activity_data = r.get("activity", None)
+            if activity_data is None:
+                continue
+
+            task_activity = activity_data.get("task", [])
+            sleep_activity = activity_data.get("sleep", [])
+
+            if len(task_activity) == 0 or len(sleep_activity) == 0:
+                continue
+
+            sleep_hour = None
+            for s in sleep_activity:
+                if s["is_main"]:
+                    end_time = s["end_time"]
+                    sleep_hour = (arrow.get(s["end_time"]) - arrow.get(s["start_time"])).seconds / 3600
+                    break
+
+            if sleep_hour is None:
+                continue
+
+            task_count = len(task_activity)
+            task_hour = 0
+            for t in task_activity:
+                task_hour += (arrow.get(t["end_time"]) - arrow.get(t["start_time"])).seconds / 3600
+
+            end_time = task_activity[0]["end_time"]
+
+            summary_data = r.get("summary", {})
+            data = {
+                "sleep_hour": sleep_hour,
+                "task_count": task_count,
+                "task_hour": task_hour,
+                "time": end_time,
+                "attention_score": summary_data.get("attention", 0),
+                "productive_score": summary_data.get("productive", 0),
+                "happy_score": summary_data.get("happy", 0),
+                "repeat_task_score": summary_data.get("repeat_task", 0),
+                "sleep_score": summary_data.get("sleep", 0),
+                "total_score": summary_data.get("total", 0),
+            }
+            datas.append(data)
+
+        return pd.DataFrame(datas)
+
+    def _make_sleep_activity_df(self, records):
+        datas = []
+        for r in records:
+            task_activity = r.get("activity", {}).get("task", [])
+            task_activity = [t for t in task_activity if "score" in t]
+            if len(task_activity) == 0:
+                continue
+
+            happy_activity = r.get("activity", {}).get("happy", [])
+            if len(happy_activity) == 0:
+                continue
+
+            sleep_activity = r.get("activity", {}).get("sleep", [])
+
+            end_time = None
+            sleep_time = None
+            for s in sleep_activity:
+                if s["is_main"]:
+                    end_time = s["end_time"]
+                    sleep_time = (arrow.get(s["end_time"]) - arrow.get(s["start_time"])).seconds / 60
+                    break
+
+            attention_score = r.get("summary", {}).get("attention", None)
+            happy_score = r.get("summary", {}).get("happy", None)
+
+            if attention_score is None or happy_score is None or sleep_time is None:
+                continue
+
+            data = {
+                "attention_score": attention_score,
+                "happy_score": happy_score,
+                "time": end_time,
+                "sleep_time": sleep_time,
+                "year": arrow.get(end_time).year,
+            }
+            datas.append(data)
+        return pd.DataFrame(datas)
+
+    def _make_task_activity_df(self, records, PAD_MINUTES=30):
+        datas = []
+        for r in records:
+            task_activity = r.get("activity", {}).get("task", [])
+            happy_activity = r.get("activity", {}).get("happy", [])
+
+            for h in happy_activity:
+                happy_time = arrow.get(h["time"])
+
+                for t in task_activity:
+                    task_start_time = arrow.get(t["start_time"]).shift(minutes=-PAD_MINUTES)
+                    task_end_time = arrow.get(t["end_time"]).shift(minutes=+PAD_MINUTES)
+
+                    if happy_time < task_start_time:
+                        break
+                    if task_start_time <= happy_time <= task_end_time:
+                        t["happy_score"] = h["score"]
+
+            datas += task_activity
+
+        df = pd.DataFrame(datas)
+        df["category"] = df["project"]
+        df["attention_score"] = df["score"]
+        return df
+
+    def read_records_by_date(self, start_date, end_date):
+        record_path = Path(self.record_path)
+
+        records = []
+        for f in record_path.iterdir():
+            if f.suffix != ".json":
+                continue
+            if start_date <= f.stem <= end_date:
+                records.append(self.read_file(f))
+        return records
 
     def read_acitivity(self, days=0):
         record_data = self.read_record(days=days)
