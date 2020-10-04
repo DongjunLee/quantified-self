@@ -439,24 +439,32 @@ def make_habits_analysis_content(now):
         [
             html.Div([
                 make_card_html([
+                    dcc.Dropdown(
+                        id='all_task_category_dropdown',
+                        options=[{"label": c, "value": c} for c in data_handler.TASK_CATEGORIES],
+                        value='Develop',
+                    ),
+                ], size=3, title_text="Category"),
+                make_card_html([
                     dcc.RangeSlider(
                         id='all_task_working_minute_slider',
-                        min=1,
-                        max=360,
+                        min=0,
+                        max=300,
                         step=5,
-                        value=[90, 360],
+                        value=[0, 300],
                         marks={
-                            15: {"label": "15분"},
                             30: {"label": "30분"},
                             60: {"label": "1시간"},
                             120: {"label": "2시간"},
                             180: {"label": "3시간"},
-                            360: {"label": "6시간"},
+                            240: {"label": "4시간"},
+                            300: {"label": "5시간"},
                         }
                     ),
-                ], size=12, title_text="작업시간 (분)"),
+                ], size=9, title_text="작업시간 (분)"),
             ], className="container-fluid row"),
             dcc.Graph(id="analysis_all_task_scatter_chart"),
+            dcc.Graph(id="analysis_all_task_correlation_chart"),
         ],
         title_text="Task: HappyScore x AttentionScore with WorkingHour",
         size=6

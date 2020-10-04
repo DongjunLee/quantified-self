@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import calendar
 import json
 from pathlib import Path
 
@@ -145,19 +146,26 @@ class DataHandler:
             }
             datas.append(data)
 
-        return pd.DataFrame(datas)
+        df = pd.DataFrame(datas)
+        df["year"] = df["time"].apply(lambda x: str(arrow.get(x).year))
+        df["month"] = df["time"].apply(lambda x: arrow.get(x).format("MM"))
+        df["day"] = df["time"].apply(lambda x: arrow.get(x).format("DDD"))
+        df = df.drop_duplicates(subset=["year", "day"])
+        return df
 
     def _make_sleep_activity_df(self, records):
         datas = []
         for r in records:
+            task_empty = False
             task_activity = r.get("activity", {}).get("task", [])
             task_activity = [t for t in task_activity if "score" in t]
             if len(task_activity) == 0:
-                continue
+                task_empty = True
 
+            happy_empty = False
             happy_activity = r.get("activity", {}).get("happy", [])
             if len(happy_activity) == 0:
-                continue
+                happy_empty = True
 
             sleep_activity = r.get("activity", {}).get("sleep", [])
 
@@ -176,14 +184,19 @@ class DataHandler:
                 continue
 
             data = {
+                "task_empty": task_empty,
+                "happy_empty": happy_empty,
                 "attention_score": attention_score,
                 "happy_score": happy_score,
                 "time": end_time,
                 "sleep_time": sleep_time,
-                "year": arrow.get(end_time).year,
+                "year": str(arrow.get(end_time).year),
             }
             datas.append(data)
-        return pd.DataFrame(datas)
+
+        df = pd.DataFrame(datas)
+        df["weekday"] = df["time"].apply(lambda x: calendar.day_name[arrow.get(x).isoweekday()-1])
+        return df
 
     def _make_task_activity_df(self, records, PAD_MINUTES=30):
         datas = []
@@ -198,6 +211,12 @@ class DataHandler:
                     task_start_time = arrow.get(t["start_time"]).shift(minutes=-PAD_MINUTES)
                     task_end_time = arrow.get(t["end_time"]).shift(minutes=+PAD_MINUTES)
 
+                    # TODO: change data
+                    if t["project"] == "BeAwesomeToday":
+                        t["project"] = "Review"
+                    if t["project"] == "Deep Learning":
+                        t["project"] = "Research"
+
                     if happy_time < task_start_time:
                         break
                     if task_start_time <= happy_time <= task_end_time:
@@ -208,6 +227,15 @@ class DataHandler:
         df = pd.DataFrame(datas)
         df["category"] = df["project"]
         df["attention_score"] = df["score"]
+
+        df["date"] = df["end_time"].apply(lambda x: arrow.get(x).format("YYYY-MM-DD"))
+        df["year"] = df["end_time"].apply(lambda x: str(arrow.get(x).year))
+        df["month"] = df["end_time"].apply(lambda x: arrow.get(x).format("MM"))
+        df["start_hour"] = df["start_time"].apply(lambda x: arrow.get(x).hour + arrow.get(x).minute / 60)
+
+        df["working_hours"] = df.apply(lambda x: (arrow.get(x.end_time) - arrow.get(x.start_time)).seconds / 3600, axis=1)
+        df["working_minutes"] = df.apply(lambda x: int((arrow.get(x.end_time) - arrow.get(x.start_time)).seconds / 60), axis=1)
+        df["working_hours_text"] = df["working_minutes"].apply(lambda x: f"{x//60}:{x%60:02d}")
         return df
 
     def read_records_by_date(self, start_date, end_date):

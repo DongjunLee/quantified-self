@@ -482,35 +482,35 @@ def _make_summary_chart_and_corr(df):
         x=list(corr_df.columns),
         y=list(corr_df.columns),
         color_continuous_scale=px.colors.sequential.Viridis,
+        range_color=[-1, 1],
     )
     return bar_fig, corr_fig
 
 
 def _make_sleep_happy_scatter_chart(df):
-    jittering_value = 0.4
+    df = df.loc[df["happy_empty"] == False]
 
-    df["weekday"] = df["time"].apply(lambda x: calendar.day_name[arrow.get(x).isoweekday()-1])
-    df["happy_score"] = df["happy_score"].apply(lambda x: x + random.uniform(-jittering_value, jittering_value))  # Jittering
-    df["year"] = df["year"].apply(lambda x: str(x))
+    jittering_value = 0.4
+    df["happy_score_j"] = df["happy_score"].apply(lambda x: x + random.uniform(-jittering_value, jittering_value))  # Jittering
 
     fig = px.scatter(
         df,
         x="sleep_time",
-        y="happy_score",
+        y="happy_score_j",
         color="year",
         category_orders={
             "year": ["2017", "2018", "2019", "2020"],
             "weekday": list(calendar.day_name),
         },
         facet_col="weekday",
-        facet_col_wrap=4,
         opacity=0.7,
         title=f"SleepTime x Happy Correlation: {df.corr()['sleep_time']['happy_score']}",
+        marginal_x="violin",
     )
 
     max_sleep_time = df["sleep_time"].max()
 
-    time_values = list(range(0, round(max_sleep_time)+30, 60))
+    time_values = list(range(0, round(max_sleep_time)+30, 120))
     fig.update_xaxes({
         "tickmode": "array",
         "tickvals": time_values,
@@ -520,30 +520,29 @@ def _make_sleep_happy_scatter_chart(df):
 
 
 def _make_sleep_attention_scatter_chart(df):
-    jittering_value = 0.4
+    df = df.loc[df["task_empty"] == False]
 
-    df["weekday"] = df["time"].apply(lambda x: calendar.day_name[arrow.get(x).isoweekday()-1])
-    df["attention_score"] = df["attention_score"].apply(lambda x: x + random.uniform(-jittering_value, jittering_value))  # Jittering
-    df["year"] = df["year"].apply(lambda x: str(x))
+    jittering_value = 0.4
+    df["attention_score_j"] = df["attention_score"].apply(lambda x: x + random.uniform(-jittering_value, jittering_value))  # Jittering
 
     fig = px.scatter(
         df,
         x="sleep_time",
-        y="attention_score",
+        y="attention_score_j",
         color="year",
         category_orders={
             "year": ["2017", "2018", "2019", "2020"],
             "weekday": list(calendar.day_name),
         },
         facet_col="weekday",
-        facet_col_wrap=4,
         opacity=0.7,
         title=f"SleepTime x Attention Correlation: {df.corr()['sleep_time']['attention_score']}",
+        marginal_x="violin",
     )
 
     max_sleep_time = df["sleep_time"].max()
 
-    time_values = list(range(0, round(max_sleep_time)+30, 60))
+    time_values = list(range(0, round(max_sleep_time)+30, 120))
     fig.update_xaxes({
         "tickmode": "array",
         "tickvals": time_values,
@@ -553,13 +552,7 @@ def _make_sleep_attention_scatter_chart(df):
 
 
 def _make_task_working_hour_bar_chart(df):
-    df["year"] = df["end_time"].apply(lambda x: str(arrow.get(x).year))
-    df["month"] = df["end_time"].apply(lambda x: arrow.get(x).format("MM"))
-    df["working_hour"] = df.apply(lambda x: (arrow.get(x.end_time) - arrow.get(x.start_time)).seconds / 3600, axis=1)
-    df["category"] = df["project"]
-
-    df = df.groupby(["year", "month", "category"]).sum().reset_index()
-
+    # TODO: use Toggl
     colors = {
         'Empty': '#DEDEDE',
         'Article': '#e36a00',
@@ -578,9 +571,9 @@ def _make_task_working_hour_bar_chart(df):
     }
 
     fig = px.bar(
-        df,
+        df.groupby(["year", "month", "category"]).sum().reset_index(),
         x="month",
-        y="working_hour",
+        y="working_hours",
         color="category",
         color_discrete_map=colors,
         category_orders={
@@ -594,65 +587,43 @@ def _make_task_working_hour_bar_chart(df):
     return fig
 
 
-def _make_task_scatter_chart(df, task_working_minutes):
-    df["date"] = df["end_time"].apply(lambda x: arrow.get(x).format("YYYY-MM-DD"))
-    # df["start_time"] = df["start_time"].apply(lambda x: arrow.get(x).hour * 60 + arrow.get(x).minute)
-    df["working_minutes"] = df.apply(lambda x: int((arrow.get(x.end_time) - arrow.get(x.start_time)).seconds / 60), axis=1)
-    df["working_hours"] = df["working_minutes"].apply(lambda x: f"{x//60}:{x%60:02d}")
-
-    df["category"] = df["project"]
-    df["size"] = df["working_minutes"].apply(lambda x: x/40)
-
+def _make_task_scatter_chart_and_corr(df, category, task_working_minutes):
+    df = df.loc[df["category"] == category]
     df = df.loc[(df["working_minutes"] >= task_working_minutes[0]) & (df["working_minutes"] <= task_working_minutes[1])]
 
     jittering_value = 0.35
-    df[['attention_score']] = df[['score']].fillna(value=3)
+
     df["attention_score_j"] = df["attention_score"].apply(lambda x: x + random.uniform(-jittering_value, jittering_value))  # Jittering
-
-    df[['happy_score']] = df[['happy_score']].fillna(value=3)
     df["happy_score_j"] = df["happy_score"].apply(lambda x: x + random.uniform(-jittering_value, jittering_value))  # Jittering
+    df.dropna(inplace=True)
 
-    colors = {
-        'Empty': '#DEDEDE',
-        'Article': '#e36a00',
-        'Review': '#566614',
-        'Book': '#bf7000',
-        'Management': '#990099',
-        'Develop': '#0b83d9',
-        'Meeting': '#9e5bd9',
-        'Think': '#2da608',
-        'Seminar': '#06a893',
-        'Blog': '#566614',
-        'Exercise': '#525266',
-        'Research': '#465bb3',
-        'MOOC': '#06a893',
-        'Planning': '#d94182'
-    }
-
-    fig = px.scatter(
+    scatter_matrix_fig = px.scatter_matrix(
         df,
-        x="happy_score_j",
-        y="attention_score_j",
-        size="size",
-        size_max=15,
-        color="category",
-        color_discrete_map=colors,
+        dimensions=["happy_score_j", "attention_score_j", "working_hours", "start_hour"],
+        color="year",
+        # color_discrete_map=colors,
         category_orders={
             "category": data_handler.TASK_CATEGORIES,
             "year": ["2017", "2018", "2019", "2020"],
             "weekday": list(calendar.day_name),
         },
-        hover_data=["start_time", "end_time", "description", "attention_score", "happy_score", "working_hours"],
-        height=700,
-        opacity=0.5,
-        range_x=[0.5, 5.5],
-        range_y=[0.5, 5.5],
+        opacity=0.7,
+        hover_data=[
+            "start_time",
+            "end_time",
+            "description",
+            "attention_score",
+            "happy_score",
+            "working_hours_text"
+        ],
     )
 
-    time_values = list(range(0, 1440+1, 60))
-    fig.update_xaxes({
-        "tickmode": "array",
-        "tickvals": time_values,
-        "ticktext": [f"{t//60:02d}:{t%60:02d}" for t in time_values],
-    })
-    return fig
+    corr_df = df[["attention_score", "happy_score", "working_hours", "start_hour"]].corr()
+    corr_fig = px.imshow(
+        corr_df.to_numpy(),
+        x=list(corr_df.columns),
+        y=list(corr_df.columns),
+        color_continuous_scale=px.colors.sequential.Viridis,
+        range_color=[-1, 1],
+    )
+    return scatter_matrix_fig, corr_fig

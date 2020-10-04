@@ -17,7 +17,7 @@ from chart import (
     _make_sleep_happy_scatter_chart,
     _make_sleep_attention_scatter_chart,
     _make_task_working_hour_bar_chart,
-    _make_task_scatter_chart,
+    _make_task_scatter_chart_and_corr,
 )
 from dashboard import (
     _update_daily,
@@ -273,14 +273,18 @@ def make_task_working_hour_chart_fig(metric):
 
 
 @app.callback(
-    Output("analysis_all_task_scatter_chart", "figure"),
+    [
+        Output("analysis_all_task_scatter_chart", "figure"),
+        Output("analysis_all_task_correlation_chart", "figure"),
+    ],
     [
         Input("metric_dropdown", "value"),
+        Input("all_task_category_dropdown", "value"),
         Input("all_task_working_minute_slider", "value"),
     ],
 )
-def make_task_scatter_chart_fig(metric, task_working_minutes):
-    return _make_task_scatter_chart(metric_dfs[metric]["task_activity"], task_working_minutes)
+def make_task_scatter_chart_fig(metric, category, task_working_minutes):
+    return _make_task_scatter_chart_and_corr(metric_dfs[metric]["task_activity"], category, task_working_minutes)
 
 
 if __name__ == "__main__":
