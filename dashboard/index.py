@@ -91,6 +91,7 @@ def make_card_html(
     body,
     card_id=None,
     title_text=None,
+    description_text=None,
     size=12,
     background_color="white",
     class_name="",
@@ -116,8 +117,12 @@ def make_card_html(
 
     card_html.children[0].children.append(div)
 
+    if description_text is not None:
+        description = html.P(description_text)
+        card_html.children[0].children[0].children.insert(0, description)
+
     if title_text is not None:
-        title = html.H6(title_text, className="card-title")
+        title = html.H5(title_text, className="card-title")
         card_html.children[0].children[0].children.insert(0, title)
 
     return card_html
@@ -393,7 +398,7 @@ def make_habits_weekly_content(now):
                         end_date=now.datetime,
                         max_date_allowed=now.datetime,
                     ),
-                ],
+            ],
                 style=DATE_PICKER_STYLE,
             ),
             dcc.Graph(id="live-weekly-stack-reports"),
@@ -416,6 +421,7 @@ def make_habits_analysis_content(now):
             dcc.Graph(id="analysis_summary_total_chart"),
         ],
         title_text="Summary: Month x Total Average",
+        description_text="월간 종합점수의 평균 점수의 변화",
         size=6
     )
 
@@ -424,6 +430,7 @@ def make_habits_analysis_content(now):
             dcc.Graph(id="analysis_summary_correlation_chart"),
         ],
         title_text="Summary: Correlation",
+        description_text="하루의 점수와 각종 데이터들 간의 상관관계",
         size=6
     )
 
@@ -432,6 +439,7 @@ def make_habits_analysis_content(now):
             dcc.Graph(id="analysis_all_task_working_hour_chart"),
         ],
         title_text="Task: Month x WorkingHour",
+        description_text="월간 각 카테고리 별 작업시간의 누적 막대 그래프",
         size=6
     )
 
@@ -466,7 +474,8 @@ def make_habits_analysis_content(now):
             dcc.Graph(id="analysis_all_task_scatter_chart"),
             dcc.Graph(id="analysis_all_task_correlation_chart"),
         ],
-        title_text="Task: HappyScore x AttentionScore with WorkingHour",
+        title_text="Task: HappyScore x AttentionScore x WorkingHour x StartHour",
+        description_text="각각의 작업에 대해서 어떠한 요소가 집중도에 가장 영향이 있는가",
         size=6
     )
 
@@ -474,13 +483,15 @@ def make_habits_analysis_content(now):
         [
             dcc.Graph(id="analysis_sleep_time_happy_chart"),
         ],
-        title_text="SleepTime x Happy"
+        title_text="SleepTime x Happy",
+        description_text="수면시간과 하루 행복도 점수 간의 상관관계",
     )
     sleep_time_attention_card = make_card_html(
         [
             dcc.Graph(id="analysis_sleep_time_attention_chart"),
         ],
-        title_text="SleepTime x Attention"
+        title_text="SleepTime x Attention",
+        description_text="수면시간과 하루 집중도 점수 간의 상관관계",
     )
 
     return html.Div(
