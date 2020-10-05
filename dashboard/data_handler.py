@@ -232,6 +232,7 @@ class DataHandler:
         df["year"] = df["end_time"].apply(lambda x: str(arrow.get(x).year))
         df["month"] = df["end_time"].apply(lambda x: arrow.get(x).format("MM"))
         df["start_hour"] = df["start_time"].apply(lambda x: arrow.get(x).hour + arrow.get(x).minute / 60)
+        df["start_hour"] = df["start_hour"].apply(lambda x: x+24 if x <= 3 else x)  # NOTE: start_hour - 새벽
 
         df["working_hours"] = df.apply(lambda x: (arrow.get(x.end_time) - arrow.get(x.start_time)).seconds / 3600, axis=1)
         df["working_minutes"] = df.apply(lambda x: int((arrow.get(x.end_time) - arrow.get(x.start_time)).seconds / 60), axis=1)

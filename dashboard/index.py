@@ -443,6 +443,27 @@ def make_habits_analysis_content(now):
         size=6
     )
 
+    task_ranking_card = make_card_html(
+        [
+            dcc.Dropdown(
+                id='year_dropdown',
+                options=[
+                    {'label': '2017', 'value': '2017'},
+                    {'label': '2018', 'value': '2018'},
+                    {'label': '2019', 'value': '2019'},
+                    {'label': '2020', 'value': '2020'},
+                    {'label': '전체', 'value': '-1'},
+                ],
+                value='2017',
+                style={"width": "200px"},
+            ),
+            dcc.Graph(id="analysis_all_task_ranking_chart"),
+        ],
+        title_text="Task: Month x WorkingHour",
+        description_text="그 동안 작업한 것들에 대한 작업 랭킹",
+        size=6
+    )
+
     task_scatter_card = make_card_html(
         [
             html.Div([
@@ -454,29 +475,23 @@ def make_habits_analysis_content(now):
                     ),
                 ], size=3, title_text="Category"),
                 make_card_html([
-                    dcc.RangeSlider(
-                        id='all_task_working_minute_slider',
-                        min=0,
-                        max=300,
-                        step=5,
-                        value=[0, 300],
-                        marks={
-                            30: {"label": "30분"},
-                            60: {"label": "1시간"},
-                            120: {"label": "2시간"},
-                            180: {"label": "3시간"},
-                            240: {"label": "4시간"},
-                            300: {"label": "5시간"},
-                        }
-                    ),
-                ], size=9, title_text="작업시간 (분)"),
+                    dcc.Graph(id="analysis_all_task_scatter_chart"),
+                ], size=12),
+                make_card_html([
+                    dcc.Graph(id="analysis_all_task_correlation_morning_chart"),
+                ], size=4, title_text="새벽, 오전 (5~12시)"),
+                make_card_html([
+                    dcc.Graph(id="analysis_all_task_correlation_afternoon_chart"),
+                ], size=4, title_text="오후, 저녁 (12~19시)"),
+                make_card_html([
+                    dcc.Graph(id="analysis_all_task_correlation_evening_chart"),
+                ], size=4, title_text="저녁, 심야 (19~2시)"),
             ], className="container-fluid row"),
-            dcc.Graph(id="analysis_all_task_scatter_chart"),
-            dcc.Graph(id="analysis_all_task_correlation_chart"),
+
         ],
         title_text="Task: HappyScore x AttentionScore x WorkingHour x StartHour",
         description_text="각각의 작업에 대해서 어떠한 요소가 집중도에 가장 영향이 있는가",
-        size=6
+        size=12
     )
 
     sleep_time_happy_card = make_card_html(
@@ -514,8 +529,12 @@ def make_habits_analysis_content(now):
             ),
             summary_total_card,
             summary_corr_card,
+
             task_working_hour_card,
+            task_ranking_card,
+
             task_scatter_card,
+
             sleep_time_happy_card,
             sleep_time_attention_card,
         ],

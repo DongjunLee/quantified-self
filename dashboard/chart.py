@@ -587,19 +587,102 @@ def _make_task_working_hour_bar_chart(df):
     return fig
 
 
-def _make_task_scatter_chart_and_corr(df, category, task_working_minutes):
+def _make_task_ranking_table_chart(df, year):
+    # TODO: use Toggl
+    colors = {
+        'Empty': '#DEDEDE',
+        'Article': '#e36a00',
+        'Review': '#566614',
+        'Book': '#bf7000',
+        'Management': '#990099',
+        'Develop': '#0b83d9',
+        'Meeting': '#9e5bd9',
+        'Think': '#2da608',
+        'Seminar': '#06a893',
+        'Blog': '#566614',
+        'Exercise': '#525266',
+        'Research': '#465bb3',
+        'MOOC': '#06a893',
+        'Planning': '#d94182'
+    }
+
+    if year == "-1":
+        pass
+    else:
+        df = df.loc[df["year"] == year]
+    df = df.groupby(["category", "description"]).sum().reset_index()
+    df = df.nlargest(100, "working_hours")  # Top 100
+
+    text_max_length = 9
+
+    df["short_description"] = df["description"].apply(lambda x: x.split(" - ")[1] if " - " in x else x)
+    df["short_description"] = df["short_description"].apply(lambda x: x[:text_max_length-1]+".." if len(x) > text_max_length else x)
+
+    fig = px.bar(
+        df,
+        y="short_description",
+        x="working_hours",
+        color="category",
+        color_discrete_map=colors,
+        category_orders={
+            "category": data_handler.TASK_CATEGORIES,
+            "year": ["2017", "2018", "2019", "2020"],
+            "weekday": list(calendar.day_name),
+        },
+        orientation="h",
+        hover_data=["description"],
+        height=700,
+    )
+    fig.update_layout(
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
+        ),
+    )
+    return fig
+
+
+def _make_task_scatter_chart_and_corrs(df, category):
+    hour_intervals = [
+        [5, 12],
+        [12, 19],
+        [19, 26],  # 26 ~ 새벽 2시
+    ]
+
+    figs = []
+
+    scatter_fig, _ = _make_task_scatter_chart_and_corr(df, category)
+    figs.append(scatter_fig)
+
+    for hour_interval in hour_intervals:
+        _, corr_fig = _make_task_scatter_chart_and_corr(df, category, hour_interval=hour_interval)
+        figs.append(corr_fig)
+    return figs
+
+
+def _make_task_scatter_chart_and_corr(df, category, hour_interval=None):
     df = df.loc[df["category"] == category]
-    df = df.loc[(df["working_minutes"] >= task_working_minutes[0]) & (df["working_minutes"] <= task_working_minutes[1])]
+    if hour_interval is not None:
+        df = df.loc[(df["start_hour"] >= hour_interval[0]) & (df["start_hour"] < hour_interval[1])]
+        df["start_hour"] = df["start_hour"].apply(lambda x: x-hour_interval[0])  # Scale
 
     jittering_value = 0.35
 
-    df["attention_score_j"] = df["attention_score"].apply(lambda x: x + random.uniform(-jittering_value, jittering_value))  # Jittering
-    df["happy_score_j"] = df["happy_score"].apply(lambda x: x + random.uniform(-jittering_value, jittering_value))  # Jittering
+    df["attention_j"] = df["attention_score"].apply(lambda x: x + random.uniform(-jittering_value, jittering_value))  # Jittering
+    df["happy_j"] = df["happy_score"].apply(lambda x: x + random.uniform(-jittering_value, jittering_value))  # Jittering
     df.dropna(inplace=True)
+
+    df["size"] = 1  # NOTE: fixed value
+
+    if len(df) == 0:
+        return {}, {}
 
     scatter_matrix_fig = px.scatter_matrix(
         df,
-        dimensions=["happy_score_j", "attention_score_j", "working_hours", "start_hour"],
+        dimensions=["happy_j", "attention_j", "working_hours", "start_hour"],
         color="year",
         # color_discrete_map=colors,
         category_orders={
@@ -607,7 +690,9 @@ def _make_task_scatter_chart_and_corr(df, category, task_working_minutes):
             "year": ["2017", "2018", "2019", "2020"],
             "weekday": list(calendar.day_name),
         },
-        opacity=0.7,
+        size="size",
+        size_max=5,
+        opacity=0.4,
         hover_data=[
             "start_time",
             "end_time",
@@ -616,6 +701,7 @@ def _make_task_scatter_chart_and_corr(df, category, task_working_minutes):
             "happy_score",
             "working_hours_text"
         ],
+        height=700,
     )
 
     corr_df = df[["attention_score", "happy_score", "working_hours", "start_hour"]].corr()
