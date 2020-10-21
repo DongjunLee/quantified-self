@@ -2,6 +2,8 @@
 
 import calendar
 import json
+import os
+import pickle
 from pathlib import Path
 
 import arrow
@@ -78,6 +80,11 @@ class DataHandler:
         return self.read_file(file_path)
 
     def read_record_df_by_metrics(self):
+        cache_path = "metrics_df.pkl"
+        if os.path.exists(cache_path):
+            with open(cache_path, "rb") as f:
+                return pickle.load(f)
+
         metrics = [
             {
                 "name": "metric_v0",
@@ -99,6 +106,14 @@ class DataHandler:
                 "sleep_activity": self._make_sleep_activity_df(records),
                 "task_activity": self._make_task_activity_df(records),
             }
+
+        metric_dfs["all"] = {
+            "task_activity": pd.concat([v["task_activity"] for _, v in metric_dfs.items()])
+        }
+
+        with open(cache_path, "wb") as f:
+            pickle.dump(metric_dfs, f)
+
         return metric_dfs
 
     def _make_daily_summary_df(self, records):
@@ -132,6 +147,19 @@ class DataHandler:
             end_time = task_activity[0]["end_time"]
 
             summary_data = r.get("summary", {})
+
+            if "habit" in summary_data:
+                habit_data = summary_data.get("habit", {})
+                bat = habit_data.get("bat", False)
+                blog = habit_data.get("blog", False)
+                diary = habit_data.get("diary", False)
+                exercise = habit_data.get("exercise", False)
+            else:
+                bat = summary_data.get("do_bat", False)
+                blog = summary_data.get("do_blog", False)
+                diary = summary_data.get("do_diary", False)
+                exercise = summary_data.get("do_exercise", False)
+
             data = {
                 "sleep_hour": sleep_hour,
                 "task_count": task_count,
@@ -143,6 +171,10 @@ class DataHandler:
                 "repeat_task_score": summary_data.get("repeat_task", 0),
                 "sleep_score": summary_data.get("sleep", 0),
                 "total_score": summary_data.get("total", 0),
+                "bat": bat,
+                "blog": blog,
+                "diary": diary,
+                "exercise": exercise,
             }
             datas.append(data)
 
@@ -231,6 +263,7 @@ class DataHandler:
         df["date"] = df["end_time"].apply(lambda x: arrow.get(x).format("YYYY-MM-DD"))
         df["year"] = df["end_time"].apply(lambda x: str(arrow.get(x).year))
         df["month"] = df["end_time"].apply(lambda x: arrow.get(x).format("MM"))
+        df["weekday"] = df["end_time"].apply(lambda x: calendar.day_name[arrow.get(x).isoweekday()-1])
         df["start_hour"] = df["start_time"].apply(lambda x: arrow.get(x).hour + arrow.get(x).minute / 60)
         df["start_hour"] = df["start_hour"].apply(lambda x: x+24 if x <= 3 else x)  # NOTE: start_hour - 새벽
 
