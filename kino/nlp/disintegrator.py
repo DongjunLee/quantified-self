@@ -1,25 +1,24 @@
 import re
 import string
 
-import langid
-import nltk
-
 from konlpy.tag import Twitter
 
+import nltk
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.corpus import wordnet
 from nltk.stem.wordnet import WordNetLemmatizer
 
+from .lang_code import LangCode
+
 
 class Disintegrator:
     def __init__(self, text):
         self.text = text
-        self.lang_code = langid.classify(text)[0]
-
-        if self.lang_code == "ko":
+        lang_code = LangCode.classify(text)
+        if lang_code == "ko":
             self.instance = KorDisintegrator()
-        elif self.lang_code == "en":
+        elif lang_code == "en":
             self.instance = EngDisintegrator()
         else:
             self.instance = None

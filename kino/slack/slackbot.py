@@ -11,6 +11,7 @@ from slacker import Slacker
 from .resource import MsgResource
 from .template import MsgTemplate
 
+from ..nlp.lang_code import LangCode
 from ..utils.data_handler import DataHandler
 
 
@@ -22,11 +23,7 @@ class SlackerAdapter(object):
 
         self.user = user
         self.channel = channel
-
-        if input_text is None:
-            self.lang_code = Config.bot.get("LANG_CODE", "en")
-        else:
-            self.lang_code = langid.classify(input_text)[0]
+        self.lang_code = LangCode.classify(input_text)
 
     def send_message(self, channel=None, text=None, attachments=None, giphy=True):
         if self.channel is None:
