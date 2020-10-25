@@ -30,6 +30,9 @@ class FeedNotifier:
 
         self.data_handler = DataHandler()
         self.feeds = self.data_handler.read_feeds()
+        self.feed_classifier = None
+        if Config.bot.get("FEED_CLASSIFIER", False):
+            self.feed_classifier = FeedClassifier()
 
         if slackbot is None:
             self.slackbot = SlackerAdapter(
@@ -40,36 +43,14 @@ class FeedNotifier:
 
     def notify_all(self) -> None:
         self.logger.info("Check feed_list")
-        noti_list = []
-        for category, feed_list in self.feeds.items():
-            for feed in feed_list:
-                noti_list += self.get_notify_list(category, feed)
-
-        if Config.bot.get("FEED_CLASSIFIER", False):
-            feed_classifier = FeedClassifier()
-
-        for (feed, save_pocket) in noti_list:
-            feed_header = feed[0].split("\n")
-            category = feed_header[0]
-            title = feed_header[1]
-            link = feed[1]
-
-            # Depense
-            if not link.startswith("http"):
-                continue
-
-            self.feed_logger.info(json.dumps({"category": category, "title": title}))
-
-            if Config.bot.get("FEED_CLASSIFIER", False) and feed_classifier.predict(
-                link, category, force=save_pocket
-            ):
-                self.slackbot.send_message(
-                    text=MsgResource.PREDICT_FEED_TRUE(title=category + ": " + title)
-                )
-                continue
-
-            attachments = MsgTemplate.make_feed_template(feed)
-            self.slackbot.send_message(attachments=attachments)
+        for category, feeds in self.feeds.items():
+            for feed in feeds:
+                try:
+                    results = self.get_notify_list(category, feed)
+                    self.notify(category, feed, results)
+                except Exception as e:
+                    self.logger.error(f"FEED Error: {e}")
+                    self.logger.exception("feed")
 
     def get_notify_list(self, category: str, feed: tuple) -> list:
         CACHE_FILE_NAME = "cache_feed.json"
@@ -148,6 +129,36 @@ class FeedNotifier:
         text = re.sub(entry_link, "", text)
         return text
 
+    def notify(self, category: str, feed: tuple, results: list):
+        if len(results) == 0:
+            feed_name = feed[0]
+            self.slackbot.send_message(text=MsgResource.FEED_NO_NEW_POST(feed_name=feed_name))
+            return
+
+        for (parsed_feed, save_pocket) in results:
+            feed_header = parsed_feed[0].split("\n")
+
+            category = feed_header[0]
+            title = feed_header[1]
+            link = parsed_feed[1]
+
+            # Depense
+            if not link.startswith("http"):
+                continue
+
+            self.feed_logger.info(json.dumps({"category": category, "title": title}))
+
+            if self.feed_classifier is not None and self.feed_classifier.predict(
+                link, category, force=save_pocket
+            ):
+                self.slackbot.send_message(
+                    text=MsgResource.PREDICT_FEED_TRUE(title=category + ": " + title)
+                )
+                continue
+
+            attachments = MsgTemplate.make_feed_template(parsed_feed)
+            self.slackbot.send_message(attachments=attachments)
+
 
 class FeedClassifier:
     def __init__(self):
@@ -169,13 +180,15 @@ class FeedClassifier:
             save_result = self.save_to_pocket(category, link)
             return save_result
 
-        predict_result = self.clf.predict(category_id)[0]
-        if predict_result == FeedDataLoader.TRUE_LABEL:
-            self.logger.info("predict result is True, Save feed to Pocket ...")
-            save_result = self.save_to_pocket(category, link)
-            return save_result
-        else:
-            return False
+        return False
+
+        # predict_result = self.clf.predict(category_id)[0]
+        # if predict_result == FeedDataLoader.TRUE_LABEL:
+            # self.logger.info("predict result is True, Save feed to Pocket ...")
+            # save_result = self.save_to_pocket(category, link)
+            # return save_result
+        # else:
+            # return False
 
     def save_to_pocket(self, category, link):
         try:

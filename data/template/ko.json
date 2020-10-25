@@ -25,13 +25,13 @@
     "NAP" : "헛.. 죄송합니다. 제가 잠시 졸고 있었습니다ㅠㅠ",
 
     "WORKER_START" : [
-      "넵, 일 열심히 하겠습니다ㅎㅎ",
+      "넵, 일 열심히 하겠습니다",
       "일 시작이군요..! 조..조금만 쉬고 싶지만ㅋㅋㅋㅋ 아닙니다.",
       "후후 저는 기계라 피로를 모릅니다. 제게 맡겨주세요."
     ],
     "WORKER_STOP" : [
-      "휴.. 드디어 휴식시간이군요!\n필요하실 때 언제나 불러주세요ㅎㅎ",
-      ":battery: 배터리 부족입니다. 엇ㅎㅎ 전 잠시 쉬고 있겠습니다."
+      "휴.. 드디어 휴식시간이군요!\n필요하실 때 언제나 불러주세요",
+      ":battery: 배터리 부족입니다. 엇, 전 잠시 쉬고 있겠습니다."
     ],
 
     "WORKER_CREATE_START" : "요청하신 일을 만들도록 하겠습니다!",
@@ -74,7 +74,7 @@
 
     "GREETING" : [
       "저를 찾으셨나요! 무엇을 도와드릴까요?",
-      "안녕하세요! 반갑습니다ㅎㅎㅎ"
+      "안녕하세요! 반갑습니다"
     ],
 
     "SCHEDULER_CREATE_START" : "알람 등록을 진행합니다.",
@@ -93,8 +93,8 @@
 
     "GITHUB_COMMIT_EMPTY" : "Github에 Commit한 기록이 없습니다. 일일커밋 실천하셔야죠!",
     "GITHUB_COMMIT_EXIST" : [
-      "오, Commit을 하셨군요! 멋지십니다.ㅎㅎ 오늘 하루 Commit 수 : {commit_count}",
-      "커밋커밋! 푸쉬푸쉬!! ㅎㅎ 오늘 하루 Commit 수 : {commit_count}"
+      "오, Commit을 하셨군요! 멋지십니다. 오늘 하루 Commit 수 : {commit_count}",
+      "커밋커밋! 푸쉬푸쉬!! 오늘 하루 Commit 수 : {commit_count}"
     ],
     "GITHUB_COMMIT_WEEKLY" : "일주일간의 Github commit 을 확인하세요!",
 
@@ -115,7 +115,7 @@
       ":bell: :bell: :bell: 기상! :bell::bell: :bell: "
     ],
     "PROFILE_WORK_START" : [
-      "오늘 하루도 화이팅입니다!ㅎㅎ :raised_hands:",
+      "오늘 하루도 화이팅입니다! :raised_hands:",
       "오늘도 힘찬 하루가 되었으면 좋겠습니다^^",
       "멋진 하루보내세요!!"
     ],
@@ -125,7 +125,7 @@
     "PROFILE_GO_TO_BED" : [
       ":sleeping_accommodation: 이제 주무실 시간입니다! ",
       "7시간은 주무셔야 다음날 컨디션도 좋습니다! 주무시죠^^ :sleeping_accommodation:",
-      "잠이 최고의 보약이라고 해요! 그만 잘까요?ㅎㅎ"
+      "잠이 최고의 보약이라고 해요! 그만 잘까요?"
     ],
 
     "WEATHER" : "날씨 정보를 알려드립니다.",
@@ -154,7 +154,7 @@
     "TODOIST_TODAY" : "오늘 할일의 수는 {task_count}개 입니다.",
 
     "TODOIST_KARMA": {
-        "up": "최근 생산성이 올랐습니다. 이대로 쭉 갑시다!ㅎㅎ",
+        "up": "최근 생산성이 올랐습니다. 이대로 쭉 갑시다!",
         "-": "생산성에 변화가 없습니다! 분발하시죠!",
         "down": "최근 생산성이 떨어지고 있습니다. 할일목록을 잘 관리해주세요! ㅠㅠ"
     },
@@ -171,7 +171,7 @@
 
     "TODOIST_FEEDBACK_OVERDUE": {
       "10": "아직 처리해야할 일들이 많이 남았습니다. ㅠㅠ",
-      "5": "처리해야할 일들이 조금 남았습니다. 조금만 힘내시죠ㅎㅎ",
+      "5": "처리해야할 일들이 조금 남았습니다. 조금만 힘내시죠",
       "1": "거의 다 처리하셨군요! 마지막까지 화이팅!",
       "0": "오.. 예정되었던 일들을 전부 처리하셨군요! 이제 푹 쉬세요. :+1: "
     },
@@ -213,13 +213,13 @@
 
     "ATTENTION_QUESTION_STEP_0" : [
       "진행하신 작업에 얼마나 집중하셨나요? \n (1점 :weary: | 2점 :disappointed: | 3점 :neutral_face: | 4점 :thinking_face: | 5점 :star-struck: )",
-      "이번 작업은 집중이 잘 되셨나요. 궁금합니다ㅎㅎ \n (1점 :weary: | 2점 :disappointed: | 3점 :neutral_face: | 4점 :thinking_face: | 5점 :star-struck: )",
-      "작업하느라 고생하셨습니다!ㅎㅎ :clap: :clap: 집중은 잘 되셨나요? \n (1점 :weary: | 2점 :disappointed: | 3점 :neutral_face: | 4점 :thinking_face: | 5점 :star-struck: )"
+      "이번 작업은 집중이 잘 되셨나요. 궁금합니다. \n (1점 :weary: | 2점 :disappointed: | 3점 :neutral_face: | 4점 :thinking_face: | 5점 :star-struck: )",
+      "작업하느라 고생하셨습니다! :clap: :clap: 집중은 잘 되셨나요? \n (1점 :weary: | 2점 :disappointed: | 3점 :neutral_face: | 4점 :thinking_face: | 5점 :star-struck: )"
     ],
 
     "ATTENTION_QUESTION_STEP_1": {
       "5": "몰입력 최고군요! :laughing: ",
-      "4": "일이 재미있으시군요! ㅎㅎ :smile: ",
+      "4": "일이 재밌으셨던 것 같군요! :smile: ",
       "3": "할만한 일인 것 같아요! :smiley: ",
       "2": "좀 어렵거나, 재미없으신 일인 것 같군요..! :simple_smile: ",
       "1": "하기 싫은 작업이였군요..ㅠㅠ :angry: "
@@ -228,15 +228,15 @@
     "ATTENTION_REPORT" : "집중도 Report 입니다.",
 
     "HAPPY_QUESTION_STEP_0" : [
-      "오늘 하루는 어떠신가요? \n (1점 :rage: | 2점 :pensive: | 3점 :slightly_smiling_face: | 4점 :laughing: | 5점 :heart_eyes: )",
-  		"ㅎㅎ잠시 오늘 하루는 어떤지 생각해볼까요? \n (1점 :rage: | 2점 :pensive: | 3점 :slightly_smiling_face: | 4점 :laughing: | 5점 :heart_eyes: )",
+      "지금 기분은 어떠신가요? \n (1점 :rage: | 2점 :pensive: | 3점 :slightly_smiling_face: | 4점 :laughing: | 5점 :heart_eyes: )",
+  		"잠시 기분이 어떤지 생각해볼까요? \n (1점 :rage: | 2점 :pensive: | 3점 :slightly_smiling_face: | 4점 :laughing: | 5점 :heart_eyes: )",
   		"Be Happy! 지금 기분이 어떠신지 점수로 알려주세요! \n (1점 :rage: | 2점 :pensive: | 3점 :slightly_smiling_face: | 4점 :laughing: | 5점 :heart_eyes: )"
     ],
 
     "HAPPY_QUESTION_STEP_1": {
       "5": "기분 최고!! :laughing: ",
-      "4": "행복하시군요ㅎㅎ 보기 좋습니다. :smile: ",
-      "3": "슬며시 미소를 짓고 계신 것 같아요ㅎㅎ :smiley: ",
+      "4": "기분이 좋아보이네요! 보기 좋습니다. :smile: ",
+      "3": "슬며시 미소를 짓고 계신 것 같아요 :smiley: ",
       "2": "그냥 그러시군요.. :simple_smile: ",
       "1": "무슨 일 있으신가요? 기분이 안 좋아보입니다ㅠㅠ :angry: "
     },
@@ -259,9 +259,9 @@
       "40": "#C11B17"
     },
 
-    "APPLAUD" : ":clap::clap::clap: 멋지십니다!ㅎㅎ",
-    "WEEKDAY" : "오늘은 평일이군요! 달리시죠ㅎㅎ :running: ",
-    "HOLIDAY" : "오늘은 쉬는 날 이군요! 쉬면서 가세요ㅎㅎ :walking: ",
+    "APPLAUD" : ":clap::clap::clap: 멋지십니다!",
+    "WEEKDAY" : "오늘은 평일이군요! 달리시죠 :running: ",
+    "HOLIDAY" : "오늘은 쉬는 날 이군요! 쉬면서 가세요 :walking: ",
     "GOOD_MORNING" : "안녕히 주무셨나요? 좋은 아침입니다^^ :sun_with_face:",
 
     "SLEEP_TIME": "{bed_time} ~ {wakeup_time}, 총 {diff_h}h 동안 잠을 주무셨습니다.",
@@ -292,7 +292,7 @@
     "PREDICT_RESULT": [
       "지금은 왠지 *{description}* 기능을 사용하실 것 같군요!",
       "음.........!! 잠시 미래를 보고 왔습니다! *{description}* 기능이 보였습니다 후후",
-      "개인비서로서 이정도는 알아서 해야죠ㅎㅎ *{description}* 처리하겠습니다."
+      "개인비서로서 이정도는 알아서 해야죠 *{description}* 처리하겠습니다."
     ],
 
     "FEED_COLOR": "#438C56",
@@ -332,7 +332,9 @@
     },
     "HUMOR_SORRY": "죄송합니다...",
 
-    "PREDICT_FEED_TRUE": "Pocket에 항상 넣으시는 Feed 네요! 제가 알아서 넣어놓겠습니다 ㅎㅎ \n - Title : {title}",
+    "FEED_ACK": "넵, Feed 를 확인해보겠습다.",
+    "PREDICT_FEED_TRUE": "Pocket에 항상 넣으시는 Feed 네요! 제가 알아서 넣어놓겠습니다 \n - Title : {title}",
+    "FEED_NO_NEW_POST": "{feed_name} 에는 새로운 글이 없습니다.",
 
     "FOCUS": "일에 집중하셔야하는 군요. 화이팅!",
     "FOCUS_FINISH": "일에 집중은 잘 되셨나요? 계속 서포트를 하겠습니다."

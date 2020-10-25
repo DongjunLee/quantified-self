@@ -76,6 +76,8 @@ class Functions(object):
         icon: ":spock-hand: "
         """
 
+        self.slackbot.send_message(text=MsgResource.FEED_ACK)
+
         feed_notifier = FeedNotifier()
         feed_notifier.notify_all()
 
