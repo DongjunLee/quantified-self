@@ -35,7 +35,8 @@ class KinoBot:
 
     def start_session(self, init: bool = False, nap: bool = False):
         if nap:
-            self.slackbot.send_message(text=MsgResource.NAP)
+            pass
+            # self.slackbot.send_message(text=MsgResource.NAP)
         else:
             self.worker.stop(init=init)
             self.worker.run(init=init)
@@ -56,8 +57,6 @@ class KinoBot:
             asyncio.set_event_loop(loop)
             asyncio.get_event_loop().run_until_complete(execute_bot())
             asyncio.get_event_loop().run_forever()
-
-
 
         except BaseException:
             self.logger.error(f"Session Error. restart in {self.error_delay} seconds..")
