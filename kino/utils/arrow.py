@@ -118,6 +118,6 @@ class ArrowUtil(object):
 
         now = arrow.now()
         for i in range(-6, 1, 1):
-            date = now.replace(days=i)
+            date = now.shift(days=i)
             format_date_list.append(date.format("MM-DD"))
         return format_date_list

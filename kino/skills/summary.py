@@ -359,8 +359,8 @@ class Summary(object):
 
     def check_commit_count(self):
         github = GithubManager()
-        commit_count = github.commit(timely=-1)
-        self.data_handler.edit_summary(("github_commit_count", commit_count))
+        commit_count = github.commit(timely=0)
+        self.data_handler.edit_detail("productive", {"github_commit_count": commit_count})
 
     def total_chart(self):
         records = []

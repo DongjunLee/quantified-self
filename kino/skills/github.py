@@ -17,8 +17,7 @@ class GithubManager(object):
         self.data_handler = DataHandler()
 
         self.username = Config.open_api.github.USERNAME
-        password = Config.open_api.github.PASSWORD
-        self.github = Github(self.username, password)
+        self.github = Github(Config.open_api.github.ACCESS_TOKEN)
 
         if slackbot is None:
             self.slackbot = SlackerAdapter(
